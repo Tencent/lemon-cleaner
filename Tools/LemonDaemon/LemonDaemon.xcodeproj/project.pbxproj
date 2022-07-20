@@ -1,0 +1,832 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		2FA7A48321C2869200B93EF5 /* LMPlistHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FA7A48221C2869200B93EF5 /* LMPlistHelper.m */; };
+		2FA7A4A621C38D8C00B93EF5 /* DaemonStartup.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FA7A4A521C38D8C00B93EF5 /* DaemonStartup.m */; };
+		2FA7A53F21C3C65C00B93EF5 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FA7A53E21C3C65C00B93EF5 /* main.m */; };
+		76B4C27C287294C000F61386 /* LMDMVersionHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 76B4C27B287294C000F61386 /* LMDMVersionHelper.m */; };
+		76B4C2922872981400F61386 /* CmcSmartQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = 76B4C2852872981400F61386 /* CmcSmartQuery.m */; };
+		76B4C2932872981400F61386 /* CmcAppleSmc2.m in Sources */ = {isa = PBXBuildFile; fileRef = 76B4C2872872981400F61386 /* CmcAppleSmc2.m */; };
+		76B4C2942872981400F61386 /* McTemperatureInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 76B4C2882872981400F61386 /* McTemperatureInfo.m */; };
+		76B4C2952872981400F61386 /* CmcTemperature.m in Sources */ = {isa = PBXBuildFile; fileRef = 76B4C28A2872981400F61386 /* CmcTemperature.m */; };
+		76B4C2962872981400F61386 /* CmcAppleSmc.m in Sources */ = {isa = PBXBuildFile; fileRef = 76B4C28E2872981400F61386 /* CmcAppleSmc.m */; };
+		76B4C2972872981400F61386 /* CmcFan.m in Sources */ = {isa = PBXBuildFile; fileRef = 76B4C2902872981400F61386 /* CmcFan.m */; };
+		76B4C2982872981400F61386 /* McFanInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 76B4C2912872981400F61386 /* McFanInfo.m */; };
+		785CA6227A7C5B29A3F7C3D5 /* libPods-LemonDaemon.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 71B3D3D30CBDF7DC92261FBF /* libPods-LemonDaemon.a */; };
+		7A0221CD2865BED8000F9FD4 /* CmcSystem.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A0221CC2865BED8000F9FD4 /* CmcSystem.c */; };
+		BC6842B8225E0E980074B2D2 /* ExecuteCmdHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = BC6842B6225E0E970074B2D2 /* ExecuteCmdHelper.m */; };
+		BC8254EE22FA7DF100292FA5 /* LMKextManager.m in Sources */ = {isa = PBXBuildFile; fileRef = BC8254ED22FA7DF100292FA5 /* LMKextManager.m */; };
+		D466802221AE8B6500704647 /* LMDaemonXPCService.m in Sources */ = {isa = PBXBuildFile; fileRef = D466802121AE8B6500704647 /* LMDaemonXPCService.m */; };
+		D466802621AE8D8700704647 /* LMXPCFunction.m in Sources */ = {isa = PBXBuildFile; fileRef = D466802521AE8D8700704647 /* LMXPCFunction.m */; };
+		D466802921AE91A600704647 /* LMDaemonListenerDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D466802821AE91A600704647 /* LMDaemonListenerDelegate.m */; };
+		D485708A21425F720018B0FB /* AudioProcessStat.m in Sources */ = {isa = PBXBuildFile; fileRef = D485708821425F720018B0FB /* AudioProcessStat.m */; };
+		D4B14D2821A2E41D001E6064 /* LemonBizManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D4B14D2721A2E41D001E6064 /* LemonBizManager.m */; };
+		D4B7253F21393F8B003B59B5 /* VideoProcessStat.m in Sources */ = {isa = PBXBuildFile; fileRef = D4B7253D21393F8B003B59B5 /* VideoProcessStat.m */; };
+		D4B72589213D3013003B59B5 /* OwlManageDaemon.m in Sources */ = {isa = PBXBuildFile; fileRef = D4B72588213D3013003B59B5 /* OwlManageDaemon.m */; };
+		D4E1D85020F5F6D9001FA263 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D4E1D84F20F5F6D9001FA263 /* main.m */; };
+		D4E1D89420F5F7C8001FA263 /* CutBinary.m in Sources */ = {isa = PBXBuildFile; fileRef = D4E1D88B20F5F75A001FA263 /* CutBinary.m */; };
+		D4E1D89520F5F7C8001FA263 /* CmcFileAction.m in Sources */ = {isa = PBXBuildFile; fileRef = D4E1D88C20F5F75A001FA263 /* CmcFileAction.m */; };
+		D4E1D89720F5F7C8001FA263 /* McUninstall.m in Sources */ = {isa = PBXBuildFile; fileRef = D4E1D88F20F5F75A001FA263 /* McUninstall.m */; };
+		D4E1D89920F5F7C8001FA263 /* McKextMgr.m in Sources */ = {isa = PBXBuildFile; fileRef = D4E1D87720F5F75A001FA263 /* McKextMgr.m */; };
+		D4E1D89D20F5F7C8001FA263 /* QMLaunchpadClean.m in Sources */ = {isa = PBXBuildFile; fileRef = D4E1D87C20F5F75A001FA263 /* QMLaunchpadClean.m */; };
+		D4E1D89F20F5F7C8001FA263 /* FMDatabaseQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = D4E1D87F20F5F75A001FA263 /* FMDatabaseQueue.m */; };
+		D4E1D8A220F5F7C8001FA263 /* FMDatabaseAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = D4E1D88220F5F75A001FA263 /* FMDatabaseAdditions.m */; };
+		D4E1D8A320F5F7C8001FA263 /* FMDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = D4E1D88320F5F75A001FA263 /* FMDatabase.m */; };
+		D4E1D8A720F5F7C8001FA263 /* FMDatabasePool.m in Sources */ = {isa = PBXBuildFile; fileRef = D4E1D88720F5F75A001FA263 /* FMDatabasePool.m */; };
+		D4E1D8A820F5F7C8001FA263 /* FMResultSet.m in Sources */ = {isa = PBXBuildFile; fileRef = D4E1D88820F5F75A001FA263 /* FMResultSet.m */; };
+		D4E1D8A920F5F7C8001FA263 /* LemonDaemon-Prefix.pch in Sources */ = {isa = PBXBuildFile; fileRef = D4E1D85620F5F75A001FA263 /* LemonDaemon-Prefix.pch */; };
+		D4E1D8AB20F5F7C8001FA263 /* CmcNetSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = D4E1D85A20F5F75A001FA263 /* CmcNetSocket.m */; };
+		D4E1D8AE20F5F7C8001FA263 /* Cmcfsdata.c in Sources */ = {isa = PBXBuildFile; fileRef = D4E1D85E20F5F75A001FA263 /* Cmcfsdata.c */; };
+		D4E1D8B120F5F7C8001FA263 /* CmcProcInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = D4E1D86220F5F75A001FA263 /* CmcProcInfo.m */; };
+		D4E1D8B320F5F7C8001FA263 /* CmcProcess.m in Sources */ = {isa = PBXBuildFile; fileRef = D4E1D86420F5F75A001FA263 /* CmcProcess.m */; };
+		D4E1D8BA20F5F7C8001FA263 /* McPipeThread.m in Sources */ = {isa = PBXBuildFile; fileRef = D4E1D86D20F5F75A001FA263 /* McPipeThread.m */; };
+		D4E1D8BD20F5F7C8001FA263 /* McRemoveTrojan.m in Sources */ = {isa = PBXBuildFile; fileRef = D4E1D87120F5F75A001FA263 /* McRemoveTrojan.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		2FA7A53A21C3C65C00B93EF5 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+		D4E1D84A20F5F6D9001FA263 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		296103B8AF2A800CC0A3A3E4 /* Pods-LemonDaemon.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LemonDaemon.release.xcconfig"; path = "../../Pods/Target Support Files/Pods-LemonDaemon/Pods-LemonDaemon.release.xcconfig"; sourceTree = "<group>"; };
+		2FA7A48121C2869200B93EF5 /* LMPlistHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMPlistHelper.h; sourceTree = "<group>"; };
+		2FA7A48221C2869200B93EF5 /* LMPlistHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMPlistHelper.m; sourceTree = "<group>"; };
+		2FA7A4A421C38D8C00B93EF5 /* DaemonStartup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DaemonStartup.h; path = DaemonStartup/DaemonStartup.h; sourceTree = "<group>"; };
+		2FA7A4A521C38D8C00B93EF5 /* DaemonStartup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DaemonStartup.m; path = DaemonStartup/DaemonStartup.m; sourceTree = "<group>"; };
+		2FA7A4A821C38EC000B93EF5 /* SocketCommunicationKeyWord.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SocketCommunicationKeyWord.h; sourceTree = "<group>"; };
+		2FA7A53C21C3C65C00B93EF5 /* LemonDaemonActivator */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = LemonDaemonActivator; sourceTree = BUILT_PRODUCTS_DIR; };
+		2FA7A53E21C3C65C00B93EF5 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		2FA7A54321C3C72600B93EF5 /* SocketCommunicationKeyWord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SocketCommunicationKeyWord.h; path = LemonDaemonActivator/SocketCommunicationKeyWord.h; sourceTree = SOURCE_ROOT; };
+		71B3D3D30CBDF7DC92261FBF /* libPods-LemonDaemon.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-LemonDaemon.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		76B4C27A287294C000F61386 /* LMDMVersionHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMDMVersionHelper.h; sourceTree = "<group>"; };
+		76B4C27B287294C000F61386 /* LMDMVersionHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMDMVersionHelper.m; sourceTree = "<group>"; };
+		76B4C2842872981400F61386 /* CmcFan.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CmcFan.h; sourceTree = "<group>"; };
+		76B4C2852872981400F61386 /* CmcSmartQuery.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CmcSmartQuery.m; sourceTree = "<group>"; };
+		76B4C2862872981400F61386 /* CmcTemperature.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CmcTemperature.h; sourceTree = "<group>"; };
+		76B4C2872872981400F61386 /* CmcAppleSmc2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CmcAppleSmc2.m; sourceTree = "<group>"; };
+		76B4C2882872981400F61386 /* McTemperatureInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = McTemperatureInfo.m; sourceTree = "<group>"; };
+		76B4C2892872981400F61386 /* McFanInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = McFanInfo.h; sourceTree = "<group>"; };
+		76B4C28A2872981400F61386 /* CmcTemperature.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CmcTemperature.m; sourceTree = "<group>"; };
+		76B4C28B2872981400F61386 /* CmcAppleSmc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CmcAppleSmc.h; sourceTree = "<group>"; };
+		76B4C28C2872981400F61386 /* CmcSmartQuery.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CmcSmartQuery.h; sourceTree = "<group>"; };
+		76B4C28D2872981400F61386 /* CmcAppleSmc2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CmcAppleSmc2.h; sourceTree = "<group>"; };
+		76B4C28E2872981400F61386 /* CmcAppleSmc.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CmcAppleSmc.m; sourceTree = "<group>"; };
+		76B4C28F2872981400F61386 /* McTemperatureInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = McTemperatureInfo.h; sourceTree = "<group>"; };
+		76B4C2902872981400F61386 /* CmcFan.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CmcFan.m; sourceTree = "<group>"; };
+		76B4C2912872981400F61386 /* McFanInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = McFanInfo.m; sourceTree = "<group>"; };
+		76B4C29E2872996400F61386 /* McPipeCmdStruct.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = McPipeCmdStruct.h; sourceTree = "<group>"; };
+		76B4C29F2872996400F61386 /* McPipeStruct.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = McPipeStruct.h; sourceTree = "<group>"; };
+		7A0221CB2865BED8000F9FD4 /* CmcSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CmcSystem.h; sourceTree = "<group>"; };
+		7A0221CC2865BED8000F9FD4 /* CmcSystem.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = CmcSystem.c; sourceTree = "<group>"; };
+		8A36FA88920478B5FBB32539 /* Pods-LemonDaemon.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LemonDaemon.debug.xcconfig"; path = "../../Pods/Target Support Files/Pods-LemonDaemon/Pods-LemonDaemon.debug.xcconfig"; sourceTree = "<group>"; };
+		BC6842B6225E0E970074B2D2 /* ExecuteCmdHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExecuteCmdHelper.m; sourceTree = "<group>"; };
+		BC6842B7225E0E970074B2D2 /* ExecuteCmdHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExecuteCmdHelper.h; sourceTree = "<group>"; };
+		BC8254EC22FA7DF100292FA5 /* LMKextManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LMKextManager.h; sourceTree = "<group>"; };
+		BC8254ED22FA7DF100292FA5 /* LMKextManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LMKextManager.m; sourceTree = "<group>"; };
+		D466802021AE8B6500704647 /* LMDaemonXPCService.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LMDaemonXPCService.h; sourceTree = "<group>"; };
+		D466802121AE8B6500704647 /* LMDaemonXPCService.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LMDaemonXPCService.m; sourceTree = "<group>"; };
+		D466802321AE8BA000704647 /* LMDaemonXPCProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LMDaemonXPCProtocol.h; sourceTree = "<group>"; };
+		D466802421AE8D8700704647 /* LMXPCFunction.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LMXPCFunction.h; sourceTree = "<group>"; };
+		D466802521AE8D8700704647 /* LMXPCFunction.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LMXPCFunction.m; sourceTree = "<group>"; };
+		D466802721AE91A600704647 /* LMDaemonListenerDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LMDaemonListenerDelegate.h; sourceTree = "<group>"; };
+		D466802821AE91A600704647 /* LMDaemonListenerDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LMDaemonListenerDelegate.m; sourceTree = "<group>"; };
+		D46680E221AFE31300704647 /* LMLemonXPCProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMLemonXPCProtocol.h; sourceTree = "<group>"; };
+		D46680E321AFE31300704647 /* LMMonitorXPCProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMMonitorXPCProtocol.h; sourceTree = "<group>"; };
+		D485708821425F720018B0FB /* AudioProcessStat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioProcessStat.m; sourceTree = "<group>"; };
+		D485708921425F720018B0FB /* AudioProcessStat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioProcessStat.h; sourceTree = "<group>"; };
+		D4ACC031221D76BD00DF0B7B /* LemonDaemonConst.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LemonDaemonConst.h; sourceTree = "<group>"; };
+		D4B14D2621A2E41D001E6064 /* LemonBizManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LemonBizManager.h; sourceTree = "<group>"; };
+		D4B14D2721A2E41D001E6064 /* LemonBizManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LemonBizManager.m; sourceTree = "<group>"; };
+		D4B7253A21393F8B003B59B5 /* VideoProcessStat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoProcessStat.h; sourceTree = "<group>"; };
+		D4B7253D21393F8B003B59B5 /* VideoProcessStat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoProcessStat.m; sourceTree = "<group>"; };
+		D4B72587213D3012003B59B5 /* OwlManageDaemon.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OwlManageDaemon.h; sourceTree = "<group>"; };
+		D4B72588213D3013003B59B5 /* OwlManageDaemon.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OwlManageDaemon.m; sourceTree = "<group>"; };
+		D4E1D84C20F5F6D9001FA263 /* LemonDaemon */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = LemonDaemon; sourceTree = BUILT_PRODUCTS_DIR; };
+		D4E1D84F20F5F6D9001FA263 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		D4E1D85620F5F75A001FA263 /* LemonDaemon-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "LemonDaemon-Prefix.pch"; sourceTree = "<group>"; };
+		D4E1D85920F5F75A001FA263 /* CmcNetSocket.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CmcNetSocket.h; sourceTree = "<group>"; };
+		D4E1D85A20F5F75A001FA263 /* CmcNetSocket.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CmcNetSocket.m; sourceTree = "<group>"; };
+		D4E1D85C20F5F75A001FA263 /* Cmcfsmonitor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Cmcfsmonitor.h; sourceTree = "<group>"; };
+		D4E1D85D20F5F75A001FA263 /* fsevents.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fsevents.h; sourceTree = "<group>"; };
+		D4E1D85E20F5F75A001FA263 /* Cmcfsdata.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Cmcfsdata.c; sourceTree = "<group>"; };
+		D4E1D86120F5F75A001FA263 /* CmcProcess.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CmcProcess.h; sourceTree = "<group>"; };
+		D4E1D86220F5F75A001FA263 /* CmcProcInfo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CmcProcInfo.m; sourceTree = "<group>"; };
+		D4E1D86320F5F75A001FA263 /* CmcProcInfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CmcProcInfo.h; sourceTree = "<group>"; };
+		D4E1D86420F5F75A001FA263 /* CmcProcess.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CmcProcess.m; sourceTree = "<group>"; };
+		D4E1D86D20F5F75A001FA263 /* McPipeThread.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = McPipeThread.m; sourceTree = "<group>"; };
+		D4E1D86E20F5F75A001FA263 /* McPipeThread.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = McPipeThread.h; sourceTree = "<group>"; };
+		D4E1D87120F5F75A001FA263 /* McRemoveTrojan.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = McRemoveTrojan.m; sourceTree = "<group>"; };
+		D4E1D87220F5F75A001FA263 /* McRemoveTrojan.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = McRemoveTrojan.h; sourceTree = "<group>"; };
+		D4E1D87720F5F75A001FA263 /* McKextMgr.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = McKextMgr.m; sourceTree = "<group>"; };
+		D4E1D87820F5F75A001FA263 /* McKextMgr.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = McKextMgr.h; sourceTree = "<group>"; };
+		D4E1D87920F5F75A001FA263 /* OSKextError.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OSKextError.h; sourceTree = "<group>"; };
+		D4E1D87B20F5F75A001FA263 /* QMLaunchpadClean.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QMLaunchpadClean.h; sourceTree = "<group>"; };
+		D4E1D87C20F5F75A001FA263 /* QMLaunchpadClean.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QMLaunchpadClean.m; sourceTree = "<group>"; };
+		D4E1D87E20F5F75A001FA263 /* FMDatabase.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FMDatabase.h; sourceTree = "<group>"; };
+		D4E1D87F20F5F75A001FA263 /* FMDatabaseQueue.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FMDatabaseQueue.m; sourceTree = "<group>"; };
+		D4E1D88020F5F75A001FA263 /* FMResultSet.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FMResultSet.h; sourceTree = "<group>"; };
+		D4E1D88120F5F75A001FA263 /* FMDatabasePool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FMDatabasePool.h; sourceTree = "<group>"; };
+		D4E1D88220F5F75A001FA263 /* FMDatabaseAdditions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FMDatabaseAdditions.m; sourceTree = "<group>"; };
+		D4E1D88320F5F75A001FA263 /* FMDatabase.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FMDatabase.m; sourceTree = "<group>"; };
+		D4E1D88420F5F75A001FA263 /* FMDatabaseQueue.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FMDatabaseQueue.h; sourceTree = "<group>"; };
+		D4E1D88520F5F75A001FA263 /* FMDB.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FMDB.h; sourceTree = "<group>"; };
+		D4E1D88620F5F75A001FA263 /* FMDatabaseAdditions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FMDatabaseAdditions.h; sourceTree = "<group>"; };
+		D4E1D88720F5F75A001FA263 /* FMDatabasePool.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FMDatabasePool.m; sourceTree = "<group>"; };
+		D4E1D88820F5F75A001FA263 /* FMResultSet.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FMResultSet.m; sourceTree = "<group>"; };
+		D4E1D88A20F5F75A001FA263 /* CmcFileAction.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CmcFileAction.h; sourceTree = "<group>"; };
+		D4E1D88B20F5F75A001FA263 /* CutBinary.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CutBinary.m; sourceTree = "<group>"; };
+		D4E1D88C20F5F75A001FA263 /* CmcFileAction.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CmcFileAction.m; sourceTree = "<group>"; };
+		D4E1D88D20F5F75A001FA263 /* CutBinary.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CutBinary.h; sourceTree = "<group>"; };
+		D4E1D88F20F5F75A001FA263 /* McUninstall.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = McUninstall.m; sourceTree = "<group>"; };
+		D4E1D89020F5F75A001FA263 /* McUninstall.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = McUninstall.h; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		2FA7A53921C3C65C00B93EF5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D4E1D84920F5F6D9001FA263 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				785CA6227A7C5B29A3F7C3D5 /* libPods-LemonDaemon.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		20F46311F818E096281879C8 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				8A36FA88920478B5FBB32539 /* Pods-LemonDaemon.debug.xcconfig */,
+				296103B8AF2A800CC0A3A3E4 /* Pods-LemonDaemon.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		2FA7A4A321C38D7E00B93EF5 /* DaemonStartup */ = {
+			isa = PBXGroup;
+			children = (
+				2FA7A4A421C38D8C00B93EF5 /* DaemonStartup.h */,
+				2FA7A4A521C38D8C00B93EF5 /* DaemonStartup.m */,
+				2FA7A54321C3C72600B93EF5 /* SocketCommunicationKeyWord.h */,
+			);
+			name = DaemonStartup;
+			sourceTree = "<group>";
+		};
+		2FA7A53D21C3C65C00B93EF5 /* LemonDaemonActivator */ = {
+			isa = PBXGroup;
+			children = (
+				2FA7A4A821C38EC000B93EF5 /* SocketCommunicationKeyWord.h */,
+				2FA7A53E21C3C65C00B93EF5 /* main.m */,
+			);
+			path = LemonDaemonActivator;
+			sourceTree = "<group>";
+		};
+		76B4C2832872980A00F61386 /* SMC */ = {
+			isa = PBXGroup;
+			children = (
+				76B4C28B2872981400F61386 /* CmcAppleSmc.h */,
+				76B4C28E2872981400F61386 /* CmcAppleSmc.m */,
+				76B4C28D2872981400F61386 /* CmcAppleSmc2.h */,
+				76B4C2872872981400F61386 /* CmcAppleSmc2.m */,
+				76B4C2842872981400F61386 /* CmcFan.h */,
+				76B4C2902872981400F61386 /* CmcFan.m */,
+				76B4C28C2872981400F61386 /* CmcSmartQuery.h */,
+				76B4C2852872981400F61386 /* CmcSmartQuery.m */,
+				76B4C2862872981400F61386 /* CmcTemperature.h */,
+				76B4C28A2872981400F61386 /* CmcTemperature.m */,
+				76B4C2892872981400F61386 /* McFanInfo.h */,
+				76B4C2912872981400F61386 /* McFanInfo.m */,
+				76B4C28F2872981400F61386 /* McTemperatureInfo.h */,
+				76B4C2882872981400F61386 /* McTemperatureInfo.m */,
+			);
+			path = SMC;
+			sourceTree = "<group>";
+		};
+		7A0221CE2865BEE7000F9FD4 /* oshlp */ = {
+			isa = PBXGroup;
+			children = (
+				7A0221CC2865BED8000F9FD4 /* CmcSystem.c */,
+				7A0221CB2865BED8000F9FD4 /* CmcSystem.h */,
+			);
+			path = oshlp;
+			sourceTree = "<group>";
+		};
+		BC68427D225D8D260074B2D2 /* cmd */ = {
+			isa = PBXGroup;
+			children = (
+				BC6842B7225E0E970074B2D2 /* ExecuteCmdHelper.h */,
+				BC6842B6225E0E970074B2D2 /* ExecuteCmdHelper.m */,
+			);
+			path = cmd;
+			sourceTree = "<group>";
+		};
+		D466801F21AE8B2500704647 /* DaemonXpcService */ = {
+			isa = PBXGroup;
+			children = (
+				D46680E221AFE31300704647 /* LMLemonXPCProtocol.h */,
+				D46680E321AFE31300704647 /* LMMonitorXPCProtocol.h */,
+				D466802021AE8B6500704647 /* LMDaemonXPCService.h */,
+				D466802121AE8B6500704647 /* LMDaemonXPCService.m */,
+				D466802321AE8BA000704647 /* LMDaemonXPCProtocol.h */,
+				D466802421AE8D8700704647 /* LMXPCFunction.h */,
+				D466802521AE8D8700704647 /* LMXPCFunction.m */,
+				D466802721AE91A600704647 /* LMDaemonListenerDelegate.h */,
+				D466802821AE91A600704647 /* LMDaemonListenerDelegate.m */,
+				BC8254EC22FA7DF100292FA5 /* LMKextManager.h */,
+				BC8254ED22FA7DF100292FA5 /* LMKextManager.m */,
+			);
+			path = DaemonXpcService;
+			sourceTree = "<group>";
+		};
+		D4B7253921393F71003B59B5 /* Owl */ = {
+			isa = PBXGroup;
+			children = (
+				D485708921425F720018B0FB /* AudioProcessStat.h */,
+				D485708821425F720018B0FB /* AudioProcessStat.m */,
+				D4B7253A21393F8B003B59B5 /* VideoProcessStat.h */,
+				D4B7253D21393F8B003B59B5 /* VideoProcessStat.m */,
+				D4B72587213D3012003B59B5 /* OwlManageDaemon.h */,
+				D4B72588213D3013003B59B5 /* OwlManageDaemon.m */,
+			);
+			path = Owl;
+			sourceTree = "<group>";
+		};
+		D4E1D84320F5F6D9001FA263 = {
+			isa = PBXGroup;
+			children = (
+				D4E1D84E20F5F6D9001FA263 /* LemonDaemon */,
+				2FA7A53D21C3C65C00B93EF5 /* LemonDaemonActivator */,
+				D4E1D84D20F5F6D9001FA263 /* Products */,
+				20F46311F818E096281879C8 /* Pods */,
+				F76A3ED78A9C81C8F7B57A70 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		D4E1D84D20F5F6D9001FA263 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D4E1D84C20F5F6D9001FA263 /* LemonDaemon */,
+				2FA7A53C21C3C65C00B93EF5 /* LemonDaemonActivator */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		D4E1D84E20F5F6D9001FA263 /* LemonDaemon */ = {
+			isa = PBXGroup;
+			children = (
+				BC68427D225D8D260074B2D2 /* cmd */,
+				2FA7A4A321C38D7E00B93EF5 /* DaemonStartup */,
+				D466801F21AE8B2500704647 /* DaemonXpcService */,
+				D4E1D88920F5F75A001FA263 /* FileAction */,
+				D4E1D88E20F5F75A001FA263 /* Install */,
+				D4E1D87620F5F75A001FA263 /* KextMgr */,
+				D4E1D87A20F5F75A001FA263 /* Launchpad */,
+				D4B14D2621A2E41D001E6064 /* LemonBizManager.h */,
+				D4B14D2721A2E41D001E6064 /* LemonBizManager.m */,
+				D4E1D85620F5F75A001FA263 /* LemonDaemon-Prefix.pch */,
+				D4ACC031221D76BD00DF0B7B /* LemonDaemonConst.h */,
+				2FA7A48121C2869200B93EF5 /* LMPlistHelper.h */,
+				2FA7A48221C2869200B93EF5 /* LMPlistHelper.m */,
+				D4E1D84F20F5F6D9001FA263 /* main.m */,
+				D4E1D85720F5F75A001FA263 /* Monitor */,
+				7A0221CE2865BEE7000F9FD4 /* oshlp */,
+				D4B7253921393F71003B59B5 /* Owl */,
+				D4E1D86A20F5F75A001FA263 /* Pipe */,
+				D4E1D87020F5F75A001FA263 /* RemoveTrojan */,
+			);
+			path = LemonDaemon;
+			sourceTree = "<group>";
+		};
+		D4E1D85720F5F75A001FA263 /* Monitor */ = {
+			isa = PBXGroup;
+			children = (
+				76B4C2832872980A00F61386 /* SMC */,
+				D4E1D85820F5F75A001FA263 /* Network */,
+				D4E1D85B20F5F75A001FA263 /* Filemon */,
+				D4E1D86020F5F75A001FA263 /* ProcessMon */,
+			);
+			path = Monitor;
+			sourceTree = "<group>";
+		};
+		D4E1D85820F5F75A001FA263 /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				D4E1D85920F5F75A001FA263 /* CmcNetSocket.h */,
+				D4E1D85A20F5F75A001FA263 /* CmcNetSocket.m */,
+			);
+			path = Network;
+			sourceTree = "<group>";
+		};
+		D4E1D85B20F5F75A001FA263 /* Filemon */ = {
+			isa = PBXGroup;
+			children = (
+				D4E1D85C20F5F75A001FA263 /* Cmcfsmonitor.h */,
+				D4E1D85D20F5F75A001FA263 /* fsevents.h */,
+				D4E1D85E20F5F75A001FA263 /* Cmcfsdata.c */,
+			);
+			path = Filemon;
+			sourceTree = "<group>";
+		};
+		D4E1D86020F5F75A001FA263 /* ProcessMon */ = {
+			isa = PBXGroup;
+			children = (
+				D4E1D86120F5F75A001FA263 /* CmcProcess.h */,
+				D4E1D86220F5F75A001FA263 /* CmcProcInfo.m */,
+				D4E1D86320F5F75A001FA263 /* CmcProcInfo.h */,
+				D4E1D86420F5F75A001FA263 /* CmcProcess.m */,
+			);
+			path = ProcessMon;
+			sourceTree = "<group>";
+		};
+		D4E1D86A20F5F75A001FA263 /* Pipe */ = {
+			isa = PBXGroup;
+			children = (
+				76B4C29E2872996400F61386 /* McPipeCmdStruct.h */,
+				76B4C29F2872996400F61386 /* McPipeStruct.h */,
+				D4E1D86E20F5F75A001FA263 /* McPipeThread.h */,
+				D4E1D86D20F5F75A001FA263 /* McPipeThread.m */,
+			);
+			path = Pipe;
+			sourceTree = "<group>";
+		};
+		D4E1D87020F5F75A001FA263 /* RemoveTrojan */ = {
+			isa = PBXGroup;
+			children = (
+				D4E1D87120F5F75A001FA263 /* McRemoveTrojan.m */,
+				D4E1D87220F5F75A001FA263 /* McRemoveTrojan.h */,
+			);
+			path = RemoveTrojan;
+			sourceTree = "<group>";
+		};
+		D4E1D87620F5F75A001FA263 /* KextMgr */ = {
+			isa = PBXGroup;
+			children = (
+				D4E1D87720F5F75A001FA263 /* McKextMgr.m */,
+				D4E1D87820F5F75A001FA263 /* McKextMgr.h */,
+				D4E1D87920F5F75A001FA263 /* OSKextError.h */,
+			);
+			path = KextMgr;
+			sourceTree = "<group>";
+		};
+		D4E1D87A20F5F75A001FA263 /* Launchpad */ = {
+			isa = PBXGroup;
+			children = (
+				D4E1D87B20F5F75A001FA263 /* QMLaunchpadClean.h */,
+				D4E1D87C20F5F75A001FA263 /* QMLaunchpadClean.m */,
+				D4E1D87D20F5F75A001FA263 /* fmdb */,
+			);
+			path = Launchpad;
+			sourceTree = "<group>";
+		};
+		D4E1D87D20F5F75A001FA263 /* fmdb */ = {
+			isa = PBXGroup;
+			children = (
+				D4E1D87E20F5F75A001FA263 /* FMDatabase.h */,
+				D4E1D87F20F5F75A001FA263 /* FMDatabaseQueue.m */,
+				D4E1D88020F5F75A001FA263 /* FMResultSet.h */,
+				D4E1D88120F5F75A001FA263 /* FMDatabasePool.h */,
+				D4E1D88220F5F75A001FA263 /* FMDatabaseAdditions.m */,
+				D4E1D88320F5F75A001FA263 /* FMDatabase.m */,
+				D4E1D88420F5F75A001FA263 /* FMDatabaseQueue.h */,
+				D4E1D88520F5F75A001FA263 /* FMDB.h */,
+				D4E1D88620F5F75A001FA263 /* FMDatabaseAdditions.h */,
+				D4E1D88720F5F75A001FA263 /* FMDatabasePool.m */,
+				D4E1D88820F5F75A001FA263 /* FMResultSet.m */,
+			);
+			path = fmdb;
+			sourceTree = "<group>";
+		};
+		D4E1D88920F5F75A001FA263 /* FileAction */ = {
+			isa = PBXGroup;
+			children = (
+				D4E1D88A20F5F75A001FA263 /* CmcFileAction.h */,
+				D4E1D88B20F5F75A001FA263 /* CutBinary.m */,
+				D4E1D88C20F5F75A001FA263 /* CmcFileAction.m */,
+				D4E1D88D20F5F75A001FA263 /* CutBinary.h */,
+			);
+			path = FileAction;
+			sourceTree = "<group>";
+		};
+		D4E1D88E20F5F75A001FA263 /* Install */ = {
+			isa = PBXGroup;
+			children = (
+				76B4C27A287294C000F61386 /* LMDMVersionHelper.h */,
+				76B4C27B287294C000F61386 /* LMDMVersionHelper.m */,
+				D4E1D89020F5F75A001FA263 /* McUninstall.h */,
+				D4E1D88F20F5F75A001FA263 /* McUninstall.m */,
+			);
+			path = Install;
+			sourceTree = "<group>";
+		};
+		F76A3ED78A9C81C8F7B57A70 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				71B3D3D30CBDF7DC92261FBF /* libPods-LemonDaemon.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		2FA7A53B21C3C65C00B93EF5 /* LemonDaemonActivator */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2FA7A54221C3C65C00B93EF5 /* Build configuration list for PBXNativeTarget "LemonDaemonActivator" */;
+			buildPhases = (
+				2FA7A53821C3C65C00B93EF5 /* Sources */,
+				2FA7A53921C3C65C00B93EF5 /* Frameworks */,
+				2FA7A53A21C3C65C00B93EF5 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = LemonDaemonActivator;
+			productName = LemonDaemonActivator;
+			productReference = 2FA7A53C21C3C65C00B93EF5 /* LemonDaemonActivator */;
+			productType = "com.apple.product-type.tool";
+		};
+		D4E1D84B20F5F6D9001FA263 /* LemonDaemon */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D4E1D85320F5F6D9001FA263 /* Build configuration list for PBXNativeTarget "LemonDaemon" */;
+			buildPhases = (
+				3E9727015E82166DA23FE533 /* [CP] Check Pods Manifest.lock */,
+				D4E1D84820F5F6D9001FA263 /* Sources */,
+				D4E1D84920F5F6D9001FA263 /* Frameworks */,
+				D4E1D84A20F5F6D9001FA263 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = LemonDaemon;
+			productName = LemonAgent;
+			productReference = D4E1D84C20F5F6D9001FA263 /* LemonDaemon */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		D4E1D84420F5F6D9001FA263 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				DefaultBuildSystemTypeForWorkspace = Original;
+				LastUpgradeCheck = 0930;
+				ORGANIZATIONNAME = Tencent;
+				TargetAttributes = {
+					2FA7A53B21C3C65C00B93EF5 = {
+						CreatedOnToolsVersion = 10.1;
+					};
+					D4E1D84B20F5F6D9001FA263 = {
+						CreatedOnToolsVersion = 9.3;
+					};
+				};
+			};
+			buildConfigurationList = D4E1D84720F5F6D9001FA263 /* Build configuration list for PBXProject "LemonDaemon" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = D4E1D84320F5F6D9001FA263;
+			productRefGroup = D4E1D84D20F5F6D9001FA263 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				D4E1D84B20F5F6D9001FA263 /* LemonDaemon */,
+				2FA7A53B21C3C65C00B93EF5 /* LemonDaemonActivator */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		3E9727015E82166DA23FE533 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-LemonDaemon-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		2FA7A53821C3C65C00B93EF5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2FA7A53F21C3C65C00B93EF5 /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D4E1D84820F5F6D9001FA263 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BC6842B8225E0E980074B2D2 /* ExecuteCmdHelper.m in Sources */,
+				D4E1D89420F5F7C8001FA263 /* CutBinary.m in Sources */,
+				D4E1D89520F5F7C8001FA263 /* CmcFileAction.m in Sources */,
+				D4E1D89720F5F7C8001FA263 /* McUninstall.m in Sources */,
+				D4E1D89920F5F7C8001FA263 /* McKextMgr.m in Sources */,
+				D4E1D89D20F5F7C8001FA263 /* QMLaunchpadClean.m in Sources */,
+				D4E1D89F20F5F7C8001FA263 /* FMDatabaseQueue.m in Sources */,
+				D4E1D8A220F5F7C8001FA263 /* FMDatabaseAdditions.m in Sources */,
+				D4E1D8A320F5F7C8001FA263 /* FMDatabase.m in Sources */,
+				D4E1D8A720F5F7C8001FA263 /* FMDatabasePool.m in Sources */,
+				BC8254EE22FA7DF100292FA5 /* LMKextManager.m in Sources */,
+				D4B7253F21393F8B003B59B5 /* VideoProcessStat.m in Sources */,
+				76B4C2942872981400F61386 /* McTemperatureInfo.m in Sources */,
+				D4E1D8A820F5F7C8001FA263 /* FMResultSet.m in Sources */,
+				D4E1D8A920F5F7C8001FA263 /* LemonDaemon-Prefix.pch in Sources */,
+				D4E1D8AB20F5F7C8001FA263 /* CmcNetSocket.m in Sources */,
+				76B4C2932872981400F61386 /* CmcAppleSmc2.m in Sources */,
+				D4E1D8AE20F5F7C8001FA263 /* Cmcfsdata.c in Sources */,
+				D485708A21425F720018B0FB /* AudioProcessStat.m in Sources */,
+				D466802221AE8B6500704647 /* LMDaemonXPCService.m in Sources */,
+				D4E1D8B120F5F7C8001FA263 /* CmcProcInfo.m in Sources */,
+				76B4C27C287294C000F61386 /* LMDMVersionHelper.m in Sources */,
+				D4E1D8B320F5F7C8001FA263 /* CmcProcess.m in Sources */,
+				2FA7A4A621C38D8C00B93EF5 /* DaemonStartup.m in Sources */,
+				76B4C2962872981400F61386 /* CmcAppleSmc.m in Sources */,
+				76B4C2982872981400F61386 /* McFanInfo.m in Sources */,
+				D466802921AE91A600704647 /* LMDaemonListenerDelegate.m in Sources */,
+				D466802621AE8D8700704647 /* LMXPCFunction.m in Sources */,
+				D4B14D2821A2E41D001E6064 /* LemonBizManager.m in Sources */,
+				D4B72589213D3013003B59B5 /* OwlManageDaemon.m in Sources */,
+				76B4C2922872981400F61386 /* CmcSmartQuery.m in Sources */,
+				76B4C2972872981400F61386 /* CmcFan.m in Sources */,
+				2FA7A48321C2869200B93EF5 /* LMPlistHelper.m in Sources */,
+				D4E1D8BA20F5F7C8001FA263 /* McPipeThread.m in Sources */,
+				D4E1D8BD20F5F7C8001FA263 /* McRemoveTrojan.m in Sources */,
+				D4E1D85020F5F6D9001FA263 /* main.m in Sources */,
+				7A0221CD2865BED8000F9FD4 /* CmcSystem.c in Sources */,
+				76B4C2952872981400F61386 /* CmcTemperature.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		2FA7A54021C3C65C00B93EF5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "Developer ID Application: Tencent Technology (Shenzhen) Company Limited (88L2Q4487U)";
+				CODE_SIGN_STYLE = Manual;
+				ENABLE_HARDENED_RUNTIME = NO;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				OTHER_CODE_SIGN_FLAGS = "--timestamp=none";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		2FA7A54121C3C65C00B93EF5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "Developer ID Application: Tencent Technology (Shenzhen) Company Limited (88L2Q4487U)";
+				CODE_SIGN_STYLE = Manual;
+				ENABLE_HARDENED_RUNTIME = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_FAST_MATH = YES;
+				OTHER_CODE_SIGN_FLAGS = "--timestamp -o library --deep";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		D4E1D85120F5F6D9001FA263 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_CODE_SIGN_FLAGS = "-o library";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		D4E1D85220F5F6D9001FA263 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_CODE_SIGN_FLAGS = "-o library";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		D4E1D85420F5F6D9001FA263 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8A36FA88920478B5FBB32539 /* Pods-LemonDaemon.debug.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "Developer ID Application: Tencent Technology (Shenzhen) Company Limited (88L2Q4487U)";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_HARDENED_RUNTIME = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_PREFIX_HEADER = "LemonDaemon/LemonDaemon-Prefix.pch";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"'@executable_path/../Frameworks'",
+					"'@loader_path/Frameworks'",
+					"@executable_path/LemonSMCKit",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_CODE_SIGN_FLAGS = "--timestamp=none";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+			};
+			name = Debug;
+		};
+		D4E1D85520F5F6D9001FA263 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 296103B8AF2A800CC0A3A3E4 /* Pods-LemonDaemon.release.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "Developer ID Application: Tencent Technology (Shenzhen) Company Limited (88L2Q4487U)";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_HARDENED_RUNTIME = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_PREFIX_HEADER = "LemonDaemon/LemonDaemon-Prefix.pch";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"'@executable_path/../Frameworks'",
+					"'@loader_path/Frameworks'",
+					"@executable_path/LemonSMCKit",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				OTHER_CODE_SIGN_FLAGS = "--timestamp";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		2FA7A54221C3C65C00B93EF5 /* Build configuration list for PBXNativeTarget "LemonDaemonActivator" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2FA7A54021C3C65C00B93EF5 /* Debug */,
+				2FA7A54121C3C65C00B93EF5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D4E1D84720F5F6D9001FA263 /* Build configuration list for PBXProject "LemonDaemon" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D4E1D85120F5F6D9001FA263 /* Debug */,
+				D4E1D85220F5F6D9001FA263 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D4E1D85320F5F6D9001FA263 /* Build configuration list for PBXNativeTarget "LemonDaemon" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D4E1D85420F5F6D9001FA263 /* Debug */,
+				D4E1D85520F5F6D9001FA263 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = D4E1D84420F5F6D9001FA263 /* Project object */;
+}

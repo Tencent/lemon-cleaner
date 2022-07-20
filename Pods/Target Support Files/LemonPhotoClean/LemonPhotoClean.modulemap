@@ -1,0 +1,6 @@
+framework module LemonPhotoClean {
+  umbrella header "LemonPhotoClean-umbrella.h"
+
+  export *
+  module * { export * }
+}

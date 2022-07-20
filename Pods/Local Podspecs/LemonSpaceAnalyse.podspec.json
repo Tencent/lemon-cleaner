@@ -1,0 +1,43 @@
+{
+  "name": "LemonSpaceAnalyse",
+  "version": "0.1.0",
+  "summary": "A short description of LemonSpaceAnalyse.",
+  "description": "TODO: Add long description of the pod here.",
+  "homepage": "https://github.com/lemon/LemonSpaceAnalyse.git",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "lemon": "lemon@tencent.com"
+  },
+  "source": {
+    "git": "https://github.com/lemon/LemonSpaceAnalyse.git",
+    "tag": "0.1.0"
+  },
+  "platforms": {
+    "osx": "10.11"
+  },
+  "source_files": "LemonSpaceAnalyse/Classes/**/*",
+  "resources": [
+    "LemonSpaceAnalyse/Assets/**/*"
+  ],
+  "public_header_files": "Pod/Classes/McSpaceAnalyseWndController.h",
+  "dependencies": {
+    "AFNetworking": [
+      "3.2.1"
+    ],
+    "QMCoreFunction": [
+
+    ],
+    "Masonry": [
+      "1.1.0"
+    ],
+    "QMUICommon": [
+
+    ],
+    "YMTreeMap": [
+      "1.2.0"
+    ]
+  }
+}

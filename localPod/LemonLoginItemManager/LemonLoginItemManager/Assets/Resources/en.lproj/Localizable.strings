@@ -1,0 +1,31 @@
+/* 
+  Localizable.strings
+  LemonLoginItemManager
+
+  
+  Copyright © 2020 Tencent. All rights reserved.
+*/
+
+"LemonLoginItemManagerViewController_window_title" = "Startup items";
+
+"LemonLoginItemManagerViewController_loading" = "Loading... Please wait a moment";
+"LemonLoginItemManagerViewController_search_tips" = "Search";
+"LemonLoginItemManagerViewController_search_result_tips_begin_label_complex" = "%d results match:";
+"LemonLoginItemManagerViewController_search_result_tips_begin_label_singular" = "%d result matchs:";
+"LemonLoginItemManagerViewController_no_result" = "No matching results";
+"LemonLoginItemManagerViewController_empty" = "No startup items on your Mac.";
+
+"LemonLoginItemManagerViewController_column_name_app" = "Applications";
+"LemonLoginItemManagerViewController_column_name_status" = "Status";
+"LemonLoginItemManagerViewController_column_name_setting" = "Option";
+"LemonLoginItemManagerViewController_column_name_count" = "Items";
+"LemonLoginItemManagerViewController_status_all_enabled" = "All enabled";
+"LemonLoginItemManagerViewController_status_partial_enable" = "Partially enabled";
+"LemonLoginItemManagerViewController_status_all_disabled" = "All disabled";
+"LemonLoginItemManagerViewController_setting_status_enabled" = "Enabled";
+"LemonLoginItemManagerViewController_setting_status_disabled" = "Disabled";
+"LemonLoginItemManagerViewController_item_count" = "%d items";
+
+"LemonLoginItemManagerViewController_item_type_app" = "Login items";
+"LemonLoginItemManagerViewController_item_type_service" = "Launch agents";
+"LemonLoginItemManagerViewController_unknown_app" = "Unknown applicaions";

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="19162" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="19162"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="LMFileMoveIntroduceVC">
+            <connections>
+                <outlet property="descFiled" destination="a70-Eq-5Tb" id="say-vC-Z5w"/>
+                <outlet property="descFiledOne" destination="a70-Eq-5Tb" id="fcQ-Ph-t8B"/>
+                <outlet property="egField" destination="pG6-Pu-EqC" id="6hB-Ru-zQe"/>
+                <outlet property="startButton" destination="mUX-C3-IhX" id="AAy-kq-8S9"/>
+                <outlet property="titleField" destination="yML-03-cym" id="WnL-d2-CM1"/>
+                <outlet property="view" destination="Hz6-mo-xeY" id="0bl-1N-x8E"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <customView id="Hz6-mo-xeY">
+            <rect key="frame" x="0.0" y="0.0" width="780" height="482"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="a70-Eq-5Tb" userLabel="des1">
+                    <rect key="frame" x="56" y="325" width="282" height="50"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="We have launched &quot;File Moving&quot; to help you clean up the files you are not sure to clean." id="Gbx-4g-VpO">
+                        <font key="font" metaFont="system" size="16"/>
+                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="yML-03-cym" userLabel="title">
+                    <rect key="frame" x="56" y="367" width="199" height="45"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <textFieldCell key="cell" lineBreakMode="clipping" title="Hey, 柠檬用户" id="TOd-O6-tiX">
+                        <font key="font" metaFont="system" size="32"/>
+                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pG6-Pu-EqC" userLabel="des3">
+                    <rect key="frame" x="56" y="222" width="364" height="76"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <textFieldCell key="cell" sendsActionOnEndEditing="YES" alignment="left" title="例如聊天过程接收的视频、图片、文档等内容，一键整理转移到外设、云盘等，帮助你更好的释放磁盘空间。" id="yWc-vZ-XxB">
+                        <font key="font" size="14" name="PingFangSC-Regular"/>
+                        <color key="textColor" red="0.59607843137254901" green="0.60392156862745094" blue="0.61960784313725492" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <button focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mUX-C3-IhX" customClass="LMRectangleButton">
+                    <rect key="frame" x="58" y="166" width="66" height="48"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" imagePosition="overlaps" alignment="center" focusRingType="none" imageScaling="proportionallyDown" inset="2" id="4mW-2Y-rkM">
+                        <behavior key="behavior" lightByContents="YES"/>
+                        <font key="font" metaFont="system" size="20"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="startScan:" target="-2" id="sbe-dB-LfK"/>
+                    </connections>
+                </button>
+                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="RPB-gX-dKk">
+                    <rect key="frame" x="295" y="0.0" width="485" height="273"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="file_move_BG" id="PRS-5f-kHP"/>
+                </imageView>
+            </subviews>
+            <point key="canvasLocation" x="139" y="129"/>
+        </customView>
+    </objects>
+    <resources>
+        <image name="file_move_BG" width="524" height="295"/>
+    </resources>
+</document>

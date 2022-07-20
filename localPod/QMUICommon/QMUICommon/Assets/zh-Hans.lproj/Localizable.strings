@@ -1,0 +1,47 @@
+/*
+  Localizable.strings
+  QMUICommon
+
+  
+  Copyright © 2019 Tencent. All rights reserved.
+*/
+"GetFullDiskPopViewController_viewWillAppear_settingBtn_1" = "完成";
+"GetFullDiskPopViewController_viewWillAppear_settingBtn_2" = "前往设置";
+"GetFullDiskPopViewController_currentApplicationChnage_settingBtn_1" = "完成";
+"GetFullDiskPopViewController_currentApplicationChnage_settingBtn_2" = "前往设置";
+"GetFullDiskPopViewController_setupViews_titleLabel_1" = "Lemon不会上传你的文件信息，请放心使用";
+"GetFullDiskPopViewController_setupViews_descLabel_2" = "步骤：【解锁】——【添加】——【应用程序】——【Lemon】";
+"GetFullDiskPremission_Title_10_15" = "10.15系统上，Lemon无权限访问废纸篓、桌面等文件夹，需要开启“完全磁盘访问权限”才能扫描并清理垃圾。";
+"GetFullDiskPremission_Button_OK_10_15" = "前往授权";
+"GetFullDiskPremission_Button_Cancel_10_15" = "取消";
+"GetFilesAndFolders_Title_10_15" = "10.15系统版本，Lemon无权限访问桌面、文稿、下载文件夹，需要开启“文件及文件夹”权限。";
+
+"GetFullDiskPopViewController_setupViews_setupBtn _3" = "前往设置";
+"GetFullDiskPopViewController_setupViews_setupBtn_4" = "完成";
+"GetFullDiskPopViewController_setupViews_cancelButton_5" = "取消";
+
+"LMPermissionGuideViewController_setupViews_okBtn_get_permission" = "前往设置";
+"LMPermissionGuideViewController_setupViews_okBtn_finish" = "确定";
+"LMPermissionGuideViewController_setupViews_cancelButton" = "取消";
+
+"DropViewContinueAdd" = "继续添加";
+
+
+
+"RatingViewController_title" = "觉得Lemon怎么样？";
+"RatingViewController_wellUse" = "还不错，评个分";
+"RatingViewController_hardUse" = "很一般";
+"TucaoTitleViewController_title" = "给我们一些建议让我们做的更好吧！";
+"TucaoTitleViewController_goto" = "前往吐槽";
+"TucaoTitleViewController_later" = "以后";
+
+
+
+"PathSelectViewController_addFolder_button_tips" = "点击或拖拽添加文件夹";
+"PathSelectViewController_addFolder_button_continue_tips" = "继续添加";
+"PathSelectViewController_add_system_photo" = "查找系统照片";
+
+
+"GetFullDiskPopViewController_setupViews_titleLabel_monitor" = "在 macOS 11.4 或以上版本，腾讯柠檬清理需要获取全盘读取权限才可清理软件卸载后的残余文件。";
+
+"GetFullDiskPopViewController_setupViews_descLabel_monitor" = "步骤：【解锁】——【添加】——【应用程序】——开启【Tencent Lemon】和【Tencent Lemon Monitor】";

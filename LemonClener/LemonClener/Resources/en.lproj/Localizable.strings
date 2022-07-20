@@ -1,0 +1,118 @@
+/*
+ Localizable.strings
+ LemonClener
+ 
+ 
+ Copyright © 2019 Tencent. All rights reserved.
+ */
+"LMCleanResultViewController_initViewText_theDayTitleLabel_1" = "Space recovered today";
+"LMCleanResultViewController_initViewText_mainTitle_2" = "Cleaned";
+"LMCleanResultViewController_initViewText_recent7DaysTitle_3" = "Total space recovered in last 7 days: ";
+"LMCleanResultViewController_initViewText_doneButton_4" = "Back";
+"LMCleanResultViewController_setResultViewWithCleanFileSize_fileNumText_1" = "Cleaned：%ld items";
+"LMCleanResultViewController_setResultViewWithCleanFileSize_timeText_2" = "Time consumption：%lds";
+"LMCleanResultViewController_setResultViewWithCleanFileSize_timeText_3" = "Time consumption：1s";
+"LMCleanBigViewController_setViewIsScanningOrCleanning_rubbishSelectTitle_1" = "selected";
+"LMCleanBigViewController_setResultTotalAndSelectSizeLabel_rubbishSizeLabel_1" = "%@ ";
+"LMCleanBigViewController_setResultTotalAndSelectSizeLabel_rubbishSizeLabel_2" = "%@ ";
+"LMCleanBigViewController_setNoResultViewWithScanFileNum_mainText_1" = " Great! Your Mac is clean.";
+"LMCleanBigViewController_setNoResultViewWithScanFileNum_fileNumText_2" = "Items scanned：%ld";
+"LMCleanBigViewController_setNoResultViewWithScanFileNum_timeText_3" = "Time consumption：%lds";
+"LMCleanBigViewController_setRubbishSelectLabelSize_sizeLabelStrring _1" = "%@ cleaning...";
+"LMCleanBigViewController_needDispalyCleaningPage_sizeLabelStrring _1" = "%@ cleaning...";
+"LMCleanBigViewController_scanProgressRefresh_totalLabelString _1" = " %@ ";
+"LMCleanBigViewController_scanProgressRefresh_1553048057_2" = "%@ ";
+"LMCleanBigViewController_updatePathRefresh_rubbishSelectTitle_1" = "Scanning%@";
+"LMCleanBigViewController_updatePathRefresh_rubbishSelectTitle_2" = "Cleaning%@";
+"LMCleanBigViewController_rememberCleanSetting_alert_titleLabelString_1" = "Remember cleanup items next time";
+"LMCleanBigViewController_rememberCleanSetting_alert_titleLabelString_2" = "Cancel cleanup items next time";
+"LMCleanBigViewController_rememberCleanSetting_alert_okButtonString_1" = "OK";
+"LMCleanBigViewController_rememberCleanSetting_alert_cancelButtonString_1" = "Cancel";
+"LMCleanScanViewController_initView_startScanBtn_1" = "Grant access";
+"LMCleanScanViewController_initView_mainViewDescLabel_2" = "Welcome to Lemon Cleaner Lite";
+"LMCleanScanViewController_initView_mainViewDescLabel_3" = "Welcome to Lemon Cleaner";
+"LMCleanScanViewController_initViewText_startScanBtn_1" = "Scan";
+"LMCleanScanViewController_initViewText_mainViewTitleLabel_2" = "Know your Mac better";
+"LMCleanScanViewController_initViewText_noResultTipLabel_3" = "Keep Mac fast and clean";
+"LMCleanScanViewController_initViewText_showBIgBtn_4" = "Details";
+"LMCleanScanViewController_initViewText_guideDescLabel1_5" = "Clik 'Details' to review about what";
+"LMCleanScanViewController_initViewText_guideDescLabel2_6" = "will be cleaned";
+"LMCleanScanViewController_initViewText_scanDetailBtn_7" = "Details";
+"LMCleanScanViewController_setResultCircleImageViewProgress_resultTipLabel_1" = "Scan complete";
+"LMCleanScanViewController_setResultCircleImageViewProgress_sizeString _2" = " %@ selected";
+"LMCleanScanViewController_setResultCircleImageViewProgress_resultBtn_3" = "Select";
+"LMCleanScanViewController_setResultCircleImageViewProgress_resultBtn_4" = "Clean";
+"LMCleanScanViewController_setCleanCategoryLabel_1553048057_1" = "Not selected";
+"LMCleanScanViewController_setCleanCategoryLabel_1553048057_2" = "Removed";
+"LMCleanScanViewController_startSmallClean_alert_1" = "Do you want to save the change and clean your Mac according to it next time?";
+"LMCleanScanViewController_startSmallClean_alert_2" = "If not, the change will not be saved";
+"LMCleanScanViewController_startSmallClean_alert_3" = "No";
+"LMCleanScanViewController_startSmallClean_alert_4" = "Yes";
+"LMCleanScanViewController_reArrangeContentView_scanTipLabel_1" = "Scanning";
+"LMCleanScanViewController_reArrangeContentView_systemRubbishSizeLabel_2" = "Waiting";
+"LMCleanScanViewController_reArrangeContentView_appRubishSizeLabel_3" = "Waiting";
+"LMCleanScanViewController_reArrangeContentView_internetRubbishSizeLabel_4" = "Waiting";
+"LMCleanScanViewController_reArrangeContentView_resultBtn_5" = "Back";
+"LMCleanScanViewController_reArrangeContentView_resultTitleLabel_6" = "Great! Your Mac is clean!";
+"LMCleanScanViewController_reArrangeContentView_scanTipLabel_7" = "Removing";
+"LMCleanScanViewController_reArrangeContentView_resultTipLabel_8" = "Cleaned";
+"LMCleanScanViewController_reArrangeContentView_resultBtn_9" = "Back";
+"LMCleanScanViewController_reArrangeContentView_numString _10" = " %ld items cleaned";
+"LMCleanScanViewController_showOpenPanelGetPermission_openDlg_1" = "Grant access";
+"LMCleanScanViewController_showOpenPanelGetPermission_openDlg_2" = "Lemon needs access to Home directory to clean. Please click 'Grant access'";
+"LMCleanScanViewController_showOpenPanelGetPermission_startScanBtn_3" = "Scan";
+"LMCleanScanViewController_selectCategory_resultTipLabel_1" = "Scan complete";
+"LMCleanScanViewController_selectCategory_resultTipLabel_2" = "Cleaned";
+"LMCleanScanViewController_selectCategory_resultTipLabel_3" = "System junks";
+"LMCleanScanViewController_selectCategory_resultTipLabel_4" = "Application junks";
+"LMCleanScanViewController_selectCategory_resultTipLabel_5" = "Internet junks";
+"LMCleanScanViewController_selectCategory_resultTipLabel_6" = "System junks cleaned";
+"LMCleanScanViewController_selectCategory_resultTipLabel_7" = "Application junks cleaned";
+"LMCleanScanViewController_selectCategory_resultTipLabel_8" = "Internet junks cleaned";
+"LMCleanScanViewController_showFloatViewInfo__floatViewScanning_1" = "Scanning...";
+"LMCleanScanViewController_showFloatViewInfo__floatViewScanning_2" = "Scanning...";
+"LMCleanScanViewController_showFloatViewInfo__floatViewSize_3" = "Not selected";
+"LMCleanScanViewController_showFloatViewInfo__floatViewSize_4" = "Cleaned";
+"LMCleanScanViewController_showFloatViewInfo__floatViewSize_5" = "Not selected";
+"LMCleanScanViewController_showFloatViewInfo__floatViewSize_6" = "Waiting";
+"LMCleanScanViewController_showFloatViewInfo__floatViewSize_7" = "Waiting";
+"QMItemCreateHelper_createSoftAdaptCategorySubItemWithId_1553048057_1" = "Clean %@ caches and logs";
+"QMItemCreateHelper_createActionItemWithId_actionItem_1" = "%@ Caches";
+"QMItemCreateHelper_createActionItemWithId_actionItem_2" = "%@ Logs";
+
+"ActionItemCellView_getSizeStr_ sizeStr _1" = "No junks";
+"ActionItemCellView_setCellData_sizeStr_1" = "No junks";
+"ActionItemCellView_setCellData_sizeLabel_2" = " %@，safe to clean";
+"ActionItemCellView_setCellData_sizeLabel_3" = " %@，check out before cleanup";
+"SubCategoryCellView_setCellData_1553048057_1" = "Grant access";
+"SubCategoryCellView_setCellData_sizeLabel_2" = "Removing...";
+"SubCategoryCellView_setCellData_sizeLabel_3" = "Scanning...";
+"SubCategoryCellView_setCellData_sizeLabel_4" = "No junks";
+"SubCategoryCellView_setCellData_[item tips]_5" = "Select caches and logs by default. Unfold to find more.";
+"SubCategoryCellView_setCellData_sizeLabel_6" = " %@，safe to clean";
+"SubCategoryCellView_setCellData_sizeLabel_7" = " %@，check out before cleanup";
+"CategoryCellView_setCellData_sizeLabel_1" = "Scanning…";
+"CategoryCellView_setCellData_sizeLabel_2" = "Removing…";
+"CategoryCellView_setCellData_sizeLabel_3" = " %@, selected";
+"LMCleanBigViewController_setLabelFont_backBtn_1" = "Back";
+"LMCleanScanViewController_setLightLabelFont_systemRubbishLabel_1" = "System Junks";
+"LMCleanScanViewController_setLightLabelFont_appRubbishLabel_2" = "Application Junks";
+"LMCleanScanViewController_setLightLabelFont_internetRubbishLabel_3" = "Internet Junks";
+"LMCleanBigViewController_initData_removeButton_1" = "Clean";
+"LMCleanBigViewController_initData_doneButton_1" = "Back";
+"ToolCellView_awakeFromNib_experienceBtn_1" = "Learn more";
+"LMCleanBigViewController_initData_introText_1" = "Need more storage space? Try the below features!";
+
+"NO network" = "NO network";
+
+
+// 5.1.0版本
+"Start" = "Start";
+"Hey, dear users" = "Hey, dear users";
+"We have launched \"File Moving\" to help you\nclean up the files you are not sure to clean." = "We have launched \"File Moving\" to help you\nclean up the files you are not sure to clean.";
+
+"Videos, pictures, documents and other content of IM tools, we help you organize and move them to external storage or cloud disks with just one click in order to free up your spaces." = "Videos, pictures, documents and other content of IM tools, we help you organize and move them to external storage or cloud disks with just one click in order to free up your spaces.";
+
+
+"needFileMoveTitle" = "Not sure to clean these apps’ media and docs? Try";
+"File Moving" = "File Moving";

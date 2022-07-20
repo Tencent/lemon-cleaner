@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14490.70"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="LMScanViewController">
+            <connections>
+                <outlet property="cancelBtn" destination="QUX-wA-QLW" id="EKH-i1-YMT"/>
+                <outlet property="currentPath" destination="72X-K9-SgQ" id="sH5-QB-aQI"/>
+                <outlet property="picView" destination="5CA-Zg-soZ" id="7cP-b1-vgu"/>
+                <outlet property="progressIndicator" destination="fbg-cm-nLg" id="uBs-Nf-Vbf"/>
+                <outlet property="scanningTitleTextField" destination="1cY-xH-qVU" id="TkG-fy-3df"/>
+                <outlet property="view" destination="Hz6-mo-xeY" id="0bl-1N-x8E"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <customView id="Hz6-mo-xeY">
+            <rect key="frame" x="0.0" y="0.0" width="780" height="482"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1cY-xH-qVU">
+                    <rect key="frame" x="262" y="123" width="267" height="45"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" state="on" alignment="center" title="正在扫描相似照片" id="TRL-o2-ipL">
+                        <font key="font" metaFont="system" size="32"/>
+                        <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fbg-cm-nLg" customClass="QMProgressView">
+                    <rect key="frame" x="240" y="80" width="300" height="5"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                </customView>
+                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5CA-Zg-soZ">
+                    <rect key="frame" x="300" y="200" width="180" height="180"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="main_logo" id="vtE-RS-4X8"/>
+                </imageView>
+                <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QUX-wA-QLW" customClass="LMBorderButton">
+                    <rect key="frame" x="545" y="134" width="50" height="23"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <buttonCell key="cell" type="square" title="取消" bezelStyle="shadowlessSquare" imagePosition="overlaps" alignment="center" state="on" imageScaling="proportionallyDown" inset="2" id="4hh-7V-WuH">
+                        <behavior key="behavior" lightByContents="YES"/>
+                        <font key="font" metaFont="systemLight" size="12"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="actionCancel:" target="-2" id="lue-Vl-dU1"/>
+                    </connections>
+                </button>
+                <textField verticalHuggingPriority="750" fixedFrame="YES" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="72X-K9-SgQ">
+                    <rect key="frame" x="165" y="98" width="460" height="17"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <textFieldCell key="cell" lineBreakMode="truncatingMiddle" sendsActionOnEndEditing="YES" state="on" alignment="center" placeholderString="正在获取路径中，可能会花一点时间..." id="8Mn-tC-zKO">
+                        <font key="font" metaFont="systemLight" size="12"/>
+                        <color key="textColor" red="0.49411764705882355" green="0.49411764705882355" blue="0.49411764705882355" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+            </subviews>
+            <point key="canvasLocation" x="156" y="207"/>
+        </customView>
+    </objects>
+    <resources>
+        <image name="main_logo" width="180" height="180"/>
+    </resources>
+</document>

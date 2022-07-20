@@ -1,0 +1,5 @@
+Lemon Cleaner uses 2 different licenses :
+- the files in the LemonDaemon module use a GPL v2 license
+- all other files in the Lemon Monitor and Lemon Cleaner use a GPL v3 license, unless explicitly stated otherwise
+
+The files in LemonDaemon module is licensed under the GNU General Public License, version 2 except for the third-party components as listed in the license text for LemonDaemon.

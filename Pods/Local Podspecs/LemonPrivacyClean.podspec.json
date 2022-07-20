@@ -1,0 +1,43 @@
+{
+  "name": "LemonPrivacyClean",
+  "version": "0.1.0",
+  "summary": "A short description of LemonPrivacyClean.",
+  "description": "TODO: Add long description of the pod here.",
+  "homepage": "https://github.com/lemon/LemonPrivacyClean",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "lemon": "lemon@tencent.com"
+  },
+  "source": {
+    "git": "https://github.com/lemon/LemonPrivacyClean.git",
+    "tag": "0.1.0"
+  },
+  "platforms": {
+    "osx": "10.11"
+  },
+  "source_files": "LemonPrivacyClean/Classes/**/*",
+  "resources": [
+    "LemonPrivacyClean/Assets/**/*"
+  ],
+  "public_header_files": "LemonPrivacyClean/Classes/Controller/PrivacyWindowController.h",
+  "dependencies": {
+    "AFNetworking": [
+      "3.2.1"
+    ],
+    "Masonry": [
+      "1.1.0"
+    ],
+    "FMDB": [
+      "2.7.5"
+    ],
+    "QMCoreFunction": [
+
+    ],
+    "QMUICommon": [
+
+    ]
+  }
+}

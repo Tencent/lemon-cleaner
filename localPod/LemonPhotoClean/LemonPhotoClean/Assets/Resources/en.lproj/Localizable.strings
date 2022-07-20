@@ -1,0 +1,66 @@
+/*
+ Localizable.strings
+ LemonPhotoCleaner
+ 
+ 
+ Copyright © 2019 Tencent. All rights reserved.
+ */
+"LMFloderAddViewController_initViewText_titleTextFileld_1" = "Similar photos";
+"LMFloderAddViewController_initViewText_descTextField_2" = "Find similar photos fast and accurately.";
+"LMFloderAddViewController_viewDidLoad_1553065843_1" = "Scan";
+"LMFloderAddViewController_viewDidLoad_1553065843_2" = "Add or drop photos";
+"LMFloderAddViewController_viewDidLoad_ok_3" = "Support photo library";
+"LMFloderAddViewController_addSystemPhotoLibraryPathAction_1553065843_1" = "%@/Pictures/照片图库.photoslibrary";
+"CheckDeleteSystemPhotoViewController_initViewText_picDeleteTip_1" = "Recovered";
+"CheckDeleteSystemPhotoViewController_initViewText_descTitleTextFileld_2" = "Photos in Photo Library cannot be deleted by Lemon Cleaner directly as it requires system\n permissions. They have been moved to the folder.";
+"CheckDeleteSystemPhotoViewController_initViewText_noUseButton_3" = "Cancel";
+"CheckDeleteSystemPhotoViewController_initViewText_noUseButton_cancel" = "Cancel";
+"CheckDeleteSystemPhotoViewController_viewDidLoad_1553065843_1" = "Open folder";
+"CheckDeleteSystemPhotoViewController_button_get_permission" = "Grant access";
+"CheckDeleteSystemPhotoViewController_viewDidLoad_needToCleanBySelf_2" = "Please open folder to delete the %@ similar photos in Photo Library.";
+"LMScanViewController_initViewText_scanningTitleTextField_1" = "Scanning similar photos...";
+"LMScanViewController_initViewText_currentPath_2" = "Searching for the path. It may take some time";
+"LMScanViewController_timerAction_descriptionString _1" = "Searching for the path. It may take some time";
+"LMScanViewController_showResultView_1553065843_1" = "Scan canceled. No similar photos in scanned items.";
+"LMScanViewController_showResultView_1553065843_2" = "No similar photos";
+"LMScanViewController_showResultView_groupName1 _3" = "";
+"LMScanViewController_showResultView_1553065843_4" = "";
+"LMScanViewController_showResultView_1553065843_5" = "";
+"LMScanViewController_showResultView_groupName2 _6" = "";
+"LMScanViewController_showResultView_1553065843_7" = "";
+"LMScanViewController_showResultView_1553065843_8" = "";
+"LMSimilarPhotoResultViewContoller_viewDidLoad_cancelButton_1" = "Back";
+"LMSimilarPhotoResultViewContoller_viewDidLoad_1553065843_2" = "Clean";
+"LMSimilarPhotoResultViewContoller_collectionView_btnSelect_1" = "Smart select";
+"LMSimilarPhotoResultViewContoller_collectionView_btnSelect_2" = "Clear select";
+"LMSimilarPhotoResultViewContoller_updateDescription_textTotalNumDescription_1" = "%ld similar photos";
+"LMSimilarPhotoResultViewContoller_updateDescription_textDesciptionString _2" = " %ld items selected,%@ in total";
+"LMSimilarPhotoResultViewContoller_getDeletePictureSizeDescription_1553065843_1" = " %.2f TB";
+"LMSimilarPhotoResultViewContoller_getDeletePictureSizeDescription_1553065843_2" = " %.2f GB";
+"LMSimilarPhotoResultViewContoller_getDeletePictureSizeDescription_1553065843_3" = " %.2f MB";
+"LMPhotoCleanViewController_viewDidLoad_cleanningTitleTextFileld_1" = "Cleaning...";
+"LMNoSimilarPhotoResultViewController_viewDidLoad_descriptionTextField_1" = "No similar photos";
+"LMNoSimilarPhotoResultViewController_viewDidLoad_1553065843_2" = "Back";
+"LMPhotoCollectionViewHeader_initWithCoder_ok_1" = "Clear selections";
+"SimilatorPhotosPreviewView_addImageNotExistDescriptionTextField_imageNotExistDescriptionTextField_1" = "The photo has been deleted";
+"SimilatorPhotosPreviewView_addConfirmButton_1553065843_1" = "Back";
+"SimilatorPhotosPreviewView_addCancelButton_cancelButton_1" = "Cancel";
+"SimilatorPhotosPreviewView_descriptionView_description _1" = " %lu photos, %d selected";
+"LMPhotoCleanFinishedViewController_viewDidLoad_descriptionTextField_1" = "The photos have been moved to trash";
+"LMPhotoCleanFinishedViewController_viewDidLoad_1553065843_2" = "Back";
+"LMPhotoCleanFinishedViewController_viewDidLoad_description _3" = " Cleanup complete. %ld photos deleted.";
+"ImageGroupCompare_setSectionHeader_1553065843_1" = "yyyy-MM-dd";
+"LMScanViewController_initViewText_cancelBtn_1" = "Cancel";
+"LMFloderAddViewController_alertDialog_content_needPermission" = "Please grant Lemon Cleaner permission to scan the photos in Photo Library.";
+"LMFloderAddViewController_alertDialog_okButton_getPermission" = "Grant access";
+"LMFloderAddViewController_alertDialog_cancelButton" = "cancel";
+"LMFloderAddViewController_accessPhoto_permissionGuide_title" = "On macOS 10.14 or above, Lemon needs permission to scan the items.";
+"LMFloderAddViewController_accessPhoto_permissionGuide_descText" = "Lemon will NEVER or EVER collect your personal information. Please rest assure.";
+"CheckDeleteSystemPhotoViewController_automation_permissionGuide_title" = "On macOS 10.14 or above, Lemon needs permission to remove the items.";
+"CheckDeleteSystemPhotoViewController_automation_permissionGuide_descText" = "Lemon will NEVER or EVER collect your personal information. Please rest assure.";
+"CheckDeleteSystemPhotoViewController_automation_needPermissionTips" = "Please grant Lemon Cleaner permission to clean up";
+"CheckDeleteSystemPhotoViewController_automation_needPermission_extraTips" = "the photos in Photo Library.";
+"CheckDeleteSystemPhotoViewController_operateButton_scanAgain" = "Reflash";
+"CheckDeleteSystemPhotoViewController_cleaning_loadingText" = "Cleaning… Please wait a moment";
+"LMSimilarPhotoResultViewContoller_intelligentSelect_text" = "Smart select";
+

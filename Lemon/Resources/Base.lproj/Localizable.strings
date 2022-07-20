@@ -1,0 +1,80 @@
+/* 
+  Localizable.strings
+  Lemon
+
+  
+  Copyright © 2019 Tencent. All rights reserved.
+*/
+"LEMON_LANGUAGE" = "EN";
+"LMToolViewController_showNotSupportToast_alert_1" = "Yes";
+"LMToolViewController_showNotSupportToast_alert_2" = "Cancel";
+"LMToolViewController_showNotSupportToast_alert_3" = "Similar photos";
+"LMToolViewController_showNotSupportToast_alert_4" = "Tencent Lemon Cleaner does not support Mac OSX 10.10 or below.";
+"PreferenceViewController_setupViews_1553049563_1" = "Detect linked files when uninstalling an application";
+"PreferenceViewController_setupViews_1553049563_2" = "Please add menu bar icon to make it work. If enabled, you will be prompted to clean leftovers when dragging an application to the trash to uninstall.";
+"PreferenceViewController_setupViews_1553049563_3" = "When click close icon";
+"PreferenceViewController_setupViews_1553049563_4" = "Get back to Dock and keep Lemon running";
+"PreferenceViewController_setupViews_1553049563_5" = "Quit Lemon";
+"PreferenceViewController_setupViews_1553049563_6" = "On macOS 10.14 or above, the system shows recent 3 applications in dock \nby default.";
+"PreferenceViewController_setupViews_1553049563_7" = "Change settings";
+"PreferenceViewController_setupViews_tfWindowTitle _8" = "Preferences";
+"PreferenceViewController_setupViews_tfMonitorTitle _9" = "What to show on menu bar";
+"PreferenceViewController_setupViews_1553049563_10" = "Please choose one at least:";
+"PreferenceViewController_setupViews_1553049563_11" = "Memory\n usage";
+"PreferenceViewController_setupViews_1553049563_12" = "Disk\n usage";
+"PreferenceViewController_setupViews_1553049563_13" = "CPU\n temperature";
+"PreferenceViewController_setupViews_1553049563_14" = "Fan\n speed";
+"PreferenceViewController_setupViews_1553049563_15" = "Network\n speed";
+"PreferenceViewController_setupViews_bootMonitorTitle _16" = "Show icons on menu bar on startup";
+"Appdelegate_about_windowAboutTitle_lemon" = "About Lemon Cleaner";
+"Appdelegate_about_windowAboutTitle_lemonlite" = "About Lemon Cleaner";
+"AppDelegate_fetchResearchChannel_notification_1" = "Close";
+"AppDelegate_fetchResearchChannel_notification_2" = "Learn More";
+"RegisterViewController_registerButtonClick_warningLabel_1" = "Connection timed out. Pleae check your network and try again";
+"RegisterViewController_registerButtonClick_warningLabel_2" = "Connection timed out. Pleae check your network and try again";
+"RegisterViewController_registerButtonClick_warningLabel_3" = "Failed to connect to the host.Pleae check your network and try again";
+"RegisterViewController_registerButtonClick_warningLabel_4" = "DNS failed. Please remove DNS caches and change DNS server.";
+"RegisterViewController_setupViews_placeholderAttrStr _1" = "Please enter your activation code";
+"RegisterViewController__WarningRegisterCodeError_1" = "Unknown error. Please check your network and activation code.";
+"RegisterViewController__WarningRegisterCodeFormatInValidate _2" = "Incorrect license code. Please check out and try again";
+"RegisterViewController__WarningNetworkError _3" = "Network error. Please make sure you've connected to network and try again later";
+"RegisterViewController__WarningRegisterCodeMatchingError _4" = "The license code has been used to activate another Mac. Please try again.";
+"LMSplashMenuBarViewController_tabbar_clean" = "FreeUp";
+"LMSplashMenuBarViewController_tabbar_system" = " System";
+"LMSplashMenuBarViewController_menu_title" = "Monitor your system state from Menu bar";
+"LMSplashMenuBarViewController_menu_subtitle" = "Provide a quick look at network speed, RAM usage and easy access to free up";
+"LMSplashMainAppViewController_system_title" = "Full scan and clean your Mac by launching Lemon";
+"LMSplashMainAppViewController_system_subtitle" = "Analyze and clean your disk deeply. Uninstall unused apps completely";
+"PreferenceViewController_setupViews_languageTitle_1" = "Language";
+"PreferenceViewController_setupViews_languageRadioBtnChDesc_1" = "简体中文";
+"PreferenceViewController_setupViews_languageRadioBtnEnDesc_1" = "English";
+"LemonAsMonitorGuideViewController_setupViews_titleLabel_1" = "Do you want to show real time \nnetwork speed on your menu bar?";
+"LemonAsMonitorGuideViewController_setupViews_showString _2" = "Yes";
+"LemonAsMonitorGuideViewController_setupViews_cancelString _3" = "No";
+"LMSplashMainAppViewController_system_register_button" = "Let' go!";
+"LemonAsMonitorGuideViewController_setupViews_titleLabel_1" = "Do you want to enable the menu bar icon?";
+"LemonAsMonitorGuideViewController_setupViews_descLabel_1" = "It shows real-time network speed and works as a shortcut to launch Lemon.";
+"LemonAsMonitorGuideViewController_setupViews_onceTitle_1" = "Show it this time";
+"LemonAsMonitorGuideViewController_setupViews_alwayTitle_1" = "Show it upon startup of my Mac";
+"LemonAsMonitorGuideViewController_setupViews_showString _2" = "Confirm";
+"LemonAsMonitorGuideViewController_setupViews_cancelString _3" = "Cancel";
+"PreferenceASViewController_initView_titleLabel_1" = "Preferences";
+"PreferenceASViewController_initView_statusActionTitle_2" = "Show icons on menu bar on startup";
+"PreferenceASViewController_initView_statusActionDesc_3" = "Display real time network on menu bar at startup.";
+"PreferenceASViewController_startAlertWindow_alert_1" = "Are you sure to prevent the menu bar icon from opening on startup?";
+"PreferenceASViewController_startAlertWindow_alert_2" = "If yes, the icon along with the network speed will quit immediately.";
+"PreferenceASViewController_startAlertWindow_alert_3" = "Cancel";
+"PreferenceASViewController_startAlertWindow_alert_4" = "Yes";
+"PreferenceViewController_startAlertWindow_alert_1" = "Lemon will restart to make the language change come into effect.";
+"PreferenceViewController_startAlertWindow_alert_2" = "You don’t have to reboot the system. It restarts Lemon application.";
+"PreferenceViewController_startAlertWindow_alert_3" = "Cancel";
+"PreferenceViewController_startAlertWindow_alert_4" = "OK";
+"PreferenceASViewController_initView_openActionTitle_1" = "Show menu bar icon";
+"PreferenceASViewController_initView_openActionDesc_1" = "If enabled, you can monitor real time network speed \non menu bar.";
+
+
+"LMToolViewController_initView_moreAppTitle_1" = "Join our community and to be heard";
+"LMMonitorTabController_rightAboutAction_LemonProductName_1" = "Lemon Cleaner";
+"LMMonitorTabController_rightAboutAction_LemonProductName_2" = "Lemon Cleaner Lite";
+
+"Share valuable suggestions" = "Share valuable suggestions";

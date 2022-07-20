@@ -1,0 +1,43 @@
+{
+  "name": "QMUICommon",
+  "version": "0.1.0",
+  "summary": "A short description of QMUICommon.",
+  "description": "TODO: Add long description of the pod here.",
+  "homepage": "https://github.com/lemon/QMUICommon",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "lemon": "lemon@tencent.com"
+  },
+  "source": {
+    "git": "https://github.com/lemon/QMUICommon.git",
+    "tag": "0.1.0"
+  },
+  "platforms": {
+    "osx": "10.10"
+  },
+  "source_files": "QMUICommon/Classes/**/*",
+  "public_header_files": [
+    "QMUICommon/Classes/*.h",
+    "QMUICommon/Classes/**/*.h",
+    "QMUICommon/Classes/**/**/*.h"
+  ],
+  "prefix_header_file": "QMUICommon/Classes/QMUICommon-Prefix.pch",
+  "resources": [
+    "QMUICommon/Assets/QMCheckboxButton/*.png",
+    "QMUICommon/Assets/QMLoadingView/*.png",
+    "QMUICommon/Assets/QMUICommon.xcassets",
+    "QMUICommon/Assets/zh-Hans.lproj/Localizable.strings",
+    "QMUICommon/Assets/en.lproj/Localizable.strings"
+  ],
+  "dependencies": {
+    "QMCoreFunction": [
+
+    ],
+    "Masonry": [
+      "1.1.0"
+    ]
+  }
+}

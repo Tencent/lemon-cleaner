@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14113" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14113"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+        <capability name="system font weights other than Regular or Bold" minToolsVersion="7.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="LMNoSimilarPhotoResultViewController">
+            <connections>
+                <outlet property="descriptionTextField" destination="J1m-14-Ciu" id="J2e-SR-zBC"/>
+                <outlet property="operateButton" destination="RuL-6F-syx" id="py7-ZL-3sf"/>
+                <outlet property="view" destination="Hz6-mo-xeY" id="0bl-1N-x8E"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <customView id="Hz6-mo-xeY">
+            <rect key="frame" x="0.0" y="0.0" width="780" height="482"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="J1m-14-Ciu">
+                    <rect key="frame" x="0.0" y="145" width="780" height="45"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" state="on" alignment="center" title="没有发现相似照片哦！" id="N7o-nH-pzY">
+                        <font key="font" metaFont="system" size="32"/>
+                        <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="RuL-6F-syx" customClass="LMImageButton">
+                    <rect key="frame" x="316" y="77" width="148" height="48"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <buttonCell key="cell" type="square" title="完成" bezelStyle="shadowlessSquare" image="icon_button1_normal" imagePosition="overlaps" alignment="center" state="on" imageScaling="proportionallyDown" inset="2" id="0DV-z8-arA">
+                        <behavior key="behavior" lightByContents="YES"/>
+                        <font key="font" metaFont="systemMedium" size="20"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="actionFinish:" target="-2" id="pUD-5I-YSB"/>
+                    </connections>
+                </button>
+                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KYM-wK-rET">
+                    <rect key="frame" x="300" y="231" width="180" height="180"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="main_logo" id="OH9-s3-Y1z"/>
+                </imageView>
+            </subviews>
+            <point key="canvasLocation" x="62.5" y="151"/>
+        </customView>
+    </objects>
+    <resources>
+        <image name="icon_button1_normal" width="148" height="48"/>
+        <image name="main_logo" width="180" height="180"/>
+    </resources>
+</document>

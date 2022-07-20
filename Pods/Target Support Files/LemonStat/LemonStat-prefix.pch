@@ -1,0 +1,19 @@
+#ifdef __OBJC__
+#import <Cocoa/Cocoa.h>
+#else
+#ifndef FOUNDATION_EXPORT
+#if defined(__cplusplus)
+#define FOUNDATION_EXPORT extern "C"
+#else
+#define FOUNDATION_EXPORT extern
+#endif
+#endif
+#endif
+
+//
+// Prefix header for all source files of the 'statlib' target in the 'statlib' project.
+//
+
+#ifdef __OBJC__
+    #import <Cocoa/Cocoa.h>
+#endif

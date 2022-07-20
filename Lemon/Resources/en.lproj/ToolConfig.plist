@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>McBigFile</key>
+	<dict>
+		<key>toolId</key>
+		<integer>0</integer>
+		<key>toolPicName</key>
+		<string>bigfile</string>
+		<key>className</key>
+		<string>McBigFileWndController</string>
+		<key>toolName</key>
+		<string>Large File</string>
+		<key>toolDesc</key>
+		<string>Find and delete files
+larger than 50MB</string>
+		<key>recommend</key>
+		<true/>
+		<key>reportId</key>
+		<integer>7202</integer>
+	</dict>
+	<key>McDuplicateFile</key>
+	<dict>
+		<key>toolId</key>
+		<integer>1</integer>
+		<key>toolPicName</key>
+		<string>duplidatefile</string>
+		<key>className</key>
+		<string>LMDuplicateWindowController</string>
+		<key>toolName</key>
+		<string>Duplicate File</string>
+		<key>toolDesc</key>
+		<string>Retrieve and delete
+duplicate files</string>
+		<key>recommend</key>
+		<true/>
+		<key>reportId</key>
+		<integer>7203</integer>
+	</dict>
+	<key>McSamePic</key>
+	<dict>
+		<key>toolId</key>
+		<integer>2</integer>
+		<key>toolPicName</key>
+		<string>samephoto</string>
+		<key>className</key>
+		<string>LMPhotoCleanerWndController</string>
+		<key>toolName</key>
+		<string>Similar Photos</string>
+		<key>toolDesc</key>
+		<string>Find and compare
+similar photos</string>
+		<key>recommend</key>
+		<true/>
+		<key>reportId</key>
+		<integer>7204</integer>
+	</dict>
+	<key>McAppUninstaller</key>
+	<dict>
+		<key>toolId</key>
+		<integer>3</integer>
+		<key>toolPicName</key>
+		<string>uninstallapp</string>
+		<key>className</key>
+		<string>McUninstallWindowController</string>
+		<key>toolName</key>
+		<string>App Uninstall</string>
+		<key>toolDesc</key>
+		<string>Remove applications
+and associated files</string>
+		<key>recommend</key>
+		<false/>
+		<key>reportId</key>
+		<integer>7205</integer>
+	</dict>
+	<key>McPrivacyBroswer</key>
+	<dict>
+		<key>toolId</key>
+		<integer>4</integer>
+		<key>toolPicName</key>
+		<string>privacyclean</string>
+		<key>className</key>
+		<string>PrivacyWindowController</string>
+		<key>toolName</key>
+		<string>Privacy Clean</string>
+		<key>toolDesc</key>
+		<string>Wash browser
+tracks</string>
+		<key>recommend</key>
+		<false/>
+		<key>reportId</key>
+		<integer>7206</integer>
+	</dict>
+	<key>McLoginItem</key>
+	<dict>
+		<key>toolId</key>
+		<integer>5</integer>
+		<key>toolPicName</key>
+		<string>loginitem</string>
+		<key>className</key>
+		<string>LMLoginItemManageWindowController</string>
+		<key>toolName</key>
+		<string>Startup Items</string>
+		<key>toolDesc</key>
+		<string>Stop apps or services
+running at startup</string>
+		<key>recommend</key>
+		<false/>
+		<key>reportId</key>
+		<integer>7207</integer>
+	</dict>
+	<key>McPrivacyFile</key>
+	<dict>
+		<key>toolId</key>
+		<integer>7</integer>
+		<key>toolPicName</key>
+		<string>icon_tool_lemon_lab</string>
+		<key>className</key>
+		<string>lemon_lab</string>
+		<key>toolName</key>
+		<string>Lemon Lab</string>
+		<key>toolDesc</key>
+		<string>Discover more free Apps</string>
+		<key>recommend</key>
+		<false/>
+		<key>reportId</key>
+		<integer>7207</integer>
+	</dict>
+	<key>McLemonLab</key>
+	<dict>
+		<key>toolId</key>
+		<integer>6</integer>
+		<key>toolPicName</key>
+		<string>space_icon</string>
+		<key>className</key>
+		<string>McSpaceAnalyseWndController</string>
+		<key>toolName</key>
+		<string>Disk Analyzer</string>
+		<key>toolDesc</key>
+		<string>In-depth analysis of disk
+ space</string>
+		<key>recommend</key>
+		<false/>
+		<key>reportId</key>
+		<integer>7207</integer>
+	</dict>
+</dict>
+</plist>

@@ -1,0 +1,16 @@
+//
+//  Prefix header
+//
+//  The contents of this file are implicitly included at the beginning of every source file.
+//
+
+#ifdef __OBJC__
+    #import <Cocoa/Cocoa.h>
+    #import <QMCoreFunction/QMExtension.h>
+    #import <QMCoreFunction/QMConditionLock.h>
+    #import <QMCoreFunction/QMSafeMutableArray.h>
+    #import <QMCoreFunction/QMSafeMutableDictionary.h>
+
+//#define APPSTORE_VERSION
+
+#endif

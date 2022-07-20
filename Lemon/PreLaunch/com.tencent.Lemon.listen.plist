@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+	<string>com.tencent.Lemon.listen</string>
+	<key>ProgramArguments</key>
+	<array>
+		<string>/Library/Application Support/Lemon/LemonDaemon</string>
+		<string>startup</string>
+	</array>
+	<key>Sockets</key>
+	<dict>
+		<key>sock1</key>
+		<dict>
+        	<key>SockFamily</key>
+			<string>Unix</string>
+			<key>SockPathMode</key>
+			<integer>438</integer>
+			<key>SockPathName</key>
+			<string>/var/run/com.tencent.Lemon.socket</string>
+			<key>SockType</key>
+			<string>Stream</string>
+		</dict>
+	</dict>
+	<key>inetdCompatibility</key>
+	<dict>
+		<key>Wait</key>
+		<false/>
+	</dict>
+</dict>
+</plist>

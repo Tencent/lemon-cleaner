@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14490.70"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner"/>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <customView wantsLayer="YES" id="c22-O7-iKe" customClass="LMPhotoCollectionViewHeader">
+            <rect key="frame" x="0.0" y="0.0" width="598" height="15"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <textField identifier="Title" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="nuF-fL-4Rf">
+                    <rect key="frame" x="33" y="-6" width="200" height="18"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="18" id="Ojo-br-PtA"/>
+                        <constraint firstAttribute="width" constant="196" id="hNm-nU-iix"/>
+                    </constraints>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" state="on" alignment="left" title="2019年10月11日" id="7pM-Vl-Oo7">
+                        <font key="font" metaFont="cellTitle"/>
+                        <color key="textColor" red="0.49411764705882355" green="0.49411764705882355" blue="0.49411764705882355" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="h3t-VP-HF1" customClass="LMCheckboxButton">
+                    <rect key="frame" x="8" y="-7" width="19" height="19"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="15" id="HlE-2H-sQP"/>
+                        <constraint firstAttribute="height" constant="15" id="nAc-fw-p28"/>
+                    </constraints>
+                    <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="left" state="mixed" allowsMixedState="YES" inset="2" id="41I-Ix-XKQ">
+                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                </button>
+            </subviews>
+            <constraints>
+                <constraint firstItem="h3t-VP-HF1" firstAttribute="leading" secondItem="c22-O7-iKe" secondAttribute="leading" constant="10" id="Nge-Ga-yAQ"/>
+                <constraint firstItem="h3t-VP-HF1" firstAttribute="top" secondItem="c22-O7-iKe" secondAttribute="top" constant="5" id="U42-Mk-ERB"/>
+                <constraint firstItem="nuF-fL-4Rf" firstAttribute="centerY" secondItem="h3t-VP-HF1" secondAttribute="centerY" id="XnL-qW-RtS"/>
+                <constraint firstItem="nuF-fL-4Rf" firstAttribute="leading" secondItem="h3t-VP-HF1" secondAttribute="trailing" constant="10" id="kib-8k-FBK"/>
+            </constraints>
+            <connections>
+                <outlet property="checkBtn" destination="h3t-VP-HF1" id="HdY-Hb-Bvy"/>
+                <outlet property="textTitle" destination="nuF-fL-4Rf" id="Ci4-zg-uxn"/>
+            </connections>
+            <point key="canvasLocation" x="198" y="64"/>
+        </customView>
+    </objects>
+</document>

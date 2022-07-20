@@ -1,0 +1,1 @@
+ find $1 -name '*.[Jj][Pp][Ee][Gg]' -or -name '*.[Pp][Nn][Gg]' -or -name '*.[Jj][Pp][Gg]'

@@ -1,0 +1,43 @@
+/* 
+  Localizable.strings
+  LemonSpaceAnalyse
+
+  
+  
+*/
+"Disk Analyzer" = "磁盘空间分析";
+"See disk usage as a visual interactive map" = "深度分析储存情况";
+
+"Visually analyze file occupancy and explore storage conditions" = "可视化分析文件占用，深度探索存储情况";
+
+"Start" = "开始分析";
+
+"Scanning Macintosh HD" = "正在扫描Macintosh HD";
+"Cancel" = "取消";
+
+"Stop the scanning？" = "确认取消扫描？";
+"It will discard all current progress." = "退出后扫描进度将会丢失，下次需重新开始扫描";
+"Stop" = "取消扫描";
+"Continue" = "继续扫描";
+
+"total " = "共 ";
+"avail." = "可用";
+" / total" = " / 共";
+"Visualization Mode" = "可视化模式";
+"folders" = "文件夹";
+"files" = "文件";
+"Start Over" = "重新扫描";
+"Reveal in Finder" = "前往访达中查看";
+
+
+"Do you want to start Over？" = "确认重新扫描？";
+"Current results won't be saved and you will need to run a new full disk scan to get new results." = "本次扫描结果将会清空，再次完成全盘扫描后可获得新的结果";
+"Confirm" = "确定";
+
+"%lu items" = "%lu 项";
+"more items" = "9999+项";
+
+"Disk Analyzer - Avail. %@ / Total %@"  = "磁盘空间分析 - 可用 %@ / 共 %@";
+
+"Grant access" = "允许访问";
+"Please authorize access to Macintosh HD to continue" = "允许访问Macintosh HD，请点击“允许访问”以继续";

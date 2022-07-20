@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="19162" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="19162"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="LMWebWindowController">
+            <connections>
+                <outlet property="mainView" destination="zIE-dN-2ok" id="nj9-07-kZq"/>
+                <outlet property="window" destination="F0z-JX-Cv5" id="gIp-Ho-8D9"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <window allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" animationBehavior="default" titlebarAppearsTransparent="YES" id="F0z-JX-Cv5">
+            <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES"/>
+            <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
+            <rect key="contentRect" x="437" y="240" width="1056" height="668"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="875"/>
+            <value key="minSize" type="size" width="1056" height="668"/>
+            <value key="maxSize" type="size" width="1056" height="668"/>
+            <view key="contentView" id="se5-gp-TjO">
+                <rect key="frame" x="0.0" y="0.0" width="1056" height="668"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <customView translatesAutoresizingMaskIntoConstraints="NO" id="zIE-dN-2ok">
+                        <rect key="frame" x="0.0" y="0.0" width="1056" height="668"/>
+                    </customView>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="zIE-dN-2ok" firstAttribute="leading" secondItem="se5-gp-TjO" secondAttribute="leading" id="DWf-dA-Qzt"/>
+                    <constraint firstAttribute="trailing" secondItem="zIE-dN-2ok" secondAttribute="trailing" id="EDY-gJ-DJ4"/>
+                    <constraint firstAttribute="bottom" secondItem="zIE-dN-2ok" secondAttribute="bottom" id="ZHo-b5-gfU"/>
+                    <constraint firstItem="zIE-dN-2ok" firstAttribute="top" secondItem="se5-gp-TjO" secondAttribute="top" id="vM7-eP-EiT"/>
+                </constraints>
+            </view>
+            <connections>
+                <outlet property="delegate" destination="-2" id="0bl-1N-AYu"/>
+            </connections>
+            <point key="canvasLocation" x="62" y="214.5"/>
+        </window>
+    </objects>
+</document>

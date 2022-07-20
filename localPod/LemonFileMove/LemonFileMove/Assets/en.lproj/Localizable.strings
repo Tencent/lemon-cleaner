@@ -1,0 +1,68 @@
+/* 
+  File.strings
+  Pods
+
+  
+  
+*/
+
+// 5.1.0版本
+"Files Transfer" = "Files Transfer";
+
+"Scanning" = "Scanning";
+
+"Select files to export" = "Select files to export";
+"Total %.1f GB, selected" = "Total %.1f GB, selected";
+"Files created before 90 days ago will be selected by default." = "Files created before 90 days ago will be selected by default.";
+"Next" = "Next";
+"Media from WeCom chat history" = "Media from WeCom chat history";
+"Media from WeChat chat history" = "Media from WeChat chat history";
+"Media from QQ chat history" = "Media from QQ chat history";
+"Documents created before 90 days" = "Documents created before 90 days";
+"Documents created within the past 90 days" = "Documents created within the past 90 days";
+"Images created before 90 days" = "Images created before 90 days";
+"Images created within the past 90 days" = "Images created within the past 90 days";
+"Videos created before 90 days" = "Videos created before 90 days";
+"Videos created within the past 90 days" = "Videos created within the past 90 days";
+"Total %@" = "%@";
+"WeCom" = "WeCom";
+"WeChat" = "WeChat";
+
+// MARK: - 磁盘选择
+
+"Select a folder to save files" = "Select a folder to save files";
+"Back" = "Back";
+"Transfer" = "Transfer";
+"To save space on your Mac you can move your files to external storage directly or after exporting files to the local disk." = "To save space on your Mac you can move your files to external storage directly or after exporting files to the local disk.";
+"Destination：" = "Destination：";
+"External Storage" = "External Storage";
+"Custom" = "Custom";
+"Custom Path" = "Custom";
+"Local" = "Local";
+"Not enough space" = "Not enough space";
+"%@ available" = "%@ available";
+"No external device found" = "No external disk";
+"Please check whether it’s connected" = " ";
+"Ok" = "Ok";
+
+// MARK: - 导出过程
+"Transferring" = "Transferring";
+"Transferred " = "Transferred ";
+"Total " = "Total ";
+" , total " = " , total ";
+"Files can not put back to original folder after transfered." = "Files can not put back to original folder after transfered.";
+" Pending" = " Pending";
+" %@ were not transferred" = " %@ were not transferred";
+" Done" = " Done";
+"Done" = "Done";
+" Free up space" = " Free up space";
+"Move File Done" = "Done" ;
+"Files were moved to %@" = "Files were moved to %@";
+"Show in Finder" = "Show in Finder";
+"Back to Menu" = "Back to Menu";
+"To free up your spaces, please move your files to external storage or cloud disks." = "To free up your spaces, please move your files to external storage or cloud disks.";
+"Some files failed to export, check space and permissions." = "Some files failed to export, check space and permissions.";
+"%@ export failed" = "%@ export failed";
+"Stop the Transfering?" = "Stop the Transfering?";
+"Abort" = "Abort";
+"Continue" = "Continue";

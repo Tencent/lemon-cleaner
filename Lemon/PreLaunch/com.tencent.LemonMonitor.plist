@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Label</key>
+	<string>com.tencent.LemonMonitor</string>
+	<key>LimitLoadToSessionType</key>
+	<string>Aqua</string>
+	<key>WorkingDirectory</key>
+	<string>/Library/Application Support/Lemon/</string>
+	<key>RunAtLoad</key>
+	<true/>
+	<key>ProgramArguments</key>
+	<array>
+		<string>/Applications/Tencent Lemon.app/Contents/Library/LoginItems/LemonMonitor.app/Contents/MacOS/LemonMonitor</string>
+		<string>1023</string>
+	</array>
+</dict>
+</plist>

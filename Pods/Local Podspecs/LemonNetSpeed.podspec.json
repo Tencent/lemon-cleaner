@@ -1,0 +1,43 @@
+{
+  "name": "LemonNetSpeed",
+  "version": "0.1.0",
+  "summary": "A short description of LemonNetSpeed.",
+  "description": "TODO: Add long description of the pod here.",
+  "homepage": "https://github.com/lemon/LemonNetSpeed",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "lemon": "lemon@tencent.com"
+  },
+  "source": {
+    "git": "https://github.com/lemon/LemonNetSpeed.git",
+    "tag": "0.1.0"
+  },
+  "platforms": {
+    "osx": "10.10"
+  },
+  "source_files": "LemonNetSpeed/Classes/**/*",
+  "resources": [
+    "LemonNetSpeed/Assets/**/*"
+  ],
+  "public_header_files": "Pod/Classes/LMNetWndController.h",
+  "dependencies": {
+    "AFNetworking": [
+      "3.2.1"
+    ],
+    "QMCoreFunction": [
+
+    ],
+    "Masonry": [
+      "1.1.0"
+    ],
+    "QMUICommon": [
+
+    ],
+    "LemonStat": [
+
+    ]
+  }
+}

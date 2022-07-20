@@ -1,0 +1,77 @@
+/* 
+  Localizable.strings
+  LemonMonitor
+
+  
+  Copyright © 2019 Tencent. All rights reserved.
+*/
+"LEMON_LANGUAGE" = "中文";
+"LMMonitorTabController_setupLauncherView_launchLemonBtn_1" = "打开 Lemon";
+"LMMonitorTabController_rightAboutAction_windowAbout_1" = "关于腾讯柠檬清理";
+"LMMonitorTabController_rightAboutAction_1553842683_2" = "腾讯公司 版权所有";
+"LMMonitorTabController_rightAboutAction_1553842683_3" = "Copyright©2020年 Tencent. All Rights Reserved";
+"LMMonitorTabController_rightLanguageAction__windowLanguage_1" = "语言设置";
+"LMMonitorTabController_rightQuitAction_alert_1" = "关闭状态栏后，所有功能（包括自动检测卸载残留，摄像头使用提醒等）都不再生效。确定关闭吗？";
+"LMMonitorPoppverController_setupBubble_1553842683_1" = "系统功能";
+"LMCleanViewController_showTrashContainerView_1553842683_1" = "垃圾可清理";
+"LMCleanViewController_showTrashContainerView_1553842683_2" = "清理";
+"LMCleanViewController_showTrashCleaningView_trashTipsText_1" = "正在清理中...";
+"LMCleanViewController_showTrashCleanedView_trashCountText_1" = "垃圾已清理";
+"LMCleanViewController_showTrashCleanedView_NSString_2" = "本次清理 %@";
+"LMCleanViewController_showTrashCleanessView_trashTipsText1_1" = "你的电脑很干净";
+"LMCleanViewController_showTrashCleanessView_trashTipsText2_2" = "继续保持哦";
+"LMCleanViewController_showScaningTrashView_trashTipsText1_1" = "正在扫描中...";
+"LMCleanViewController_showScaningTrashView_trashTipsText2_2" = "请等待一会";
+"LMCleanViewController_showMemContainerView_memTipsText_1" = "内存占用";
+"LMCleanViewController_showMemContainerView_memButtonText _2" = "释放";
+"LMCleanViewController_showMemCleaningView_memTipsText_1" = "正在释放内存";
+"LMCleanViewController_showMemCleanedView_memTipsText1_1" = "已释放";
+"LMCleanViewController_showMemCleanedView_memTipsText2_2" = "内存";
+"LMSystemFeatureViewController_updateVedioState__privacyCameraLabel_1" = "监控中";
+"LMSystemFeatureViewController_updateVedioState__privacyCameraLabel_2" = "未开启";
+"LMSystemFeatureViewController_updateVedioState__privacyCameraLabel_not_work" = "暂不支持11.3系统";
+
+"LMSystemFeatureViewController_updateAudioState__privacyMicrophoneLabel_1" = "监控中";
+"LMSystemFeatureViewController_updateAudioState__privacyMicrophoneLabel_2" = "未开启";
+"LMSystemFeatureViewController_updateAudioState__privacyMicrophoneLabel__not_work" = "正在研究，请等更新";
+"LMSystemFeatureViewController_setupNetworkInfoView_networkCheckButton _1" = "网络测速";
+"LMSystemFeatureViewController_setupOwlViews_cameraLabel_1" = "摄像头隐私保护";
+"LMSystemFeatureViewController_setupOwlViews_microphoneLabel_2" = "麦克风隐私保护";
+"LMSystemFeatureViewController_setupMiscView_cpuText_1" = "CPU温度";
+"LMSystemFeatureViewController_setupMiscView_cpuUsage_label" = "CPU占用";
+"LMSystemFeatureViewController_setupMiscView_fanText_2" = "风扇转速";
+"LMSystemFeatureViewController_setupMiscView_diskInfoLabel_3" = "磁盘占用";
+"LMMemoryCellView_setupCloseInfoViews_closeButton _1" = "关闭";
+"LMMemoryCellView_viewDidLoad_messageLabel_1" = "关闭将直接退出程序，请先保存重要数据";
+
+"LMMonitorPoppverController_setupBubble_1553842944_1" = "清理释放";
+"LMMonitorTabController_onLaunchSettings_item1 _1" = "关于 Lemon Cleaner";
+"LMMonitorTabController_onLaunchSettings_item6 _3" = "偏好设置";
+"LMMonitorTabController_onLaunchSettings_item7 _4" = "退出状态栏";
+"LMMonitorTabController_rightQuitAction_alert_2" = "取消";
+"LMMonitorTabController_rightQuitAction_alert_3" = "退出状态栏";
+"LemonHardwareViewController_initView_diskButton_1" = "硬件详情";
+"LMSystemFeatureViewController_initNetworkData_diskSize_1"="可用";
+"LMSystemFeatureViewController_initNetworkData_diskSize_2"="共";
+"LMMonitorTabController_rightAboutAction_LemonProductName_1" = "腾讯柠檬清理";
+
+"LMTrashSizeCheckWindowController_need_clean_size_tips_content_for_delete_file" = "废纸篓垃圾已占用 %@";
+"LMTrashSizeCheckWindowController_need_clean_size_tips_content_second" = "是否清空废纸篓？";
+"LMTrashSizeCheckWindowController_need_clean_size_tips_content_for_over_threshold" = "废纸篓垃圾已超过 %@";
+
+"LMTrashSizeCheckWindowController_cleaning_tips" = "正在清理，请稍候...";
+"LMTrashSizeCheckWindowController_cleaning_complete_tips" = "已清空废纸篓";
+"LMTrashSizeCheckWindowController_cleaning_next_remind_btn" = "暂不清理";
+"LMTrashSizeCheckWindowController_cleaning_clean_btn" = "清空";
+"LMTrashSizeCheckWindowController_cleaning_cancel_btn" = "取消";
+"LMTrashSizeCheckWindowController_cleaning_complete_btn" = "完成";
+
+"New version detected, you will get better cleaning experience after update" = "检测到当前有新版本，更新以获取更好的清理体验";
+"Current version: %@" = "当前版本: %@";
+"Latest version: %@" = "最新版本: %@";
+"Upgrade" = "立即升级";
+
+"beObscured"     = "状态栏可能被刘海屏遮挡，尝试显示更少的图标或关闭其余不使用的状态栏图标";
+"Cancel_Tip"     = "好的";
+"OK_Tip"         = "偏好设置";
+"NO network"     = "当前无网络";

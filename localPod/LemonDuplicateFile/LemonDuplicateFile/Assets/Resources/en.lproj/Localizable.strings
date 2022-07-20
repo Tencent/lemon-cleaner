@@ -1,0 +1,52 @@
+/*
+ Localizable.strings
+ LemonDuplicateFile
+ 
+ 
+ Copyright © 2019 tencent. All rights reserved.
+ */
+"QMDuplicateFiles_insertHashDictionary_NSString_1" = "It may take some time.Current file: %@. Comparing%@";
+"QMDuplicateFiles_bundleCompare_NSString_1" = "It may take some time. %@(%lu folders). Comparing%@";
+"QMDuplicateFiles_searchDuplicateFiles_NSString_1" = "Comparing the files and it may take a few minutes. Size:%@";
+"LMDuplicateFileNotFoundViewController_initView_button _1" = "Back";
+"LMDuplicateFileNotFoundViewController_viewWillAppear_descLabel_1" = "Scan canceled. No duplicate files in scanned items.";
+"LMDuplicateFileNotFoundViewController_viewWillAppear_descLabel_2" = "No duplicate files.";
+"LMDuplicateResultViewController_setupTitleViews_NSString_1" = "%@ duplicate files";
+"LMDuplicateResultViewController_setupTitleViews_descTextField_2" = "Please select the files you want to remove";
+"LMDuplicateResultViewController_setupTitleViews_backBtn_3" = "Back";
+"LMDuplicateResultViewController_setupTitleViews_1553072147_4" = "Clean";
+"LMDuplicateResultViewController_setupCategoryViews_1553072147_1" = "Other";
+"LMDuplicateResultViewController_setupCategoryViews_previewLabel_2" = "Preview";
+"LMDuplicateResultViewController_setupCategoryViews_autoSelectLabel" = "Smart select";
+"LMDuplicateResultViewController_setupAlertView_alertLabel_1" = "No duplicate file in this type";
+"LMDuplicateResultViewController_calculateTotalDuplicateFilesSize_1553072147_1" = "Not found";
+"LMDuplicateResultViewController_updateTitleMessage_descTextField_1" = "Please select the files you want to remove";
+"LMDuplicateSelectFoldersViewController_initView_1553072147_1" = "Add or drop folders";
+"LMDuplicateSelectFoldersViewController_initView__titleLabel_2" = "Duplicate file";
+"LMDuplicateSelectFoldersViewController_initView__descLabel_3" = "Add folers, retrieve and delete duplicate files";
+"LMDuplicateSelectFoldersViewController_initView_1553072147_4" = "Scan";
+"LMDuplicateCleanResultViewController_initView_cleanTitleLabel_1" = "Cleanup complete";
+"LMDuplicateCleanResultViewController_initView_cleanSubTitleLabel_2" = " The files have been moved to trash";
+"LMDuplicateCleanResultViewController_initView_cleanButton _3" = "Back";
+"LMDuplicateCleanResultViewController_viewWillAppear_NSString_1" = "%@ recovered. The files have been moved to trash";
+"LMDuplicateCleanResultViewController_viewWillAppear_cleanSubTitleLabel_2" = "You have moved duplicate files to trash successfully";
+"LMDuplicateScanViewController_setupTextViews_titleLabel_1" = "Scanning duplicate files...";
+"LMDuplicateScanViewController_setupTextViews_cancelButton_2" = "Cancel";
+"LMDuplicateScanViewController_progressRate_1553072147_1" = "Comparing.";
+"SelectTextView_initWithFrame__textField_1" = "Description";
+"DuplicateRootCellView_updateViewsWithItem_totalString_1" = " %@ items in total, %@";
+"DuplicateRootCellView_updateViewsWithItem_prefixString_2" = " %@ items in total, %@ selected";
+"LMDuplicateResultViewController_setupCategoryViews_1553072448_1" = "All types";
+"LMDuplicateResultViewController_setupCategoryViews_1553072448_2" = "Audio";
+"LMDuplicateResultViewController_setupCategoryViews_1553072448_3" = "Video";
+"LMDuplicateResultViewController_setupCategoryViews_1553072448_4" = "Document";
+"LMDuplicateResultViewController_setupCategoryViews_1553072591_1" = "Picture";
+
+"LMDuplicateResultViewController_updateTitleMessage_prefixStr_2" = "selected ";
+"LMDuplicateResultViewController_updateTitleMessage_NSString_3" = "%@ files, ";
+"LMDuplicateResultViewController_updateTitleMessage_NSString_4" = "%@ folders, ";
+"LMDuplicateResultViewController_updateTitleMessage_NSString_5" = "%@%@%@ %@ in total";
+
+"LMDuplicateScanResultViewController_Alert_message" = "Turn on \“Smart Select\”,  lemon will keep the latest one in each item, and move the other files to the Trash. Are you sure to clean up?";
+"LMDuplicateScanResultViewController_Alert_button_ok" = "Clean";
+"LMDuplicateScanResultViewController_Alert_button_cancel" = "Cancel";

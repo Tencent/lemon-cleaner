@@ -1,0 +1,37 @@
+{
+  "name": "LemonFileMove",
+  "version": "0.1.0",
+  "summary": "A short description of LemonFileMove.",
+  "description": "TODO: Add long description of the pod here.",
+  "homepage": "https://github.com/lemon/LemonFileMove",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "lemon": "lemon@tencent.com"
+  },
+  "source": {
+    "git": "https://github.com/lemon/LemonFileMove.git",
+    "tag": "0.1.0"
+  },
+  "platforms": {
+    "osx": "10.11"
+  },
+  "source_files": "LemonFileMove/Classes/**/*",
+  "resources": [
+    "LemonFileMove/Assets/**/*"
+  ],
+  "public_header_files": "Pod/Classes/LMFileMoveWnController.h",
+  "dependencies": {
+    "QMCoreFunction": [
+
+    ],
+    "Masonry": [
+      "1.1.0"
+    ],
+    "QMUICommon": [
+
+    ]
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "name": "LemonPhotoClean",
+  "version": "0.1.0",
+  "summary": "A short description of LemonPhotoClean.",
+  "description": "TODO: Add long description of the pod here.",
+  "homepage": "https://github.com/lemon/LemonPhotoClean",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "lemon": "lemon@tencent.com"
+  },
+  "source": {
+    "git": "https://github.com/lemon/LemonPhotoClean.git",
+    "tag": "0.1.0"
+  },
+  "platforms": {
+    "osx": "10.11"
+  },
+  "source_files": "LemonPhotoClean/Classes/**/*.{h,m}",
+  "public_header_files": "LemonPhotoClean/Classes/Controller/LMPhotoCleanerWndController.h",
+  "resources": [
+    "LemonPhotoClean/Assets/**/*"
+  ],
+  "dependencies": {
+    "AFNetworking": [
+      "3.2.1"
+    ],
+    "Masonry": [
+      "1.1.0"
+    ],
+    "FMDB": [
+      "2.7.5"
+    ],
+    "QMUICommon": [
+
+    ],
+    "QMCoreFunction": [
+
+    ],
+    "LemonStat": [
+
+    ]
+  }
+}

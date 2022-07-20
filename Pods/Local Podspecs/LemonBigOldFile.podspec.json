@@ -1,0 +1,40 @@
+{
+  "name": "LemonBigOldFile",
+  "version": "0.1.0",
+  "summary": "A short description of LemonBigOldFile.",
+  "description": "TODO: Add long description of the pod here.",
+  "homepage": "https://github.com/lemon/LemonBigOldFile",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "lemon": "lemon@tencent.com"
+  },
+  "source": {
+    "git": "https://github.com/lemon/LemonBigOldFile.git",
+    "tag": "0.1.0"
+  },
+  "platforms": {
+    "osx": "10.11"
+  },
+  "source_files": "LemonBigOldFile/Classes/**/*",
+  "resources": [
+    "LemonBigOldFile/Assets/**/*"
+  ],
+  "dependencies": {
+    "AFNetworking": [
+      "3.2.1"
+    ],
+    "QMCoreFunction": [
+
+    ],
+    "Masonry": [
+      "1.1.0"
+    ],
+    "QMUICommon": [
+
+    ]
+  },
+  "public_header_files": "LemonBigOldFile/Classes/Controller/McBigFileWndController.h"
+}

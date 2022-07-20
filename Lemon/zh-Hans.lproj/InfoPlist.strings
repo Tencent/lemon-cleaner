@@ -1,0 +1,10 @@
+/* 
+  InfoPlist.strings
+  Lemon
+
+  
+  Copyright © 2019 Tencent. All rights reserved.
+*/
+"NSAppleEventsUsageDescription" = "Lemon没有权限清理系统相册的照片，会把扫描出的相似照片放在一个文件夹里以便查看清理，因此需要此权限创建文件夹。该权限仅用于本地分析扫描，不作其它用途。";
+"NSPhotoLibraryUsageDescription" = "Lemon没有权限扫描系统相册，请点击“好”授权以正常显示扫描结果。";
+

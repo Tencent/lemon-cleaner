@@ -1,0 +1,21 @@
+//
+//  LemonNetSpeed-Prefix.pch
+//  LemonNetSpeed
+//
+//  
+//  Copyright © 2019年 tencent. All rights reserved.
+//
+
+#ifndef LemonNetSpeed_Prefix_pch
+#define LemonNetSpeed_Prefix_pch
+
+// Include any system framework and library headers here that should be included in all compilation units.
+// You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
+
+#import <Cocoa/Cocoa.h>
+#import <QMCoreFunction/QMExtension.h>
+#import <QMCoreFunction/QMConditionLock.h>
+#import <QMCoreFunction/QMSafeMutableArray.h>
+#import <QMCoreFunction/QMSafeMutableDictionary.h>
+
+#endif /* LemonNetSpeed_Prefix_pch */

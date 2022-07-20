@@ -1,0 +1,49 @@
+{
+  "name": "LemonUninstaller",
+  "version": "0.1.0",
+  "summary": "A short description of LemonUninstaller.",
+  "description": "TODO: Add long description of the pod here.",
+  "homepage": "https://github.com/lemon/LemonUninstaller",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "lemon": "lemon@tencent.com"
+  },
+  "source": {
+    "git": "https://github.com/lemon/LemonUninstaller.git",
+    "tag": "0.1.0"
+  },
+  "platforms": {
+    "osx": "10.11"
+  },
+  "source_files": "LemonUninstaller/Classes/**/*",
+  "resources": [
+    "LemonUninstaller/Assets/**/*"
+  ],
+  "public_header_files": [
+    "LemonUninstaller/Classes/Controller/McUninstallWindowController.h",
+    "LemonUninstaller/Classes/TrashWatch/AppTrashDel.h"
+  ],
+  "dependencies": {
+    "AFNetworking": [
+      "3.2.1"
+    ],
+    "Masonry": [
+      "1.1.0"
+    ],
+    "FMDB": [
+      "2.7.5"
+    ],
+    "QMCoreFunction": [
+
+    ],
+    "QMUICommon": [
+
+    ],
+    "LemonStat": [
+
+    ]
+  }
+}

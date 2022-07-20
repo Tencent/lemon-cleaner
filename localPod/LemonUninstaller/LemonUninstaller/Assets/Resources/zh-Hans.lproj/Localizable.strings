@@ -1,0 +1,83 @@
+/* 
+  Localizable.strings
+  LemonUninstaller
+
+  
+  Copyright © 2019 Tencent. All rights reserved.
+*/
+"QMSoftwareHelp_dateDistance_showString _1" = "7天内使用过";
+"QMSoftwareHelp_dateDistance_1553153166_2" = "不常用";
+"QMSoftwareHelp_dateDistance_1553153166_3" = "不常用";
+"QMSoftwareHelp_dateDistance_1553153166_4" = "三个月内使用过";
+"QMSoftwareHelp_dateDistance_1553153166_5" = "一个月内使用过";
+"QMSoftwareHelp_downloadTime_NSString_1" = "还剩%.0f秒钟";
+"QMSoftwareHelp_downloadTime_NSString_2" = "还剩%.0f分钟";
+"QMSoftwareHelp_downloadTime_NSString_3" = "还剩%.0f小时";
+"QMSoftwareHelp_downloadTime_1553153166_4" = "超过24小时";
+"McUninstallViewController_initViewText_windowTitle_1" = "应用卸载";
+"McUninstallViewController_initViewText_headerButtonName_2" = "名称";
+"McUninstallViewController_initViewText_headerButtonSize_3" = "大小";
+"McUninstallViewController_initViewText_headerButtonLastOpen_4" = "上次打开时间";
+"McUninstallViewController_initViewText_searchField_5" = "搜索";
+"McUninstallViewController_initViewText_loadingText_6" = "加载中，请耐心等待...";
+"McUninstallViewController_initViewText_noAppText_7" = "暂未发现要卸载的程序";
+"McUninstallViewController_tableView_1553153166_1" = "yyyy年MM月dd日";
+"McUninstallViewController_tableView_lastOpen_2" = "安装后从未打开";
+"McUninstallViewController_showIsKillingAppAlert_alert_1" = "取消";
+"McUninstallViewController_showIsKillingAppAlert_alert_2" = "强制退出";
+"McUninstallViewController_showIsKillingAppAlert_NSString_3" = "%@ 正在运行中，是否要强制退出？";
+"McUninstallViewController_showIsKillingAppAlert_alert_4" = "强制退出可能会导致正在编辑的数据丢失";
+"McUninstallDetailViewController_initViewText_lastUsed_1" = "一个月内未使用";
+"McUninstallDetailViewController_initViewText_selectAll_2" = "全选";
+"McUninstallDetailViewController_initViewText_cancelBtn_3" = "返回";
+"McUninstallDetailViewController_initViewText_okBtn_4" = "确认删除";
+"LMFileItem_getLMFileTypeName_1553153166_1" = "程序文件";
+"LMFileItem_getLMFileTypeName_1553153166_2" = "支持文件";
+"LMFileItem_getLMFileTypeName_1553153166_3" = "缓存文件";
+"LMFileItem_getLMFileTypeName_1553153166_4" = "设置文件";
+"LMFileItem_getLMFileTypeName_1553153166_5" = "程序状态文件";
+"LMFileItem_getLMFileTypeName_1553153166_6" = "崩溃日志";
+"LMFileItem_getLMFileTypeName_1553153166_7" = "程序日志";
+"LMFileItem_getLMFileTypeName_1553153166_8" = "沙盒文件";
+"LMFileItem_getLMFileTypeName_1553153166_9" = "守护进程项";
+"LMFileItem_getLMFileTypeName_1553153166_10" = "登录项";
+"LMFileItem_getLMFileTypeName_1553153166_11" = "内核扩展";
+"LMFileItem_getLMFileTypeName_1553153166_12" = "内核扩展";
+"LMFileItem_getLMFileTypeName_1553153166_13" = "运行程序";
+"LMFileItem_getLMFileTypeName_1553153166_14" = "文件系统";
+"LMFileItem_getLMFileTypeName_1553153166_15" = "偏好设置面板";
+
+"LMFileItem_getLMFileTypeName_1553153166_99" = "其他文件（该目录下的文件会被移入废纸篓）";
+
+
+"McTableCellView_awakeFromNib_btnRemove_1" = "卸载详情";
+
+
+"McUninstallSelectedViewController_refreshText_titleString_1" = "%@残留%@个相关文件,强力卸载可腾出%@空间.";
+"McUninstallWindowController_alertSetup_alertTitleView_1" = "你是否需要清除软件残留?";
+"McUninstallWindowController_alertSetup_1553842683_2" = "\"%@\" 被移到废纸篓中,Lemon检测到还有%@残留文件,你需要强力卸载吗?";
+"McUninstallWindowController_beginDelProgress_progressTitleView_1" = "正在卸载,请稍候...";
+"McUninstallWindowController_beginDelProgress_sucessTitle _2" = "清除卸载残留文件完成,帮您腾出%@磁盘空间.";
+
+"McUninstallWindowController_open_uninstall_trash_check_tips" = "Lemon清理支持拖动应用到废纸篓卸载时，自动检测并清理残留文件。要试试吗？";
+
+"McUninstallWindowController_open_uninstall_trash_check_sub_tips" = "macOS 10.15系统，需要授权Lemon废纸篓访问权限，点击“前往授权”以开启。";
+
+"McUninstallWindowController_open_minotor_and_uninstall_trash_check_sub_tips" = "mac OS 10.15系统，需要开启状态栏并且授权Lemon废纸篓访问权限，点击“开启并授权”。";
+
+"McUninstallWindowController_open_minotor_and_uninstall_trash_check_btn_title" = "开启并授权";
+
+
+
+"ButtonSelectAll" = "全选";
+"ButtonCancel" = "取消";
+"ButtonDelete" = "删除";
+"ButtonUninstall" = "卸载";
+"ButtonOK" = "完成";
+
+"String_UnKnown" = "未知";
+
+"McUninstallWindowController_monitor_full_disk_access_guide_window_title" = "Lemon不会上传你的文件信息，请放心使用";
+
+"McUninstallWindowController_monitor_full_disk_access_guide_window_desc" = "步骤：【解锁】——【添加】——【应用程序】——【Lemon】";
+

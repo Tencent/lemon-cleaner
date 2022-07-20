@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14868" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14868"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="LMBigMainViewController">
+            <connections>
+                <outlet property="cancelBtn" destination="D3s-7t-IxO" id="BcZ-gO-WIv"/>
+                <outlet property="mainVIewTitleLabel" destination="bSs-Fc-bQu" id="r1K-Lx-G1R"/>
+                <outlet property="mainViewBtn" destination="XqO-U7-ttP" id="MaD-bP-DYf"/>
+                <outlet property="mainViewDescLabel" destination="lYu-ZA-DtJ" id="ciG-Sq-Xde"/>
+                <outlet property="noResultDescLabel" destination="Qf8-xm-ihE" id="lTH-tc-pwd"/>
+                <outlet property="noResultTitleLabel" destination="NOG-Dv-oZS" id="gyS-w8-Na4"/>
+                <outlet property="noResultView" destination="q9E-O2-iYA" id="ZbC-6f-mrW"/>
+                <outlet property="picView" destination="4Rj-qq-jfY" id="uPq-4b-JJi"/>
+                <outlet property="scanDoneBtn" destination="Txv-RR-3bf" id="dkh-cT-lVh"/>
+                <outlet property="scanPathLabel" destination="SRd-To-tWe" id="vFF-3H-WcP"/>
+                <outlet property="scanProgressView" destination="Yyk-S5-rPw" id="I9B-JO-i8r"/>
+                <outlet property="scanTitleLabel" destination="uI0-Ld-peu" id="JUO-Yc-DnS"/>
+                <outlet property="scanView" destination="9fU-gM-veo" id="Kpk-bI-a8X"/>
+                <outlet property="startView" destination="tWz-tC-L8u" id="JWC-dD-Tre"/>
+                <outlet property="view" destination="Hz6-mo-xeY" id="0bl-1N-x8E"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <customView id="Hz6-mo-xeY">
+            <rect key="frame" x="0.0" y="0.0" width="780" height="482"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tWz-tC-L8u" userLabel="Start View">
+                    <rect key="frame" x="0.0" y="0.0" width="780" height="482"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <subviews>
+                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bSs-Fc-bQu">
+                            <rect key="frame" x="72" y="338" width="364" height="39"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="大文件清理" id="dbe-or-88x">
+                                <font key="font" metaFont="system" size="32"/>
+                                <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                            </textFieldCell>
+                        </textField>
+                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="lYu-ZA-DtJ">
+                            <rect key="frame" x="72" y="311" width="364" height="20"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="查找很久未使用或大型的文件，释放磁盘空间" id="OPp-sk-3NQ">
+                                <font key="font" metaFont="system" size="16"/>
+                                <color key="textColor" red="0.49411764705882355" green="0.49411764705882355" blue="0.49411764705882355" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                            </textFieldCell>
+                        </textField>
+                        <button focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="XqO-U7-ttP" customClass="LMRectangleButton">
+                            <rect key="frame" x="72" y="201" width="148" height="48"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                            <buttonCell key="cell" type="square" title="开始扫描" bezelStyle="shadowlessSquare" imagePosition="overlaps" alignment="center" focusRingType="none" imageScaling="proportionallyDown" inset="2" id="z33-Xh-7hk">
+                                <behavior key="behavior" lightByContents="YES"/>
+                                <font key="font" metaFont="system" size="20"/>
+                            </buttonCell>
+                            <connections>
+                                <action selector="startScanAction:" target="-2" id="fva-h6-iWq"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                </customView>
+            </subviews>
+            <point key="canvasLocation" x="211" y="78"/>
+        </customView>
+        <customView id="9fU-gM-veo" userLabel="Scan View">
+            <rect key="frame" x="0.0" y="0.0" width="780" height="482"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4Rj-qq-jfY">
+                    <rect key="frame" x="300" y="200" width="180" height="180"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="big_file_icon" id="dTZ-kW-LRP"/>
+                </imageView>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="uI0-Ld-peu">
+                    <rect key="frame" x="274" y="128" width="231" height="39"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="正在扫描大文件" id="FnV-9o-0pi">
+                        <font key="font" metaFont="system" size="32"/>
+                        <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="D3s-7t-IxO" customClass="LMBorderButton">
+                    <rect key="frame" x="520" y="135" width="60" height="24"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <buttonCell key="cell" type="square" title="取消" bezelStyle="shadowlessSquare" imagePosition="overlaps" alignment="center" state="on" imageScaling="proportionallyDown" inset="2" id="sft-DR-wPm">
+                        <behavior key="behavior" lightByContents="YES"/>
+                        <font key="font" metaFont="cellTitle"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="cancelScanAction:" target="-2" id="9FM-B6-OuU"/>
+                    </connections>
+                </button>
+                <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="SRd-To-tWe" userLabel="Path Text Field">
+                    <rect key="frame" x="240" y="96" width="300" height="17"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <textFieldCell key="cell" lineBreakMode="truncatingMiddle" sendsActionOnEndEditing="YES" state="on" alignment="center" title="scanning file path" id="I7h-DZ-2RR">
+                        <font key="font" metaFont="cellTitle"/>
+                        <color key="textColor" red="0.49411764705882355" green="0.49411764705882355" blue="0.49411764705882355" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Yyk-S5-rPw" customClass="QMProgressView">
+                    <rect key="frame" x="240" y="77" width="300" height="5"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                </customView>
+            </subviews>
+            <point key="canvasLocation" x="211" y="593"/>
+        </customView>
+        <customView id="q9E-O2-iYA" userLabel="No Result View">
+            <rect key="frame" x="0.0" y="0.0" width="780" height="482"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jh4-pt-SeK">
+                    <rect key="frame" x="300" y="211" width="180" height="180"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="big_file_icon" id="2sk-G4-G8H"/>
+                </imageView>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="NOG-Dv-oZS">
+                    <rect key="frame" x="18" y="156" width="744" height="39"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="已扫描文件中没有发现大文件" id="pah-iF-Rv9">
+                        <font key="font" metaFont="system" size="32"/>
+                        <color key="textColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Qf8-xm-ihE">
+                    <rect key="frame" x="73" y="131" width="599" height="18"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="大文件只扫描 50 MB 以上的文件噢" id="SOt-6A-lUf">
+                        <font key="font" metaFont="system" size="14"/>
+                        <color key="textColor" red="0.49411764705882355" green="0.49411764705882355" blue="0.49411764705882355" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <button focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Txv-RR-3bf" userLabel="Clean Button" customClass="LMRectangleButton">
+                    <rect key="frame" x="316" y="58" width="148" height="48"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <buttonCell key="cell" type="square" title="完成" bezelStyle="shadowlessSquare" imagePosition="overlaps" alignment="center" focusRingType="none" imageScaling="proportionallyDown" inset="2" id="ZpH-Zw-EGN">
+                        <behavior key="behavior" lightByContents="YES"/>
+                        <font key="font" metaFont="system" size="20"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="doneAction:" target="-2" id="P9m-CL-cLI"/>
+                    </connections>
+                </button>
+            </subviews>
+            <point key="canvasLocation" x="-27" y="484"/>
+        </customView>
+    </objects>
+    <resources>
+        <image name="big_file_icon" width="180" height="180"/>
+    </resources>
+</document>

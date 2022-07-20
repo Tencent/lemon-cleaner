@@ -1,0 +1,53 @@
+/* 
+  Localizable.strings
+  LemonPrivacyClean
+
+  
+  Copyright © 2019 tencent. All rights reserved.
+*/
+"RunningAppPopViewController_setupViews_killAllButton _1" = "全部退出";
+"RunningAppPopViewController_setupViews_cancelButton_2" = "取消";
+"RunningAppPopViewController_updateLabel_NSString_1" = "%li 款浏览器正在运行中,\n退出当前的浏览器开始清理";
+"PrivacyCleanResultViewController_setupViews_cleanTitleLabel_1" = "清理完成";
+"PrivacyCleanResultViewController_setupViews_cleanSubTitleLabel_2" = " 文件已移到废纸篓";
+"PrivacyCleanResultViewController_setupViews_cleanButton _3" = "完成";
+"PrivacyCleanResultViewController_viewWillAppear_NSString_1" = "%@ 条上网痕迹已成功清理";
+"PrivacyCleanResultViewController_viewWillAppear_cleanSubTitleLabel_2" = "已成功清理上网痕迹";
+"PrivacyStartViewController_setupViews_titleView_1" = "浏览器隐私清理";
+"PrivacyStartViewController_setupViews_subTitleView_2" = "清理浏览器中保存的敏感或隐私信息";
+"PrivacyStartViewController_setupViews_startScanButton _3" = "开始扫描";
+"PrivacyScanViewController_setupTextViews_titleLabel_1" = "正在扫描浏览器隐私痕迹";
+"PrivacyScanViewController_setupTextViews_titleLabel_2" = "正在清理浏览器隐私痕迹";
+"PrivacyResultViewController_setupTitleView_cleanButton _1" = "立即清理";
+"PrivacyResultViewController_updateTitleView_NSString_1" = "未选择清理隐私数据";
+"PrivacyResultViewController_updateTitleView_NSString_2" = "共选择清理 %ld 条隐私数据";
+"FirefoxPrivacyManager__1553135349_1" = "Nothing found!!";
+"PrivacyData_calculateSubItemsTotalNum_1553135349_1" = "浏览历史";
+"PrivacyData_calculateSubItemsTotalNum_1553135349_2" = "下载历史";
+"PrivacyData_calculateSubItemsTotalNum_1553135349_3" = "本地存储";
+"PrivacyData_calculateSubItemsTotalNum_1553135349_4" = "存储的密码";
+"PrivacyData_calculateSubItemsTotalNum_1553135349_5" = "自动填充项";
+"PrivacyData_calculateSubItemsTotalNum_1553135349_6" = "网站为了辨别用户身份而存储在本地的数据，删除后个人行为信息不会被网站追踪";
+"PrivacyData_calculateSubItemsTotalNum_1553135349_7" = "访问的历史记录，如果之后不会用到或者出于隐私考虑可以删除";
+"PrivacyData_calculateSubItemsTotalNum_1553135349_8" = "使用浏览器进行下载的历史记录，时间较久或者以后不会用到的可以删除";
+"PrivacyData_calculateSubItemsTotalNum_1553135349_9" = "存储特定用户会话所需的属性及配置信息，可以删除";
+"PrivacyData_calculateSubItemsTotalNum_1553135349_10" = "浏览器保存的登录过的账号密码，删除后下次登录需要手动输入密码";
+"PrivacyData_calculateSubItemsTotalNum_1553135349_11" = "本地缓存记录，存储插件保存的数据，谨慎删除";
+"PrivacyData_calculateSubItemsTotalNum_1553135349_12" = "在输入时浏览器会根据历史记录自动填充，可以删除";
+"PrivacyData_calculateSubItemsTotalNum_1553135349_13" = "unKnown, 未知项";
+"PrivacyCategoryTableCellView_updateViewByItem_NSString_1" = "共 %li 项";
+"PrivacyCategoryTableCellView_updateViewByItem_NSString_2" = "已选择 ";
+"PrivacyCategoryTableCellView_updateViewByItem_NSString_3" = "%@%@ 项";
+"PrivacyAppTableCellView_updateViewBy_NSString_1" = "共 %li 项";
+"PrivacyAppTableCellView_updateViewBy_NSString_2" = "共 %li 项, 选择 ";
+"PrivacyAppTableCellView_updateViewBy_NSString_3" = "%@%@ 项";
+"PrivacyAppTableCellView_updateViewBy_1553135349_4" = "无记录,无需处理";
+"PrivacyAppTableCellView_updateViewBy_1553135349_5" = "获取扫描权限";
+"PrivacyAppTableCellView_refreshAfterFullDiskAccessSetting_refreshLabel_1" = "已获取权限,需重新扫描";
+"PrivacyItemTableCellView_updateViewBy_NSString_1" = "%li 项相关内容";
+"GETAccessAuthority" = "获取权限";
+"GETAllItemsAccessAuthority" = "获取全部清理权限";
+
+"DefaultAccount" = "默认账户";
+"Account" = "账户";
+

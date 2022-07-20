@@ -1,0 +1,81 @@
+/*
+ Localizable.strings
+ LemonUninstaller
+ 
+ 
+ Copyright © 2019 Tencent. All rights reserved.
+ */
+"QMSoftwareHelp_dateDistance_showString _1" = "You've used it in 7 days";
+"QMSoftwareHelp_dateDistance_1553153166_2" = "Seldom used";
+"QMSoftwareHelp_dateDistance_1553153166_3" = "Seldom used";
+"QMSoftwareHelp_dateDistance_1553153166_4" = "You've used it in 3 months";
+"QMSoftwareHelp_dateDistance_1553153166_5" = "You've used it in 1 month";
+"QMSoftwareHelp_downloadTime_NSString_1" = "%.0f seconds left";
+"QMSoftwareHelp_downloadTime_NSString_2" = "%.0f minutes left";
+"QMSoftwareHelp_downloadTime_NSString_3" = "%.0f hours left";
+"QMSoftwareHelp_downloadTime_1553153166_4" = "More than 24 hours";
+"McUninstallViewController_initViewText_windowTitle_1" = "App uninstall";
+"McUninstallViewController_initViewText_headerButtonName_2" = "Name";
+"McUninstallViewController_initViewText_headerButtonSize_3" = "Size";
+"McUninstallViewController_initViewText_headerButtonLastOpen_4" = "Last time to use";
+"McUninstallViewController_initViewText_searchField_5" = "Search";
+"McUninstallViewController_initViewText_loadingText_6" = "Loading... Please wait a moment";
+"McUninstallViewController_initViewText_noAppText_7" = "Not found the application to uninstall";
+"McUninstallViewController_tableView_1553153166_1" = "yyyy-MM-dd";
+"McUninstallViewController_tableView_lastOpen_2" = "Unused";
+"McUninstallViewController_showIsKillingAppAlert_alert_1" = "Cancel";
+"McUninstallViewController_showIsKillingAppAlert_alert_2" = "Force quit";
+"McUninstallViewController_showIsKillingAppAlert_NSString_3" = "%@ is running. Are you sure to force quit it?";
+"McUninstallViewController_showIsKillingAppAlert_alert_4" = "You may lose unsaved data if force quit.";
+"McUninstallDetailViewController_initViewText_lastUsed_1" = "You have not opened it in the last 30 days.";
+"McUninstallDetailViewController_initViewText_selectAll_2" = "Select all";
+"McUninstallDetailViewController_initViewText_cancelBtn_3" = "Back";
+"McUninstallDetailViewController_initViewText_okBtn_4" = "Delete";
+"LMFileItem_getLMFileTypeName_1553153166_1" = "Application files";
+"LMFileItem_getLMFileTypeName_1553153166_2" = "Supporting files";
+"LMFileItem_getLMFileTypeName_1553153166_3" = "Cache files";
+"LMFileItem_getLMFileTypeName_1553153166_4" = "Preferences";
+"LMFileItem_getLMFileTypeName_1553153166_5" = "System setting files";
+"LMFileItem_getLMFileTypeName_1553153166_6" = "Crash logs";
+"LMFileItem_getLMFileTypeName_1553153166_7" = "Application logs";
+"LMFileItem_getLMFileTypeName_1553153166_8" = "Sandbox files";
+"LMFileItem_getLMFileTypeName_1553153166_9" = "Daemon items";
+"LMFileItem_getLMFileTypeName_1553153166_10" = "Login items";
+"LMFileItem_getLMFileTypeName_1553153166_11" = "Kernel extensions";
+"LMFileItem_getLMFileTypeName_1553153166_12" = "Kernel extensions";
+"LMFileItem_getLMFileTypeName_1553153166_13" = "Installers";
+"LMFileItem_getLMFileTypeName_1553153166_14" = "File System";
+"LMFileItem_getLMFileTypeName_1553153166_15" = "Preference Pane";
+
+"LMFileItem_getLMFileTypeName_1553153166_99" = "Other files(files in this directory will be moved to your trash)";
+
+
+
+"McTableCellView_awakeFromNib_btnRemove_1" = "Details";
+
+"McUninstallSelectedViewController_refreshText_titleString_1" = "%@ has %@ linked files. You can recovered %@ if remove them.";
+"McUninstallWindowController_alertSetup_alertTitleView_1" = "Do you want to remove linked files?";
+"McUninstallWindowController_alertSetup_1553842683_2" = "\"%@\" has been moved to Trash. Lemon found %@ linked files. Do you want to remove them?";
+"McUninstallWindowController_beginDelProgress_progressTitleView_1" = "Removing...";
+"McUninstallWindowController_beginDelProgress_sucessTitle _2" = "Successfully remove linked files and free up %@.";
+"ButtonSelectAll" = "Select all";
+"ButtonCancel" = "Cancel";
+"ButtonDelete" = "Delete";
+"ButtonUninstall" = "Uninstall";
+"ButtonOK" = "OK";
+
+"String_UnKnown" = "UNKNOWN";
+
+
+"McUninstallWindowController_open_uninstall_trash_check_tips" = "Lemon Cleaner will prompt you to clean leftovers when dragging an application to the trash to uninstall. Wanna try?";
+
+"McUninstallWindowController_open_uninstall_trash_check_sub_tips" = "From macOS 10.15, you have to grant permission \"Full Disk Access\" to clean trash. Please click \"Grant permission\"";
+
+"McUninstallWindowController_open_minotor_and_uninstall_trash_check_sub_tips" = "From macOS 10.15, you have to add menu bar icon and grant permission \"Full Disk Access\" to clean trash. Please click \"OK\" to continue.";
+
+"McUninstallWindowController_open_minotor_and_uninstall_trash_check_btn_title" = "OK";
+
+"McUninstallWindowController_monitor_full_disk_access_guide_window_title" = "Please rest assured that Lemon never or ever upload your files.";
+
+"McUninstallWindowController_monitor_full_disk_access_guide_window_desc" = "Click the lock —— Click add icon —— Find \"Tencent Lemon\" in Application";
+

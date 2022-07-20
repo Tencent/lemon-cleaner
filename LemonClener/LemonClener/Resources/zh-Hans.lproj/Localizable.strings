@@ -1,0 +1,118 @@
+/* 
+  Localizable.strings
+  LemonClener
+
+  
+  Copyright © 2019 Tencent. All rights reserved.
+*/
+"LMCleanResultViewController_initViewText_theDayTitleLabel_1" = "当日清理";
+"LMCleanResultViewController_initViewText_mainTitle_2" = "成功清理";
+"LMCleanResultViewController_initViewText_recent7DaysTitle_3" = "最近7天已清理";
+"LMCleanResultViewController_initViewText_doneButton_4" = "完成";
+"LMCleanResultViewController_setResultViewWithCleanFileSize_fileNumText_1" = "清理文件：%ld个";
+"LMCleanResultViewController_setResultViewWithCleanFileSize_timeText_2" = "清理耗时：%lds";
+"LMCleanResultViewController_setResultViewWithCleanFileSize_timeText_3" = "清理耗时：1s";
+"LMCleanBigViewController_setViewIsScanningOrCleanning_rubbishSelectTitle_1" = "已选择垃圾";
+"LMCleanBigViewController_setResultTotalAndSelectSizeLabel_rubbishSizeLabel_1" = "已发现可清理文件 %@";
+"LMCleanBigViewController_setResultTotalAndSelectSizeLabel_rubbishSizeLabel_2" = "共发现可清理文件 %@";
+"LMCleanBigViewController_setNoResultViewWithScanFileNum_mainText_1" = " 棒极了，没有发现垃圾哦～";
+"LMCleanBigViewController_setNoResultViewWithScanFileNum_fileNumText_2" = "扫描文件：%ld个";
+"LMCleanBigViewController_setNoResultViewWithScanFileNum_timeText_3" = "扫描耗时：%lds";
+"LMCleanBigViewController_setRubbishSelectLabelSize_sizeLabelStrring _1" = "%@ 清理中...";
+"LMCleanBigViewController_needDispalyCleaningPage_sizeLabelStrring _1" = "%@ 清理中...";
+"LMCleanBigViewController_scanProgressRefresh_totalLabelString _1" = "已发现可清理文件 %@";
+"LMCleanBigViewController_scanProgressRefresh_1553048057_2" = "共发现可清理文件 %@";
+"LMCleanBigViewController_updatePathRefresh_rubbishSelectTitle_1" = "正在扫描%@";
+"LMCleanBigViewController_updatePathRefresh_rubbishSelectTitle_2" = "正在清理%@";
+"LMCleanBigViewController_rememberCleanSetting_alert_titleLabelString_1" = "下次要按这次的调整来清理吗？";
+"LMCleanBigViewController_rememberCleanSetting_alert_titleLabelString_2" = "如果不需要清理，将不会记住这个目录！";
+"LMCleanBigViewController_rememberCleanSetting_alert_okButtonString_1" = "确定";
+"LMCleanBigViewController_rememberCleanSetting_alert_cancelButtonString_1" = "取消";
+"LMCleanScanViewController_initView_startScanBtn_1" = "获取权限";
+"LMCleanScanViewController_initView_mainViewDescLabel_2" = "欢迎使用 Lemon Cleaner Lite";
+"LMCleanScanViewController_initView_mainViewDescLabel_3" = "欢迎使用 Lemon Cleaner";
+"LMCleanScanViewController_initViewText_startScanBtn_1" = "开始扫描";
+"LMCleanScanViewController_initViewText_mainViewTitleLabel_2" = "畅快清理，清爽一下";
+"LMCleanScanViewController_initViewText_noResultTipLabel_3" = "请继续保持良好的使用习惯哦～";
+"LMCleanScanViewController_initViewText_showBIgBtn_4" = "详情";
+"LMCleanScanViewController_initViewText_guideDescLabel1_5" = "点击“详情”按钮即可展开大界面，查";
+"LMCleanScanViewController_initViewText_guideDescLabel2_6" = "看垃圾的具体分类和详细信息哦～";
+"LMCleanScanViewController_initViewText_scanDetailBtn_7" = "详情";
+"LMCleanScanViewController_setResultCircleImageViewProgress_resultTipLabel_1" = "已发现垃圾";
+"LMCleanScanViewController_setResultCircleImageViewProgress_sizeString _2" = "已选择 %@ 垃圾";
+"LMCleanScanViewController_setResultCircleImageViewProgress_resultBtn_3" = "去勾选";
+"LMCleanScanViewController_setResultCircleImageViewProgress_resultBtn_4" = "立即清理";
+"LMCleanScanViewController_setCleanCategoryLabel_1553048057_1" = "未勾选";
+"LMCleanScanViewController_setCleanCategoryLabel_1553048057_2" = "已清理";
+"LMCleanScanViewController_startSmallClean_alert_1" = "下次要按这次的调整来清理吗？";
+"LMCleanScanViewController_startSmallClean_alert_2" = "如果不需要，将不会记住这次更改，会恢复默认勾选项！";
+"LMCleanScanViewController_startSmallClean_alert_3" = "不用";
+"LMCleanScanViewController_startSmallClean_alert_4" = "需要";
+"LMCleanScanViewController_reArrangeContentView_scanTipLabel_1" = "发现垃圾";
+"LMCleanScanViewController_reArrangeContentView_systemRubbishSizeLabel_2" = "等待中";
+"LMCleanScanViewController_reArrangeContentView_appRubishSizeLabel_3" = "等待中";
+"LMCleanScanViewController_reArrangeContentView_internetRubbishSizeLabel_4" = "等待中";
+"LMCleanScanViewController_reArrangeContentView_resultBtn_5" = "完成";
+"LMCleanScanViewController_reArrangeContentView_resultTitleLabel_6" = "棒极了！Mac很干净！";
+"LMCleanScanViewController_reArrangeContentView_scanTipLabel_7" = "正在清理";
+"LMCleanScanViewController_reArrangeContentView_resultTipLabel_8" = "已清理垃圾";
+"LMCleanScanViewController_reArrangeContentView_resultBtn_9" = "完成";
+"LMCleanScanViewController_reArrangeContentView_numString _10" = "清理了 %ld 个文件";
+"LMCleanScanViewController_showOpenPanelGetPermission_openDlg_1" = "允许访问";
+"LMCleanScanViewController_showOpenPanelGetPermission_openDlg_2" = "正常使用lemon需要允许访问个人文件夹，请点击“允许访问”以继续";
+"LMCleanScanViewController_showOpenPanelGetPermission_startScanBtn_3" = "开始扫描";
+"LMCleanScanViewController_selectCategory_resultTipLabel_1" = "已发现垃圾";
+"LMCleanScanViewController_selectCategory_resultTipLabel_2" = "已清理垃圾";
+"LMCleanScanViewController_selectCategory_resultTipLabel_3" = "已发现系统垃圾";
+"LMCleanScanViewController_selectCategory_resultTipLabel_4" = "已发现应用垃圾";
+"LMCleanScanViewController_selectCategory_resultTipLabel_5" = "已发现上网垃圾";
+"LMCleanScanViewController_selectCategory_resultTipLabel_6" = "已清理系统垃圾";
+"LMCleanScanViewController_selectCategory_resultTipLabel_7" = "已清理应用垃圾";
+"LMCleanScanViewController_selectCategory_resultTipLabel_8" = "已清理上网垃圾";
+"LMCleanScanViewController_showFloatViewInfo__floatViewScanning_1" = "正在清理...";
+"LMCleanScanViewController_showFloatViewInfo__floatViewScanning_2" = "正在扫描...";
+"LMCleanScanViewController_showFloatViewInfo__floatViewSize_3" = "未勾选";
+"LMCleanScanViewController_showFloatViewInfo__floatViewSize_4" = "已清理";
+"LMCleanScanViewController_showFloatViewInfo__floatViewSize_5" = "未勾选";
+"LMCleanScanViewController_showFloatViewInfo__floatViewSize_6" = "待清理";
+"LMCleanScanViewController_showFloatViewInfo__floatViewSize_7" = "待扫描";
+"QMItemCreateHelper_createSoftAdaptCategorySubItemWithId_1553048057_1" = "清理%@缓存文件及日志文件";
+"QMItemCreateHelper_createActionItemWithId_actionItem_1" = "%@缓存";
+"QMItemCreateHelper_createActionItemWithId_actionItem_2" = "%@日志";
+
+"ActionItemCellView_getSizeStr_ sizeStr _1" = "很干净";
+"ActionItemCellView_setCellData_sizeStr_1" = "很干净";
+"ActionItemCellView_setCellData_sizeLabel_2" = "共 %@，建议清理";
+"ActionItemCellView_setCellData_sizeLabel_3" = "共 %@，谨慎清理";
+"SubCategoryCellView_setCellData_1553048057_1" = "获取扫描权限";
+"SubCategoryCellView_setCellData_sizeLabel_2" = "正在清理...";
+"SubCategoryCellView_setCellData_sizeLabel_3" = "正在扫描...";
+"SubCategoryCellView_setCellData_sizeLabel_4" = "很干净";
+"SubCategoryCellView_setCellData_[item tips]_5" = "默认清理缓存及日志，展开查看更多可清理项";
+"SubCategoryCellView_setCellData_sizeLabel_6" = "共 %@，建议清理";
+"SubCategoryCellView_setCellData_sizeLabel_7" = "共 %@，谨慎清理";
+"CategoryCellView_setCellData_sizeLabel_1" = "正在扫描垃圾…";
+"CategoryCellView_setCellData_sizeLabel_2" = "正在清理垃圾…";
+"CategoryCellView_setCellData_sizeLabel_3" = "共 %@，已选择";
+"LMCleanBigViewController_setLabelFont_backBtn_1" = "返回";
+"LMCleanScanViewController_setLightLabelFont_systemRubbishLabel_1" = "系统垃圾";
+"LMCleanScanViewController_setLightLabelFont_appRubbishLabel_2" = "应用垃圾";
+"LMCleanScanViewController_setLightLabelFont_internetRubbishLabel_3" = "上网垃圾";
+"LMCleanBigViewController_initData_removeButton_1" = "立即清理";
+"LMCleanBigViewController_initData_doneButton_1" = "完成";
+"ToolCellView_awakeFromNib_experienceBtn_1" = "立即体验";
+"LMCleanBigViewController_initData_introText_1" = "电脑空间不足？可以试试以下小工具哦~";
+
+"NO network"     = "当前无网络";
+
+
+// 5.1.0版本
+"Hey, dear users" = "Hey, 柠檬用户";
+"We have launched \"File Moving\" to help you\nclean up the files you are not sure to clean." = "针对扫描出来很多文件不敢清理的情况\n我们推出了文件搬家功能";
+
+"Videos, pictures, documents and other content of IM tools, we help you organize and move them to external storage or cloud disks with just one click in order to free up your spaces." = "例如聊天过程接收的视频、图片、文档等内容，一键整理转移到外设、云盘等，帮助你更好的释放磁盘空间。";
+"Start" = "去使用";
+
+
+"needFileMoveTitle" = "文件、视频和图片已占 %dGB 空间不敢清理 ? 快试试";
+"File Moving" = "文件搬家";

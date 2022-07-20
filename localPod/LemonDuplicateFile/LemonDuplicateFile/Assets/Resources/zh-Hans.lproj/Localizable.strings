@@ -1,0 +1,56 @@
+/* 
+  Localizable.strings
+  LemonDuplicateFile
+
+  
+  Copyright © 2019 tencent. All rights reserved.
+*/
+"QMDuplicateFiles_insertHashDictionary_NSString_1" = "大文件对比时间可能较长。当前文件：%@。正在比对中%@";
+"QMDuplicateFiles_bundleCompare_NSString_1" = "文件夹对比时间可能较长。当前文件夹：%@(%lu 个)。正在比对中%@";
+"QMDuplicateFiles_searchDuplicateFiles_NSString_1" = "正在比较文件夹，文件夹的比对时间可能稍长。当前文件夹大小:%@";
+"LMDuplicateFileNotFoundViewController_initView_button _1" = "完成";
+"LMDuplicateFileNotFoundViewController_viewWillAppear_descLabel_1" = "提前结束扫描,没有发现重复文件哦!";
+"LMDuplicateFileNotFoundViewController_viewWillAppear_descLabel_2" = "没有发现重复文件哦!";
+"LMDuplicateResultViewController_setupTitleViews_NSString_1" = "%@ 重复文件";
+"LMDuplicateResultViewController_setupTitleViews_descTextField_2" = "请选择需要清理的⽂件";
+"LMDuplicateResultViewController_setupTitleViews_backBtn_3" = "返回";
+"LMDuplicateResultViewController_setupTitleViews_1553072147_4" = "立即清理";
+"LMDuplicateResultViewController_setupCategoryViews_1553072147_1" = "其他";
+"LMDuplicateResultViewController_setupCategoryViews_previewLabel_2" = "预览模式";
+"LMDuplicateResultViewController_setupCategoryViews_autoSelectLabel" = "智能选择";
+"LMDuplicateResultViewController_setupAlertView_alertLabel_1" = "没有发现此类别的重复文件";
+"LMDuplicateResultViewController_calculateTotalDuplicateFilesSize_1553072147_1" = "未发现";
+"LMDuplicateResultViewController_updateTitleMessage_descTextField_1" = "请选择需要清理的⽂件";
+"LMDuplicateSelectFoldersViewController_initView_1553072147_1" = "点击添加文件夹";
+"LMDuplicateSelectFoldersViewController_initView__titleLabel_2" = "重复文件清理";
+"LMDuplicateSelectFoldersViewController_initView__descLabel_3" = "添加文件夹，快速查找内容一样的文件，节省磁盘空间";
+"LMDuplicateSelectFoldersViewController_initView_1553072147_4" = "开始扫描";
+"LMDuplicateCleanResultViewController_initView_cleanTitleLabel_1" = "清理完成";
+"LMDuplicateCleanResultViewController_initView_cleanSubTitleLabel_2" = " 文件已移到废纸篓";
+"LMDuplicateCleanResultViewController_initView_cleanButton _3" = "完成";
+"LMDuplicateCleanResultViewController_viewWillAppear_NSString_1" = "%@ 文件已移到废纸篓";
+"LMDuplicateCleanResultViewController_viewWillAppear_cleanSubTitleLabel_2" = "已成功将重复文件移到废纸篓";
+"LMDuplicateScanViewController_setupTextViews_titleLabel_1" = "正在扫描重复文件";
+"LMDuplicateScanViewController_setupTextViews_cancelButton_2" = "取消";
+"LMDuplicateScanViewController_progressRate_1553072147_1" = "正在比对中.";
+"SelectTextView_initWithFrame__textField_1" = "文字描述";
+"DuplicateRootCellView_updateViewsWithItem_totalString_1" = "共 %@ 项, %@";
+"DuplicateRootCellView_updateViewsWithItem_prefixString_2" = "共 %@ 项, 已选择 %@";
+"LMDuplicateResultViewController_setupCategoryViews_1553072448_1" = "全部";
+"LMDuplicateResultViewController_setupCategoryViews_1553072448_2" = "音频";
+"LMDuplicateResultViewController_setupCategoryViews_1553072448_3" = "视频";
+"LMDuplicateResultViewController_setupCategoryViews_1553072448_4" = "文档";
+"LMDuplicateResultViewController_setupCategoryViews_1553072591_1" = "图片";
+
+"LMDuplicateResultViewController_updateTitleMessage_prefixStr_2" = "已勾选 ";
+"LMDuplicateResultViewController_updateTitleMessage_NSString_3" = "%@ 个文件, ";
+"LMDuplicateResultViewController_updateTitleMessage_NSString_4" = "%@ 个文件夹, ";
+"LMDuplicateResultViewController_updateTitleMessage_NSString_5" = "%@%@%@ 共 %@ ";
+
+
+"LMDuplicateScanResultViewController_Alert_message" = "开启智能选择，Lemon将保留每项中最新的一份文件。其他文件将会被移至废纸篓，确认清理吗?";
+"LMDuplicateScanResultViewController_Alert_button_ok" = "清理";
+"LMDuplicateScanResultViewController_Alert_button_cancel" = "取消";
+"LMDuplicateSelectFoldersViewController_addFolder_button_tips" = "点击或拖拽添加文件夹";
+"LMDuplicateSelectFoldersViewController_addFolder_button_continue_tips" = "继续添加";
+

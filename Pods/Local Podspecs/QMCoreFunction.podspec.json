@@ -1,0 +1,39 @@
+{
+  "name": "QMCoreFunction",
+  "version": "0.1.0",
+  "summary": "A short description of QMCoreFunction.",
+  "description": "TODO: Add long description of the pod here.",
+  "homepage": "https://github.com/lemon/QMCoreFunction",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "lemon": "lemon@tencent.com"
+  },
+  "source": {
+    "git": "https://github.com/lemon/QMCoreFunction.git",
+    "tag": "0.1.0"
+  },
+  "platforms": {
+    "osx": "10.10"
+  },
+  "source_files": "QMCoreFunction/Classes/**/*",
+  "public_header_files": [
+    "QMCoreFunction/Classes/*.h",
+    "QMCoreFunction/Classes/**/*.h",
+    "QMCoreFunction/Classes/**/**/*.h"
+  ],
+  "dependencies": {
+    "LemonStat": [
+
+    ],
+    "AFNetworking": [
+      "3.2.1"
+    ]
+  },
+  "libraries": "pcap",
+  "xcconfig": {
+    "GCC_C_LANGUAGE_STANDARD": "gnu89"
+  }
+}

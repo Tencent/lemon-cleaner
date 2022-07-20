@@ -1,0 +1,75 @@
+/*
+ Localizable.strings
+ LemonNetSpeed
+ 
+ 
+ Copyright © 2019 tencent. All rights reserved.
+ */
+"LMNetMainViewController_initViewText_titleView_1" = "Accurately measure speed";
+"LMNetMainViewController_initViewText_descView_2" = "Track network data and show the current speed";
+"LMNetMainViewController_initViewText_startBtn_3" = "Start";
+"LMNetMainViewController_initViewText_procSpeedBtn_4" = "Traffic status";
+"LMNetMainViewController_initViewText_cancelSpeedBtn_5" = "Cancel";
+"LMNetMainViewController_initViewText_downloadingTitleTextField_6" = "Download";
+"LMNetMainViewController_initViewText_uploadingTextField_7" = "Upload";
+"LMNetMainViewController_initViewText_delayingTextField_8" = "Ping";
+"LMNetMainViewController_initViewText_bandWidthTextField_9" = "Bandwidth";
+"LMNetMainViewController_initViewText_bandWidthLastTextField_10" = "";
+"LMNetMainViewController_initViewText_reStartSpeefBtn_11" = "Retest";
+"LMNetMainViewController_initData_1553139812_2" = "Excellent";
+"LMNetMainViewController_initData_1553139812_3" = "Poor";
+"LMNetMainViewController_initData_1553139812_4" = "Accepted";
+"LMNetMainViewController_initData_1553139812_5" = "Fine";
+"LMNetMainViewController_initData_1553139812_6" = "Good";
+"LMNetMainViewController_initData_1553139812_7" = "Very good";
+"LMNetMainViewController_showStartView_titleView_1" = "Accurately measure speed";
+"LMNetMainViewController_showStartView_descView_2" = "Track network data and show the current speed";
+"LMNetMainViewController_showNoNetView_titleView_1" = "The network is disconnected";
+"LMNetMainViewController_showNoNetView_descView_2" = "Please check your network connection and try again";
+"LMNetMainViewController_measureNetSpeed_downloadMeasureTextField_1" = "Waiting...";
+"LMNetMainViewController_measureNetSpeed_uploadMeasureTextField_2" = "Waiting...";
+"LMNetMainViewController_measureNetSpeed_delayMeasureTextField_3" = "Measuring";
+"LMNetMainViewController_measureNetSpeed_delayFinalTextField_4" = "Measuring";
+"LMNetProcViewController_initViewText_flowMonitor_1" = "Monitor traffic data";
+"LMNetProcViewController_initViewText_currentUploadSpeed_2" = "Upload：";
+"LMNetProcViewController_initViewText_currentDownloadSpeed_3" = "Download：";
+"LMNetProcViewController_initViewText_appName_4" = "Applications";
+"LMNetProcViewController_initViewText_downloadSpeed_5" = "Download";
+"LMNetProcViewController_initViewText_uploadSpeed_6" = "Upload";
+"LMNetProcViewController_initViewText_noNetTips_7" = "Disconnected";
+"LMPortStatViewController_upPortCell__tfConnectState_1" = "连接";
+"LMPortStatViewController_upPortCell__tfConnectState_2" = "监听";
+"LMPortStatViewController_upPortCell__tfConnectState_1" = "Connected";
+"LMPortStatViewController_upPortCell__tfConnectState_2" = "Listening";
+"LMPortStatViewController_viewDidLoad_tfTitle_1" = "Internet Port";
+"LMPortStatViewController_viewDidLoad_labelPort _2" = "Port";
+"LMPortStatViewController_viewDidLoad_labelProtocol _3" = "Protocole";
+"LMPortStatViewController_viewDidLoad_labelSpec _4" = "Used by";
+"LMPortStatViewController_viewDidLoad_labelOp _5" = "Allow access";
+"LMPortStatViewController_viewDidLoad_labelState _6" = "State";
+"LMPortStatViewController_updateSpecLabel_NSString_1" = "正在使用%d个端口【仅检测OS系统中%d个常用端口】";
+"LMNetMainViewController_initViewText_portStatBtn_1" = "Internet Port";
+"LMNetMainViewController_initViewText_downloadedTextField_2" = "Download";
+"LMNetMainViewController_initViewText_uploadedTextfield_3" = "Upload";
+"LMNetMainViewController_initViewText_delayedTextField_4" = "Pings";
+"LMNetMainViewController_initViewText_netSpeedTextField_5" = "Level";
+
+"LMProcessPortViewController_viewDidLoad__tfPortInfo_1" = "xx connections in total";
+"LMProcessPortViewController_viewDidLoad__tfHeadProtocol_2" = "Protocols";
+"LMProcessPortViewController_viewDidLoad__tfHeadSrcIpPort_3" = "Local IP";
+"LMProcessPortViewController_viewDidLoad__tfHeadDestIpPort_4" = "Link address";
+"LMProcessPortViewController_viewDidLoad__tfHeadOp_5" = "Action";
+"LMProcessPortViewController_initHeader_sortNameBtn_1" = "Name";
+"LMProcessPortViewController_initHeader_sortSocketTypeBtn_2" = "Property";
+"LMProcessPortViewController_initHeader_sortConnectStateBtn_3" = "Status";
+"LMProcessPortViewController_statProcessPort_1558009676_1" = "Connected";
+"LMProcessPortViewController_statProcessPort_1558009676_2" = "Listen";
+"LMProcessPortViewController_statProcessPort_1558009676_3" = "Local";
+"LMProcessPortViewController_statProcessPort_1558009676_4" = "Remote";
+"LMProcessPortViewController_statProcessPort_NSString_5" = " %d connections in total: %d local，%d remote";
+"LMProcessPortViewController_tableView_NSString_1" = "%@ will be force quit";
+"LMProcessPortViewController_tableView_alert_2" = "Are you sure to end task?";
+"LMProcessPortViewController_tableView_alert_3" = "Yes";
+"LMProcessPortViewController_tableView_alert_4" = "Cancel";
+"LMProcessPortRowView_awakeFromNib_btnKillProcess_1" = "End task";
+"LMProcessPortRowView_awakeFromNib_titleString _2" = "End task";

@@ -1,0 +1,73 @@
+/* 
+  Localizable.strings
+  LemonNetSpeed
+
+  
+  Copyright © 2019 tencent. All rights reserved.
+*/
+"LMNetMainViewController_initViewText_titleView_1" = "网络测速，监控流量";
+"LMNetMainViewController_initViewText_descView_2" = "便捷网络测速，实时了解当前网络状况";
+"LMNetMainViewController_initViewText_startBtn_3" = "开始测速";
+"LMNetMainViewController_initViewText_procSpeedBtn_4" = "流量监控";
+"LMNetMainViewController_initViewText_cancelSpeedBtn_5" = "取消";
+"LMNetMainViewController_initViewText_downloadingTitleTextField_6" = "下载速度";
+"LMNetMainViewController_initViewText_uploadingTextField_7" = "上传速度";
+"LMNetMainViewController_initViewText_delayingTextField_8" = "网络延迟";
+"LMNetMainViewController_initViewText_bandWidthTextField_9" = "当前网速达到";
+"LMNetMainViewController_initViewText_bandWidthLastTextField_10" = "";
+"LMNetMainViewController_initViewText_reStartSpeefBtn_11" = "重新测速";
+"LMNetMainViewController_initData_1553139812_2" = "专线";
+"LMNetMainViewController_initData_1553139812_3" = "还需努力";
+"LMNetMainViewController_initData_1553139812_4" = "及格";
+"LMNetMainViewController_initData_1553139812_5" = "良好";
+"LMNetMainViewController_initData_1553139812_6" = "优秀";
+"LMNetMainViewController_initData_1553139812_7" = "卓越";
+"LMNetMainViewController_showStartView_titleView_1" = "网络测速，监控流量";
+"LMNetMainViewController_showStartView_descView_2" = "便捷网络测速，实时了解当前网络状况";
+"LMNetMainViewController_showNoNetView_titleView_1" = "网络未连接";
+"LMNetMainViewController_showNoNetView_descView_2" = "请检查网络情况，正常连接后再进行网速检测";
+"LMNetMainViewController_measureNetSpeed_downloadMeasureTextField_1" = "等待测速";
+"LMNetMainViewController_measureNetSpeed_uploadMeasureTextField_2" = "等待测速";
+"LMNetMainViewController_measureNetSpeed_delayMeasureTextField_3" = "延迟测量中";
+"LMNetMainViewController_measureNetSpeed_delayFinalTextField_4" = "延迟测量中";
+"LMNetProcViewController_initViewText_flowMonitor_1" = "流量监控";
+"LMNetProcViewController_initViewText_currentUploadSpeed_2" = "当前上传速度：";
+"LMNetProcViewController_initViewText_currentDownloadSpeed_3" = "当前下载速度：";
+"LMNetProcViewController_initViewText_appName_4" = "应用名称";
+"LMNetProcViewController_initViewText_downloadSpeed_5" = "下载速度";
+"LMNetProcViewController_initViewText_uploadSpeed_6" = "上传速度";
+"LMNetProcViewController_initViewText_noNetTips_7" = "网络未连接";
+"LMPortStatViewController_upPortCell__tfConnectState_1" = "连接";
+"LMPortStatViewController_upPortCell__tfConnectState_2" = "监听";
+"LMPortStatViewController_viewDidLoad_tfTitle_1" = "网络端口";
+"LMPortStatViewController_viewDidLoad_labelPort _2" = "端口";
+"LMPortStatViewController_viewDidLoad_labelProtocol _3" = "协议";
+"LMPortStatViewController_viewDidLoad_labelSpec _4" = "系统服务说明";
+"LMPortStatViewController_viewDidLoad_labelOp _5" = "允许入站";
+"LMPortStatViewController_viewDidLoad_labelState _6" = "状态";
+"LMPortStatViewController_updateSpecLabel_NSString_1" = "正在使用%d个端口【仅检测OS系统中%d个常用端口】";
+"LMNetMainViewController_initViewText_portStatBtn_1" = "网络端口";
+"LMNetMainViewController_initViewText_downloadedTextField_2" = "下载速度";
+"LMNetMainViewController_initViewText_uploadedTextfield_3" = "上传速度";
+"LMNetMainViewController_initViewText_delayedTextField_4" = "网络延迟";
+"LMNetMainViewController_initViewText_netSpeedTextField_5" = "网络评级";
+
+"LMProcessPortViewController_viewDidLoad__tfPortInfo_1" = "当前共建立xx连接";
+"LMProcessPortViewController_viewDidLoad__tfHeadProtocol_2" = "协议";
+"LMProcessPortViewController_viewDidLoad__tfHeadSrcIpPort_3" = "本机IP";
+"LMProcessPortViewController_viewDidLoad__tfHeadDestIpPort_4" = "连接地址";
+"LMProcessPortViewController_viewDidLoad__tfHeadOp_5" = "操作";
+"LMProcessPortViewController_initHeader_sortNameBtn_1" = "应用名称";
+"LMProcessPortViewController_initHeader_sortSocketTypeBtn_2" = "连接属性";
+"LMProcessPortViewController_initHeader_sortConnectStateBtn_3" = "状态";
+"LMProcessPortViewController_statProcessPort_1558009676_1" = "连接中";
+"LMProcessPortViewController_statProcessPort_1558009676_2" = "监听";
+"LMProcessPortViewController_statProcessPort_1558009676_3" = "本地连接";
+"LMProcessPortViewController_statProcessPort_1558009676_4" = "远程连接";
+"LMProcessPortViewController_statProcessPort_NSString_5" = "当前共建立 %d 个进程连接，%d 个本地连接，%d 个远程连接";
+"LMProcessPortViewController_tableView_NSString_1" = "%@会被强制退出";
+"LMProcessPortViewController_tableView_alert_2" = "确定要结束吗？";
+"LMProcessPortViewController_tableView_alert_3" = "确定";
+"LMProcessPortViewController_tableView_alert_4" = "取消";
+"LMProcessPortRowView_awakeFromNib_btnKillProcess_1" = "结束进程";
+"LMProcessPortRowView_awakeFromNib_titleString _2" = "结束进程";

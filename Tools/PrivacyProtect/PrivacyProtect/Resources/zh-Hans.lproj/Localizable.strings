@@ -1,0 +1,71 @@
+/* 
+  Localizable.strings
+  PrivacyProtect
+
+  
+  Copyright © 2019 Tencent. All rights reserved.
+*/
+"OwlManager_postVedioChangeNotifocationForUsingStatue_notification_1" = "摄像头正在被调用";
+"OwlManager_postVedioChangeNotifocationForUsingStatue_notification_2" = "已停止使用摄像头";
+"OwlManager_postVedioChangeNotifocationForUsingStatue_1553136870_3" = "确定";
+"OwlManager_postAudioChangeNotifocationForUsingStatue_notification_1" = "麦克风正在被调用";
+"OwlManager_postAudioChangeNotifocationForUsingStatue_notification_2" = "已停止使用麦克风";
+"OwlManager_postAudioChangeNotifocationForUsingStatue_1553136870_3" = "确定";
+"OwlManager_analyseDeviceInfoForNotificationWithArray_NSString_1" = "正在使用摄像头";
+"OwlManager_analyseDeviceInfoForNotificationWithArray_NSString_2" = "正在使用麦克风";
+"OwlManager_analyseDeviceInfoForNotificationWithArray_NSString_3" = "正在使用摄像头和麦克风";
+"OwlManager_analyseDeviceInfoForNotificationWithArray_NSString_4" = "已停止使用摄像头";
+"OwlManager_analyseDeviceInfoForNotificationWithArray_NSString_5" = "已停止使用麦克风";
+"OwlManager_analyseDeviceInfoForNotificationWithArray_NSString_6" = "已停止使用摄像头和麦克风";
+"OwlManager_analyseDeviceInfoForNotificationWithArray_notification_7" = "摄像头正在被调用";
+"OwlManager_analyseDeviceInfoForNotificationWithArray_notification_8" = "麦克风正在被调用";
+"OwlManager_analyseDeviceInfoForNotificationWithArray_notification_9" = "摄像头和麦克风正在被调用";
+"OwlManager_analyseDeviceInfoForNotificationWithArray_notification_10" = "已停止使用摄像头";
+"OwlManager_analyseDeviceInfoForNotificationWithArray_notification_11" = "已停止使用麦克风";
+"OwlManager_analyseDeviceInfoForNotificationWithArray_notification_12" = "已停止使用摄像头和麦克风";
+"OwlManager_analyseDeviceInfoForNotificationWithArray_1553136870_13" = "允许";
+"OwlManager_analyseDeviceInfoForNotificationWithArray_1553136870_14" = "阻止";
+"OwlManager_analyseDeviceInfoForNotificationWithArray_1553136870_15" = "关闭";
+"OwlManager_userNotificationCenter_alert_1" = "App会被强制退出，以防继续使用摄像头";
+"OwlManager_userNotificationCenter_alert_2" = "App会被强制退出，以防继续使用麦克风";
+"OwlManager_userNotificationCenter_alert_3" = "App会被强制退出，以防继续使用摄像头和麦克风";
+"OwlManager_userNotificationCenter_alert_4" = "确定要阻止吗？";
+"OwlManager_userNotificationCenter_alert_5" = "是否要始终允许（加入白名单）？";
+"OwlManager_userNotificationCenter_alert_6" = "若始终允许，以后该进程使用时将不再提示";
+"OwlLogViewController_initWithFrame_tfTitle_1" = "监控日志";
+"OwlLogViewController_initWithFrame_labelTime_2" = "时间";
+"OwlLogViewController_initWithFrame_labelEvent_3" = "事件";
+"OwlSelectViewController_initWithFrame_cancel_1" = "取消";
+"OwlSelectViewController_initWithFrame_ok_2" = "确定";
+"OwlSelectViewController_initWithFrame_tfTitle_3" = "白名单";
+"OwlSelectViewController_updateSelectLabel_NSString_1" = "已勾选 %d 款";
+"OwlWhiteListViewController_initWithFrame_1553136870_1" = "摄像头";
+"OwlWhiteListViewController_initWithFrame_1553136870_2" = "麦克风";
+"OwlWhiteListViewController_initWithFrame_removeBtn_3" = "移除";
+"OwlWhiteListViewController_setWhiteListModel__tfKind_1" = "系统应用";
+"OwlWhiteListViewController_setWhiteListModel__tfKind_2" = "第三方应用";
+"OwlWhiteListViewController_wantRemove_NSString_1" = "摄像头和麦克风都取消信任会把app移出白名单。需要移除吗？";
+"OwlWhiteListViewController_wantRemove_NSString_2" = "移除";
+"OwlWhiteListViewController_wantRemove_NSString_3" = "保留";
+"OwlWhiteListViewController_initWithFrame_addBtn_1" = "添加";
+"OwlWhiteListViewController_initWithFrame_tfTitle_2" = "白名单";
+"OwlWhiteListViewController_initWithFrame_labelSpecApp _3" = "应用程序";
+"OwlWhiteListViewController_initWithFrame_labelSpecType _4" = "应用类型";
+"OwlWhiteListViewController_initWithFrame_labelSpecOp _5" = "允许权限类型";
+"OwlViewController_whiteListChange_NSString_1" = "白名单（%lu）";
+"OwlViewController_setLoadingUI_loadingLabelSpec _1" = "正在初始化数据...";
+"OwlViewController_setFinishUI_labelTitle _1" = "设备保护";
+"OwlViewController_setFinishUI_vedioLabelTitle _2" = "摄像头保护";
+"OwlViewController_setFinishUI_vedioLabelSpec _3" = "摄像头被软件占用时提示通知";
+"OwlViewController_setFinishUI_audioLabelTitle _4" = "麦克风保护";
+"OwlViewController_setFinishUI_audioLabelSpec _5" = "麦克风被软件占用时提示通知";
+"OwlViewController_setFinishUI_logBtn_6" = "监控日志";
+"OwlViewController_setFinishUI_NSString_7" = "白名单（%lu）";
+"OwlViewController_showToastForFirst_notification_1" = "麦克风保护已开启";
+"OwlViewController_showToastForFirst_notification_2" = "将在麦克风被调用时提醒你哦！";
+"OwlViewController_showToastForFirst_1553136870_3" = "关闭";
+"OwlManager_userNotificationCenter_alert_7" = "始终允许";
+"OwlManager_userNotificationCenter_alert_8" = "仅本次允许";
+"OwlViewController_showToastForFirst_notification_4" = "摄像头保护已开启";
+"OwlViewController_showToastForFirst_notification_5" = "将在摄像头被调用时提醒你哦！";
+

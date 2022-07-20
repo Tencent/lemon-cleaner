@@ -1,0 +1,6 @@
+framework module LemonLoginItemManager {
+  umbrella header "LemonLoginItemManager-umbrella.h"
+
+  export *
+  module * { export * }
+}

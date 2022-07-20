@@ -1,0 +1,57 @@
+/*
+ Localizable.strings
+ LemonBigOldFile
+ 
+ Copyright © 2019 Tencent. All rights reserved.
+ */
+"LMResultViewController_initViewText_backBtn_1" = "Back";
+"LMResultViewController_initViewText_filterBtnAll_2" = "All types";
+"LMResultViewController_initViewText_filterBtnMusic_3" = "Audio";
+"LMResultViewController_initViewText_filterBtnVideo_4" = "Video";
+"LMResultViewController_initViewText_filterBtnDocument_5" = "Document";
+"LMResultViewController_initViewText_filterBtnInstall_6" = "Package";
+"LMResultViewController_initViewText_filterBtnOther_7" = "Other";
+"LMResultViewController_initViewText_previewDescText_8" = "Preview";
+"LMResultViewController_initViewText_noFileDescLabel_9" = "No large file in this type";
+"LMResultViewController_initViewText_cleanBtn_10" = "Clean";
+"LMResultViewController__refreshDeleteStatus_NSString_1" = "selected %@ files , %@ in total";
+"LMResultViewController__refreshDeleteStatus_selectedSizeText_2" = "Please select the files you want to remove";
+"LMResultViewController__refreshDeleteStatus_NSString_3" = " %@ large files";
+"LMRemoveViewController_viewDidLoad_titleLabel_1" = "Removing lareg files";
+"LMBigMainViewController_initViewText_mainVIewTitleLabel_1" = "Large file";
+"LMBigMainViewController_initViewText_mainViewBtn_2" = "Scan";
+"LMBigMainViewController_initViewText_scanTitleLabel_3" = "Scanning large files";
+"LMBigMainViewController_initViewText_cancelBtn_4" = "Cancel";
+"LMBigMainViewController_initViewText_noResultDescLabel_5" = "Scan files larger than 50MB";
+"LMBigMainViewController_initViewText_scanDoneBtn_6" = "Finish";
+"LMBigMainViewController_showNoResultView__noResultTitleLabel_1" = "No large files in scanned items";
+"LMBigMainViewController_showNoResultView__noResultTitleLabel_2" = "No large file in this type";
+"QMLargeOldManager_init_1553075107_1" = "Recent";
+"QMLargeOldManager_init_1553075107_2" = "1 week ago";
+"QMLargeOldManager_init_1553075107_3" = "2 weeks ago";
+"QMLargeOldManager_init_1553075107_4" = "1 month ago";
+"QMLargeOldManager_init_1553075107_5" = "2 months ago";
+"QMLargeOldManager_init_1553075107_6" = "3 months ago";
+"QMLargeOldManager_init_1553075107_7" = "6 months ago";
+"QMLargeOldManager_init_1553075107_8" = "1 year ago";
+"QMLargeOldManager_init_1553075107_9" = "2 years ago";
+"QMLargeOldManager_init_1553075107_10" = "Image";
+"QMLargeOldManager_init_1553075107_11" = "Document";
+"QMLargeOldManager_init_1553075107_12" = "Package";
+"QMLargeOldManager_init_1553075107_13" = "Video";
+"QMLargeOldManager_init_1553075107_14" = "Document";
+"QMLargeOldManager_init_1553075107_15" = "Other";
+"QMLargeOldManager_accessTimeArray_1553075107_1" = "随时";
+"QMLargeOldManager__fileSizeName_NSString_1" = "%@ - %@:";
+"QMLargeOldManager__fileSizeName_NSString_2" = "Above %@:";
+"QMLargeOldManager__fileExtensionName_1553075107_1" = "Audio";
+"QMLargeOldManager__fileExtensionName_1553075107_2" = "Video";
+"QMLargeOldManager__fileExtensionName_1553075107_3" = "Document";
+"QMLargeOldManager__fileExtensionName_1553075107_4" = "Image";
+"QMLargeOldManager__fileExtensionName_1553075107_5" = "Other";
+"LMRootCellView_setCellData_NSString_1" = " %ld items , %@";
+"LMRootCellView_setCellData_NSString_2" = " %@ in total，selected ";
+"LMBigMainViewController_initViewText_mainViewDescLabel_1" = "Find large and old files to free up space";
+"LMRemoveViewController_viewDidLoad_doneTitleTextView_1" = "Cleanup complete";
+"LMRemoveViewController_viewDidLoad_removedDescText_2" = "%@ recovered. The files have been moved to trash";
+"LMRemoveViewController_viewDidLoad_doneBtn_3" = "Back";

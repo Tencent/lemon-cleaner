@@ -1,0 +1,6 @@
+framework module LemonSpaceAnalyse {
+  umbrella header "LemonSpaceAnalyse-umbrella.h"
+
+  export *
+  module * { export * }
+}

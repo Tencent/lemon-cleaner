@@ -1,0 +1,32 @@
+{
+  "name": "LemonStat",
+  "version": "0.1.0",
+  "summary": "A short description of LemonStat.",
+  "description": "TODO: Add long description of the pod here.",
+  "homepage": "https://github.com/lemon/LemonStat",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "lemon": "lemon@tencent.com"
+  },
+  "source": {
+    "git": "https://github.com/lemon/LemonStat.git",
+    "tag": "0.1.0"
+  },
+  "platforms": {
+    "osx": "10.10"
+  },
+  "source_files": "LemonStat/Classes/**/*",
+  "public_header_files": "LemonStat/Classes/header/*.{h}",
+  "prefix_header_file": "LemonStat/Classes/statlib_Prefix.pch",
+  "frameworks": [
+    "CoreServices",
+    "IOKit",
+    "Cocoa",
+    "Security",
+    "SystemConfiguration",
+    "DiskArbitration"
+  ]
+}

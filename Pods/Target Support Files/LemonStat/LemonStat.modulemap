@@ -1,0 +1,6 @@
+framework module LemonStat {
+  umbrella header "LemonStat-umbrella.h"
+
+  export *
+  module * { export * }
+}

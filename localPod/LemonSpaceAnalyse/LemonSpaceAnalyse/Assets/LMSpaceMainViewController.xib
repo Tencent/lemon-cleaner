@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="19162" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="19162"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="LMSpaceMainViewController">
+            <connections>
+                <outlet property="mainViewDesc" destination="4iC-WV-cJd" id="htu-3x-3G7"/>
+                <outlet property="mainViewStartButton" destination="D2p-a4-dWG" id="gUp-8N-RM3"/>
+                <outlet property="mainViewTitle" destination="r3O-Ba-PaB" id="VQC-OG-Ntc"/>
+                <outlet property="scanView" destination="FWI-gq-z7u" id="bCa-WV-mCi"/>
+                <outlet property="scanViewCancelButton" destination="kyM-Zb-Qbf" id="vOS-zJ-x7s"/>
+                <outlet property="scanViewDesc" destination="0Hp-oL-9wO" id="Lko-Ab-YQQ"/>
+                <outlet property="scanViewImageView" destination="NgW-Oz-fny" id="fEI-bx-HRd"/>
+                <outlet property="scanViewProgressView" destination="P6x-vN-yaR" id="cVg-GH-4i5"/>
+                <outlet property="scanViewTitle" destination="bP2-wY-Nd4" id="fp7-5W-q6j"/>
+                <outlet property="startView" destination="bkf-UK-GKm" id="1rJ-mX-6jY"/>
+                <outlet property="view" destination="Hz6-mo-xeY" id="0bl-1N-x8E"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <customView id="Hz6-mo-xeY">
+            <rect key="frame" x="0.0" y="0.0" width="1056" height="640"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <customView id="bkf-UK-GKm" userLabel="startView">
+                    <rect key="frame" x="0.0" y="0.0" width="1056" height="640"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    <subviews>
+                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="r3O-Ba-PaB">
+                            <rect key="frame" x="68" y="510" width="198" height="45"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="45" id="NuJ-xy-Veb"/>
+                            </constraints>
+                            <textFieldCell key="cell" lineBreakMode="clipping" title="磁盘空间分析" id="UPP-Fk-x8l">
+                                <font key="font" metaFont="system" size="32"/>
+                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                            </textFieldCell>
+                        </textField>
+                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="4iC-WV-cJd">
+                            <rect key="frame" x="68" y="486" width="168" height="22"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="22" id="HqG-sE-VfF"/>
+                            </constraints>
+                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="left" title="全面分析磁盘使用情况" id="WJg-nW-RAM">
+                                <font key="font" metaFont="system" size="16"/>
+                                <color key="textColor" red="0.4941176471" green="0.4941176471" blue="0.4941176471" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                            </textFieldCell>
+                        </textField>
+                        <button focusRingType="none" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="D2p-a4-dWG" customClass="LMRectangleButton">
+                            <rect key="frame" x="70" y="374" width="144" height="48"/>
+                            <constraints>
+                                <constraint firstAttribute="width" constant="144" id="Osf-Mq-J3g"/>
+                                <constraint firstAttribute="height" constant="48" id="cBH-NC-dOl"/>
+                            </constraints>
+                            <buttonCell key="cell" type="square" title="开始扫描" bezelStyle="shadowlessSquare" imagePosition="overlaps" alignment="center" focusRingType="none" imageScaling="proportionallyDown" inset="2" id="KOW-Zd-2fx">
+                                <behavior key="behavior" lightByContents="YES"/>
+                                <font key="font" metaFont="system" size="20"/>
+                            </buttonCell>
+                            <connections>
+                                <action selector="startScanBtn:" target="-2" id="Euj-dD-nyH"/>
+                            </connections>
+                        </button>
+                    </subviews>
+                    <constraints>
+                        <constraint firstItem="4iC-WV-cJd" firstAttribute="top" secondItem="r3O-Ba-PaB" secondAttribute="bottom" constant="2" id="2wG-zc-zIL"/>
+                        <constraint firstItem="r3O-Ba-PaB" firstAttribute="top" secondItem="bkf-UK-GKm" secondAttribute="top" constant="85" id="Ghf-Zb-ISg"/>
+                        <constraint firstItem="4iC-WV-cJd" firstAttribute="leading" secondItem="bkf-UK-GKm" secondAttribute="leading" constant="70" id="KAd-R6-kR8"/>
+                        <constraint firstItem="r3O-Ba-PaB" firstAttribute="leading" secondItem="bkf-UK-GKm" secondAttribute="leading" constant="70" id="i0B-r7-5Uz"/>
+                        <constraint firstItem="D2p-a4-dWG" firstAttribute="top" secondItem="bkf-UK-GKm" secondAttribute="top" constant="218" id="lJa-y6-1tI"/>
+                        <constraint firstItem="D2p-a4-dWG" firstAttribute="leading" secondItem="bkf-UK-GKm" secondAttribute="leading" constant="70" id="vQA-5E-dfU"/>
+                    </constraints>
+                </customView>
+            </subviews>
+            <point key="canvasLocation" x="-42" y="78"/>
+        </customView>
+        <customView id="FWI-gq-z7u" userLabel="Scan View">
+            <rect key="frame" x="0.0" y="0.0" width="1056" height="640"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="NgW-Oz-fny">
+                    <rect key="frame" x="438" y="320" width="180" height="180"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="180" id="RKa-rH-tCX"/>
+                        <constraint firstAttribute="width" constant="180" id="dCS-8o-BPI"/>
+                    </constraints>
+                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="ani_scanning_00000" id="a2w-OQ-bOO"/>
+                </imageView>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="bP2-wY-Nd4" userLabel="正在扫描全盘">
+                    <rect key="frame" x="326" y="164" width="404" height="45"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="400" id="0fo-bm-6xT"/>
+                        <constraint firstAttribute="height" constant="45" id="8Th-Bb-SGr"/>
+                    </constraints>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" title="正在扫描Macintosh HD" id="hAO-yf-SJu">
+                        <font key="font" metaFont="system" size="32"/>
+                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="kyM-Zb-Qbf" customClass="LMBorderButton">
+                    <rect key="frame" x="744" y="175" width="60" height="24"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="24" id="SqY-25-Ba8"/>
+                        <constraint firstAttribute="width" constant="60" id="dxL-Vm-C3d"/>
+                    </constraints>
+                    <buttonCell key="cell" type="square" title="取消" bezelStyle="shadowlessSquare" imagePosition="overlaps" alignment="center" state="on" imageScaling="proportionallyDown" inset="2" id="bgs-OM-6JF">
+                        <behavior key="behavior" lightByContents="YES"/>
+                        <font key="font" metaFont="cellTitle"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="cancelScanBtn:" target="-2" id="opG-sd-nbj"/>
+                    </connections>
+                </button>
+                <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="0Hp-oL-9wO" userLabel="Path Text Field">
+                    <rect key="frame" x="296" y="139" width="464" height="17"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="460" id="aTT-df-WrZ"/>
+                        <constraint firstAttribute="height" constant="17" id="ns9-tB-QTQ"/>
+                    </constraints>
+                    <textFieldCell key="cell" lineBreakMode="charWrapping" sendsActionOnEndEditing="YES" state="on" alignment="center" title="scanning" id="cOQ-S9-36z">
+                        <font key="font" metaFont="cellTitle"/>
+                        <color key="textColor" red="0.4941176471" green="0.4941176471" blue="0.4941176471" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <customView translatesAutoresizingMaskIntoConstraints="NO" id="P6x-vN-yaR" customClass="QMProgressView">
+                    <rect key="frame" x="378" y="120" width="300" height="5"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="300" id="8c7-ND-3Gh"/>
+                        <constraint firstAttribute="height" constant="5" id="e61-RD-mfq"/>
+                    </constraints>
+                </customView>
+            </subviews>
+            <constraints>
+                <constraint firstItem="bP2-wY-Nd4" firstAttribute="centerX" secondItem="FWI-gq-z7u" secondAttribute="centerX" id="1cf-gp-pcO"/>
+                <constraint firstItem="kyM-Zb-Qbf" firstAttribute="centerY" secondItem="bP2-wY-Nd4" secondAttribute="centerY" id="73U-Hk-Wnn"/>
+                <constraint firstItem="0Hp-oL-9wO" firstAttribute="top" secondItem="bP2-wY-Nd4" secondAttribute="bottom" constant="8" id="Lm0-0Z-M1u"/>
+                <constraint firstItem="bP2-wY-Nd4" firstAttribute="top" secondItem="NgW-Oz-fny" secondAttribute="bottom" constant="111" id="U3v-T0-cCM"/>
+                <constraint firstItem="0Hp-oL-9wO" firstAttribute="centerX" secondItem="FWI-gq-z7u" secondAttribute="centerX" id="VNe-uU-OLb"/>
+                <constraint firstItem="NgW-Oz-fny" firstAttribute="centerX" secondItem="FWI-gq-z7u" secondAttribute="centerX" id="YN1-le-Wgf"/>
+                <constraint firstItem="NgW-Oz-fny" firstAttribute="top" secondItem="FWI-gq-z7u" secondAttribute="top" constant="140" id="ZC8-hY-oH3"/>
+                <constraint firstItem="P6x-vN-yaR" firstAttribute="centerX" secondItem="FWI-gq-z7u" secondAttribute="centerX" id="hsB-zb-fyF"/>
+                <constraint firstItem="P6x-vN-yaR" firstAttribute="top" secondItem="0Hp-oL-9wO" secondAttribute="bottom" constant="14" id="iQl-hw-J1n"/>
+                <constraint firstItem="kyM-Zb-Qbf" firstAttribute="leading" secondItem="bP2-wY-Nd4" secondAttribute="trailing" constant="16" id="nxJ-87-FZb"/>
+            </constraints>
+            <point key="canvasLocation" x="211" y="593"/>
+        </customView>
+    </objects>
+    <resources>
+        <image name="ani_scanning_00000" width="360" height="360"/>
+    </resources>
+</document>

@@ -1,0 +1,6 @@
+framework module QMAppLoginItemManage {
+  umbrella header "QMAppLoginItemManage-umbrella.h"
+
+  export *
+  module * { export * }
+}

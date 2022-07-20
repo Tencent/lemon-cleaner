@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="19162" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="19162"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner"/>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <customView identifier="LMSpaceTableRowIdentifier" id="c22-O7-iKe" customClass="LMSpaceTableRowView">
+            <rect key="frame" x="0.0" y="0.0" width="244" height="52"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <textField horizontalHuggingPriority="252" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="4Os-Qf-BUt" customClass="LMTextField">
+                    <rect key="frame" x="154" y="21" width="64" height="14"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="60" id="CTV-tP-EYi"/>
+                        <constraint firstAttribute="height" constant="14" id="TQf-9Z-COk"/>
+                    </constraints>
+                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="right" title="290.00GB" id="vRZ-cf-3RR">
+                        <font key="font" metaFont="smallSystem"/>
+                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="t5h-sy-2IO" customClass="LMImageView">
+                    <rect key="frame" x="8" y="11" width="30" height="30"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="30" id="Drv-Oa-Oqf"/>
+                        <constraint firstAttribute="width" constant="30" id="IR8-gS-k7x"/>
+                    </constraints>
+                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="NSComputer" id="e82-JV-HYd"/>
+                </imageView>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="DTq-Ke-BW3" customClass="LMTextField">
+                    <rect key="frame" x="44" y="8" width="110" height="17"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="17" id="JR2-s0-LHa"/>
+                    </constraints>
+                    <textFieldCell key="cell" lineBreakMode="charWrapping" truncatesLastVisibleLine="YES" enabled="NO" sendsActionOnEndEditing="YES" alignment="left" title="xxxxx项" id="p7c-ML-Ec3">
+                        <font key="font" metaFont="cellTitle"/>
+                        <color key="textColor" red="0.59607843137254901" green="0.60392156862745094" blue="0.61960784313725492" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <button horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Uht-vj-ryj">
+                    <rect key="frame" x="220" y="18" width="16" height="16"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="16" id="Uz6-bl-CM3"/>
+                        <constraint firstAttribute="height" constant="16" id="qRB-0q-iMa"/>
+                    </constraints>
+                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="icon-跳转" imagePosition="only" alignment="center" allowsMixedState="YES" imageScaling="proportionallyUpOrDown" inset="2" id="rzU-tw-6dL">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                </button>
+                <customView translatesAutoresizingMaskIntoConstraints="NO" id="Tbj-lX-wAV" customClass="LMSpacePathView">
+                    <rect key="frame" x="46" y="27" width="106" height="17"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="17" id="aM4-FC-dcC"/>
+                    </constraints>
+                </customView>
+            </subviews>
+            <constraints>
+                <constraint firstItem="Uht-vj-ryj" firstAttribute="centerY" secondItem="c22-O7-iKe" secondAttribute="centerY" id="02N-rl-mOR"/>
+                <constraint firstAttribute="bottom" secondItem="DTq-Ke-BW3" secondAttribute="bottom" constant="8" id="0ol-6x-pdr"/>
+                <constraint firstItem="Uht-vj-ryj" firstAttribute="leading" secondItem="4Os-Qf-BUt" secondAttribute="trailing" constant="4" id="1FQ-x7-gQd"/>
+                <constraint firstAttribute="trailing" secondItem="Uht-vj-ryj" secondAttribute="trailing" constant="8" id="Bml-OY-Ndh"/>
+                <constraint firstItem="4Os-Qf-BUt" firstAttribute="centerY" secondItem="c22-O7-iKe" secondAttribute="centerY" constant="-2" id="Txp-fW-mmd"/>
+                <constraint firstItem="DTq-Ke-BW3" firstAttribute="leading" secondItem="c22-O7-iKe" secondAttribute="leading" constant="46" id="VIH-HT-zDq"/>
+                <constraint firstItem="t5h-sy-2IO" firstAttribute="centerY" secondItem="c22-O7-iKe" secondAttribute="centerY" id="b61-r9-fOb"/>
+                <constraint firstItem="Tbj-lX-wAV" firstAttribute="top" secondItem="c22-O7-iKe" secondAttribute="top" constant="8" id="jFA-Ij-CCn"/>
+                <constraint firstItem="DTq-Ke-BW3" firstAttribute="trailing" secondItem="Tbj-lX-wAV" secondAttribute="trailing" id="oRy-28-GAc"/>
+                <constraint firstItem="Tbj-lX-wAV" firstAttribute="leading" secondItem="c22-O7-iKe" secondAttribute="leading" constant="46" id="ocU-dS-x6d"/>
+                <constraint firstItem="4Os-Qf-BUt" firstAttribute="leading" secondItem="Tbj-lX-wAV" secondAttribute="trailing" constant="4" id="vUK-EC-ATR"/>
+                <constraint firstItem="t5h-sy-2IO" firstAttribute="leading" secondItem="c22-O7-iKe" secondAttribute="leading" constant="8" id="w0m-gK-PAU"/>
+            </constraints>
+            <connections>
+                <outlet property="iconImage" destination="t5h-sy-2IO" id="eGT-iR-DtQ"/>
+                <outlet property="nextButton" destination="Uht-vj-ryj" id="80n-4g-SPc"/>
+                <outlet property="spaceNameLabel" destination="Tbj-lX-wAV" id="l6X-Ts-zfw"/>
+                <outlet property="spaceSizeLabel" destination="4Os-Qf-BUt" id="pBg-bk-rFF"/>
+                <outlet property="spaceSubCountLabel" destination="DTq-Ke-BW3" id="VXr-AV-iEt"/>
+            </connections>
+            <point key="canvasLocation" x="285" y="132"/>
+        </customView>
+    </objects>
+    <resources>
+        <image name="NSComputer" width="32" height="32"/>
+        <image name="icon-跳转" width="16" height="16"/>
+    </resources>
+</document>

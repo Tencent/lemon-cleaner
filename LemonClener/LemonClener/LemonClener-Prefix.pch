@@ -1,0 +1,21 @@
+//
+//  LemonClener-Prefix.pch
+//  LemonClener
+//
+
+//  Copyright © 2018年 Tencent. All rights reserved.
+//
+
+
+
+#ifndef LemonClener_Prefix_pch
+#define LemonClener_Prefix_pch
+
+// Include any system framework and library headers here that should be included in all compilation units.
+// You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
+#import <Cocoa/Cocoa.h>
+#import <QMCoreFunction/QMExtension.h>
+#import <QMCoreFunction/QMDataCenter.h>
+#import <QMCoreFunction/QMNetworkClock.h>
+
+#endif /* LemonClener_Prefix_pch */

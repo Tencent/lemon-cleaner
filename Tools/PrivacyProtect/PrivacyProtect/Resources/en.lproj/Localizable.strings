@@ -1,0 +1,71 @@
+/*
+ Localizable.strings
+ PrivacyProtect
+ 
+ 
+ Copyright © 2019 Tencent. All rights reserved.
+ */
+"OwlManager_postVedioChangeNotifocationForUsingStatue_notification_1" = "The webcam becomes active";
+"OwlManager_postVedioChangeNotifocationForUsingStatue_notification_2" = "The webcam became inactive";
+"OwlManager_postVedioChangeNotifocationForUsingStatue_1553136870_3" = "OK";
+"OwlManager_postAudioChangeNotifocationForUsingStatue_notification_1" = "The mic becomes active";
+"OwlManager_postAudioChangeNotifocationForUsingStatue_notification_2" = "The mic became inactive";
+"OwlManager_postAudioChangeNotifocationForUsingStatue_1553136870_3" = "OK";
+"OwlManager_analyseDeviceInfoForNotificationWithArray_NSString_1" = "is using your webcam";
+"OwlManager_analyseDeviceInfoForNotificationWithArray_NSString_2" = "is using your mic";
+"OwlManager_analyseDeviceInfoForNotificationWithArray_NSString_3" = "is using webcam and mic";
+"OwlManager_analyseDeviceInfoForNotificationWithArray_NSString_4" = "has stopped using your webcam";
+"OwlManager_analyseDeviceInfoForNotificationWithArray_NSString_5" = "has stopped using your mic";
+"OwlManager_analyseDeviceInfoForNotificationWithArray_NSString_6" = "has stopped using your webcam and mic";
+"OwlManager_analyseDeviceInfoForNotificationWithArray_notification_7" = "The webcam becomes active";
+"OwlManager_analyseDeviceInfoForNotificationWithArray_notification_8" = "The mic becomes active";
+"OwlManager_analyseDeviceInfoForNotificationWithArray_notification_9" = "he webcam and mic become active";
+"OwlManager_analyseDeviceInfoForNotificationWithArray_notification_10" = "The webcam became inactive";
+"OwlManager_analyseDeviceInfoForNotificationWithArray_notification_11" = "The mic became inactive";
+"OwlManager_analyseDeviceInfoForNotificationWithArray_notification_12" = "The webcam and mic became inactive";
+"OwlManager_analyseDeviceInfoForNotificationWithArray_1553136870_13" = "Allow";
+"OwlManager_analyseDeviceInfoForNotificationWithArray_1553136870_14" = "Block";
+"OwlManager_analyseDeviceInfoForNotificationWithArray_1553136870_15" = "Close";
+"OwlManager_userNotificationCenter_alert_1" = "The App will be force stopped to prevent it from using the webcam";
+"OwlManager_userNotificationCenter_alert_2" = "The App will be force stopped to prevent it from using the mic";
+"OwlManager_userNotificationCenter_alert_3" = "The App will be force stopped to prevent it from using the webcam and mic";
+"OwlManager_userNotificationCenter_alert_4" = "Are you sure to block it？";
+"OwlManager_userNotificationCenter_alert_5" = "Always allow it to use your webcam and mic（add it to whitelist）?";
+"OwlManager_userNotificationCenter_alert_6" = "If always allow, you'll not get notifications when it access your webcam or mic";
+"OwlLogViewController_initWithFrame_tfTitle_1" = "Activity log";
+"OwlLogViewController_initWithFrame_labelTime_2" = "Time";
+"OwlLogViewController_initWithFrame_labelEvent_3" = "Event";
+"OwlSelectViewController_initWithFrame_cancel_1" = "Cancel";
+"OwlSelectViewController_initWithFrame_ok_2" = "Yes";
+"OwlSelectViewController_initWithFrame_tfTitle_3" = "Whitelist";
+"OwlSelectViewController_updateSelectLabel_NSString_1" = " %d Apps selected";
+"OwlWhiteListViewController_initWithFrame_1553136870_1" = "Webcam";
+"OwlWhiteListViewController_initWithFrame_1553136870_2" = "Microphone";
+"OwlWhiteListViewController_initWithFrame_removeBtn_3" = "Remove";
+"OwlWhiteListViewController_setWhiteListModel__tfKind_1" = "Build-in app";
+"OwlWhiteListViewController_setWhiteListModel__tfKind_2" = "Third-party app";
+"OwlWhiteListViewController_wantRemove_NSString_1" = "It will be removed from whitelist if you deny access to both webcam and mic. Are you sure to remove？";
+"OwlWhiteListViewController_wantRemove_NSString_2" = "YES";
+"OwlWhiteListViewController_wantRemove_NSString_3" = "Cancel";
+"OwlWhiteListViewController_initWithFrame_addBtn_1" = "Add";
+"OwlWhiteListViewController_initWithFrame_tfTitle_2" = "Whitelist";
+"OwlWhiteListViewController_initWithFrame_labelSpecApp _3" = "Name";
+"OwlWhiteListViewController_initWithFrame_labelSpecType _4" = "Type";
+"OwlWhiteListViewController_initWithFrame_labelSpecOp _5" = "Allow access";
+"OwlViewController_whiteListChange_NSString_1" = "Whitelist（%lu）";
+"OwlViewController_setLoadingUI_loadingLabelSpec _1" = "Initializing...";
+"OwlViewController_setFinishUI_labelTitle _1" = "Device Access Alert";
+"OwlViewController_setFinishUI_vedioLabelTitle _2" = "Webcam Access Alert";
+"OwlViewController_setFinishUI_vedioLabelSpec _3" = "Get alerts when apps access your webcam";
+"OwlViewController_setFinishUI_audioLabelTitle _4" = "Microphone Access Alert";
+"OwlViewController_setFinishUI_audioLabelSpec _5" = "Get alerts when apps access your mic";
+"OwlViewController_setFinishUI_logBtn_6" = "Activity log";
+"OwlViewController_setFinishUI_NSString_7" = "Whitelist（%lu）";
+"OwlViewController_showToastForFirst_notification_1" = "Mic access alert enabled";
+"OwlViewController_showToastForFirst_notification_2" = "You'll get notifications when your mic is accessed.";
+"OwlViewController_showToastForFirst_1553136870_3" = "Close";
+"OwlManager_userNotificationCenter_alert_7" = "Always allow";
+"OwlManager_userNotificationCenter_alert_8" = "Allow once";
+"OwlViewController_showToastForFirst_notification_4" = "Webcam access alert is enabled.";
+"OwlViewController_showToastForFirst_notification_5" = "You'll get notifications when your webcam is accessed.";
+

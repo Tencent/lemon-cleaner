@@ -1,0 +1,14 @@
+{
+  "version": "1",
+  "com.bjango.istatmenus": {
+    "UserAgents": [
+      "~/Library/LaunchAgents/com.bjango.istatmenus.status.plist",
+      "~/Library/LaunchAgents/com.bjango.istatmenus.status.plist"
+    ],
+    "Daemons": [
+      "/Library/LaunchDaemons/com.bjango.istatmenus.daemon.plist",
+      "/Library/LaunchDaemons/com.bjango.istatmenus.fans.plist",
+      "/Library/LaunchDaemons/com.bjango.istatmenus.installerhelper.plist"
+    ]
+  }
+}

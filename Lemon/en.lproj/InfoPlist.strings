@@ -1,0 +1,9 @@
+/* 
+  InfoPlist.strings
+  Lemon
+
+  
+  Copyright © 2019 Tencent. All rights reserved.
+*/
+"NSAppleEventsUsageDescription" = "Lemon cannot delete photos in photo library directly. The similar photos will be moved to a new folder. Please grant Lemon permission to create the new folder. ";
+"NSPhotoLibraryUsageDescription" = "Please grant Lemon permission to scan  photos in photo library. ";

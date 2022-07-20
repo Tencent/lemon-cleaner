@@ -1,0 +1,80 @@
+/*
+ Localizable.strings
+ LemonMonitor
+ 
+ 
+ Copyright © 2019 Tencent. All rights reserved.
+ */
+"LEMON_LANGUAGE" = "EN";
+"LMMonitorTabController_setupLauncherView_launchLemonBtn_1" = "Launch Lemon";
+"LMMonitorTabController_rightAboutAction_windowAbout_1" = "About Lemon Cleaner";
+"LMMonitorTabController_rightAboutAction_1553842683_2" = "Copyright©2020 Tencent. All Rights Reserved.";
+"LMMonitorTabController_rightAboutAction_1553842683_3" = "Copyright©2020 Tencent. All Rights Reserved";
+"LMMonitorTabController_rightLanguageAction__windowLanguage_1" = "Language settings";
+"LMMonitorTabController_rightQuitAction_alert_1" = "After you quit, device access alert and leftover detection features will not work any more. Do you still want to quit?";
+"LMMonitorPoppverController_setupBubble_1553842683_1" = "System";
+"LMCleanViewController_showTrashContainerView_1553842683_1" = " can be recovered";
+"LMCleanViewController_showTrashContainerView_1553842683_2" = "Clean";
+"LMCleanViewController_showTrashCleaningView_trashTipsText_1" = "Cleaning...";
+"LMCleanViewController_showTrashCleanedView_trashCountText_1" = "space recovered";
+"LMCleanViewController_showTrashCleanedView_NSString_2" = "Recovered %@";
+"LMCleanViewController_showTrashCleanessView_trashTipsText1_1" = "Your Mac is very clean!";
+"LMCleanViewController_showTrashCleanessView_trashTipsText2_2" = "Keep Mac as clean as new";
+"LMCleanViewController_showScaningTrashView_trashTipsText1_1" = "Scanning...";
+"LMCleanViewController_showScaningTrashView_trashTipsText2_2" = " Wait a second please";
+"LMCleanViewController_showMemContainerView_memTipsText_1" = "Memory usage";
+"LMCleanViewController_showMemContainerView_memButtonText _2" = "Release";
+"LMCleanViewController_showMemCleaningView_memTipsText_1" = "Releasing memory...";
+"LMCleanViewController_showMemCleanedView_memTipsText1_1" = "Released";
+"LMCleanViewController_showMemCleanedView_memTipsText2_2" = "Memory";
+"LMSystemFeatureViewController_updateVedioState__privacyCameraLabel_1" = "Monitoring";
+"LMSystemFeatureViewController_updateVedioState__privacyCameraLabel_2" = "Off";
+"LMSystemFeatureViewController_updateVedioState__privacyCameraLabel_not_work" = "Not supported for 11.3";
+
+"LMSystemFeatureViewController_updateAudioState__privacyMicrophoneLabel_1" = "Monitoring";
+"LMSystemFeatureViewController_updateAudioState__privacyMicrophoneLabel_2" = "Off";
+"LMSystemFeatureViewController_updateAudioState__privacyMicrophoneLabel__not_work" = "Working on update";
+
+"LMSystemFeatureViewController_setupNetworkInfoView_networkCheckButton _1" = "Test speed";
+"LMSystemFeatureViewController_setupOwlViews_cameraLabel_1" = "Webcam Access Alert";
+"LMSystemFeatureViewController_setupOwlViews_microphoneLabel_2" = "Microphone Access Alert";
+"LMSystemFeatureViewController_setupMiscView_cpuText_1" = "CPU";
+"LMSystemFeatureViewController_setupMiscView_cpuUsage_label" = "CPU Usage";
+"LMSystemFeatureViewController_setupMiscView_fanText_2" = "Fan speed";
+"LMSystemFeatureViewController_setupMiscView_diskInfoLabel_3" = "Disk usage";
+"LMMemoryCellView_setupCloseInfoViews_closeButton _1" = "Close";
+"LMMemoryCellView_viewDidLoad_messageLabel_1" = "Tips: Save your files before closing it.";
+
+"LMMonitorPoppverController_setupBubble_1553842944_1" = "FreeUp";
+"LMMonitorTabController_onLaunchSettings_item1 _1" = "About Lemon Cleaner";
+"LMMonitorTabController_onLaunchSettings_item4 _2" = "Update";
+"LMMonitorTabController_onLaunchSettings_item6 _3" = "Preferences";
+"LMMonitorTabController_onLaunchSettings_item7 _4" = "Quit";
+"LMMonitorTabController_rightQuitAction_alert_2" = "Cancel";
+"LMMonitorTabController_rightQuitAction_alert_3" = "Quit";
+"LemonHardwareViewController_initView_diskButton_1" = "More info";
+"LMSystemFeatureViewController_initNetworkData_diskSize_1"="Left";
+"LMSystemFeatureViewController_initNetworkData_diskSize_2"="Total";
+"LMMonitorTabController_rightAboutAction_LemonProductName_1" = "Lemon Cleaner";
+
+"LMTrashSizeCheckWindowController_need_clean_size_tips_content_for_delete_file" = "There are %@ junks in the trash.";
+"LMTrashSizeCheckWindowController_need_clean_size_tips_content_second" = "Would you like to empty the trash?";
+"LMTrashSizeCheckWindowController_need_clean_size_tips_content_for_over_threshold" = "There are over %@ junks in the trash.";
+"LMTrashSizeCheckWindowController_cleaning_tips" = "Removing……";
+"LMTrashSizeCheckWindowController_cleaning_complete_tips" = "The trash has been cleaned up.";
+
+"LMTrashSizeCheckWindowController_cleaning_next_remind_btn" = "Clean later";
+"LMTrashSizeCheckWindowController_cleaning_clean_btn" = "Yes";
+"LMTrashSizeCheckWindowController_cleaning_cancel_btn" = "Cancel";
+"LMTrashSizeCheckWindowController_cleaning_complete_btn" = "Done";
+
+"New version detected, you will get better cleaning experience after update" = "New version detected, you will get better cleaning experience after update";
+"Current version: %@" = "Current version: %@";
+"Latest version: %@" = "Latest version: %@";
+"Upgrade" = "Upgrade";
+
+"beObscured"     = "The status bar may be obscured by the camera. Try displaying fewer icons or turning off the rest of the unused status bar icons.";
+"Cancel_Tip"     = "OK";
+"OK_Tip"         = "Preferences";
+
+"NO network"     = "NO network";

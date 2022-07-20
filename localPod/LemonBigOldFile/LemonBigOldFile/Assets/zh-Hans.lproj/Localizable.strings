@@ -1,0 +1,57 @@
+/* 
+  Localizable.strings
+  LemonBigOldFile
+
+  Copyright © 2019 Tencent. All rights reserved.
+*/
+"LMResultViewController_initViewText_backBtn_1" = "返回";
+"LMResultViewController_initViewText_filterBtnAll_2" = "全部";
+"LMResultViewController_initViewText_filterBtnMusic_3" = "音频";
+"LMResultViewController_initViewText_filterBtnVideo_4" = "视频";
+"LMResultViewController_initViewText_filterBtnDocument_5" = "文档";
+"LMResultViewController_initViewText_filterBtnInstall_6" = "安装包";
+"LMResultViewController_initViewText_filterBtnOther_7" = "其他";
+"LMResultViewController_initViewText_previewDescText_8" = "预览模式";
+"LMResultViewController_initViewText_noFileDescLabel_9" = "没有发现此类别的大文件";
+"LMResultViewController_initViewText_cleanBtn_10" = "立即清理";
+"LMResultViewController__refreshDeleteStatus_NSString_1" = "已选择 %@ 个文件，共 %@";
+"LMResultViewController__refreshDeleteStatus_selectedSizeText_2" = "请选择需要清理的文件";
+"LMResultViewController__refreshDeleteStatus_NSString_3" = "发现 %@ 大文件";
+"LMRemoveViewController_viewDidLoad_titleLabel_1" = "正在清理大文件";
+"LMBigMainViewController_initViewText_mainVIewTitleLabel_1" = "大文件清理";
+"LMBigMainViewController_initViewText_mainViewBtn_2" = "开始扫描";
+"LMBigMainViewController_initViewText_scanTitleLabel_3" = "正在扫描大文件";
+"LMBigMainViewController_initViewText_cancelBtn_4" = "取消";
+"LMBigMainViewController_initViewText_noResultDescLabel_5" = "大文件只扫描 50 MB 以上的文件噢";
+"LMBigMainViewController_initViewText_scanDoneBtn_6" = "完成";
+"LMBigMainViewController_showNoResultView__noResultTitleLabel_1" = "已扫描文件中没有发现大文件";
+"LMBigMainViewController_showNoResultView__noResultTitleLabel_2" = "没有发现大文件";
+"QMLargeOldManager_init_1553075107_1" = "最近";
+"QMLargeOldManager_init_1553075107_2" = "一周前";
+"QMLargeOldManager_init_1553075107_3" = "两周前";
+"QMLargeOldManager_init_1553075107_4" = "一个月前";
+"QMLargeOldManager_init_1553075107_5" = "两个月前";
+"QMLargeOldManager_init_1553075107_6" = "三个月前";
+"QMLargeOldManager_init_1553075107_7" = "六个月前";
+"QMLargeOldManager_init_1553075107_8" = "一年前";
+"QMLargeOldManager_init_1553075107_9" = "两年前";
+"QMLargeOldManager_init_1553075107_10" = "图片";
+"QMLargeOldManager_init_1553075107_11" = "文档";
+"QMLargeOldManager_init_1553075107_12" = "压缩包";
+"QMLargeOldManager_init_1553075107_13" = "电影";
+"QMLargeOldManager_init_1553075107_14" = "文档";
+"QMLargeOldManager_init_1553075107_15" = "其他";
+"QMLargeOldManager_accessTimeArray_1553075107_1" = "随时";
+"QMLargeOldManager__fileSizeName_NSString_1" = "%@ - %@ 文件:";
+"QMLargeOldManager__fileSizeName_NSString_2" = "%@ 以上文件:";
+"QMLargeOldManager__fileExtensionName_1553075107_1" = "音频";
+"QMLargeOldManager__fileExtensionName_1553075107_2" = "视频";
+"QMLargeOldManager__fileExtensionName_1553075107_3" = "文档";
+"QMLargeOldManager__fileExtensionName_1553075107_4" = "图片";
+"QMLargeOldManager__fileExtensionName_1553075107_5" = "其他";
+"LMRootCellView_setCellData_NSString_1" = "共 %ld 项，%@";
+"LMRootCellView_setCellData_NSString_2" = "共 %@，已选择 ";
+"LMBigMainViewController_initViewText_mainViewDescLabel_1" = "查找很久未使用或大型的文件，释放磁盘空间";
+"LMRemoveViewController_viewDidLoad_doneTitleTextView_1" = "清理完成";
+"LMRemoveViewController_viewDidLoad_removedDescText_2" = "%@ 文件已移到废纸篓";
+"LMRemoveViewController_viewDidLoad_doneBtn_3" = "完成";

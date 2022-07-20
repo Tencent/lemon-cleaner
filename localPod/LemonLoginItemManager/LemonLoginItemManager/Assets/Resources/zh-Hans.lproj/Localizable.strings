@@ -1,0 +1,33 @@
+/* 
+  Localizable.strings
+  LemonLoginItemManager
+
+  
+  Copyright © 2020 Tencent. All rights reserved.
+*/
+
+"LemonLoginItemManagerViewController_window_title" = "开机启动项管理";
+
+"LemonLoginItemManagerViewController_loading" = "加载中，请耐心等待...";
+"LemonLoginItemManagerViewController_search_tips" = "搜索";
+"LemonLoginItemManagerViewController_search_result_tips_begin_label_complex" = "搜索到以下 %d 个开机自启项:";
+"LemonLoginItemManagerViewController_search_result_tips_begin_label_singular" = "搜索到以下 %d 个开机自启项:";
+
+"LemonLoginItemManagerViewController_no_result" = "暂未搜索到相关结果";
+"LemonLoginItemManagerViewController_empty" = "未找到开机启动项";
+
+"LemonLoginItemManagerViewController_column_name_app" = "应用程序";
+"LemonLoginItemManagerViewController_column_name_status" = "启用状态";
+"LemonLoginItemManagerViewController_column_name_setting" = "设置启动项";
+"LemonLoginItemManagerViewController_column_name_count" = "开机自启项";
+"LemonLoginItemManagerViewController_status_all_enabled" = "全部允许";
+"LemonLoginItemManagerViewController_status_partial_enable" = "部分允许";
+"LemonLoginItemManagerViewController_status_all_disabled" = "全部禁止";
+
+"LemonLoginItemManagerViewController_setting_status_enabled" = "已允许";
+"LemonLoginItemManagerViewController_setting_status_disabled" = "已禁止";
+"LemonLoginItemManagerViewController_item_count" = "%d 项";
+
+"LemonLoginItemManagerViewController_item_type_app" = "应用启动项";
+"LemonLoginItemManagerViewController_item_type_service" = "后台服务项";
+"LemonLoginItemManagerViewController_unknown_app" = "未知应用";

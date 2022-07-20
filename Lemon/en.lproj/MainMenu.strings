@@ -1,0 +1,87 @@
+
+/* Class = "NSMenuItem"; title = "Lemon Cleaner"; ObjectID = "1Xt-HY-uBw"; */
+"1Xt-HY-uBw.title" = "Lemon Cleaner";
+
+/* Class = "NSMenuItem"; title = "退出 Lemon Cleaner"; ObjectID = "4sb-4s-VLi"; */
+"4sb-4s-VLi.title" = "Quit Lemon Cleaner";
+
+/* Class = "NSMenuItem"; title = "编辑"; ObjectID = "5QF-Oa-p0T"; */
+"5QF-Oa-p0T.title" = "Edit";
+
+/* Class = "NSMenuItem"; title = "偏好设置"; ObjectID = "ijo-b3-SYX"; */
+"ijo-b3-SYX.title" = "Preferences...";
+
+/* Class = "NSMenuItem"; title = "关于 Lemon Cleaner"; ObjectID = "5kV-Vb-QxS"; */
+"5kV-Vb-QxS.title" = "About Lemon Cleaner";
+
+/* Class = "NSMenuItem"; title = "Redo"; ObjectID = "6dh-zS-Vam"; */
+"6dh-zS-Vam.title" = "Redo";
+
+/* Class = "NSMenu"; title = "Main Menu"; ObjectID = "AYu-sK-qS6"; */
+"AYu-sK-qS6.title" = "Main Menu";
+
+/* Class = "NSMenuItem"; title = "版本更新"; ObjectID = "BOF-NM-1cW"; */
+"BOF-NM-1cW.title" = "Upgrade";
+
+/* Class = "NSMenu"; title = "帮助"; ObjectID = "F2S-fz-NVQ"; */
+"F2S-fz-NVQ.title" = "Help";
+
+/* Class = "NSMenuItem"; title = "反馈建议"; ObjectID = "FKE-Sm-Kum"; */
+"FKE-Sm-Kum.title" = "Feedback";
+
+/* Class = "NSMenuItem"; title = "Bring All to Front"; ObjectID = "LE2-aR-0XJ"; */
+"LE2-aR-0XJ.title" = "Bring All to Front";
+
+/* Class = "NSMenuItem"; title = "Minimize"; ObjectID = "OY7-WF-poV"; */
+"OY7-WF-poV.title" = "Minimize";
+
+/* Class = "NSMenuItem"; title = "隐藏 Lemon Cleaner"; ObjectID = "Olw-nP-bQN"; */
+"Olw-nP-bQN.title" = "Hide Lemon Cleaner";
+
+/* Class = "NSMenuItem"; title = "Zoom"; ObjectID = "R4o-n2-Eq4"; */
+"R4o-n2-Eq4.title" = "Zoom";
+
+/* Class = "NSMenuItem"; title = "Select All"; ObjectID = "Ruw-6m-B2m"; */
+"Ruw-6m-B2m.title" = "Select All";
+
+/* Class = "NSMenu"; title = "窗口"; ObjectID = "Td7-aD-5lo"; */
+"Td7-aD-5lo.title" = "Window";
+
+/* Class = "NSMenuItem"; title = "Close"; ObjectID = "UpW-Vv-31G"; */
+"UpW-Vv-31G.title" = "Close";
+
+/* Class = "NSMenuItem"; title = "隐藏其他"; ObjectID = "Vdr-fp-XzO"; */
+"Vdr-fp-XzO.title" = "Hide others";
+
+/* Class = "NSMenu"; title = "编辑"; ObjectID = "W48-6f-4Dl"; */
+"W48-6f-4Dl.title" = "Edit";
+
+/* Class = "NSMenuItem"; title = "窗口"; ObjectID = "aUF-d1-5bR"; */
+"aUF-d1-5bR.title" = "Window";
+
+/* Class = "NSMenuItem"; title = "Undo"; ObjectID = "dRJ-4n-Yzg"; */
+"dRJ-4n-Yzg.title" = "Undo";
+
+/* Class = "NSMenuItem"; title = "Paste"; ObjectID = "gVA-U4-sdL"; */
+"gVA-U4-sdL.title" = "Paste";
+
+/* Class = "NSMenuItem"; title = "Delete"; ObjectID = "pa3-QI-u2k"; */
+"pa3-QI-u2k.title" = "Delete";
+
+/* Class = "NSMenu"; title = "Lemon Cleaner"; ObjectID = "uQy-DD-JDr"; */
+"uQy-DD-JDr.title" = "Lemon Cleaner";
+
+/* Class = "NSMenuItem"; title = "Cut"; ObjectID = "uRl-iY-unG"; */
+"uRl-iY-unG.title" = "Cut";
+
+/* Class = "NSMenuItem"; title = "帮助"; ObjectID = "wpr-3q-Mcd"; */
+"wpr-3q-Mcd.title" = "Help";
+
+/* Class = "NSMenuItem"; title = "Copy"; ObjectID = "x3v-GG-iWU"; */
+"x3v-GG-iWU.title" = "Copy";
+
+"tjx-iT-XSu.title" = "Add menu bar icon";
+"8Qw-f1-ca7.title" = "Privacy policy";
+
+"h02-Kg-SYn.title" = "Collect Log";
+

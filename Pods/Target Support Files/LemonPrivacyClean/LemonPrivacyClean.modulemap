@@ -1,0 +1,6 @@
+framework module LemonPrivacyClean {
+  umbrella header "LemonPrivacyClean-umbrella.h"
+
+  export *
+  module * { export * }
+}

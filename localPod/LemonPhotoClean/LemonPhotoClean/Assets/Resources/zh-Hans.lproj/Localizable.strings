@@ -1,0 +1,66 @@
+/* 
+  Localizable.strings
+  LemonPhotoCleaner
+
+  
+  Copyright © 2019 Tencent. All rights reserved.
+*/
+"LMFloderAddViewController_initViewText_titleTextFileld_1" = "相似照片清理";
+"LMFloderAddViewController_initViewText_descTextField_2" = "快速准确地查找相似或重复的照片，支持查找系统照片";
+"LMFloderAddViewController_viewDidLoad_1553065843_1" = "开始扫描";
+"LMFloderAddViewController_viewDidLoad_1553065843_2" = "点击添加照片文件夹";
+"LMFloderAddViewController_viewDidLoad_ok_3" = "查找系统照片";
+"LMFloderAddViewController_addSystemPhotoLibraryPathAction_1553065843_1" = "%@/Pictures/照片图库.photoslibrary";
+"CheckDeleteSystemPhotoViewController_initViewText_picDeleteTip_1" = "照片已清理";
+"CheckDeleteSystemPhotoViewController_initViewText_descTitleTextFileld_2" = "已将照片移动到相似文件夹中，请前往文件夹并手动删除";
+"CheckDeleteSystemPhotoViewController_initViewText_noUseButton_3" = "暂不体验";
+"CheckDeleteSystemPhotoViewController_initViewText_noUseButton_cancel" = "取消";
+"CheckDeleteSystemPhotoViewController_viewDidLoad_1553065843_1" = "立即清理";
+"CheckDeleteSystemPhotoViewController_button_get_permission" = "获取权限";
+"CheckDeleteSystemPhotoViewController_viewDidLoad_needToCleanBySelf_2" = "剩余%@照片在系统文件目录下，需要手动清理 ";
+"LMScanViewController_initViewText_scanningTitleTextField_1" = "正在扫描相似照片";
+"LMScanViewController_initViewText_currentPath_2" = "正在获取路径中，可能会花一点时间...";
+"LMScanViewController_timerAction_descriptionString _1" = "正在获取路径中，可能会花一点时间";
+"LMScanViewController_showResultView_1553065843_1" = "提前结束扫描，没有发现相似照片哦！";
+"LMScanViewController_showResultView_1553065843_2" = "没有发现相似照片哦！";
+"LMScanViewController_showResultView_groupName1 _3" = "";
+"LMScanViewController_showResultView_1553065843_4" = "";
+"LMScanViewController_showResultView_1553065843_5" = "";
+"LMScanViewController_showResultView_groupName2 _6" = "";
+"LMScanViewController_showResultView_1553065843_7" = "";
+"LMScanViewController_showResultView_1553065843_8" = "";
+"LMSimilarPhotoResultViewContoller_viewDidLoad_cancelButton_1" = "返回";
+"LMSimilarPhotoResultViewContoller_viewDidLoad_1553065843_2" = "立即清理";
+"LMSimilarPhotoResultViewContoller_collectionView_btnSelect_1" = "建议选择";
+"LMSimilarPhotoResultViewContoller_collectionView_btnSelect_2" = "取消选择";
+"LMSimilarPhotoResultViewContoller_updateDescription_textTotalNumDescription_1" = "%ld张相似照片";
+"LMSimilarPhotoResultViewContoller_updateDescription_textDesciptionString _2" = "已选择 %ld 张，%@";
+"LMSimilarPhotoResultViewContoller_getDeletePictureSizeDescription_1553065843_1" = "共 %.2f TB";
+"LMSimilarPhotoResultViewContoller_getDeletePictureSizeDescription_1553065843_2" = "共 %.2f GB";
+"LMSimilarPhotoResultViewContoller_getDeletePictureSizeDescription_1553065843_3" = "共 %.2f MB";
+"LMPhotoCleanViewController_viewDidLoad_cleanningTitleTextFileld_1" = "正在清理相似照片";
+"LMNoSimilarPhotoResultViewController_viewDidLoad_descriptionTextField_1" = "没有发现相似照片哦！";
+"LMNoSimilarPhotoResultViewController_viewDidLoad_1553065843_2" = "完成";
+"LMPhotoCollectionViewHeader_initWithCoder_ok_1" = "取消选择";
+"SimilatorPhotosPreviewView_addImageNotExistDescriptionTextField_imageNotExistDescriptionTextField_1" = "该图片已被删除";
+"SimilatorPhotosPreviewView_addConfirmButton_1553065843_1" = "确定";
+"SimilatorPhotosPreviewView_addCancelButton_cancelButton_1" = "取消";
+"SimilatorPhotosPreviewView_descriptionView_description _1" = "共 %lu 张相似照片，已选择 %d 张";
+"LMPhotoCleanFinishedViewController_viewDidLoad_descriptionTextField_1" = "清理完成，照片已经移到废纸篓";
+"LMPhotoCleanFinishedViewController_viewDidLoad_1553065843_2" = "完成";
+"LMPhotoCleanFinishedViewController_viewDidLoad_description _3" = "清理完成，%ld张照片已经移到废纸篓";
+"ImageGroupCompare_setSectionHeader_1553065843_1" = "yyyy年MM月dd日";
+"LMScanViewController_initViewText_cancelBtn_1" = "取消";
+"LMFloderAddViewController_alertDialog_content_needPermission" = "Lemon没有权限扫描系统相册，点击“获取权限”授权后继续完成扫描。";
+"LMFloderAddViewController_alertDialog_okButton_getPermission" = "获取权限";
+"LMFloderAddViewController_alertDialog_cancelButton" = "取消";
+"LMFloderAddViewController_accessPhoto_permissionGuide_title" = "10.14系统后，需获取权限才可扫描系统相册";
+"LMFloderAddViewController_accessPhoto_permissionGuide_descText" = "Lemon不会上传你的照片信息，请放心使用";
+"CheckDeleteSystemPhotoViewController_automation_permissionGuide_title" = "10.14系统后，需获取权限才可清理系统相册";
+"CheckDeleteSystemPhotoViewController_automation_permissionGuide_descText" = "Lemon不会上传你的照片信息，请放心使用";
+"CheckDeleteSystemPhotoViewController_automation_needPermissionTips" = "Lemon没有权限清理系统相册，授权以继续完成清理";
+"CheckDeleteSystemPhotoViewController_operateButton_scanAgain" = "更新";
+"CheckDeleteSystemPhotoViewController_cleaning_loadingText" = "正在清理，请稍等...";
+"LMSimilarPhotoResultViewContoller_intelligentSelect_text" = "智能选择";
+
+

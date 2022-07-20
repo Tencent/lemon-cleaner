@@ -1,0 +1,53 @@
+/*
+ Localizable.strings
+ LemonPrivacyClean
+ 
+ 
+ Copyright © 2019 tencent. All rights reserved.
+ */
+"RunningAppPopViewController_setupViews_killAllButton _1" = "Quit";
+"RunningAppPopViewController_setupViews_cancelButton_2" = "Cancel";
+"RunningAppPopViewController_updateLabel_NSString_1" = "%li browsers are running,\n please quit them first.";
+"PrivacyCleanResultViewController_setupViews_cleanTitleLabel_1" = "Cleanup complete";
+"PrivacyCleanResultViewController_setupViews_cleanSubTitleLabel_2" = " The items have been moved to trash";
+"PrivacyCleanResultViewController_setupViews_cleanButton _3" = "Back";
+"PrivacyCleanResultViewController_viewWillAppear_NSString_1" = "%@ tracks have been cleand";
+"PrivacyCleanResultViewController_viewWillAppear_cleanSubTitleLabel_2" = "You have successfully washed browser tracks";
+"PrivacyStartViewController_setupViews_titleView_1" = "Privacy clean";
+"PrivacyStartViewController_setupViews_subTitleView_2" = "Wash browser tracks and private information stored";
+"PrivacyStartViewController_setupViews_startScanButton _3" = "Scan";
+"PrivacyScanViewController_setupTextViews_titleLabel_1" = "Scanning browser tracks";
+"PrivacyScanViewController_setupTextViews_titleLabel_2" = "Cleaning browser tracks";
+"PrivacyResultViewController_setupTitleView_cleanButton _1" = "Clean";
+"PrivacyResultViewController_updateTitleView_NSString_1" = "Please select the items you want to remove";
+"PrivacyResultViewController_updateTitleView_NSString_2" = " %ld items selected";
+"FirefoxPrivacyManager__1553135349_1" = "Nothing found!!";
+"PrivacyData_calculateSubItemsTotalNum_1553135349_1" = "Visited links";
+"PrivacyData_calculateSubItemsTotalNum_1553135349_2" = "Download hisotry";
+"PrivacyData_calculateSubItemsTotalNum_1553135349_3" = "Local storage";
+"PrivacyData_calculateSubItemsTotalNum_1553135349_4" = "Password data";
+"PrivacyData_calculateSubItemsTotalNum_1553135349_5" = "Autofill form data";
+"PrivacyData_calculateSubItemsTotalNum_1553135349_6" = "Data stored in local to identify users. Personal information cannot be tracked if deleted";
+"PrivacyData_calculateSubItemsTotalNum_1553135349_7" = "Browsing history. Remove them if you don't need them or for privacy reasons.";
+"PrivacyData_calculateSubItemsTotalNum_1553135349_8" = "The download history of browser. You can remove early records";
+"PrivacyData_calculateSubItemsTotalNum_1553135349_9" = "Configuration information of certain user sessions. You can safely delete it.";
+"PrivacyData_calculateSubItemsTotalNum_1553135349_10" = "The password data stored locally within the browser. You need to enter password if deleted.";
+"PrivacyData_calculateSubItemsTotalNum_1553135349_11" = "Web applications store data locally within the browser. It's NOT suggested to delete it.";
+"PrivacyData_calculateSubItemsTotalNum_1553135349_12" = "Autofill data according to your history when input in browser. You can safely delete it.";
+"PrivacyData_calculateSubItemsTotalNum_1553135349_13" = "unKnown, Unknown items";
+"PrivacyCategoryTableCellView_updateViewByItem_NSString_1" = " %li items";
+"PrivacyCategoryTableCellView_updateViewByItem_NSString_2" = "selected ";
+"PrivacyCategoryTableCellView_updateViewByItem_NSString_3" = "%@%@ items";
+"PrivacyAppTableCellView_updateViewBy_NSString_1" = " %li items";
+"PrivacyAppTableCellView_updateViewBy_NSString_2" = " %li items, select ";
+"PrivacyAppTableCellView_updateViewBy_NSString_3" = "%@%@ items";
+"PrivacyAppTableCellView_updateViewBy_1553135349_4" = "No records";
+"PrivacyAppTableCellView_updateViewBy_1553135349_5" = "Grant Access";
+"PrivacyAppTableCellView_refreshAfterFullDiskAccessSetting_refreshLabel_1" = "Access granted and please rescan";
+"PrivacyItemTableCellView_updateViewBy_NSString_1" = "%li related items";
+"GETAccessAuthority" = "Grant access";
+"GETAllItemsAccessAuthority" = "Grant all access";
+
+"DefaultAccount" = "Default Account";
+"Account" = "Account ";
+

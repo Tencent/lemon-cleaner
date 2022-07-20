@@ -1,0 +1,67 @@
+/* 
+  File.strings
+  Pods
+
+  
+  
+*/
+
+// 5.1.0版本
+"Files Transfer" = "文件搬家";
+
+"Scanning" = "正在扫描";
+
+"Select files to export" = "请选择需要导出的文件";
+"Total %.1f GB, selected" = "共 %.1f GB，已选择";
+"Files created before 90 days ago will be selected by default." = "默认选择 90 天以前产生的文件";
+"Next" = "下一步";
+"Media from WeCom chat history" = "企业微信接收到的文档/图片/视频";
+"Media from WeChat chat history" = "微信接收到的文档/图片/视频";
+"Media from QQ chat history" = "QQ接收到的文档/图片/视频";
+"Documents created before 90 days" = "90 天前产生的文档";
+"Documents created within the past 90 days" = "最近 90 天产生的文档";
+"Images created before 90 days" = "90 天前产生的图片";
+"Images created within the past 90 days" = "最近 90 天产生的图片";
+"Videos created before 90 days" = "90 天前产生的视频";
+"Videos created within the past 90 days" = "最近 90 天产生的视频";
+"Total %@" = "共 %@";
+"WeCom" = "企业微信";
+"WeChat" = "微信";
+
+// MARK: - 磁盘选择
+"Select a folder to save files" = "请选择导出位置";
+"Back" = "返回";
+"Transfer" = "开始搬家";
+"To save space on your Mac you can move your files to external storage directly or after exporting files to the local disk." = "可选择外部储存为本地腾出空间；或者先导出至本地，后续再迁出本地磁盘";
+"Destination：" = "所选位置：";
+"External Storage" = "外部存储";
+"Custom" = "自定义";
+"Custom Path" = "自定义路径";
+"Local" = "本地磁盘";
+"Not enough space" = "可用空间不足";
+"%@ available" = "%@可用";
+"No external device found" = "未找到外部存储";
+"Please check whether it’s connected" = "请检查是否已连接";
+"Ok" = "选择";
+
+// MARK: - 导出过程
+"Transferring" = "文件正在搬家";
+"Transferred " = "已导出";
+"Total " = "共";
+" , total " = "，共";
+"Files can not put back to original folder after transfered." = "文件导出至新位置后，原路径文件将被清理";
+" Pending" = " 待导出";
+" %@ were not transferred" = " 已完成，%@导出失败";
+" Done" = " 已完成";
+"Done" = "已完成";
+" Free up space" = "已腾出空间";
+"Move File Done" = "搬家完成";
+"Files were moved to %@" = "文件已导出到 %@";
+"Show in Finder" = "查看文件";
+"Back to Menu" = "返回菜单";
+"To free up your spaces, please move your files to external storage or cloud disks." = "为更好的腾出空间，记得后续转移到外部存储或云盘喔~";
+"Some files failed to export, check space and permissions." = "部分文件导出失败，请检查剩余空间及目录权限";
+"%@ export failed" = "%@导出失败";
+"Stop the Transfering?" = "确认终止导出？";
+"Abort" = "终止";
+"Continue" = "继续导出";

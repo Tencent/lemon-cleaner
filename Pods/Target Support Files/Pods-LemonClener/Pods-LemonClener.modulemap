@@ -1,0 +1,6 @@
+framework module Pods_LemonClener {
+  umbrella header "Pods-LemonClener-umbrella.h"
+
+  export *
+  module * { export * }
+}

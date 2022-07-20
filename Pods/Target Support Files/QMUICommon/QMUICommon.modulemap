@@ -1,0 +1,6 @@
+framework module QMUICommon {
+  umbrella header "QMUICommon-umbrella.h"
+
+  export *
+  module * { export * }
+}

@@ -1,0 +1,227 @@
+<garbage version="2019.07.09.1">
+    <filters>
+        <!--临时目录下的缓存过滤-->
+        <filter id="1" column="filename" relation="is" value="com.apple.dock" action="exclude"/>
+        <filter id="2" column="filename" relation="is" value="com.apple.appstore" action="exclude"/>
+        <filter id="3" column="filename" relation="is" value="com.apple.dock.iconcache" action="exclude"/>
+        <filter id="4" column="filename" relation="is" value="com.apple.FontRegistry" action="exclude"/>
+        <filter id="5" column="filename" relation="begin with" value="com.apple.LaunchServices-" action="exclude"/>
+        <filter id="6" column="filename" relation="is" value="com.apple.Safari" action="exclude"/>
+        <!--系统目录缓存-->
+        <filter id="7" column="filename" relation="is" value="com.apple.Spotlight" action="exclude"/>
+        <!--日志文件过滤-->
+        <filter id="8" column="filesize" relation="greater" value="10000" action="include"/>
+        <filter id="9" column="filename" relation="match" value="^access.log*" action="include"/>
+        <filter id="10" column="filename" relation="match" value="^page.log*" action="include"/>
+        <filter id="11" column="filename" relation="match" value="^error.log*" action="include"/>
+        <filter id="12" column="filename" relation="match" value=".+\.out" action="include"/>
+        <filter id="13" column="filename" relation="match" value=".+\.log\..+" action="include"/>
+        <filter id="14" column="filename" relation="end with" value="log" action="include"/>
+        <filter id="15" column="filename" relation="is" value="com.rovio.mac.badpiggies" action="exclude"/>
+        <filter id="16" column="filename" relation="is" value="com.naturalmotion.csrracingmac" action="exclude"/>
+        <filter id="17" column="filename" relation="is" value="Axure-" action="exclude"/>
+        <filter id="18" column="filename" relation="is" value="com.glu.macos.ewarriors2" action="exclude"/>
+        <filter id="19" column="filename" relation="is" value="com.glu.macos.ckzombies2" action="exclude"/>
+        <filter id="20" column="filename" relation="is" value="com.naturalmotion.csrracingmac" action="exclude"/>
+        <filter id="21" column="filename" relation="is" value="com.apple.IconServices" action="exclude"/>
+        <filter id="23" column="filepath" relation="is" value="~/Library/Caches/Metadata/" action="exclude"/>
+        <filter id="24" column="filename" relation="is" value="Safari" action="include"/>
+        <filter id="25" column="filepath" relation="is" value="~/Library/Caches/Google/" action="exclude"/>
+        <filter id="26" column="filename" relation="is" value="DiagnosticReports" action="exclude"/>
+        <!--沙盒缓存-->
+        <filter id="27" column="filename" relation="is" value="com.glu.macos.deerhunt2" action="exclude"/>
+        <filter id="28" column="filepath" relation="is" value="~/Library/Caches/Opera/" action="exclude"/>
+        <filter id="29" column="filepath" relation="is" value="~/Library/Caches/QQBrowser2/" action="exclude"/>
+        <filter id="30" column="filepath" relation="is" value="~/Library/Caches/Firefox/" action="exclude"/>
+        <filter id="31" column="filepath" relation="is" value="~/Library/Caches/com.apple.Safari/" action="exclude"/>
+        <filter id="32" column="filepath" relation="is" value="~/Library/Caches/Google/Chrome/Default/Cache/" action="exclude"/>
+        <filter id="33" column="filepath" relation="begin with" value="~/Library/Caches/Microsoft" action="exclude"/>
+        <filter id="34" column="filepath" relation="begin with" value="~/Library/Containers/com.microsoft." action="exclude"/>
+        <filter id="35" column="filepath" relation="match" value="/private/var/folders/.*/.*/com\.microsoft\..*" action="exclude"/>
+        <filter id="36" column="filepath" relation="begin with" value="~/Library/Containers/com.apple.Safari.CacheDeleteExtension/" action="exclude"/>
+        <filter id="37" column="filepath" relation="is" value="~/Library/Caches/com.google.Chrome/" action="exclude"/>
+        <filter id="38" column="filepath" relation="is" value="~/Library/Caches/com.apple.Safari.SafeBrowsing/" action="exclude"/>
+        <filter id="39" column="filepath" relation="is" value="~/Library/Caches/com.apple.safaridavclient/" action="exclude"/>
+        
+        <!--ios缓存-->
+        <filter id="40" column="subfilecount" relation="greater" value="1" action="include"/>
+        <filter id="41" column="subfilepath" relation="is" value="~/Pictures/iPod Photo Cache/Photo DataBase" action="include"/>
+        <!--残留文件-->
+        <filter id="42" column="filename" relation="begin with" value="com.microsoft.office" action="exclude"/>
+        <filter id="43" column="filename" relation="match" value=".+com\.apple.+" action="exclude"/>
+        <filter id="44" column="filename" relation="begin with" value="loginwindow" action="exclude"/>
+        <filter id="45" column="filename" relation="begin with" value="UserEventAgent" action="exclude"/>
+        <filter id="46" column="filename" relation="begin with" value="com.hex-rays.IDA" action="exclude"/>
+        <filter id="47" column="filename" relation="match" value=".+\.[s|S]team.*" action="exclude"/>
+        <!--过滤苹果软件-->
+        <filter id="48" column="bundleid" relation="begin with" value="com.apple" action="exclude"/>
+        <!--过滤英语-->
+        <filter id="49" column="laungeuagekey" relation="is" value="en" action="exclude"/>
+        <filter id="50" column="laungeuagekey" relation="begin with" value="zh" action="exclude"/>
+        <filter id="51" column="bundleid" relation="is" value="com.apple.dt.Xcode" action="exclude"/>
+        <!--过滤微软软件-->
+        <filter id="52" column="bundleid" relation="begin with" value="com.microsoft" action="exclude"/>
+        <filter id="53" column="bundleid" relation="begin with" value="com.ittybittyapps" action="exclude"/>
+        <filter id="54" column="app" relation="is" value="signed" action="exclude"/>
+        <filter id="55" column="filename" relation="begin with" value="com.apple" action="exclude"/>
+        <!--caches 不扫描逻辑-->
+        <filter id="56" column="filepath" relation="begin with" value="~/Library/Containers/com.tencent.qq" action="exclude"/>
+        <filter id="57" column="filepath" relation="begin with" value="~/Library/Containers/com.tencent.xinWeChat" action="exclude"/>
+        <filter id="58" column="filepath" relation="begin with" value="~/Library/Caches/com.alibaba.DingTalkMac" action="exclude"/>
+        <filter id="59" column="filepath" relation="begin with" value="~/Library/Containers/5ZSL2CJU2T.com.dingtalk.mac" action="exclude"/>
+        <filter id="60" column="filepath" relation="begin with" value="~/Library/Caches/IntelliJIdea" action="exclude"/>
+        <!--    qq filter逻辑    -->
+        <filter id="61" column="time" relation="greater" value="180" action="include"/>
+        <filter id="62" column="time" relation="smaller" value="180" action="include"/>
+        <!--    微信 filter逻辑    -->
+        <filter id="63" column="filepath" relation="contains" value="avatar" action="include"/>
+        <!--    Logic Pro X逻辑    -->
+        <filter id="64" column="filepath" relation="contains" value="Logic Pro" action="exclude"/>
+        <filter id="65" column="filepath" relation="contains" value="com.apple.logic" action="exclude"/>
+        <filter id="66" column="filepath" relation="contains" value="com.apple.STMExtension" action="exclude"/>
+        <filter id="67" column="filepath" relation="contains" value="Logic" action="exclude"/>
+        <!--    微信生成在Library cache的问题    -->
+        <filter id="70" column="filepath" relation="contains" value="~/Library/Caches/com.tencent.xinWeChat/" action="exclude"/>
+    </filters>
+    
+    <category id="1">
+        <title><![CDATA[系统垃圾]]></title>
+        <tips><![CDATA[清理系统产生的日志和缓存等垃圾。]]></tips>
+        <item id="1004" recommend="YES" fastmode="NO">
+            <title><![CDATA[iOS照片缓存]]></title>
+            <tips><![CDATA[iOS设置同步时产生的照片缓存]]></tips>
+            <action type="dir">
+                <atom filters="(40+41)"/>
+                <path type="abs" level="1" value="~/Pictures/iPod Photo Cache/"/>
+            </action>
+        </item>
+        <item id="1005" recommend="YES" fastmode="NO">
+            <title><![CDATA[iOS软件升级数据缓存]]></title>
+            <tips><![CDATA[iOS设置同步时，iOS软件升级导致的数据缓存]]></tips>
+            <action type="file">
+                <path type="abs" filename=".+\.ipsw" level="-1" value="~/Library/iTunes/"/>
+            </action>
+        </item>
+        <item id="1006" recommend="NO" fastmode="NO">
+            <title><![CDATA[废纸篓]]></title>
+            <tips><![CDATA[清理前请确认废纸篓中的文件都是可删除的]]></tips>
+            <action type="file" cleanemptyfolder="YES" cleanhiddenfile="YES">
+                <path type="abs" level="1" value="~/.Trash/"/>
+            </action>
+        </item>
+    </category>
+    
+    
+    <category id="2">
+        <title><![CDATA[应用垃圾]]></title>
+        <tips><![CDATA[清理应用程序产生的日志和缓存等垃圾。]]></tips>
+        <item id="2101" fastmode="YES" showaction="YES" defaultstate="-1" bundleid="com.apple.dt.Xcode">
+            <title><![CDATA[Xcode开发垃圾]]></title>
+            <tips><![CDATA[默认清理Xcode缓存文件，展开查看具体可清理项]]></tips>
+            <action id="20011" type="appcache" sandbox="not">
+                <title><![CDATA[Xcode app缓存]]></title>
+                <path type="abs" level="1" value="~/Library/Caches/com.apple.dt.Xcode/"/>
+                <path type="special" level="1" value="SystemTempDir" value1="com.apple.dt.Xcode"/>
+            </action>
+            <action id="20012" recommend="NO" type="derivedapp">
+                <title><![CDATA[Xcode DerivedData]]></title>
+                <path type="abs" filename=".+\.app" level="-1" value="~/Library/Developer/Xcode/DerivedData/"/>
+            </action>
+            <action id="20013" recommend="NO" type="file">
+                <title><![CDATA[iOS Device Support]]></title>
+                <path type="abs" level="1" value="~/Library/Developer/Xcode/iOS DeviceSupport/"/>
+            </action>
+            <action id="20014" recommend="NO" type="archive">
+                <title><![CDATA[Archives]]></title>
+                <path type="abs" filename=".+\.xcarchive" level="-1" value="~/Library/Developer/Xcode/Archives/"/>
+            </action>
+            <action id="20015" recommend="NO" type="file">
+                <title><![CDATA[Module Caches]]></title>
+                <path type="abs" level="0" value="~/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/"/>
+            </action>
+            <action id="20016" recommend="NO" type="file">
+                <title><![CDATA[iOS Device Logs]]></title>
+                <path type="abs" level="0" value="~/Library/Developer/Xcode/iOS Device Logs/"/>
+            </action>
+            <action id="20017" recommend="NO" type="file">
+                <title><![CDATA[DocumentationCache]]></title>
+                <path type="abs" level="0" value="~/Library/Developer/Xcode/DocumentationCache/"/>
+            </action>
+        </item>
+    </category>
+    
+    <category id="3">
+        <title><![CDATA[上网垃圾]]></title>
+        <tips><![CDATA[清理Chrome，Opera，Safari，Firefox和QQ浏览器产生的缓存文件。]]></tips>
+        <item id="301" recommend="NO"  fastmode="NO">
+            <title><![CDATA[Mail缓存]]></title>
+            <tips><![CDATA[收发邮件会下载大量的附件，可以将不会用到的缓存移除]]></tips>
+            <action type="file">
+                <path type="abs" level="1" value="~/Library/Containers/com.apple.mail/Data/Library/Mail Downloads/"/>
+            </action>
+            <action type="mail">
+                <path type="abs" level="1" value="~/Library/Mail/"/>
+            </action>
+        </item>
+        <item id="306" recommend="YES"  showresult="YES" fastmode="NO" bundleid="com.apple.Safari">
+            <title><![CDATA[Safari]]></title>
+            <tips><![CDATA[Safari 加载页面时缓存的一些网页或资源]]></tips>
+            <!--Internet Cache下的缓存文件-->
+            <action id="3061" type="file" recommend="YES">
+                <path type="abs" level="1" value="~/Library/Caches/com.apple.Safari/"/>
+                <path type="abs" level="1" value="~/Library/Caches/Metadata/Safari/"/>
+                <path type="abs" level="1" value="~/Library/Containers/com.apple.Safari.CacheDeleteExtension/"/>
+                <path type="abs" level="1" value="~/Library/Caches/com.apple.Safari.SafeBrowsing/"/>
+                <path type="abs" level="1" value="~/Library/Caches/com.apple.safaridavclient/"/>
+            </action>
+        </item>
+        <item id="307" recommend="YES"  showresult="YES" fastmode="NO" bundleid="com.google.Chrome">
+            <title><![CDATA[Chrome]]></title>
+            <tips><![CDATA[Chrome 加载页面时缓存的一些网页或资源]]></tips>
+            <!--Internet Cache-->
+            <action id="3071" type="file" recommend="YES">
+                <path type="abs" level="0" value="~/Library/Caches/Google/Chrome/Default/Cache/"/>
+            </action>
+        </item>
+        <item id="308" recommend="YES"  showresult="NO" fastmode="NO" bundleid="com.tencent.QQBrowser">
+            <title><![CDATA[QQ浏览器]]></title>
+            <tips><![CDATA[QQ浏览器 加载页面时缓存的一些网页或资源]]></tips>
+            <!--Internet Cache-->
+            <action id="841" type="file" recommend="YES">
+                <title><![CDATA[浏览器缓存]]></title>
+                <path type="abs" level="0" value="~/Library/Caches/QQBrowser2/Default/Cache/"/>
+            </action>
+        </item>
+        <item id="309" recommend="YES"  showresult="NO" fastmode="NO" bundleid="com.operasoftware.Opera">
+            <title><![CDATA[Opera]]></title>
+            <tips><![CDATA[Opera 加载页面时缓存的一些网页或资源]]></tips>
+            <!--Cache-->
+            <action id="3091" type="file" recommend="YES" appversion="((1[0-2])|([0-9]))\..*" bundle="com.operasoftware.Opera" apppath="/Applications/Opera.app">
+                <title><![CDATA[浏览器缓存]]></title>
+                <path type="abs" level="0" value="~/Library/Caches/Opera/"/>
+            </action>
+            <action id="3092" type="file" recommend="YES" appversion="((1[3-9])|([2-9][0-9]))\..*" bundle="com.operasoftware.Opera" apppath="/Applications/Opera.app">
+                <title><![CDATA[浏览器缓存]]></title>
+                <path type="abs" level="0" value="~/Library/Application Support/com.operasoftware.Opera/GPUCache"/>
+                <path type="abs" level="0" value="~/Library/Caches/com.operasoftware.Opera"/>
+            </action>
+            <!--Application Cache-->
+            <action id="3093" type="file" recommend="YES" appversion="((1[0-2])|([0-9]))\..*" bundle="com.operasoftware.Opera" apppath="/Applications/Opera.app">
+                <title><![CDATA[应用程序缓存]]></title>
+                <path type="abs" level="0" value="~/Library/Application Support/Opera/application_cache"/>
+            </action>
+        </item>
+        <item id="310" recommend="YES"  showresult="NO" fastmode="NO" bundleid="org.mozilla.firefox">
+            <title><![CDATA[FireFox]]></title>
+            <tips><![CDATA[FireFox 加载页面时缓存的一些网页或资源]]></tips>
+            <!--~/Library/Caches/Google/Chrome/Default/Cache/下的缓存文件-->
+            <action id="3101" type="file" recommend="YES">
+                <title><![CDATA[浏览器缓存]]></title>
+                <path type="abs" level="0" value="~/Library/Caches/Firefox/"/>
+            </action>
+        </item>
+    </category>
+    
+</garbage>
+
+

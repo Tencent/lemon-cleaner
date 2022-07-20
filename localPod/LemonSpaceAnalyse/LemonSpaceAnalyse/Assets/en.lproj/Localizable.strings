@@ -1,0 +1,47 @@
+/* 
+  Localizable.strings
+  LemonSpaceAnalyse
+
+  
+  
+*/
+"Disk Analyzer" = "Disk Analyzer";
+"See disk usage as a visual interactive map" = "See disk usage as a visual interactive map";
+
+"Visually analyze file occupancy and explore storage conditions" = "Visually analyze file occupancy and explore storage conditions";
+
+"Start" = "Start";
+
+
+"Scanning Macintosh HD" = "Scanning Macintosh HD";
+"Cancel" = "Cancel";
+
+
+"Stop the scanning？" = "Stop the scanning？";
+"It will discard all current progress." = "It will discard all current progress.";
+"Stop" = "Stop";
+"Continue" = "Continue";
+
+
+"total " = "Total ";
+"avail." = "Avail. ";
+" / total" = " / Total ";
+"Visualization Mode" = "Visualization Mode";
+"folders" = "Folders";
+"files" = "Files";
+"Start Over" = "Start Over";
+"Reveal in Finder" = "Reveal in Finder";
+
+"Do you want to start Over？" = "Do you want to start Over？";
+"Current results won't be saved and you will need to run a new full disk scan to get new results." = "Current results won't be saved and you will need to run a new full disk scan to get new results.";
+"Confirm" = "Confirm";
+
+
+"%lu items" = "%lu items";
+"more items" = "9999+items";
+
+
+"Disk Analyzer - Avail. %@ / Total %@" = "Disk Analyzer - Avail. %@ / Total %@";
+
+"Grant access" = "Grant access";
+"Please authorize access to Macintosh HD to continue" = "Please authorize access to Macintosh HD to continue";

@@ -1,0 +1,20 @@
+//
+//  PrefixLemon.pch
+//  Lemon
+//
+//  Created by  Torsysmeng on 2018/8/28.
+//  Copyright © 2018年 Tencent. All rights reserved.
+//
+
+#ifndef PrefixLemon_pch
+#define PrefixLemon_pch
+
+// Include any system framework and library headers here that should be included in all compilation units.
+// You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
+
+#import <QMUICommon/QMUICommon.h>
+#import <Masonry/Masonry.h>
+
+#define APPSTORE_VERSION
+
+#endif /* PrefixLemon_pch */

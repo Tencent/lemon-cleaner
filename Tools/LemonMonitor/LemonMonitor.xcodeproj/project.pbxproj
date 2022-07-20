@@ -1,0 +1,1111 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		02448250C136D1BA83A700A8 /* Pods_LemonMonitor.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F2A84A8EFAA857D1C173D896 /* Pods_LemonMonitor.framework */; };
+		18FD67BA2248825C00036012 /* LMMonitorTrashManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 18FD67B92248825C00036012 /* LMMonitorTrashManager.m */; };
+		7952E49E23FD12D20058C48C /* LMTrashSizeCheckWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7952E49C23FD12D20058C48C /* LMTrashSizeCheckWindowController.m */; };
+		7952E49F23FD12D20058C48C /* LMTrashSizeCheckWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7952E49D23FD12D20058C48C /* LMTrashSizeCheckWindowController.xib */; };
+		797D5CCF2364774D000DC4BE /* LMHardWareDataUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 797D5CCE2364774D000DC4BE /* LMHardWareDataUtil.m */; };
+		79A96341236A84F000DB0B1D /* TrashCheckMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = 79A96340236A84F000DB0B1D /* TrashCheckMonitor.m */; };
+		847E2D4B21C74AE400F49D5D /* LemonMonitroHelpParams.m in Sources */ = {isa = PBXBuildFile; fileRef = 847E2D4A21C74AE400F49D5D /* LemonMonitroHelpParams.m */; };
+		84ADF214212EADE500B8C9C6 /* LemonClener.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84ADF209212EAC7500B8C9C6 /* LemonClener.framework */; };
+		84ADF218212EB18E00B8C9C6 /* LemonClener.framework in Copy Files */ = {isa = PBXBuildFile; fileRef = 84ADF209212EAC7500B8C9C6 /* LemonClener.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		84BA8E7A21758EA70066B794 /* uiresources.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 84BA8E7921758EA70066B794 /* uiresources.xcassets */; };
+		B88029CF196BE562007CFE8D /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B88029CE196BE562007CFE8D /* SystemConfiguration.framework */; };
+		B88029D1196BE573007CFE8D /* libpcap.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = B88029D0196BE573007CFE8D /* libpcap.dylib */; };
+		B8B6CAF8198B8EA000946160 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B8B6CAF7198B8EA000946160 /* QuartzCore.framework */; };
+		B8B6CAFE198B920500946160 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B8B6CAFD198B920500946160 /* IOKit.framework */; };
+		B8B6CB00198B920D00946160 /* DiskArbitration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B8B6CAFF198B920D00946160 /* DiskArbitration.framework */; };
+		B8F110451962572100D29FFC /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B8F110441962572100D29FFC /* Cocoa.framework */; };
+		B8F110511962572100D29FFC /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B8F110501962572100D29FFC /* main.m */; };
+		B8F110581962572100D29FFC /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = B8F110571962572100D29FFC /* AppDelegate.mm */; };
+		B8F110641962572100D29FFC /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B8F110631962572100D29FFC /* XCTest.framework */; };
+		B8F110651962572100D29FFC /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B8F110441962572100D29FFC /* Cocoa.framework */; };
+		B8F1106D1962572100D29FFC /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = B8F1106B1962572100D29FFC /* InfoPlist.strings */; };
+		B8F1106F1962572100D29FFC /* QQMacMgrMonitorTests.m in Sources */ = {isa = PBXBuildFile; fileRef = B8F1106E1962572100D29FFC /* QQMacMgrMonitorTests.m */; };
+		B8F11079196257B000D29FFC /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = B8F11078196257B000D29FFC /* MainMenu.xib */; };
+		B8FF54481A1B3A7E00A5E1D7 /* QMEarlyWarning.m in Sources */ = {isa = PBXBuildFile; fileRef = B8FF54471A1B3A7E00A5E1D7 /* QMEarlyWarning.m */; };
+		BC89F8A522759B7200983314 /* QMStatusMonitorView.m in Sources */ = {isa = PBXBuildFile; fileRef = BC89F89922759B7200983314 /* QMStatusMonitorView.m */; };
+		BC89F8A622759B7200983314 /* QMStatusTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = BC89F89B22759B7200983314 /* QMStatusTextField.m */; };
+		BC89F8A722759B7200983314 /* JLNDragEffectManager.m in Sources */ = {isa = PBXBuildFile; fileRef = BC89F89D22759B7200983314 /* JLNDragEffectManager.m */; };
+		BC89F8A822759B7200983314 /* QMDragEffectView.m in Sources */ = {isa = PBXBuildFile; fileRef = BC89F8A022759B7200983314 /* QMDragEffectView.m */; };
+		BC89F8A922759B7200983314 /* QMStatusCircleView.m in Sources */ = {isa = PBXBuildFile; fileRef = BC89F8A222759B7200983314 /* QMStatusCircleView.m */; };
+		BC89F8AA22759B7200983314 /* QMMonitorView2.m in Sources */ = {isa = PBXBuildFile; fileRef = BC89F8A322759B7200983314 /* QMMonitorView2.m */; };
+		BCC2838F21F02D070026CC09 /* LMMonitorPoppverController.m in Sources */ = {isa = PBXBuildFile; fileRef = BCC2838E21F02D070026CC09 /* LMMonitorPoppverController.m */; };
+		BCC2839221F06D1D0026CC09 /* LMMonitorController.m in Sources */ = {isa = PBXBuildFile; fileRef = BCC2839121F06D1D0026CC09 /* LMMonitorController.m */; };
+		BCDC61E421EE06D800C9004B /* MCBaselineSegmentedControl.m in Sources */ = {isa = PBXBuildFile; fileRef = BCDC61E321EE06D800C9004B /* MCBaselineSegmentedControl.m */; };
+		BCDC61E721EE070600C9004B /* BaselineSegmentedCell.m in Sources */ = {isa = PBXBuildFile; fileRef = BCDC61E621EE070600C9004B /* BaselineSegmentedCell.m */; };
+		BCDC61EB21EE11DB00C9004B /* LMMonitorTabController.m in Sources */ = {isa = PBXBuildFile; fileRef = BCDC61EA21EE11DB00C9004B /* LMMonitorTabController.m */; };
+		BCF3874D21EEED880031A2FD /* LMCleanViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BCF3874C21EEED880031A2FD /* LMCleanViewController.m */; };
+		BCF3875221EEEDD90031A2FD /* LMSystemFeatureViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BCF3875121EEEDD90031A2FD /* LMSystemFeatureViewController.m */; };
+		BCF3875621EF27B20031A2FD /* LMMemoryCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = BCF3875521EF27B20031A2FD /* LMMemoryCellView.m */; };
+		D432EF3221707F110034BC25 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D432EF3121707F110034BC25 /* libz.tbd */; };
+		D432EF3421707F4A0034BC25 /* libstdc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = D432EF3321707F490034BC25 /* libstdc++.tbd */; };
+		D47D64C1215D22BF00E411AE /* AFNetworking.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D47D64C0215D22BF00E411AE /* AFNetworking.framework */; };
+		D49FA4CE21DDA4D7004A416E /* PrivacyProtect.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D49FA4C921DDA2A3004A416E /* PrivacyProtect.framework */; };
+		D49FA4CF21DDA4D7004A416E /* PrivacyProtect.framework in Copy Files */ = {isa = PBXBuildFile; fileRef = D49FA4C921DDA2A3004A416E /* PrivacyProtect.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		DE27949C26A038BE007B4443 /* LMUpdatePopoverBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = DE27949A26A038BE007B4443 /* LMUpdatePopoverBackgroundView.m */; };
+		DE27949D26A038BE007B4443 /* LMUpdatePopoverRootView.m in Sources */ = {isa = PBXBuildFile; fileRef = DE27949B26A038BE007B4443 /* LMUpdatePopoverRootView.m */; };
+		DE4EF2D927352D46005649F4 /* LMVisibleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DE4EF2D727352D46005649F4 /* LMVisibleViewController.m */; };
+		DE4EF2DA27352D46005649F4 /* LMVisibleViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = DE4EF2D827352D46005649F4 /* LMVisibleViewController.xib */; };
+		F285DA2A19FFC3CB007F66B5 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F285DA2919FFC3CB007F66B5 /* Carbon.framework */; };
+		F2D881CA198A644F007FA339 /* QMNetworkPlotView.m in Sources */ = {isa = PBXBuildFile; fileRef = F2D881C7198A644F007FA339 /* QMNetworkPlotView.m */; };
+		F81F2F57224C753A0023C1D7 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = F81F2F59224C753A0023C1D7 /* Localizable.strings */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		84ADF208212EAC7500B8C9C6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 84ADF203212EAC7400B8C9C6 /* LemonClener.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = F854B18A20F77012009102CF;
+			remoteInfo = LemonClener;
+		};
+		84ADF20A212EAC7500B8C9C6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 84ADF203212EAC7400B8C9C6 /* LemonClener.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = F854B19320F77012009102CF;
+			remoteInfo = LemonClenerTests;
+		};
+		B8F110661962572100D29FFC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B8F110391962572100D29FFC /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B8F110401962572100D29FFC;
+			remoteInfo = QQMacMgrMonitor;
+		};
+		D49FA4C821DDA2A3004A416E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D49FA4C221DDA2A3004A416E /* PrivacyProtect.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D49FA44D21DDA0F2004A416E;
+			remoteInfo = PrivacyProtect;
+		};
+		D49FA4CC21DDA4C3004A416E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D49FA4C221DDA2A3004A416E /* PrivacyProtect.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = D49FA44C21DDA0F2004A416E;
+			remoteInfo = PrivacyProtect;
+		};
+		D49FA4D021DDA4D7004A416E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D49FA4C221DDA2A3004A416E /* PrivacyProtect.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = D49FA44C21DDA0F2004A416E;
+			remoteInfo = PrivacyProtect;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		84ADF217212EB17700B8C9C6 /* Copy Files */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				84ADF218212EB18E00B8C9C6 /* LemonClener.framework in Copy Files */,
+				D49FA4CF21DDA4D7004A416E /* PrivacyProtect.framework in Copy Files */,
+			);
+			name = "Copy Files";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B8FA92421A3ED6C600CFAA3C /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		18B5A2EB224DD1310076A1E3 /* QMDataConst.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = QMDataConst.h; path = ../../../Lemon/QMDataConst.h; sourceTree = "<group>"; };
+		18FD67B82248825C00036012 /* LMMonitorTrashManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LMMonitorTrashManager.h; sourceTree = "<group>"; };
+		18FD67B92248825C00036012 /* LMMonitorTrashManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LMMonitorTrashManager.m; sourceTree = "<group>"; };
+		2F6E0B7721CA3763009B4875 /* SocketCommunicationKeyWord.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SocketCommunicationKeyWord.h; path = ../../LemonDaemon/LemonDaemonActivator/SocketCommunicationKeyWord.h; sourceTree = "<group>"; };
+		2FAE179F5D5E36229D7AE5D8 /* Pods-LemonMonitor.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LemonMonitor.debug.xcconfig"; path = "../../Pods/Target Support Files/Pods-LemonMonitor/Pods-LemonMonitor.debug.xcconfig"; sourceTree = "<group>"; };
+		47D7AC3330517E6E138F5D82 /* Pods-LemonMonitor.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LemonMonitor.release.xcconfig"; path = "../../Pods/Target Support Files/Pods-LemonMonitor/Pods-LemonMonitor.release.xcconfig"; sourceTree = "<group>"; };
+		62B5DA708EB7D85717DD6753 /* Pods_LemonMonitorToday.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_LemonMonitorToday.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		7952E49B23FD12D20058C48C /* LMTrashSizeCheckWindowController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LMTrashSizeCheckWindowController.h; sourceTree = "<group>"; };
+		7952E49C23FD12D20058C48C /* LMTrashSizeCheckWindowController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LMTrashSizeCheckWindowController.m; sourceTree = "<group>"; };
+		7952E49D23FD12D20058C48C /* LMTrashSizeCheckWindowController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LMTrashSizeCheckWindowController.xib; sourceTree = "<group>"; };
+		797D5CCD2364774D000DC4BE /* LMHardWareDataUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LMHardWareDataUtil.h; sourceTree = "<group>"; };
+		797D5CCE2364774D000DC4BE /* LMHardWareDataUtil.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LMHardWareDataUtil.m; sourceTree = "<group>"; };
+		79A9633F236A84F000DB0B1D /* TrashCheckMonitor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TrashCheckMonitor.h; sourceTree = "<group>"; };
+		79A96340236A84F000DB0B1D /* TrashCheckMonitor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TrashCheckMonitor.m; sourceTree = "<group>"; };
+		847E2D4921C74AE400F49D5D /* LemonMonitroHelpParams.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LemonMonitroHelpParams.h; sourceTree = "<group>"; };
+		847E2D4A21C74AE400F49D5D /* LemonMonitroHelpParams.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LemonMonitroHelpParams.m; sourceTree = "<group>"; };
+		84ADF203212EAC7400B8C9C6 /* LemonClener.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = LemonClener.xcodeproj; path = ../../LemonClener/LemonClener.xcodeproj; sourceTree = "<group>"; };
+		84BA8E7921758EA70066B794 /* uiresources.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = uiresources.xcassets; sourceTree = "<group>"; };
+		B88029CE196BE562007CFE8D /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		B88029D0196BE573007CFE8D /* libpcap.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpcap.dylib; path = usr/lib/libpcap.dylib; sourceTree = SDKROOT; };
+		B8B6CAF7198B8EA000946160 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		B8B6CAFD198B920500946160 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
+		B8B6CAFF198B920D00946160 /* DiskArbitration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DiskArbitration.framework; path = System/Library/Frameworks/DiskArbitration.framework; sourceTree = SDKROOT; };
+		B8F110411962572100D29FFC /* LemonMonitor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LemonMonitor.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B8F110441962572100D29FFC /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		B8F110471962572100D29FFC /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		B8F110481962572100D29FFC /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		B8F110491962572100D29FFC /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		B8F1104C1962572100D29FFC /* LemonMonitor-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "LemonMonitor-Info.plist"; sourceTree = "<group>"; };
+		B8F110501962572100D29FFC /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		B8F110521962572100D29FFC /* LemonMonitor-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "LemonMonitor-Prefix.pch"; sourceTree = "<group>"; };
+		B8F110561962572100D29FFC /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		B8F110571962572100D29FFC /* AppDelegate.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = AppDelegate.mm; sourceTree = "<group>"; };
+		B8F110621962572100D29FFC /* LemonMonitorTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LemonMonitorTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		B8F110631962572100D29FFC /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		B8F1106A1962572100D29FFC /* LemonMonitorTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "LemonMonitorTests-Info.plist"; sourceTree = "<group>"; };
+		B8F1106C1962572100D29FFC /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		B8F1106E1962572100D29FFC /* QQMacMgrMonitorTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QQMacMgrMonitorTests.m; sourceTree = "<group>"; };
+		B8F11078196257B000D29FFC /* MainMenu.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainMenu.xib; sourceTree = "<group>"; };
+		B8FA922A1A3ED6C600CFAA3C /* NotificationCenter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NotificationCenter.framework; path = System/Library/Frameworks/NotificationCenter.framework; sourceTree = SDKROOT; };
+		B8FF54461A1B3A7E00A5E1D7 /* QMEarlyWarning.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMEarlyWarning.h; sourceTree = "<group>"; };
+		B8FF54471A1B3A7E00A5E1D7 /* QMEarlyWarning.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMEarlyWarning.m; sourceTree = "<group>"; };
+		BC89F89922759B7200983314 /* QMStatusMonitorView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMStatusMonitorView.m; sourceTree = "<group>"; };
+		BC89F89A22759B7200983314 /* QMDragEffectView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMDragEffectView.h; sourceTree = "<group>"; };
+		BC89F89B22759B7200983314 /* QMStatusTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMStatusTextField.m; sourceTree = "<group>"; };
+		BC89F89C22759B7200983314 /* QMStatusCircleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMStatusCircleView.h; sourceTree = "<group>"; };
+		BC89F89D22759B7200983314 /* JLNDragEffectManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JLNDragEffectManager.m; sourceTree = "<group>"; };
+		BC89F89E22759B7200983314 /* QMMonitorView2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMMonitorView2.h; sourceTree = "<group>"; };
+		BC89F89F22759B7200983314 /* QMStatusTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMStatusTextField.h; sourceTree = "<group>"; };
+		BC89F8A022759B7200983314 /* QMDragEffectView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMDragEffectView.m; sourceTree = "<group>"; };
+		BC89F8A122759B7200983314 /* QMStatusMonitorView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMStatusMonitorView.h; sourceTree = "<group>"; };
+		BC89F8A222759B7200983314 /* QMStatusCircleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMStatusCircleView.m; sourceTree = "<group>"; };
+		BC89F8A322759B7200983314 /* QMMonitorView2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMMonitorView2.m; sourceTree = "<group>"; };
+		BC89F8A422759B7200983314 /* JLNDragEffectManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JLNDragEffectManager.h; sourceTree = "<group>"; };
+		BCC2838D21F02D070026CC09 /* LMMonitorPoppverController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LMMonitorPoppverController.h; sourceTree = "<group>"; };
+		BCC2838E21F02D070026CC09 /* LMMonitorPoppverController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LMMonitorPoppverController.m; sourceTree = "<group>"; };
+		BCC2839021F06D1D0026CC09 /* LMMonitorController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LMMonitorController.h; sourceTree = "<group>"; };
+		BCC2839121F06D1D0026CC09 /* LMMonitorController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LMMonitorController.m; sourceTree = "<group>"; };
+		BCC7B1522264BE9700D33922 /* LemonDaemonConst.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LemonDaemonConst.h; path = ../../LemonDaemon/LemonDaemon/LemonDaemonConst.h; sourceTree = "<group>"; };
+		BCDC61E221EE06D800C9004B /* MCBaselineSegmentedControl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCBaselineSegmentedControl.h; sourceTree = "<group>"; };
+		BCDC61E321EE06D800C9004B /* MCBaselineSegmentedControl.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCBaselineSegmentedControl.m; sourceTree = "<group>"; };
+		BCDC61E521EE070600C9004B /* BaselineSegmentedCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BaselineSegmentedCell.h; sourceTree = "<group>"; };
+		BCDC61E621EE070600C9004B /* BaselineSegmentedCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BaselineSegmentedCell.m; sourceTree = "<group>"; };
+		BCDC61E921EE11DB00C9004B /* LMMonitorTabController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LMMonitorTabController.h; sourceTree = "<group>"; };
+		BCDC61EA21EE11DB00C9004B /* LMMonitorTabController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LMMonitorTabController.m; sourceTree = "<group>"; };
+		BCF3874B21EEED880031A2FD /* LMCleanViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LMCleanViewController.h; sourceTree = "<group>"; };
+		BCF3874C21EEED880031A2FD /* LMCleanViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LMCleanViewController.m; sourceTree = "<group>"; };
+		BCF3875021EEEDD90031A2FD /* LMSystemFeatureViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LMSystemFeatureViewController.h; sourceTree = "<group>"; };
+		BCF3875121EEEDD90031A2FD /* LMSystemFeatureViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LMSystemFeatureViewController.m; sourceTree = "<group>"; };
+		BCF3875421EF27B20031A2FD /* LMMemoryCellView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LMMemoryCellView.h; sourceTree = "<group>"; };
+		BCF3875521EF27B20031A2FD /* LMMemoryCellView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LMMemoryCellView.m; sourceTree = "<group>"; };
+		D432EF3121707F110034BC25 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
+		D432EF3321707F490034BC25 /* libstdc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.tbd"; path = "usr/lib/libstdc++.tbd"; sourceTree = SDKROOT; };
+		D47D64BB215D203700E411AE /* AFNetworking.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = AFNetworking.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D47D64C0215D22BF00E411AE /* AFNetworking.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AFNetworking.framework; path = "../../../../../Library/Developer/Xcode/DerivedData/Lemon-gmfqyfrusrvxopduwpphgyjaxeqx/Build/Products/Debug/AFNetworking/AFNetworking.framework"; sourceTree = "<group>"; };
+		D49FA4C221DDA2A3004A416E /* PrivacyProtect.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = PrivacyProtect.xcodeproj; path = ../PrivacyProtect/PrivacyProtect.xcodeproj; sourceTree = "<group>"; };
+		D49FA52921DDA797004A416E /* QMUserNotificationCenter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QMUserNotificationCenter.h; sourceTree = "<group>"; };
+		D49FA52B21DDA797004A416E /* QMUserNotificationCenter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QMUserNotificationCenter.m; sourceTree = "<group>"; };
+		DE27949826A038BE007B4443 /* LMUpdatePopoverBackgroundView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMUpdatePopoverBackgroundView.h; sourceTree = "<group>"; };
+		DE27949926A038BE007B4443 /* LMUpdatePopoverRootView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMUpdatePopoverRootView.h; sourceTree = "<group>"; };
+		DE27949A26A038BE007B4443 /* LMUpdatePopoverBackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMUpdatePopoverBackgroundView.m; sourceTree = "<group>"; };
+		DE27949B26A038BE007B4443 /* LMUpdatePopoverRootView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMUpdatePopoverRootView.m; sourceTree = "<group>"; };
+		DE4EF2D627352D46005649F4 /* LMVisibleViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LMVisibleViewController.h; sourceTree = "<group>"; };
+		DE4EF2D727352D46005649F4 /* LMVisibleViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LMVisibleViewController.m; sourceTree = "<group>"; };
+		DE4EF2D827352D46005649F4 /* LMVisibleViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LMVisibleViewController.xib; sourceTree = "<group>"; };
+		F285DA2919FFC3CB007F66B5 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = System/Library/Frameworks/Carbon.framework; sourceTree = SDKROOT; };
+		F2A84A8EFAA857D1C173D896 /* Pods_LemonMonitor.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_LemonMonitor.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		F2D881C6198A644F007FA339 /* QMNetworkPlotView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMNetworkPlotView.h; sourceTree = "<group>"; };
+		F2D881C7198A644F007FA339 /* QMNetworkPlotView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMNetworkPlotView.m; sourceTree = "<group>"; };
+		F81F2F58224C753A0023C1D7 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		F81F2F5A224C75520023C1D7 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		F81F2F5B224C75520023C1D7 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
+		F8E3021722CB5021007C9E11 /* LemonMonitor.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = LemonMonitor.entitlements; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		B8F1103E1962572100D29FFC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D432EF3421707F4A0034BC25 /* libstdc++.tbd in Frameworks */,
+				D432EF3221707F110034BC25 /* libz.tbd in Frameworks */,
+				D47D64C1215D22BF00E411AE /* AFNetworking.framework in Frameworks */,
+				84ADF214212EADE500B8C9C6 /* LemonClener.framework in Frameworks */,
+				D49FA4CE21DDA4D7004A416E /* PrivacyProtect.framework in Frameworks */,
+				B8B6CAF8198B8EA000946160 /* QuartzCore.framework in Frameworks */,
+				F285DA2A19FFC3CB007F66B5 /* Carbon.framework in Frameworks */,
+				B8B6CB00198B920D00946160 /* DiskArbitration.framework in Frameworks */,
+				B8B6CAFE198B920500946160 /* IOKit.framework in Frameworks */,
+				B88029D1196BE573007CFE8D /* libpcap.dylib in Frameworks */,
+				B88029CF196BE562007CFE8D /* SystemConfiguration.framework in Frameworks */,
+				B8F110451962572100D29FFC /* Cocoa.framework in Frameworks */,
+				02448250C136D1BA83A700A8 /* Pods_LemonMonitor.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B8F1105F1962572100D29FFC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B8F110651962572100D29FFC /* Cocoa.framework in Frameworks */,
+				B8F110641962572100D29FFC /* XCTest.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		18FD67B52248824400036012 /* manager */ = {
+			isa = PBXGroup;
+			children = (
+				18FD67B82248825C00036012 /* LMMonitorTrashManager.h */,
+				18FD67B92248825C00036012 /* LMMonitorTrashManager.m */,
+			);
+			name = manager;
+			sourceTree = "<group>";
+		};
+		797D5CD323647DC4000DC4BE /* Util */ = {
+			isa = PBXGroup;
+			children = (
+				797D5CCD2364774D000DC4BE /* LMHardWareDataUtil.h */,
+				797D5CCE2364774D000DC4BE /* LMHardWareDataUtil.m */,
+			);
+			path = Util;
+			sourceTree = "<group>";
+		};
+		79A9633B236A846B00DB0B1D /* TrashCheck */ = {
+			isa = PBXGroup;
+			children = (
+				79A9633F236A84F000DB0B1D /* TrashCheckMonitor.h */,
+				79A96340236A84F000DB0B1D /* TrashCheckMonitor.m */,
+				7952E49B23FD12D20058C48C /* LMTrashSizeCheckWindowController.h */,
+				7952E49C23FD12D20058C48C /* LMTrashSizeCheckWindowController.m */,
+				7952E49D23FD12D20058C48C /* LMTrashSizeCheckWindowController.xib */,
+			);
+			path = TrashCheck;
+			sourceTree = "<group>";
+		};
+		84ADF204212EAC7400B8C9C6 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				84ADF209212EAC7500B8C9C6 /* LemonClener.framework */,
+				84ADF20B212EAC7500B8C9C6 /* LemonClenerTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		B804997919750498002C38DE /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				18FD67B52248824400036012 /* manager */,
+				BCDC61E921EE11DB00C9004B /* LMMonitorTabController.h */,
+				BCDC61EA21EE11DB00C9004B /* LMMonitorTabController.m */,
+				BCF3874B21EEED880031A2FD /* LMCleanViewController.h */,
+				BCF3874C21EEED880031A2FD /* LMCleanViewController.m */,
+				BCF3875021EEEDD90031A2FD /* LMSystemFeatureViewController.h */,
+				BCF3875121EEEDD90031A2FD /* LMSystemFeatureViewController.m */,
+				BCC2838D21F02D070026CC09 /* LMMonitorPoppverController.h */,
+				BCC2838E21F02D070026CC09 /* LMMonitorPoppverController.m */,
+				BCC2839021F06D1D0026CC09 /* LMMonitorController.h */,
+				BCC2839121F06D1D0026CC09 /* LMMonitorController.m */,
+				DE4EF2D627352D46005649F4 /* LMVisibleViewController.h */,
+				DE4EF2D727352D46005649F4 /* LMVisibleViewController.m */,
+				DE4EF2D827352D46005649F4 /* LMVisibleViewController.xib */,
+			);
+			name = Controller;
+			sourceTree = "<group>";
+		};
+		B846A9D7196A441000A877E0 /* Monitor */ = {
+			isa = PBXGroup;
+			children = (
+				B846A9DB196A444400A877E0 /* Views */,
+				B804997919750498002C38DE /* Controller */,
+			);
+			path = Monitor;
+			sourceTree = "<group>";
+		};
+		B846A9DB196A444400A877E0 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				DE27949826A038BE007B4443 /* LMUpdatePopoverBackgroundView.h */,
+				DE27949A26A038BE007B4443 /* LMUpdatePopoverBackgroundView.m */,
+				DE27949926A038BE007B4443 /* LMUpdatePopoverRootView.h */,
+				DE27949B26A038BE007B4443 /* LMUpdatePopoverRootView.m */,
+				BC89F89822759B7200983314 /* Status */,
+				BCF3875321EF27880031A2FD /* LemonCell */,
+				BCDC61E121EDFB0800C9004B /* LemonSegment */,
+				F2D881BB198A643B007FA339 /* Network Traffic */,
+			);
+			name = Views;
+			sourceTree = "<group>";
+		};
+		B8F110381962572100D29FFC = {
+			isa = PBXGroup;
+			children = (
+				D49FA4C221DDA2A3004A416E /* PrivacyProtect.xcodeproj */,
+				84ADF203212EAC7400B8C9C6 /* LemonClener.xcodeproj */,
+				B8F1104A1962572100D29FFC /* LemonMonitor */,
+				B8F110681962572100D29FFC /* LemonMonitorTests */,
+				B8F110431962572100D29FFC /* Frameworks */,
+				B8F110421962572100D29FFC /* Products */,
+				BE4977336D300524BD052A70 /* Pods */,
+			);
+			sourceTree = "<group>";
+		};
+		B8F110421962572100D29FFC /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				B8F110411962572100D29FFC /* LemonMonitor.app */,
+				B8F110621962572100D29FFC /* LemonMonitorTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		B8F110431962572100D29FFC /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				D432EF3321707F490034BC25 /* libstdc++.tbd */,
+				D432EF3121707F110034BC25 /* libz.tbd */,
+				D47D64BB215D203700E411AE /* AFNetworking.framework */,
+				D47D64C0215D22BF00E411AE /* AFNetworking.framework */,
+				F285DA2919FFC3CB007F66B5 /* Carbon.framework */,
+				B8B6CAFF198B920D00946160 /* DiskArbitration.framework */,
+				B8B6CAFD198B920500946160 /* IOKit.framework */,
+				B8B6CAF7198B8EA000946160 /* QuartzCore.framework */,
+				B88029D0196BE573007CFE8D /* libpcap.dylib */,
+				B88029CE196BE562007CFE8D /* SystemConfiguration.framework */,
+				B8F110441962572100D29FFC /* Cocoa.framework */,
+				B8F110631962572100D29FFC /* XCTest.framework */,
+				B8FA922A1A3ED6C600CFAA3C /* NotificationCenter.framework */,
+				B8F110461962572100D29FFC /* Other Frameworks */,
+				62B5DA708EB7D85717DD6753 /* Pods_LemonMonitorToday.framework */,
+				F2A84A8EFAA857D1C173D896 /* Pods_LemonMonitor.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		B8F110461962572100D29FFC /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				B8F110471962572100D29FFC /* AppKit.framework */,
+				B8F110481962572100D29FFC /* CoreData.framework */,
+				B8F110491962572100D29FFC /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		B8F1104A1962572100D29FFC /* LemonMonitor */ = {
+			isa = PBXGroup;
+			children = (
+				79A9633B236A846B00DB0B1D /* TrashCheck */,
+				797D5CD323647DC4000DC4BE /* Util */,
+				F8E3021722CB5021007C9E11 /* LemonMonitor.entitlements */,
+				D49FA52721DDA797004A416E /* notification */,
+				B8FF54411A1B3A0400A5E1D7 /* EarlyWarning */,
+				B846A9D7196A441000A877E0 /* Monitor */,
+				18B5A2EB224DD1310076A1E3 /* QMDataConst.h */,
+				BCC7B1522264BE9700D33922 /* LemonDaemonConst.h */,
+				B8F110561962572100D29FFC /* AppDelegate.h */,
+				B8F110571962572100D29FFC /* AppDelegate.mm */,
+				847E2D4921C74AE400F49D5D /* LemonMonitroHelpParams.h */,
+				847E2D4A21C74AE400F49D5D /* LemonMonitroHelpParams.m */,
+				2F6E0B7721CA3763009B4875 /* SocketCommunicationKeyWord.h */,
+				B8F11078196257B000D29FFC /* MainMenu.xib */,
+				B8F1104B1962572100D29FFC /* Supporting Files */,
+				D46FAA0621008BD100CF8E0F /* Resources */,
+			);
+			path = LemonMonitor;
+			sourceTree = "<group>";
+		};
+		B8F1104B1962572100D29FFC /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				B8F1104C1962572100D29FFC /* LemonMonitor-Info.plist */,
+				B8F110501962572100D29FFC /* main.m */,
+				B8F110521962572100D29FFC /* LemonMonitor-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		B8F110681962572100D29FFC /* LemonMonitorTests */ = {
+			isa = PBXGroup;
+			children = (
+				B8F1106E1962572100D29FFC /* QQMacMgrMonitorTests.m */,
+				B8F110691962572100D29FFC /* Supporting Files */,
+			);
+			path = LemonMonitorTests;
+			sourceTree = "<group>";
+		};
+		B8F110691962572100D29FFC /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				B8F1106A1962572100D29FFC /* LemonMonitorTests-Info.plist */,
+				B8F1106B1962572100D29FFC /* InfoPlist.strings */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		B8FF54411A1B3A0400A5E1D7 /* EarlyWarning */ = {
+			isa = PBXGroup;
+			children = (
+				B8FF54461A1B3A7E00A5E1D7 /* QMEarlyWarning.h */,
+				B8FF54471A1B3A7E00A5E1D7 /* QMEarlyWarning.m */,
+			);
+			name = EarlyWarning;
+			sourceTree = "<group>";
+		};
+		BC89F89822759B7200983314 /* Status */ = {
+			isa = PBXGroup;
+			children = (
+				BC89F8A122759B7200983314 /* QMStatusMonitorView.h */,
+				BC89F89922759B7200983314 /* QMStatusMonitorView.m */,
+				BC89F89C22759B7200983314 /* QMStatusCircleView.h */,
+				BC89F8A222759B7200983314 /* QMStatusCircleView.m */,
+				BC89F89F22759B7200983314 /* QMStatusTextField.h */,
+				BC89F89B22759B7200983314 /* QMStatusTextField.m */,
+				BC89F89A22759B7200983314 /* QMDragEffectView.h */,
+				BC89F8A022759B7200983314 /* QMDragEffectView.m */,
+				BC89F89E22759B7200983314 /* QMMonitorView2.h */,
+				BC89F8A322759B7200983314 /* QMMonitorView2.m */,
+				BC89F8A422759B7200983314 /* JLNDragEffectManager.h */,
+				BC89F89D22759B7200983314 /* JLNDragEffectManager.m */,
+			);
+			path = Status;
+			sourceTree = "<group>";
+		};
+		BCDC61E121EDFB0800C9004B /* LemonSegment */ = {
+			isa = PBXGroup;
+			children = (
+				BCDC61E221EE06D800C9004B /* MCBaselineSegmentedControl.h */,
+				BCDC61E321EE06D800C9004B /* MCBaselineSegmentedControl.m */,
+				BCDC61E521EE070600C9004B /* BaselineSegmentedCell.h */,
+				BCDC61E621EE070600C9004B /* BaselineSegmentedCell.m */,
+			);
+			name = LemonSegment;
+			sourceTree = "<group>";
+		};
+		BCF3875321EF27880031A2FD /* LemonCell */ = {
+			isa = PBXGroup;
+			children = (
+				BCF3875421EF27B20031A2FD /* LMMemoryCellView.h */,
+				BCF3875521EF27B20031A2FD /* LMMemoryCellView.m */,
+			);
+			name = LemonCell;
+			sourceTree = "<group>";
+		};
+		BE4977336D300524BD052A70 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				2FAE179F5D5E36229D7AE5D8 /* Pods-LemonMonitor.debug.xcconfig */,
+				47D7AC3330517E6E138F5D82 /* Pods-LemonMonitor.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		D46FAA0621008BD100CF8E0F /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				84BA8E7921758EA70066B794 /* uiresources.xcassets */,
+				F81F2F59224C753A0023C1D7 /* Localizable.strings */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		D49FA4C321DDA2A3004A416E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D49FA4C921DDA2A3004A416E /* PrivacyProtect.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		D49FA52721DDA797004A416E /* notification */ = {
+			isa = PBXGroup;
+			children = (
+				D49FA52921DDA797004A416E /* QMUserNotificationCenter.h */,
+				D49FA52B21DDA797004A416E /* QMUserNotificationCenter.m */,
+			);
+			path = notification;
+			sourceTree = "<group>";
+		};
+		F2D881BB198A643B007FA339 /* Network Traffic */ = {
+			isa = PBXGroup;
+			children = (
+				F2D881C6198A644F007FA339 /* QMNetworkPlotView.h */,
+				F2D881C7198A644F007FA339 /* QMNetworkPlotView.m */,
+			);
+			name = "Network Traffic";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		B8F110401962572100D29FFC /* LemonMonitor */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B8F110721962572100D29FFC /* Build configuration list for PBXNativeTarget "LemonMonitor" */;
+			buildPhases = (
+				86CECB0496F2F8A7CBD9BFA5 /* [CP] Check Pods Manifest.lock */,
+				B8F1103D1962572100D29FFC /* Sources */,
+				B8F1103E1962572100D29FFC /* Frameworks */,
+				B8F1103F1962572100D29FFC /* Resources */,
+				B8FA92421A3ED6C600CFAA3C /* Embed App Extensions */,
+				36ED308E1ECAEBE4006C5B33 /* ShellScript */,
+				84ADF217212EB17700B8C9C6 /* Copy Files */,
+				977E13C17BF52736F49A4515 /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D49FA4CD21DDA4C3004A416E /* PBXTargetDependency */,
+				D49FA4D121DDA4D7004A416E /* PBXTargetDependency */,
+			);
+			name = LemonMonitor;
+			productName = QQMacMgrMonitor;
+			productReference = B8F110411962572100D29FFC /* LemonMonitor.app */;
+			productType = "com.apple.product-type.application";
+		};
+		B8F110611962572100D29FFC /* LemonMonitorTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B8F110751962572100D29FFC /* Build configuration list for PBXNativeTarget "LemonMonitorTests" */;
+			buildPhases = (
+				B8F1105E1962572100D29FFC /* Sources */,
+				B8F1105F1962572100D29FFC /* Frameworks */,
+				B8F110601962572100D29FFC /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				B8F110671962572100D29FFC /* PBXTargetDependency */,
+			);
+			name = LemonMonitorTests;
+			productName = QQMacMgrMonitorTests;
+			productReference = B8F110621962572100D29FFC /* LemonMonitorTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		B8F110391962572100D29FFC /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0510;
+				ORGANIZATIONNAME = Tencent;
+				TargetAttributes = {
+					B8F110401962572100D29FFC = {
+						ProvisioningStyle = Manual;
+						SystemCapabilities = {
+							com.apple.HardenedRuntime = {
+								enabled = 1;
+							};
+						};
+					};
+					B8F110611962572100D29FFC = {
+						TestTargetID = B8F110401962572100D29FFC;
+					};
+				};
+			};
+			buildConfigurationList = B8F1103C1962572100D29FFC /* Build configuration list for PBXProject "LemonMonitor" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				English,
+				en,
+				"zh-Hans",
+			);
+			mainGroup = B8F110381962572100D29FFC;
+			productRefGroup = B8F110421962572100D29FFC /* Products */;
+			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 84ADF204212EAC7400B8C9C6 /* Products */;
+					ProjectRef = 84ADF203212EAC7400B8C9C6 /* LemonClener.xcodeproj */;
+				},
+				{
+					ProductGroup = D49FA4C321DDA2A3004A416E /* Products */;
+					ProjectRef = D49FA4C221DDA2A3004A416E /* PrivacyProtect.xcodeproj */;
+				},
+			);
+			projectRoot = "";
+			targets = (
+				B8F110401962572100D29FFC /* LemonMonitor */,
+				B8F110611962572100D29FFC /* LemonMonitorTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		84ADF209212EAC7500B8C9C6 /* LemonClener.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = LemonClener.framework;
+			remoteRef = 84ADF208212EAC7500B8C9C6 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		84ADF20B212EAC7500B8C9C6 /* LemonClenerTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = LemonClenerTests.xctest;
+			remoteRef = 84ADF20A212EAC7500B8C9C6 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		D49FA4C921DDA2A3004A416E /* PrivacyProtect.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = PrivacyProtect.framework;
+			remoteRef = D49FA4C821DDA2A3004A416E /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
+
+/* Begin PBXResourcesBuildPhase section */
+		B8F1103F1962572100D29FFC /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F81F2F57224C753A0023C1D7 /* Localizable.strings in Resources */,
+				DE4EF2DA27352D46005649F4 /* LMVisibleViewController.xib in Resources */,
+				7952E49F23FD12D20058C48C /* LMTrashSizeCheckWindowController.xib in Resources */,
+				B8F11079196257B000D29FFC /* MainMenu.xib in Resources */,
+				84BA8E7A21758EA70066B794 /* uiresources.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B8F110601962572100D29FFC /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B8F1106D1962572100D29FFC /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		36ED308E1ECAEBE4006C5B33 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "exit 0\ncodesign --force --sign 620F6D9A115BAA1CA292D044F75037200250D832 --timestamp=none  ${CODESIGNING_FOLDER_PATH}\nfi\n";
+		};
+		86CECB0496F2F8A7CBD9BFA5 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-LemonMonitor-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		977E13C17BF52736F49A4515 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-LemonMonitor/Pods-LemonMonitor-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		B8F1103D1962572100D29FFC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B8FF54481A1B3A7E00A5E1D7 /* QMEarlyWarning.m in Sources */,
+				BCDC61E721EE070600C9004B /* BaselineSegmentedCell.m in Sources */,
+				BC89F8A922759B7200983314 /* QMStatusCircleView.m in Sources */,
+				18FD67BA2248825C00036012 /* LMMonitorTrashManager.m in Sources */,
+				797D5CCF2364774D000DC4BE /* LMHardWareDataUtil.m in Sources */,
+				DE27949D26A038BE007B4443 /* LMUpdatePopoverRootView.m in Sources */,
+				BCF3875221EEEDD90031A2FD /* LMSystemFeatureViewController.m in Sources */,
+				B8F110581962572100D29FFC /* AppDelegate.mm in Sources */,
+				BC89F8A522759B7200983314 /* QMStatusMonitorView.m in Sources */,
+				BCDC61E421EE06D800C9004B /* MCBaselineSegmentedControl.m in Sources */,
+				BCF3875621EF27B20031A2FD /* LMMemoryCellView.m in Sources */,
+				847E2D4B21C74AE400F49D5D /* LemonMonitroHelpParams.m in Sources */,
+				BC89F8AA22759B7200983314 /* QMMonitorView2.m in Sources */,
+				BCC2839221F06D1D0026CC09 /* LMMonitorController.m in Sources */,
+				DE4EF2D927352D46005649F4 /* LMVisibleViewController.m in Sources */,
+				DE27949C26A038BE007B4443 /* LMUpdatePopoverBackgroundView.m in Sources */,
+				BCDC61EB21EE11DB00C9004B /* LMMonitorTabController.m in Sources */,
+				BCF3874D21EEED880031A2FD /* LMCleanViewController.m in Sources */,
+				BC89F8A722759B7200983314 /* JLNDragEffectManager.m in Sources */,
+				BCC2838F21F02D070026CC09 /* LMMonitorPoppverController.m in Sources */,
+				7952E49E23FD12D20058C48C /* LMTrashSizeCheckWindowController.m in Sources */,
+				BC89F8A622759B7200983314 /* QMStatusTextField.m in Sources */,
+				79A96341236A84F000DB0B1D /* TrashCheckMonitor.m in Sources */,
+				BC89F8A822759B7200983314 /* QMDragEffectView.m in Sources */,
+				B8F110511962572100D29FFC /* main.m in Sources */,
+				F2D881CA198A644F007FA339 /* QMNetworkPlotView.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B8F1105E1962572100D29FFC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B8F1106F1962572100D29FFC /* QQMacMgrMonitorTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		B8F110671962572100D29FFC /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B8F110401962572100D29FFC /* LemonMonitor */;
+			targetProxy = B8F110661962572100D29FFC /* PBXContainerItemProxy */;
+		};
+		D49FA4CD21DDA4C3004A416E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = PrivacyProtect;
+			targetProxy = D49FA4CC21DDA4C3004A416E /* PBXContainerItemProxy */;
+		};
+		D49FA4D121DDA4D7004A416E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = PrivacyProtect;
+			targetProxy = D49FA4D021DDA4D7004A416E /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		B8F1106B1962572100D29FFC /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				B8F1106C1962572100D29FFC /* en */,
+				F81F2F5B224C75520023C1D7 /* zh-Hans */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		F81F2F59224C753A0023C1D7 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F81F2F58224C753A0023C1D7 /* en */,
+				F81F2F5A224C75520023C1D7 /* zh-Hans */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		B8F110701962572100D29FFC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_CODE_SIGN_FLAGS = "--timestamp=none -o library";
+				PROVISIONING_PROFILE = "";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		B8F110711962572100D29FFC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "Developer ID Application: Tencent Technology (Shenzhen) Company Limited (88L2Q4487U)";
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				OTHER_CODE_SIGN_FLAGS = "--timestamp=none -o library";
+				PROVISIONING_PROFILE = "";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		B8F110731962572100D29FFC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2FAE179F5D5E36229D7AE5D8 /* Pods-LemonMonitor.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CODE_SIGN_ENTITLEMENTS = LemonMonitor/LemonMonitor.entitlements;
+				CODE_SIGN_IDENTITY = "Developer ID Application: Tencent Technology (Shenzhen) Company Limited (88L2Q4487U)";
+				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
+				CODE_SIGN_STYLE = Manual;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_HARDENED_RUNTIME = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Framework",
+					"$(PROJECT_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "LemonMonitor/LemonMonitor-Prefix.pch";
+				INFOPLIST_FILE = "LemonMonitor/LemonMonitor-Info.plist";
+				INSTALL_PATH = "@rpath";
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks @loader_path/../../../ @executable_path/../Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/LemonMonitor/Bugly",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MARKETING_VERSION = 4.7.0;
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_CODE_SIGN_FLAGS = "--timestamp=none -o library";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-l\"c++\"",
+					"-l\"pcap\"",
+					"-l\"sqlite3\"",
+					"-l\"z\"",
+					"-framework",
+					"\"AFNetworking\"",
+					"-framework",
+					"\"AppKit\"",
+					"-framework",
+					"\"Cocoa\"",
+					"-framework",
+					"\"CoreServices\"",
+					"-framework",
+					"\"DiskArbitration\"",
+					"-framework",
+					"\"FMDB\"",
+					"-framework",
+					"\"Foundation\"",
+					"-framework",
+					"\"IOKit\"",
+					"-framework",
+					"\"LemonHardware\"",
+					"-framework",
+					"\"LemonNetSpeed\"",
+					"-framework",
+					"\"LemonStat\"",
+					"-framework",
+					"\"LemonUninstaller\"",
+					"-framework",
+					"\"Masonry\"",
+					"-framework",
+					"\"QMCoreFunction\"",
+					"-framework",
+					"\"QMUICommon\"",
+					"-framework",
+					"\"Security\"",
+					"-framework",
+					"\"SystemConfiguration\"",
+					"-ObjC",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.tencent.LemonMonitor;
+				PRODUCT_NAME = LemonMonitor;
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				USER_HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../statlib/header\"";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		B8F110741962572100D29FFC /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 47D7AC3330517E6E138F5D82 /* Pods-LemonMonitor.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CODE_SIGN_ENTITLEMENTS = LemonMonitor/LemonMonitor.entitlements;
+				CODE_SIGN_IDENTITY = "Developer ID Application: Tencent Technology (Shenzhen) Company Limited (88L2Q4487U)";
+				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
+				CODE_SIGN_STYLE = Manual;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_HARDENED_RUNTIME = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Framework",
+					"$(PROJECT_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "LemonMonitor/LemonMonitor-Prefix.pch";
+				INFOPLIST_FILE = "LemonMonitor/LemonMonitor-Info.plist";
+				INSTALL_PATH = "@rpath";
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks @loader_path/../../../ @executable_path/../Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/LemonMonitor/Bugly",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MARKETING_VERSION = 4.7.0;
+				OTHER_CODE_SIGN_FLAGS = "--timestamp -o library";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-framework",
+					"\"AFNetworking\"",
+					"-framework",
+					"\"FMDB\"",
+					"-framework",
+					"\"LemonStat\"",
+					"-framework",
+					"\"Masonry\"",
+					"-framework",
+					"\"QMCoreFunction\"",
+					"-framework",
+					"\"QMUICommon\"",
+					"-ObjC",
+				);
+				"OTHER_LIBTOOLFLAGS[arch=*]" = "";
+				PRODUCT_BUNDLE_IDENTIFIER = com.tencent.LemonMonitor;
+				PRODUCT_NAME = LemonMonitor;
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				USER_HEADER_SEARCH_PATHS = "\"$(SRCROOT)/../statlib/header\"";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		B8F110761962572100D29FFC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Lemon uninstall-monitor.app/Contents/MacOS/Lemon uninstall-monitor";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(inherited)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "LemonMonitor/LemonMonitor-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "LemonMonitorTests/LemonMonitorTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Debug;
+		};
+		B8F110771962572100D29FFC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Lemon uninstall-monitor.app/Contents/MacOS/Lemon uninstall-monitor";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(inherited)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "LemonMonitor/LemonMonitor-Prefix.pch";
+				INFOPLIST_FILE = "LemonMonitorTests/LemonMonitorTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		B8F1103C1962572100D29FFC /* Build configuration list for PBXProject "LemonMonitor" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B8F110701962572100D29FFC /* Debug */,
+				B8F110711962572100D29FFC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B8F110721962572100D29FFC /* Build configuration list for PBXNativeTarget "LemonMonitor" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B8F110731962572100D29FFC /* Debug */,
+				B8F110741962572100D29FFC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B8F110751962572100D29FFC /* Build configuration list for PBXNativeTarget "LemonMonitorTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B8F110761962572100D29FFC /* Debug */,
+				B8F110771962572100D29FFC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = B8F110391962572100D29FFC /* Project object */;
+}

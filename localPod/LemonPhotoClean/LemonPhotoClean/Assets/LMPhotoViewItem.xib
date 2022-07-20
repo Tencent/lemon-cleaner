@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14868" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14868"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="LMPhotoViewItem">
+            <connections>
+                <outlet property="checkBtnIsSelected" destination="mtn-iH-b4a" id="U5j-Ss-UWU"/>
+                <outlet property="imgThumbnail" destination="gYe-TS-ajM" id="adE-Od-1PT"/>
+                <outlet property="view" destination="Hz6-mo-xeY" id="0bl-1N-x8E"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <customView id="Hz6-mo-xeY">
+            <rect key="frame" x="0.0" y="0.0" width="80" height="80"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="gYe-TS-ajM">
+                    <rect key="frame" x="0.0" y="0.0" width="80" height="80"/>
+                    <imageCell key="cell" scrollable="YES" lineBreakMode="clipping" refusesFirstResponder="YES" alignment="left" imageScaling="axesIndependently" id="bCQ-rC-KMZ"/>
+                    <connections>
+                        <binding destination="Ycf-4S-B4q" name="value" keyPath="representedObject.previewImage" id="57o-aY-svl"/>
+                    </connections>
+                </imageView>
+                <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="mtn-iH-b4a" customClass="LMCheckboxButton">
+                    <rect key="frame" x="64" y="-2" width="19" height="19"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="15" id="EgK-D4-RyR"/>
+                        <constraint firstAttribute="height" constant="15" id="pWn-CR-xSJ"/>
+                    </constraints>
+                    <buttonCell key="cell" type="check" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="FDr-TJ-213">
+                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="valueChange:" target="Ycf-4S-B4q" id="jxP-ym-heS"/>
+                        <binding destination="Ycf-4S-B4q" name="value" keyPath="representedObject.isSelected" id="jfm-9x-0sM"/>
+                    </connections>
+                </button>
+            </subviews>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="mtn-iH-b4a" secondAttribute="trailing" constant="-1" id="IdQ-0v-WRw"/>
+                <constraint firstAttribute="bottom" secondItem="mtn-iH-b4a" secondAttribute="bottom" id="JJj-ru-6bw"/>
+                <constraint firstItem="gYe-TS-ajM" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" id="YG7-Q5-pUB"/>
+                <constraint firstAttribute="trailing" secondItem="gYe-TS-ajM" secondAttribute="trailing" id="ZJx-by-8sn"/>
+                <constraint firstAttribute="bottom" secondItem="gYe-TS-ajM" secondAttribute="bottom" id="eYy-jV-jm6"/>
+                <constraint firstItem="gYe-TS-ajM" firstAttribute="top" secondItem="Hz6-mo-xeY" secondAttribute="top" id="ka0-Lj-NsR"/>
+            </constraints>
+            <point key="canvasLocation" x="-29" y="94.5"/>
+        </customView>
+        <collectionViewItem id="Ycf-4S-B4q" customClass="LMPhotoViewItem">
+            <connections>
+                <outlet property="view" destination="Hz6-mo-xeY" id="lKy-BA-tOi"/>
+            </connections>
+        </collectionViewItem>
+        <userDefaultsController representsSharedInstance="YES" id="atg-sz-DtO"/>
+    </objects>
+</document>

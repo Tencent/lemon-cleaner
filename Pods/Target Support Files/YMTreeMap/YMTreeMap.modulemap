@@ -1,0 +1,6 @@
+framework module YMTreeMap {
+  umbrella header "YMTreeMap-umbrella.h"
+
+  export *
+  module * { export * }
+}

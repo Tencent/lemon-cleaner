@@ -1,0 +1,6 @@
+framework module LemonBigOldFile {
+  umbrella header "LemonBigOldFile-umbrella.h"
+
+  export *
+  module * { export * }
+}

@@ -1,0 +1,29 @@
+/* 
+  Localizable.strings
+  LemonHardware
+
+  
+  Copyright © 2019 Tencent. All rights reserved.
+*/
+"LemonHardwareViewController_initView_1558009402_1" = "硬件检测";
+"HardwareDataCenter_getAllHardwareInfoWithBlock_1558009402_1" = "硬盘";
+"HardwareDataCenter_getAllHardwareInfoWithBlock_1558009402_2" = "可用空间";
+"HardwareDataCenter_getAllHardwareInfoWithBlock_1558009402_3" = "全部空间";
+"HardwareDataCenter_getAllHardwareInfoWithBlock_1558009402_4" = "处理器";
+"HardwareDataCenter_getAllHardwareInfoWithBlock_1558009402_5" = "名称";
+"HardwareDataCenter_getAllHardwareInfoWithBlock_1558009402_6" = "速度";
+"HardwareDataCenter_getAllHardwareInfoWithBlock_1558009402_7" = "核总数";
+"HardwareDataCenter_getAllHardwareInfoWithBlock_1558009402_8" = "显卡";
+"HardwareDataCenter_getAllHardwareInfoWithBlock_1558009402_9" = "型号";
+"HardwareDataCenter_getAllHardwareInfoWithBlock_1558009402_10" = "显存";
+"HardwareDataCenter_getAllHardwareInfoWithBlock_1558009402_11" = "显示器分辨率";
+"HardwareDataCenter_getAllHardwareInfoWithBlock_1558009402_12" = "内存";
+"HardwareDataCenter_getAllHardwareInfoWithBlock_NSString_13" = "内存%ld";
+"HardwareDataCenter_getAllHardwareInfoWithBlock_1558009402_14" = "电池";
+"HardwareDataCenter_getAllHardwareInfoWithBlock_1558009402_15" = "电池容量";
+"HardwareDataCenter_getAllHardwareInfoWithBlock_1558009402_16" = "循环次数";
+"HardwareDataCenter_getAllHardwareInfoWithBlock_1558009402_17" = "正常";
+"HardwareDataCenter_getAllHardwareInfoWithBlock_1558009402_18" = "异常";
+"HardwareDataCenter_getAllHardwareInfoWithBlock_1558009402_19" = "健康状态";
+"MachineModel__macModelDetailInfo_NSString_1" = "%@第%@周";
+"Disk Analyzer" = "磁盘空间分析";

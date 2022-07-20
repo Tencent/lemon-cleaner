@@ -1,0 +1,42 @@
+/*
+ Localizable.strings
+ QMUICommon
+ 
+ 
+ Copyright © 2019 Tencent. All rights reserved.
+ */
+"GetFullDiskPopViewController_viewWillAppear_settingBtn_1" = "Finish";
+"GetFullDiskPopViewController_viewWillAppear_settingBtn_2" = "Go to Settings";
+"GetFullDiskPopViewController_currentApplicationChnage_settingBtn_1" = "Finish";
+"GetFullDiskPopViewController_currentApplicationChnage_settingBtn_2" = "Go to Settings";
+"GetFullDiskPopViewController_setupViews_titleLabel_1" = "Please rest assured that Lemon never or ever upload your files.";
+"GetFullDiskPopViewController_setupViews_descLabel_2" = "Click the lock —— Click add icon —— Find \"Tencent Lemon\" in Application";
+"GetFullDiskPremission_Title_10_15" = "From macOS 10.15, you have to grant permission \"Full Disk Access\" to clean trash and mail cache.";
+"GetFullDiskPremission_Button_OK_10_15" = "Grant permission";
+"GetFullDiskPremission_Button_Cancel_10_15" = "Cancel";
+
+"GetFilesAndFolders_Title_10_15" = "From macOS 10.15, you have to grant permission \"Files and Folders\" to scan desktop, documents and download folders.";
+"GetFullDiskPopViewController_setupViews_setupBtn _3" = "Go to Settings";
+"GetFullDiskPopViewController_setupViews_setupBtn_4" = "Finish";
+"GetFullDiskPopViewController_setupViews_cancelButton_5" = "Cancel";
+
+"LMPermissionGuideViewController_setupViews_okBtn_get_permission" = "Go to Settings";
+"LMPermissionGuideViewController_setupViews_cancelButton" = "Cancel";
+"LMPermissionGuideViewController_setupViews_okBtn_finish" = "Confirm";
+
+"DropViewContinueAdd" = "Add";
+
+"RatingViewController_title" = "Enjoying Lemon?";
+"RatingViewController_wellUse" = "Yes! Rate Lemon";
+"RatingViewController_hardUse" = "Not really";
+"TucaoTitleViewController_title" = "Would you mind giving us some feedback?";
+"TucaoTitleViewController_goto" = "OK, sure";
+"TucaoTitleViewController_later" = "No, thanks";
+
+"PathSelectViewController_add_system_photo" = "Support photo library";
+"PathSelectViewController_addFolder_button_tips" = "Click or drag to add file folder";
+"PathSelectViewController_addFolder_button_continue_tips" = "Add";
+
+"GetFullDiskPopViewController_setupViews_titleLabel_monitor" = "In macOS 11.4 or above, Tencent lemon cleaner needs to obtain full disk read permission to clean up the residual files";
+
+"GetFullDiskPopViewController_setupViews_descLabel_monitor" = "Click the lock —— Click add icon —— Find  \"Tencent Lemon\" in Application ——open \"Tencent Lemon\" & \"Tencent Lemon Monitor\"";
