@@ -20,7 +20,7 @@ void DiskDescriptionChangedCallback(DADiskRef diskRef, CFArrayRef keys, void *co
 
 @interface Disk (DiskPrivate)
 
-+ (id)uniqueDiskForDADisk:(DADiskRef)diskRef create:(BOOL)create;
++ (instancetype)uniqueDiskForDADisk:(DADiskRef)diskRef create:(BOOL)create;
 
 - (instancetype)initWithDADisk:(DADiskRef)diskRef shouldCreateParent:(BOOL)shouldCreateParent;
 - (void)refreshFromDescription;

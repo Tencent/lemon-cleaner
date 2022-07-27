@@ -36,7 +36,7 @@
 
 @implementation LMLocalAppListManager
 
-+ (id)defaultManager
++ (instancetype)defaultManager
 {
     static id instance = nil;
     static dispatch_once_t onceToken;

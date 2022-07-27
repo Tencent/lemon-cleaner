@@ -55,7 +55,7 @@
 
 #pragma mark Factory
 
-+ (id)sharedDragEffectManager
++ (instancetype)sharedDragEffectManager
 {
 //    static id sharedDragEffectManager = nil;
 //    if (sharedDragEffectManager == nil)

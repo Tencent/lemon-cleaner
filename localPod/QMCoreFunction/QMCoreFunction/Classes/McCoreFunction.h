@@ -31,7 +31,7 @@ typedef enum: NSUInteger {
                  array:(NSArray *)pathArray
              removeType:(AppBinaryType)type;
 
-+ (id)shareCoreFuction;
++ (instancetype)shareCoreFuction;
 
 // app store version
 + (void)setAppStoreVersion:(BOOL)isAppstore;

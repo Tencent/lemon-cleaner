@@ -12,7 +12,7 @@
 @synthesize status;
 @synthesize object;
 
-+ (id)itemWithObject:(id)object
++ (instancetype)itemWithObject:(id)object
 {
     QMStatusItem *item = [[QMStatusItem alloc] init];
     item.object = object;

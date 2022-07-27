@@ -27,7 +27,7 @@
 
 @implementation McScanner
 
-+ (id)scanner
++ (instancetype)scanner
 {
     return [[self alloc] init];
 }

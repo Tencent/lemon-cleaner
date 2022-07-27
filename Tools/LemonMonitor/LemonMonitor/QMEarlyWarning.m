@@ -32,7 +32,7 @@
 
 @implementation QMEarlyWarning
 
-+ (id)sharedInstance
++ (instancetype)sharedInstance
 {
     static id instance = nil;
     static dispatch_once_t onceToken;

@@ -23,7 +23,7 @@
 
 @implementation LMCleanerDataCenter
 
-+(id)shareInstance{
++(instancetype)shareInstance{
     static LMCleanerDataCenter * instance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{

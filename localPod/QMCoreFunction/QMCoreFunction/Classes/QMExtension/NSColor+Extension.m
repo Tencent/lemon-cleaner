@@ -95,7 +95,7 @@
     return (__bridge CGColorRef)([(__bridge id)colorRef performSelector:NSSelectorFromString(@"autorelease")]);
 }
 
-+ (id)createCGColorWithSRGB:(float)r green:(float)g blue:(float)b alpha:(float)alpha
++ (instancetype)createCGColorWithSRGB:(float)r green:(float)g blue:(float)b alpha:(float)alpha
 {
     CGColorSpaceRef spaceRef = CGColorSpaceCreateWithName(kCGColorSpaceSRGB);
     CGColorRef colorRef = CGColorCreate(spaceRef,  (CGFloat[]){r/255.0, g/255.0, b/255.0, alpha});

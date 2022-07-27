@@ -70,7 +70,7 @@
     return [super keyPathsForValuesAffectingValueForKey:key];
 }
 
-+ (id)uniqueDiskForDADisk:(DADiskRef)diskRef create:(BOOL)create
++ (instancetype)uniqueDiskForDADisk:(DADiskRef)diskRef create:(BOOL)create
 {
     for (Disk *disk in uniqueDisks) {
         if (disk.hash == CFHash(diskRef))

@@ -34,7 +34,7 @@
     return retSize;
 }
 
-+(id)hyperlinkFromString:(NSString*)inString withURL:(NSURL*)aURL
++(instancetype)hyperlinkFromString:(NSString*)inString withURL:(NSURL*)aURL
 {
     NSMutableAttributedString* attrString = [[NSMutableAttributedString alloc] initWithString: inString];
     [attrString addAttribute:NSForegroundColorAttributeName value:[NSColor colorWithHex:0x057cff] range:NSMakeRange(0, inString.length)];
@@ -52,7 +52,7 @@
     
     [attrString endEditing];
     
-    return attrString;
+    return [attrString copy];
 }
 
 

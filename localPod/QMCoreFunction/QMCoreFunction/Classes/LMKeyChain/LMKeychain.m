@@ -108,7 +108,7 @@ static BOOL _logErrors;
 	return (returnStatus == noErr);
 }
 
-+ (id)getKeychainAttribute:(SecItemAttr)attrTag fromItem:(SecKeychainItemRef)item {
++ (instancetype)getKeychainAttribute:(SecItemAttr)attrTag fromItem:(SecKeychainItemRef)item {
 	SecKeychainAttribute attribute[1];
 	attribute[0].tag = attrTag;
 	SecKeychainAttributeList list;
@@ -221,7 +221,7 @@ static BOOL _logErrors;
 	}
 	return self;
 }
-+ (id)genericKeychainItem:(SecKeychainItemRef)item forServiceName:(NSString *)serviceName username:(NSString *)username password:(NSString *)password {
++ (instancetype)genericKeychainItem:(SecKeychainItemRef)item forServiceName:(NSString *)serviceName username:(NSString *)username password:(NSString *)password {
 	return [[LMGenericKeychainItem alloc] initWithCoreKeychainItem:item serviceName:serviceName username:username password:password];
 }
 - (NSString *)serviceName {
@@ -312,7 +312,7 @@ static BOOL _logErrors;
 	}
 	return self;
 }
-+ (id)internetKeychainItem:(SecKeychainItemRef)item forServer:(NSString *)server username:(NSString *)username password:(NSString *)password path:(NSString *)path port:(int)port protocol:(SecProtocolType)protocol {
++ (instancetype)internetKeychainItem:(SecKeychainItemRef)item forServer:(NSString *)server username:(NSString *)username password:(NSString *)password path:(NSString *)path port:(int)port protocol:(SecProtocolType)protocol {
 	return [[LMInternetKeychainItem alloc] initWithCoreKeychainItem:item server:server username:username password:password path:path port:port protocol:protocol];
 }
 - (NSString *)server {

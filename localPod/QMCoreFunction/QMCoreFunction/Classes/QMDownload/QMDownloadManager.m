@@ -24,7 +24,7 @@ NSString *QMDownloadListChangedNotification = @"QMDownloadListChangedNotificatio
 @synthesize downloadDirectory;
 @synthesize concurrentCount;
 
-+ (id)sharedManager
++ (instancetype)sharedManager
 {
     static id instance = nil;
     static dispatch_once_t onceToken;

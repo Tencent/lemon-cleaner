@@ -41,8 +41,8 @@ typedef NSInteger McLocalType;
 @property (nonatomic, strong) NSImage   *icon;
 @property (nonatomic, assign) McLocalType type;
 
-+ (id)softWithPath:(NSString *)filePath;
-+ (id)softWithBundle:(NSBundle *)bundle;
++ (instancetype)softWithPath:(NSString *)filePath;
++ (instancetype)softWithBundle:(NSBundle *)bundle;
 
 - (BOOL)needUpdateWithNetVersion:(NSString *)netVersion;
 - (NSComparisonResult)compareVersion:(McLocalSoft *)localSoft;

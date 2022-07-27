@@ -17,7 +17,7 @@
 
 @implementation QMViewAnimation
 
-+ (id)animationWithInfos:(NSArray *)viewAnimations
++ (instancetype)animationWithInfos:(NSArray *)viewAnimations
 {
     QMViewAnimation *animation = [[QMViewAnimation alloc] init];
     [animation setViewAnimations:viewAnimations];

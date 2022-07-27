@@ -10,6 +10,6 @@
 
 @interface QMEarlyWarning : NSObject
 
-+ (id)sharedInstance;
++ (instancetype)sharedInstance;
 
 @end

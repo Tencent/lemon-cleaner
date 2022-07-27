@@ -36,8 +36,8 @@ extern NSString *McUninstallSoftPathKey;
 @property (nonatomic, readonly) NSImage *icon;
 @property (nonatomic, readonly) McLocalType type;
 
-+ (id)uninstallSoftWithSoft:(McLocalSoft *)localsoft;
-+ (id)uninstallSoftWithPath:(NSString *)filePath;
++ (instancetype)uninstallSoftWithSoft:(McLocalSoft *)localsoft;
++ (instancetype)uninstallSoftWithPath:(NSString *)filePath;
 
 - (void)appendItem:(id)item;
 - (McSoftwareFileType)removingType;
