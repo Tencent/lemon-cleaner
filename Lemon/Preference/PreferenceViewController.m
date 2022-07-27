@@ -61,7 +61,7 @@
 
 @implementation PreferenceViewController
 
--(id)initWithPreferenceWindowController:(PreferenceWindowController *)wdControle{
+-(instancetype)initWithPreferenceWindowController:(PreferenceWindowController *)wdControle{
     self = [super init];
     if (self) {
         self.myWC = wdControle;

@@ -35,7 +35,7 @@
 }
 @property (assign) id<QMDuplicateDropLayerDelegate> dropDelegate;
 
-- (id)initWithFrame:(NSRect)rect;
+- (instancetype)initWithFrame:(NSRect)rect;
 
 - (void)addPathItem:(NSArray *)pathArray;
 

@@ -22,7 +22,7 @@
 
 @implementation AudioDeviceModel
 
-- (id)init{
+- (instancetype)init{
     self = [super init];
     if (self) {
         _isAudioActive = NO;

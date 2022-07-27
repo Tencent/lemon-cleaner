@@ -13,7 +13,7 @@
 @implementation QMActionAtomItem
 @synthesize resultFilters;
 
--(id)copyWithZone:(NSZone *)zone{
+-(instancetype)copyWithZone:(NSZone *)zone{
     QMActionAtomItem *copy = [[QMActionAtomItem alloc] init];
     if (copy) {
         copy.resultFilters = [self.resultFilters copy];
@@ -22,7 +22,7 @@
     return self;
 }
 
--(id)mutableCopyWithZone:(NSZone *)zone{
+-(instancetype)mutableCopyWithZone:(NSZone *)zone{
     QMActionAtomItem *copy = [[QMActionAtomItem alloc] init];
     if (copy) {
         copy.resultFilters = [self.resultFilters copy];
@@ -40,7 +40,7 @@
 @synthesize level;
 @synthesize scanFilters;
 
-- (id)init
+- (instancetype)init
 {
     if (self = [super init])
     {
@@ -49,7 +49,7 @@
     return self;
 }
 
--(id)copyWithZone:(NSZone *)zone{
+-(instancetype)copyWithZone:(NSZone *)zone{
     QMActionPathItem *copy = [[QMActionPathItem alloc] init];
     if (copy) {
         copy.filename = [self.filename mutableCopy];
@@ -63,7 +63,7 @@
     return self;
 }
 
--(id)mutableCopyWithZone:(NSZone *)zone{
+-(instancetype)mutableCopyWithZone:(NSZone *)zone{
     QMActionPathItem *copy = [[QMActionPathItem alloc] init];
     if (copy) {
         copy.filename = [self.filename mutableCopy];
@@ -97,7 +97,7 @@
 @synthesize appVersion;
 @synthesize buildVersion;
 
-- (id)init
+- (instancetype)init
 {
     if (self = [super init])
     {
@@ -114,7 +114,7 @@
     return self;
 }
 
--(id)copyWithZone:(NSZone *)zone{
+-(instancetype)copyWithZone:(NSZone *)zone{
     QMActionItem *copy = [super copyWithZone:zone];
     if (copy) {
         copy.actionID = [self.actionID mutableCopy];
@@ -143,7 +143,7 @@
     return copy;
 }
 
--(id)mutableCopyWithZone:(NSZone *)zone{
+-(instancetype)mutableCopyWithZone:(NSZone *)zone{
     QMActionItem *copy = [super mutableCopyWithZone:zone];
     if (copy) {
         copy.actionID = [self.actionID mutableCopy];

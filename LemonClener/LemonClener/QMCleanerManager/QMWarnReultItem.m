@@ -16,7 +16,7 @@
 @synthesize iconImage;
 @synthesize resultSize;
 
-- (id)initWithPath:(NSString *)path
+- (instancetype)initWithPath:(NSString *)path
 {
     if (self = [super init])
     {

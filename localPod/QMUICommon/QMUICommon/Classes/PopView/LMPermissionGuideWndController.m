@@ -18,11 +18,11 @@
 @implementation LMPermissionGuideWndController
 
 
--(id)initWithParaentCenterPos:(CGPoint)centerPos title:(NSString *)title descText:(NSString *) desc image:(NSImage *) image{
+-(instancetype)initWithParaentCenterPos:(CGPoint)centerPos title:(NSString *)title descText:(NSString *) desc image:(NSImage *) image{
     return [self initWithParaentCenterPos:centerPos title:title descText:desc image:image guideImageViewHeight:410];
 }
 
--(id)initWithParaentCenterPos:(CGPoint)centerPos title:(NSString *)title descText:(NSString *) desc image:(NSImage *) image guideImageViewHeight: (NSInteger) height{
+-(instancetype)initWithParaentCenterPos:(CGPoint)centerPos title:(NSString *)title descText:(NSString *) desc image:(NSImage *) image guideImageViewHeight: (NSInteger) height{
     self = [super init];
     if (self) {
         self.centerPoint = centerPos;

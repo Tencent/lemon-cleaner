@@ -22,7 +22,7 @@
     
 }
 
-- (id)initWithFrame:(NSRect)rect;
+- (instancetype)initWithFrame:(NSRect)rect;
 
 - (void)setProgressValue:(CGFloat)progressValue animation:(BOOL)animation;
 
@@ -30,7 +30,7 @@
 
 @implementation QMDuplicateBackLayer
 
-- (id)initWithFrame:(NSRect)rect
+- (instancetype)initWithFrame:(NSRect)rect
 {
     if (self = [super init])
     {

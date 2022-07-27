@@ -25,7 +25,7 @@
 
 @implementation CameraDeviceModel
 
-- (id)init{
+- (instancetype)init{
     self = [super init];
     if (self) {
         _isCameraActive = NO;

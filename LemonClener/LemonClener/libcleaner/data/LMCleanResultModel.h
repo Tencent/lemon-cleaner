@@ -25,8 +25,8 @@ typedef enum {
 @property (nonatomic, assign) long long oprateTime;
 @property (nonatomic, assign) long long createTime;
 
--(id)initWithCreateTime:(long long) createTime;
+-(instancetype)initWithCreateTime:(long long) createTime;
 
--(id)initWithResultId:(NSInteger) resultId totalSize:(long long) totalSize sysSize:(long long)sysSize appSize:(long long)appSize intSize:(long long)intSize cleanType:(CleanResultType) cleanType fileNum:(NSUInteger) fileNum oprateTime:(long long)oprateTime createTime:(long long) createTime;
+-(instancetype)initWithResultId:(NSInteger) resultId totalSize:(long long) totalSize sysSize:(long long)sysSize appSize:(long long)appSize intSize:(long long)intSize cleanType:(CleanResultType) cleanType fileNum:(NSUInteger) fileNum oprateTime:(long long)oprateTime createTime:(long long) createTime;
 
 @end

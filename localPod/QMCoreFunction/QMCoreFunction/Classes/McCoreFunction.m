@@ -22,7 +22,7 @@ BOOL gIsAppStoreVersion = NO;
     init_xpc();
 }
 
-- (id)init
+- (instancetype)init
 {
     self = [super init];
     if (self)

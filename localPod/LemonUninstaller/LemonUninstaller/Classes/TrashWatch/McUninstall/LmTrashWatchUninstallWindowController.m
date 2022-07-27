@@ -73,7 +73,7 @@
 @implementation LmTrashWatchUninstallWindowController
 @synthesize delegate;
 
-- (id)init
+- (instancetype)init
 {
     //hook 多语言
     NSString *languageString = [LanguageHelper getCurrentUserLanguageByReadFile];

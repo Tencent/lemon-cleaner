@@ -18,7 +18,7 @@
 @synthesize flyEffect;
 @synthesize completionHandler;
 
-- (id)init
+- (instancetype)init
 {
     self = [super initWithContentRect:NSMakeRect(0, 0, 64, 64) 
                             styleMask:NSBorderlessWindowMask 

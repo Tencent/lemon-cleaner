@@ -28,7 +28,7 @@
 #define FRAME_COUNT 10
 #define DISAPPERA_DELAY 0.3
 
-- (id) initWithFrame:(NSRect)frameRect
+- (instancetype) initWithFrame:(NSRect)frameRect
 {
     self = [super initWithFrame:frameRect];
     if (self) {

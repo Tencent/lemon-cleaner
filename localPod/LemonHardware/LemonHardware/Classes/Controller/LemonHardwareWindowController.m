@@ -17,7 +17,7 @@
 
 @implementation LemonHardwareWindowController
 
-- (id)init
+- (instancetype)init
 {
     self = [super initWithWindowNibName:NSStringFromClass(self.class)];
     

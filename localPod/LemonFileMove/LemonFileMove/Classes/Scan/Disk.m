@@ -80,7 +80,7 @@
     return create ? [[self.class alloc] initWithDADisk:diskRef shouldCreateParent:YES] : nil;
 }
 
-- (id)initWithDADisk:(DADiskRef)diskRef shouldCreateParent:(BOOL)shouldCreateParent
+- (instancetype)initWithDADisk:(DADiskRef)diskRef shouldCreateParent:(BOOL)shouldCreateParent
 {
     NSAssert(diskRef, @"No Disk Arbitration disk provided to initializer.");
     

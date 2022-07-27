@@ -46,7 +46,7 @@
 @dynamic borderWidth, borderColor, backgroudColor;
 @dynamic draggable, titleMode, distance;
 
-- (id)init
+- (instancetype)init
 {
     self = [super init];
     if (self)

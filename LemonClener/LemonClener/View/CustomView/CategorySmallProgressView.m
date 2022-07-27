@@ -10,7 +10,7 @@
 
 @implementation CategorySmallProgressView
 
--(id)initWithCoder:(NSCoder *)decoder{
+-(instancetype)initWithCoder:(NSCoder *)decoder{
     self = [super initWithCoder:decoder];
     if (self) {
         [self setWantsLayer:YES];

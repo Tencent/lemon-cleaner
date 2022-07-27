@@ -15,6 +15,6 @@ typedef void(^CLoseBLock)(void);
 
 @property (nonatomic, assign) BOOL isLemonMonitor;
 
--(id)initWithCLoseSetting:(CLoseBLock) closeBlock;
+-(instancetype)initWithCLoseSetting:(CLoseBLock) closeBlock;
 
 @end

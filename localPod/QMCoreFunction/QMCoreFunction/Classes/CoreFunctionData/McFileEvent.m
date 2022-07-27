@@ -18,7 +18,7 @@
 @synthesize fsindex;
 @synthesize renamedPath;
 
-- (id)init
+- (instancetype)init
 {
     if (self = [super init])
     {
@@ -35,7 +35,7 @@
 
 @implementation McFileEvent
 
-- (id)init
+- (instancetype)init
 {
     if (self = [super init])
     {

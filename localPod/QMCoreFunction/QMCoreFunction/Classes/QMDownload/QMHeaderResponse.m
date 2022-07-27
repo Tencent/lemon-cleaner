@@ -30,7 +30,7 @@
     return [headerResponse headerResponse:error];
 }
 
-- (id)initWithURL:(NSURL *)aURL
+- (instancetype)initWithURL:(NSURL *)aURL
 {
     self = [super init];
     if (self)

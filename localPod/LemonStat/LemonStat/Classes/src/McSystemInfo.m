@@ -21,7 +21,7 @@
 @synthesize purchCountry;
 @synthesize covEndData;
 
-- (id) init
+- (instancetype) init
 {
     if (self = [super init])
     {

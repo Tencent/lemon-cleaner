@@ -21,7 +21,7 @@
 @property (nonatomic, assign) NSUInteger resultSize;
 @property (nonatomic, assign) BOOL selected;
 
-- (id)initWithPath:(NSString *)path;
+- (instancetype)initWithPath:(NSString *)path;
 
 - (void)addResultPathArray:(NSArray *)pathArray cleanType:(QMCleanType)type;
 - (NSDictionary *)resultPathDict;

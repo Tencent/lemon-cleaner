@@ -31,7 +31,7 @@ NSString * const QMDataCenterDidChangeNotification = @"QMDataCenterDidChangeNoti
     return instance;
 }
 
-- (id)init
+- (instancetype)init
 {
     self = [super init];
     if (self)

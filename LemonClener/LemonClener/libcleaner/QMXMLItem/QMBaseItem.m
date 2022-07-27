@@ -14,7 +14,7 @@
 @synthesize progressValue;
 @synthesize state;
 
--(id)copyWithZone:(NSZone *)zone{
+-(instancetype)copyWithZone:(NSZone *)zone{
     QMBaseItem *copy = [[[self class] alloc] init];
     if (copy) {
         copy.progressValue = self.progressValue;
@@ -26,7 +26,7 @@
     return copy;
 }
 
--(id)mutableCopyWithZone:(NSZone *)zone{
+-(instancetype)mutableCopyWithZone:(NSZone *)zone{
     QMBaseItem *copy = [[[self class] alloc] init];
     if (copy) {
         copy.progressValue = self.progressValue;

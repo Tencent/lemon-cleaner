@@ -10,7 +10,7 @@
 
 @implementation ToolModel
 
--(id)initWithToolId:(NSString *)toolId toolPicName:(NSString *)toolPicName className:(NSString *)className toolName:(NSString *)toolName toolDesc:(NSString *)toolDesc reportId:(NSInteger)reportId{
+-(instancetype)initWithToolId:(NSString *)toolId toolPicName:(NSString *)toolPicName className:(NSString *)className toolName:(NSString *)toolName toolDesc:(NSString *)toolDesc reportId:(NSInteger)reportId{
     self = [super init];
     if (self) {
         self.toolId = toolId;

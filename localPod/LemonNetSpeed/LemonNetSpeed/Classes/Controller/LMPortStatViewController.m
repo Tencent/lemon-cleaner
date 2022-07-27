@@ -164,7 +164,7 @@ const NSString* LMPortStateKey = @"LMPortStateKey";
 @end
 @implementation LMPortTableRowView
 
-- (id)initWithFrame:(NSRect)frameRect
+- (instancetype)initWithFrame:(NSRect)frameRect
 {
     if (self = [super initWithFrame:frameRect])
     {

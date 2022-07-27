@@ -14,7 +14,7 @@
 
 @implementation LMFileMoveResultFailureRowView
 
-- (id)initWithFrame:(NSRect)frameRect {
+- (instancetype)initWithFrame:(NSRect)frameRect {
     if (self = [super initWithFrame:frameRect]) {
         m_selectedColor = [LMAppThemeHelper getTableViewRowSelectedColor];
     }

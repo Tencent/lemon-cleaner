@@ -34,7 +34,7 @@
     return instance;
 }
 
--(id)init{
+-(instancetype)init{
     self = [super init];
     if (self) {
         self.m_subCategoryDict = [[NSMutableDictionary alloc] init];

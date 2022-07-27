@@ -20,7 +20,7 @@
 @synthesize cpuCount;
 @synthesize cpuBrandStr;
 
-- (id) init
+- (instancetype) init
 {
     if (self = [super init])
     {

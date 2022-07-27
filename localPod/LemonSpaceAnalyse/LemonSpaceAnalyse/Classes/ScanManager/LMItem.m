@@ -11,7 +11,7 @@
 
 @implementation LMItem
 
-- (id)init {
+- (instancetype)init {
     self = [super init];
     if (self) {
         _childItems = [NSMutableArray array];
@@ -24,7 +24,7 @@
     return self;
 }
 
-- (id)initWithFullPath:(NSString *)path {
+- (instancetype)initWithFullPath:(NSString *)path {
     self = [self init];
     if (self) {
         self.fullPath = path;

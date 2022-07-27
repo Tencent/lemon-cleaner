@@ -14,7 +14,7 @@
 // 加号 , 拖拽语句, 背景色 的 Layer.
 @implementation QMDuplicateCoverLayer
 
-- (id)initWithFrame:(NSRect)rect addTips:(NSString *)tips{
+- (instancetype)initWithFrame:(NSRect)rect addTips:(NSString *)tips{
     if (self = [super init])
     {
         [self setFrame:rect];

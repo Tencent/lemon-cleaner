@@ -81,7 +81,7 @@ static double ntpDiffSeconds(struct ntpTimestamp * start, struct ntpTimestamp * 
     return [NSData dataWithBytes:wireData length:48];
 }
 
-- (id)init
+- (instancetype)init
 {
     if (self = [super init])
     {

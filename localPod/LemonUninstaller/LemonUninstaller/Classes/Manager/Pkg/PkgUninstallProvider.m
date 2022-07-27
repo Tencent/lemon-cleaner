@@ -36,7 +36,7 @@ typedef enum {
     NSDictionary *_categoryDict;
 }
 
-- (id)initWithPkgBundleId:(NSString *)pkgBundleId withKeyWording:(NSString *)keyWord {
+- (instancetype)initWithPkgBundleId:(NSString *)pkgBundleId withKeyWording:(NSString *)keyWord {
     self = [super init];
     if (self) {
         _fileManager = NSFileManager.defaultManager;

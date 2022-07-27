@@ -49,9 +49,9 @@
 //app macos二进制的架构
 @property (nonatomic, assign) AppBinaryType binaryType;
 
-- (id)initWithPath:(NSString *)rpath;
+- (instancetype)initWithPath:(NSString *)rpath;
 
-- (id)initWithLanguageKey:(NSString *)key;
+- (instancetype)initWithLanguageKey:(NSString *)key;
 
 - (void)addResultWithPathArray:(NSArray *)pathArray;
 - (void)addResultWithPath:(NSString *)rpath;

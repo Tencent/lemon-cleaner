@@ -25,7 +25,7 @@
 @synthesize networkDevice;
 @synthesize writeble;
 
-- (id) init
+- (instancetype) init
 {
     if (self = [super init])
     {
@@ -58,7 +58,7 @@
     [encoder encodeBool:internalDevice forKey:@"internalDevice"];
     [encoder encodeBool:networkDevice forKey:@"networkDevice"];
 }
-- (id)initWithCoder:(NSCoder *)aCoder
+- (instancetype)initWithCoder:(NSCoder *)aCoder
 {
     self = [super init];
     if (self != nil)
@@ -86,7 +86,7 @@
 @synthesize bytesRead;
 @synthesize bytesWrite;
 
-- (id) init
+- (instancetype) init
 {
     if (self = [super init])
     {

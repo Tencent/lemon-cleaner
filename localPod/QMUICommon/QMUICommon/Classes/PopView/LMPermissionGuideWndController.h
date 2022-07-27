@@ -48,12 +48,12 @@ typedef void(^FinishButtonEvent)(void);    //(1)
 @property(nonatomic) NSString *confirmTitle; //授权后的确认按钮
 @property BOOL needCheckMonitorFullDiskAuthorizationStatus;
 
--(id)initWithParaentCenterPos:(CGPoint)centerPos title:(NSString *)title descText:(NSString *) desc image:(NSImage *) image;
+-(instancetype)initWithParaentCenterPos:(CGPoint)centerPos title:(NSString *)title descText:(NSString *) desc image:(NSImage *) image;
 
 -(void)closeWindow;
 -(void)loadWindow;
 
--(id)initWithParaentCenterPos:(CGPoint)centerPos title:(NSString *)title descText:(NSString *) desc image:(NSImage *) image guideImageViewHeight: (NSInteger) height;
+-(instancetype)initWithParaentCenterPos:(CGPoint)centerPos title:(NSString *)title descText:(NSString *) desc image:(NSImage *) image guideImageViewHeight: (NSInteger) height;
 @end
 
 NS_ASSUME_NONNULL_END

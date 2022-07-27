@@ -11,7 +11,7 @@
 @implementation Event
 
 //init
--(id)init:(Client*)client device:(int)device state:(NSControlStateValue)state
+-(instancetype)init:(Client*)client device:(int)device state:(NSControlStateValue)state
 {
     //super
     self = [super init];

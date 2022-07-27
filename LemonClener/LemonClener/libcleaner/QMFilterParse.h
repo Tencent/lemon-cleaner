@@ -20,7 +20,7 @@
 }
 @property (assign) id<QMScanDelegate> delegate;
 
-- (id)initFilterDict:(NSDictionary *)filerDict;
+- (instancetype)initFilterDict:(NSDictionary *)filerDict;
 
 - (NSArray *)enumeratorAtFilePath:(QMActionItem *)item;
 

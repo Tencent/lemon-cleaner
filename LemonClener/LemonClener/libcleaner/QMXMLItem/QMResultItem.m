@@ -13,7 +13,7 @@
 
 @implementation QMResultBrowerItem
 
--(id)init{
+-(instancetype)init{
     self = [super init];
     if (self) {
         self.isSelect = NO;
@@ -33,7 +33,7 @@
 @synthesize languageKey;
 @synthesize cautionID;
 
-- (id)init
+- (instancetype)init
 {
     if (self = [super init])
     {
@@ -45,7 +45,7 @@
     return self;
 }
 
-- (id)initWithPath:(NSString *)rpath
+- (instancetype)initWithPath:(NSString *)rpath
 {
     if (self = [self init])
     {
@@ -66,7 +66,7 @@
 }
 
 
-- (id)initWithLanguageKey:(NSString *)key
+- (instancetype)initWithLanguageKey:(NSString *)key
 {
     if (self = [self init])
     {

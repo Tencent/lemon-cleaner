@@ -43,7 +43,7 @@
 
 @implementation LMFileScanManager
 
-- (id)init{
+- (instancetype)init{
     self = [super init];
     if (self) {
         _concurrentQueue = dispatch_queue_create("com.tencent.lemonFileScan", DISPATCH_QUEUE_CONCURRENT);

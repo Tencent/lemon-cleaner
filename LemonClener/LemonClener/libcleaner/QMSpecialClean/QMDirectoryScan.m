@@ -16,7 +16,7 @@
 @implementation QMDirectoryScan
 @synthesize delegate;
 
-- (id)init
+- (instancetype)init
 {
     if (self = [super init])
     {

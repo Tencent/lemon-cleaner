@@ -34,7 +34,7 @@
     return instance;
 }
 
-- (id)init {
+- (instancetype)init {
     self = [super init];
     NSLog(@"OwlManageDaemon init begin");
     if (self) {

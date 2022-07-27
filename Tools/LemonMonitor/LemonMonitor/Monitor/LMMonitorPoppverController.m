@@ -36,7 +36,7 @@ static const CGFloat kDefaultBubbleMarginToScreen = 50;
 
 
 
-- (id)init
+- (instancetype)init
 {
     self = [super init];
     if (self)

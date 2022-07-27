@@ -22,7 +22,7 @@
 
 @implementation QMLargeOldItem
 
-- (id)initWithFileItem:(LMBigFileItem *)item
+- (instancetype)initWithFileItem:(LMBigFileItem *)item
 {
     if (self = [super init])
     {
@@ -89,7 +89,7 @@
 
 @implementation QMLargeOldScanner
 
-- (id)init
+- (instancetype)init
 {
     if (self = [super init])
     {

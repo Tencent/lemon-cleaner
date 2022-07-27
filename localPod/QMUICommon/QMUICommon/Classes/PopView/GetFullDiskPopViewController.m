@@ -39,7 +39,7 @@ static BOOL isSettingSuccess = NO;
 
 @implementation GetFullDiskPopViewController
 
--(id)initWithCLoseSetting:(CLoseBLock) closeBlock{
+-(instancetype)initWithCLoseSetting:(CLoseBLock) closeBlock{
     self = [super init];
     if (self) {
         self.closeBlock = closeBlock;

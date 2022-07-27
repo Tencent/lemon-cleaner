@@ -17,7 +17,7 @@
 @synthesize cpuUsage;
 @synthesize iconImage;
 @synthesize upSpeed, downSpeed;
--(id)init
+-(instancetype)init
 {
     if(self = [super init])
     {
@@ -51,7 +51,7 @@
     //NSLog(@"process encode");
     
 }
-- (id)initWithCoder:(NSCoder *)aDecoder
+- (instancetype)initWithCoder:(NSCoder *)aDecoder
 {
     self = [super init];
     if (self != nil)

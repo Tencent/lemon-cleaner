@@ -31,7 +31,7 @@ options:flags errorHandler:nil]
 @implementation QMAppUnlessFile
 @synthesize delegate;
 
-- (id)init
+- (instancetype)init
 {
     if (self = [super init])
     {

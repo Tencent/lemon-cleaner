@@ -132,12 +132,12 @@ static void MyCFSocketCallback(CFSocketRef, CFSocketCallBackType, CFDataRef, con
 	NSTimeInterval timeout;
 	long tag;
 }
-- (id)initWithData:(NSData *)d address:(NSData *)a timeout:(NSTimeInterval)t tag:(long)i;
+- (instancetype)initWithData:(NSData *)d address:(NSData *)a timeout:(NSTimeInterval)t tag:(long)i;
 @end
 
 @implementation AsyncSendPacket
 
-- (id)initWithData:(NSData *)d address:(NSData *)a timeout:(NSTimeInterval)t tag:(long)i
+- (instancetype)initWithData:(NSData *)d address:(NSData *)a timeout:(NSTimeInterval)t tag:(long)i
 {
 	if((self = [super init]))
 	{
@@ -167,12 +167,12 @@ static void MyCFSocketCallback(CFSocketRef, CFSocketCallBackType, CFDataRef, con
 	NSString *host;
 	UInt16 port;
 }
-- (id)initWithTimeout:(NSTimeInterval)t tag:(long)i;
+- (instancetype)initWithTimeout:(NSTimeInterval)t tag:(long)i;
 @end
 
 @implementation AsyncReceivePacket
 
-- (id)initWithTimeout:(NSTimeInterval)t tag:(long)i
+- (instancetype)initWithTimeout:(NSTimeInterval)t tag:(long)i
 {
 	if((self = [super init]))
 	{
@@ -194,7 +194,7 @@ static void MyCFSocketCallback(CFSocketRef, CFSocketCallBackType, CFDataRef, con
 
 @implementation AsyncUdpSocket
 
-- (id)initWithDelegate:(id)delegate userData:(long)userData enableIPv4:(BOOL)enableIPv4 enableIPv6:(BOOL)enableIPv6
+- (instancetype)initWithDelegate:(id)delegate userData:(long)userData enableIPv4:(BOOL)enableIPv4 enableIPv6:(BOOL)enableIPv6
 {
 	if((self = [super init]))
 	{
@@ -293,27 +293,27 @@ static void MyCFSocketCallback(CFSocketRef, CFSocketCallBackType, CFDataRef, con
 	return self;
 }
 
-- (id)init
+- (instancetype)init
 {
 	return [self initWithDelegate:nil userData:0 enableIPv4:YES enableIPv6:YES];
 }
 
-- (id)initWithDelegate:(id)delegate
+- (instancetype)initWithDelegate:(id)delegate
 {
 	return [self initWithDelegate:delegate userData:0 enableIPv4:YES enableIPv6:YES];
 }
 
-- (id)initWithDelegate:(id)delegate userData:(long)userData
+- (instancetype)initWithDelegate:(id)delegate userData:(long)userData
 {
 	return [self initWithDelegate:delegate userData:userData enableIPv4:YES enableIPv6:YES];
 }
 
-- (id)initIPv4
+- (instancetype)initIPv4
 {
 	return [self initWithDelegate:nil userData:0 enableIPv4:YES enableIPv6:NO];
 }
 
-- (id)initIPv6
+- (instancetype)initIPv6
 {
 	return [self initWithDelegate:nil userData:0 enableIPv4:NO enableIPv6:YES];
 }

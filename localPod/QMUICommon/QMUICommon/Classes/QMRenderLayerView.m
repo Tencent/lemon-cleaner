@@ -20,7 +20,7 @@
 @implementation QMRenderLayerView
 @synthesize staticMode;
 
-- (id)initWithCoder:(NSCoder *)aDecoder
+- (instancetype)initWithCoder:(NSCoder *)aDecoder
 {
     self = [super initWithCoder:aDecoder];
     if (self)
@@ -30,7 +30,7 @@
     return self;
 }
 
-- (id)initWithFrame:(NSRect)frameRect
+- (instancetype)initWithFrame:(NSRect)frameRect
 {
     self = [super initWithFrame:frameRect];
     if (self)
@@ -40,7 +40,7 @@
     return self;
 }
 
-- (id)initWithLayer:(CALayer *)layer
+- (instancetype)initWithLayer:(CALayer *)layer
 {
     self = [self initWithFrame:layer.bounds];
     if (self)

@@ -17,8 +17,8 @@
 @property (nonatomic, assign) long long internetJunkSize;
 @property (nonatomic, strong) NSString *dateTime;
 
--(id)initWithDateTime:(NSString *)dateTime;
+-(instancetype)initWithDateTime:(NSString *)dateTime;
 
--(id)initTotalSize:(long long) totalSize sysJunkModel:(long long)systemJunkSize appJunkModel:(long long)appJunkSize interJunkModel:(long long)internetJunkSize dateTime:(NSString *) dateTime;
+-(instancetype)initTotalSize:(long long) totalSize sysJunkModel:(long long)systemJunkSize appJunkModel:(long long)appJunkSize interJunkModel:(long long)internetJunkSize dateTime:(NSString *) dateTime;
 
 @end

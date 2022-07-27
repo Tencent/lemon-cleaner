@@ -556,7 +556,7 @@ NSString *McUninstallSoftPathKey = @"McUninstallSoftPathKey";
 @implementation McUninstallSoftGroup
 @synthesize groupInfo;
 
-- (id)init
+- (instancetype)init
 {
     self = [super init];
     if (self)

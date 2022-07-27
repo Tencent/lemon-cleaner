@@ -22,7 +22,7 @@
 @synthesize orFilterItem;
 @synthesize logicLevel;
 
--(id)copyWithZone:(NSZone *)zone{
+-(instancetype)copyWithZone:(NSZone *)zone{
     QMFilterItem *copy = [[QMFilterItem alloc] init];
     if (copy) {
         copy.filterID = [self.filterID mutableCopy];
@@ -38,7 +38,7 @@
     return copy;
 }
 
--(id)mutableCopyWithZone:(NSZone *)zone{
+-(instancetype)mutableCopyWithZone:(NSZone *)zone{
     QMFilterItem *copy = [[QMFilterItem alloc] init];
     if (copy) {
         copy.filterID = [self.filterID mutableCopy];

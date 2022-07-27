@@ -18,7 +18,7 @@ NSString *kLMCleanKnowLedge = @"~/Library/Application Support/com.tencent.lemon/
 
 @implementation QMXMLParseManager
 
-- (id)init
+- (instancetype)init
 {
     if (self = [super init])
     {

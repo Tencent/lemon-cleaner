@@ -27,7 +27,7 @@ int g_mapsize = 1024*1024*2;
 
 @implementation McPipeThread
 
-- (id)init:(NSString *)path
+- (instancetype)init:(NSString *)path
 {
     fd_read = -1;
     fd_write = -1;

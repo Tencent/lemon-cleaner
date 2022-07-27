@@ -18,7 +18,7 @@
 
 @implementation AudioProcessStat
 
-- (id)initWithWhiteArray:(NSArray*)array {
+- (instancetype)initWithWhiteArray:(NSArray*)array {
     self = [super init];
     if (self) {
         _whiteProcessArray = [[NSArray alloc] initWithArray:array];

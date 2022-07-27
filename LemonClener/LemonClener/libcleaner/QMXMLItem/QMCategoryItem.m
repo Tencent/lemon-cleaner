@@ -17,7 +17,7 @@
 @synthesize tips;
 @synthesize m_actionItemArray;
 
-- (id)init
+- (instancetype)init
 {
     if (self = [super init])
     {
@@ -30,7 +30,7 @@
     return self;
 }
 
--(id)copyWithZone:(NSZone *)zone{
+-(instancetype)copyWithZone:(NSZone *)zone{
     QMCategorySubItem *copy = [super copyWithZone:zone];
     if (copy) {
         copy.subCategoryID = [self.subCategoryID mutableCopy];
@@ -53,7 +53,7 @@
     return copy;
 }
 
--(id)mutableCopyWithZone:(NSZone *)zone{
+-(instancetype)mutableCopyWithZone:(NSZone *)zone{
     QMCategorySubItem *copy = [super mutableCopyWithZone:zone];
     if (copy) {
         copy.subCategoryID = [self.subCategoryID mutableCopy];
@@ -226,7 +226,7 @@
 @synthesize m_categorySubItemArray;
 @synthesize recommend;
 
-- (id)init
+- (instancetype)init
 {
     if (self = [super init])
     {
@@ -237,7 +237,7 @@
     return self;
 }
 
--(id)copyWithZone:(NSZone *)zone{
+-(instancetype)copyWithZone:(NSZone *)zone{
     QMCategoryItem *copy = [super copyWithZone:zone];
     if (copy) {
         copy.categoryID = [self.categoryID mutableCopy];
@@ -258,7 +258,7 @@
     return copy;
 }
 
--(id)mutableCopyWithZone:(NSZone *)zone{
+-(instancetype)mutableCopyWithZone:(NSZone *)zone{
     QMCategoryItem *copy = [super mutableCopyWithZone:zone];
     if (copy) {
         copy.categoryID = [self.categoryID mutableCopy];

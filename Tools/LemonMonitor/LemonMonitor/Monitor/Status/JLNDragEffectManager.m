@@ -74,7 +74,7 @@
 
 #pragma mark Constructors / Destructors
 
-- (id)initWithWindow:(NSWindow *)window
+- (instancetype)initWithWindow:(NSWindow *)window
 {
 	// Create the window first (ignore any we're sent, create our own)
 	window = [[NSWindow alloc] initWithContentRect:NSMakeRect(0, 0, 64, 64) 

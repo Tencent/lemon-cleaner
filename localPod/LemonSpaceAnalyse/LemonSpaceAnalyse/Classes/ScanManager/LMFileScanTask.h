@@ -24,7 +24,7 @@ typedef void(^LMFileScanTaskBlock)(LMItem*);
 @property(retain, nonatomic) LMItem *dirItem;
 @property (nonatomic, weak) id<LMFileScanTaskDelegate> delegate;
 
-- (id)initWithRootDirItem:(LMItem *)dirItem;
+- (instancetype)initWithRootDirItem:(LMItem *)dirItem;
 -(void)starTaskWithBlock:(LMFileScanTaskBlock)block;
 
 @end

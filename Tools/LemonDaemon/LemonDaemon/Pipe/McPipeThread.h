@@ -23,5 +23,5 @@
     sem_t       *sem_write;
 }
 
-- (id)init:(NSString *)path;
+- (instancetype)init:(NSString *)path;
 @end

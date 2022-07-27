@@ -29,7 +29,7 @@ extern NSString * const NSWindowDidExitVersionBrowserNotification;
 
 #if __MAC_OS_X_VERSION_MAX_ALLOWED < 1090
 @interface NSData (INBase64BackwardCompatibility)
-- (id)initWithBase64Encoding:(NSString *)base64String;
+- (instancetype)initWithBase64Encoding:(NSString *)base64String;
 @end
 #endif
 
@@ -522,7 +522,7 @@ NS_INLINE void INApplyClippingPathInCurrentContext(CGPathRef path) {
 #pragma mark -
 #pragma mark Initialization
 
-- (id)initWithContentRect:(NSRect)contentRect styleMask:(NSUInteger)aStyle backing:(NSBackingStoreType)bufferingType defer:(BOOL)flag
+- (instancetype)initWithContentRect:(NSRect)contentRect styleMask:(NSUInteger)aStyle backing:(NSBackingStoreType)bufferingType defer:(BOOL)flag
 {
 	if ((self = [super initWithContentRect:contentRect styleMask:aStyle backing:bufferingType defer:flag])) {
 		[self _doInitialWindowSetup];
@@ -530,7 +530,7 @@ NS_INLINE void INApplyClippingPathInCurrentContext(CGPathRef path) {
 	return self;
 }
 
-- (id)initWithContentRect:(NSRect)contentRect styleMask:(NSUInteger)aStyle backing:(NSBackingStoreType)bufferingType defer:(BOOL)flag screen:(NSScreen *)screen
+- (instancetype)initWithContentRect:(NSRect)contentRect styleMask:(NSUInteger)aStyle backing:(NSBackingStoreType)bufferingType defer:(BOOL)flag screen:(NSScreen *)screen
 {
 	if ((self = [super initWithContentRect:contentRect styleMask:aStyle backing:bufferingType defer:flag screen:screen])) {
 		[self _doInitialWindowSetup];
