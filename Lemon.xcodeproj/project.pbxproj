@@ -221,6 +221,8 @@
 		79C99869256507DB002DA88D /* loginItem_template.plist in Resources */ = {isa = PBXBuildFile; fileRef = 79C99868256507DB002DA88D /* loginItem_template.plist */; };
 		79D3D3532397D773004189F6 /* LemonMonitor.app in CopyFiles */ = {isa = PBXBuildFile; fileRef = D462687821DE0924005BC358 /* LemonMonitor.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		8450B55521AFD47C00523D9F /* LemonStartUpParams.m in Sources */ = {isa = PBXBuildFile; fileRef = 8450B55421AFD47C00523D9F /* LemonStartUpParams.m */; };
+		8B54998928A20A1400B55BB8 /* LMHoverButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B54998728A20A1400B55BB8 /* LMHoverButton.m */; };
+		8B5499B428A261D400B55BB8 /* LMAboutWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B5499B328A261D400B55BB8 /* LMAboutWindow.m */; };
 		BC08ED082277F0CA00CEE24B /* LemonAsMonitorGuideViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BC08ED012277F0CA00CEE24B /* LemonAsMonitorGuideViewController.m */; };
 		BC5D8A242177210D005D2220 /* RegisterWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = BC5D8A1B2177210D005D2220 /* RegisterWindowController.m */; };
 		BC5D8A252177210D005D2220 /* regiser_unable.png in Resources */ = {isa = PBXBuildFile; fileRef = BC5D8A1C2177210D005D2220 /* regiser_unable.png */; };
@@ -728,6 +730,10 @@
 		8450B55421AFD47C00523D9F /* LemonStartUpParams.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LemonStartUpParams.m; sourceTree = "<group>"; };
 		84D4A3B5219A7BA9007669D8 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/MainMenu.strings"; sourceTree = "<group>"; };
 		84D4A3BC219A7C05007669D8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/MainMenu.strings; sourceTree = "<group>"; };
+		8B54998728A20A1400B55BB8 /* LMHoverButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMHoverButton.m; sourceTree = "<group>"; };
+		8B54998828A20A1400B55BB8 /* LMHoverButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMHoverButton.h; sourceTree = "<group>"; };
+		8B5499B228A261D400B55BB8 /* LMAboutWindow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LMAboutWindow.h; sourceTree = "<group>"; };
+		8B5499B328A261D400B55BB8 /* LMAboutWindow.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LMAboutWindow.m; sourceTree = "<group>"; };
 		90072B757471067B640ECCE6 /* Pods-Lemon.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Lemon.release.xcconfig"; path = "Pods/Target Support Files/Pods-Lemon/Pods-Lemon.release.xcconfig"; sourceTree = "<group>"; };
 		AABB39B505F3F27400C594F3 /* Pods-Lemon.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Lemon.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Lemon/Pods-Lemon.debug.xcconfig"; sourceTree = "<group>"; };
 		BC08ED002277F0CA00CEE24B /* LemonAsMonitorGuideViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LemonAsMonitorGuideViewController.h; sourceTree = "<group>"; };
@@ -1222,6 +1228,17 @@
 			path = loginitem;
 			sourceTree = "<group>";
 		};
+		8B5499AE28A2619A00B55BB8 /* About */ = {
+			isa = PBXGroup;
+			children = (
+				8B5499B228A261D400B55BB8 /* LMAboutWindow.h */,
+				8B5499B328A261D400B55BB8 /* LMAboutWindow.m */,
+				8B54998828A20A1400B55BB8 /* LMHoverButton.h */,
+				8B54998728A20A1400B55BB8 /* LMHoverButton.m */,
+			);
+			path = About;
+			sourceTree = "<group>";
+		};
 		9A859E5A955310071C491C02 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -1345,6 +1362,7 @@
 				F85BC5B421256E5800BD147D /* Helper */,
 				F8190EFE2124531200454795 /* Controller */,
 				D4F025CB212D4BCE005E3D3B /* PreLaunch */,
+				8B5499AE28A2619A00B55BB8 /* About */,
 				D4D4F5E020F5C3BB0048F108 /* AppDelegate.h */,
 				D4D4F5E120F5C3BB0048F108 /* AppDelegate.mm */,
 				8450B55321AFD47C00523D9F /* LemonStartUpParams.h */,
@@ -1508,8 +1526,8 @@
 		F85BC5B82125727F00BD147D /* View */ = {
 			isa = PBXGroup;
 			children = (
-				792CFB1A2333662100B364D6 /* LMSegment */,
 				F85BC5B92125728600BD147D /* Cell */,
+				792CFB1A2333662100B364D6 /* LMSegment */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -2120,6 +2138,7 @@
 			files = (
 				5CA3579A21E4A59500BCD89D /* MyAnimateCellView.m in Sources */,
 				2F8855A721BE53D700E659C7 /* LMInstallerHelper.m in Sources */,
+				8B54998928A20A1400B55BB8 /* LMHoverButton.m in Sources */,
 				D4F1DF7D219C432F000CDA07 /* PreferenceWindowController.m in Sources */,
 				F87749FD2281240B000C7175 /* PreferenceASViewController.m in Sources */,
 				F8190F07212454F000454795 /* LMToolViewController.m in Sources */,
@@ -2139,6 +2158,7 @@
 				BC7FBE3A2268191300D025CF /* BFPageControl.m in Sources */,
 				F8190EF721244FCB00454795 /* LemonMainWndController.m in Sources */,
 				D4D4F5E220F5C3BB0048F108 /* AppDelegate.mm in Sources */,
+				8B5499B428A261D400B55BB8 /* LMAboutWindow.m in Sources */,
 				792CFB1D233366A400B364D6 /* LMBaseLineSegmentedControl.m in Sources */,
 				BC5D8A2C21772872005D2220 /* RegisterUtil.m in Sources */,
 				BC08ED082277F0CA00CEE24B /* LemonAsMonitorGuideViewController.m in Sources */,

@@ -27,7 +27,7 @@
 "PreferenceViewController_setupViews_1553049563_15" = "Network\n speed";
 "PreferenceViewController_setupViews_1553049563_16" = "CPU\n usage";
 "PreferenceViewController_setupViews_bootMonitorTitle _16" = "Show icons on menu bar on startup";
-"Appdelegate_about_windowAboutTitle_lemon" = "About Lemon Cleaner";
+"About_windowAboutTitle_lemon" = "About Lemon Cleaner";
 "Appdelegate_about_windowAboutTitle_lemonlite" = "About Lemon Cleaner Lite";
 "AppDelegate_fetchResearchChannel_notification_1" = "Close";
 "AppDelegate_fetchResearchChannel_notification_2" = "Learn More";
@@ -113,3 +113,7 @@
 
 
 "Share valuable suggestions" = "Share valuable suggestions";
+
+"Services Agreement" = "Services Agreement";
+"Privacy Policy" = "Privacy Policy";
+"Website" = "Website";

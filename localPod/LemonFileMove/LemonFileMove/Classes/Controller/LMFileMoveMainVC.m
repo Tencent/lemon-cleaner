@@ -278,17 +278,18 @@
 - (void)diskDidAppear:(NSNotification *)notif {
     Disk *disk = notif.object;
 
-    NSLog(@"1-disk: %@===%@", disk.BSDName,disk.isMounted?@"YES":@"no");
+    NSLog(@"1-disk: %@===%@", disk.BSDName,disk);
     if (disk.isMounted) {
         [self addDisksObject:disk];
     }
+    NSLog(@"1设备：%lu",(unsigned long)self.diskModelArr.count);
     [self reloadCollection];
 }
 
 - (void)diskDidDisappear:(NSNotification *)notif {
     Disk *disk = notif.object;
 
-    NSLog(@"2-disk: %@===%@", disk.BSDName,disk.isMounted?@"YES":@"no");
+    NSLog(@"2-disk: %@===%@", disk.BSDName,disk);
     [self removeDisksObject:notif.object];
     NSLog(@"2设备：%lu",(unsigned long)self.diskModelArr.count);
     [self reloadCollection];
@@ -296,7 +297,7 @@
 
 - (void)diskDidChange:(NSNotification *)notif {
     Disk *disk = notif.object;
-    NSLog(@"3-disk: %@===%@", disk.BSDName,disk.isMounted?@"YES":@"no");
+    NSLog(@"3-disk: %@===%@", disk.BSDName,disk);
     if (disk.isMounted) {
         [self addDisksObject:disk];
     } else {
