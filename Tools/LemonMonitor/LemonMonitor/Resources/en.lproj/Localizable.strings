@@ -7,9 +7,10 @@
  */
 "LEMON_LANGUAGE" = "EN";
 "LMMonitorTabController_setupLauncherView_launchLemonBtn_1" = "Launch Lemon";
-"LMMonitorTabController_rightAboutAction_windowAbout_1" = "About Lemon Cleaner";
-"LMMonitorTabController_rightAboutAction_1553842683_2" = "Copyright©2020 Tencent. All Rights Reserved.";
-"LMMonitorTabController_rightAboutAction_1553842683_3" = "Copyright©2020 Tencent. All Rights Reserved";
+"About_windowAboutTitle_lemon" = "About Lemon Cleaner";
+//"LMMonitorTabController_rightAboutAction_windowAbout_1" = "About Lemon Cleaner";
+//"LMMonitorTabController_rightAboutAction_1553842683_2" = "Copyright©2020 Tencent. All Rights Reserved.";
+//"LMMonitorTabController_rightAboutAction_1553842683_3" = "Copyright©2020 Tencent. All Rights Reserved";
 "LMMonitorTabController_rightLanguageAction__windowLanguage_1" = "Language settings";
 "LMMonitorTabController_rightQuitAction_alert_1" = "After you quit, device access alert and leftover detection features will not work any more. Do you still want to quit?";
 "LMMonitorPoppverController_setupBubble_1553842683_1" = "System";
@@ -78,3 +79,7 @@
 "OK_Tip"         = "Preferences";
 
 "NO network"     = "NO network";
+
+"Services Agreement" = "Services Agreement";
+"Privacy Policy" = "Privacy Policy";
+"Website" = "Website";

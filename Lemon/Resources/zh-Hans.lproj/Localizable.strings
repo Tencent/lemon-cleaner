@@ -27,7 +27,7 @@
 "PreferenceViewController_setupViews_1553049563_15" = "网速";
 "PreferenceViewController_setupViews_1553049563_16" = "CPU占用";
 "PreferenceViewController_setupViews_bootMonitorTitle _16" = "开机时显示状态栏图标";
-"Appdelegate_about_windowAboutTitle_lemon" = "关于腾讯柠檬清理";
+"About_windowAboutTitle_lemon" = "关于腾讯柠檬清理";
 "Appdelegate_about_windowAboutTitle_lemonlite" = "关于Lemon Cleaner Lite";
 "AppDelegate_fetchResearchChannel_notification_1" = "关闭";
 "AppDelegate_fetchResearchChannel_notification_2" = "打开";
@@ -112,3 +112,7 @@
 
 
 "Share valuable suggestions" = "分享宝贵建议";
+
+"Services Agreement" = "服务协议";
+"Privacy Policy" = "隐私政策";
+"Website" = "官网网站";

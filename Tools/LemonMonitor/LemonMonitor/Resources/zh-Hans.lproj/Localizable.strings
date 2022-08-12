@@ -7,9 +7,10 @@
 */
 "LEMON_LANGUAGE" = "中文";
 "LMMonitorTabController_setupLauncherView_launchLemonBtn_1" = "打开 Lemon";
-"LMMonitorTabController_rightAboutAction_windowAbout_1" = "关于腾讯柠檬清理";
-"LMMonitorTabController_rightAboutAction_1553842683_2" = "腾讯公司 版权所有";
-"LMMonitorTabController_rightAboutAction_1553842683_3" = "Copyright©2020年 Tencent. All Rights Reserved";
+"About_windowAboutTitle_lemon" = "关于腾讯柠檬清理";
+//"LMMonitorTabController_rightAboutAction_windowAbout_1" = "关于腾讯柠檬清理";
+//"LMMonitorTabController_rightAboutAction_1553842683_2" = "腾讯公司 版权所有";
+//"LMMonitorTabController_rightAboutAction_1553842683_3" = "Copyright©2020年 Tencent. All Rights Reserved";
 "LMMonitorTabController_rightLanguageAction__windowLanguage_1" = "语言设置";
 "LMMonitorTabController_rightQuitAction_alert_1" = "关闭状态栏后，所有功能（包括自动检测卸载残留，摄像头使用提醒等）都不再生效。确定关闭吗？";
 "LMMonitorPoppverController_setupBubble_1553842683_1" = "系统功能";
@@ -75,3 +76,7 @@
 "Cancel_Tip"     = "好的";
 "OK_Tip"         = "偏好设置";
 "NO network"     = "当前无网络";
+
+"Services Agreement" = "服务协议";
+"Privacy Policy" = "隐私政策";
+"Website" = "官网网站";
