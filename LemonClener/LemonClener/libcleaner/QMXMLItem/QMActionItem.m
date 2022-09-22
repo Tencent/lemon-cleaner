@@ -216,21 +216,6 @@
     self.m_stateValue = (recommend ? NSOnState : NSOffState);
 }
 
-// 检查系统版本
-- (BOOL)checkVersion:(NSString *)curSysVersion
-{
-    BOOL retValue = NO;
-    NSString * regexStr = self.os;
-    if (regexStr
-        && ![@"" isEqualToString:regexStr])
-    {
-        retValue = [QMCleanUtils assertRegex:regexStr matchStr:curSysVersion];
-        if (!retValue)  return NO;
-        
-    }
-    return YES;
-}
-
 // 检查软件版本
 - (BOOL)checkAppVersion:(NSBundle *)bundle
 {
