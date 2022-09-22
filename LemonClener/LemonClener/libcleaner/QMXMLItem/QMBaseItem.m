@@ -9,6 +9,7 @@
 #import "QMBaseItem.h"
 #import "QMResultItem.h"
 #import "QMCategoryItem.h"
+#import "QMCleanUtils.h"
 
 @implementation QMBaseItem
 @synthesize progressValue;
@@ -36,6 +37,21 @@
     }
     
     return copy;
+}
+
+// 检查系统版本
+- (BOOL)checkVersion:(NSString *)curSysVersion
+{
+    BOOL retValue = NO;
+    NSString * regexStr = self.os;
+    if (regexStr
+        && ![@"" isEqualToString:regexStr])
+    {
+        retValue = [QMCleanUtils assertRegex:regexStr matchStr:curSysVersion];
+        if (!retValue)  return NO;
+        
+    }
+    return YES;
 }
 
 - (NSArray *)resultItemArray
