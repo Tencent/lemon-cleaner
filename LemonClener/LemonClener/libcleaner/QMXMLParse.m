@@ -206,6 +206,12 @@
     if (![allKeys containsObject:kXMLKeyID])
     return;
     m_curCategorySubItem = [[QMCategorySubItem alloc] init];
+    if ([allKeys containsObject:kXMLKeyOS]) {
+        m_curCategorySubItem.os = [attributeDict objectForKey:kXMLKeyOS];
+    }
+    if (![m_curCategorySubItem checkVersion:m_curSysVersion]) {
+        return;
+    }
     m_curCategorySubItem.subCategoryID = [attributeDict objectForKey:kXMLKeyID];
     if ([allKeys containsObject:kXMLKeyRecommend]){
         m_curCategorySubItem.recommend = [[attributeDict objectForKey:kXMLKeyRecommend] boolValue];

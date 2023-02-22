@@ -17,6 +17,8 @@
 		84ADF214212EADE500B8C9C6 /* LemonClener.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84ADF209212EAC7500B8C9C6 /* LemonClener.framework */; };
 		84ADF218212EB18E00B8C9C6 /* LemonClener.framework in Copy Files */ = {isa = PBXBuildFile; fileRef = 84ADF209212EAC7500B8C9C6 /* LemonClener.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		84BA8E7A21758EA70066B794 /* uiresources.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 84BA8E7921758EA70066B794 /* uiresources.xcassets */; };
+		8B5499D728A3562A00B55BB8 /* LMHoverButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B5499D328A3562A00B55BB8 /* LMHoverButton.m */; };
+		8B5499D828A3562A00B55BB8 /* LMAboutWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B5499D628A3562A00B55BB8 /* LMAboutWindow.m */; };
 		B88029CF196BE562007CFE8D /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B88029CE196BE562007CFE8D /* SystemConfiguration.framework */; };
 		B88029D1196BE573007CFE8D /* libpcap.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = B88029D0196BE573007CFE8D /* libpcap.dylib */; };
 		B8B6CAF8198B8EA000946160 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B8B6CAF7198B8EA000946160 /* QuartzCore.framework */; };
@@ -148,6 +150,10 @@
 		847E2D4A21C74AE400F49D5D /* LemonMonitroHelpParams.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LemonMonitroHelpParams.m; sourceTree = "<group>"; };
 		84ADF203212EAC7400B8C9C6 /* LemonClener.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = LemonClener.xcodeproj; path = ../../LemonClener/LemonClener.xcodeproj; sourceTree = "<group>"; };
 		84BA8E7921758EA70066B794 /* uiresources.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = uiresources.xcassets; sourceTree = "<group>"; };
+		8B5499D328A3562A00B55BB8 /* LMHoverButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMHoverButton.m; sourceTree = "<group>"; };
+		8B5499D428A3562A00B55BB8 /* LMAboutWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMAboutWindow.h; sourceTree = "<group>"; };
+		8B5499D528A3562A00B55BB8 /* LMHoverButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMHoverButton.h; sourceTree = "<group>"; };
+		8B5499D628A3562A00B55BB8 /* LMAboutWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMAboutWindow.m; sourceTree = "<group>"; };
 		B88029CE196BE562007CFE8D /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		B88029D0196BE573007CFE8D /* libpcap.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpcap.dylib; path = usr/lib/libpcap.dylib; sourceTree = SDKROOT; };
 		B8B6CAF7198B8EA000946160 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
@@ -297,6 +303,18 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		8B5499D228A3562A00B55BB8 /* About */ = {
+			isa = PBXGroup;
+			children = (
+				8B5499D428A3562A00B55BB8 /* LMAboutWindow.h */,
+				8B5499D628A3562A00B55BB8 /* LMAboutWindow.m */,
+				8B5499D528A3562A00B55BB8 /* LMHoverButton.h */,
+				8B5499D328A3562A00B55BB8 /* LMHoverButton.m */,
+			);
+			name = About;
+			path = ../../../Lemon/About;
+			sourceTree = "<group>";
+		};
 		B804997919750498002C38DE /* Controller */ = {
 			isa = PBXGroup;
 			children = (
@@ -400,6 +418,7 @@
 		B8F1104A1962572100D29FFC /* LemonMonitor */ = {
 			isa = PBXGroup;
 			children = (
+				8B5499D228A3562A00B55BB8 /* About */,
 				79A9633B236A846B00DB0B1D /* TrashCheck */,
 				797D5CD323647DC4000DC4BE /* Util */,
 				F8E3021722CB5021007C9E11 /* LemonMonitor.entitlements */,
@@ -738,6 +757,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8B5499D828A3562A00B55BB8 /* LMAboutWindow.m in Sources */,
+				8B5499D728A3562A00B55BB8 /* LMHoverButton.m in Sources */,
 				B8FF54481A1B3A7E00A5E1D7 /* QMEarlyWarning.m in Sources */,
 				BCDC61E721EE070600C9004B /* BaselineSegmentedCell.m in Sources */,
 				BC89F8A922759B7200983314 /* QMStatusCircleView.m in Sources */,

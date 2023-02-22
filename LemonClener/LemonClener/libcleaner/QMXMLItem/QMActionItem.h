@@ -48,8 +48,6 @@ typedef NS_ENUM(NSUInteger, SandboxType) {
 @property (nonatomic, strong) NSString * actionID;
 // 清理种类
 @property (nonatomic, assign) QMActionType type;
-// 对应的系统，默认为nil，全部系统
-@property (nonatomic, strong) NSString * os;
 
 @property (nonatomic, assign) BOOL recommend;
 @property (nonatomic, assign) BOOL showResult;
@@ -82,7 +80,6 @@ typedef NS_ENUM(NSUInteger, SandboxType) {
 
 - (void)addActionPathItem:(QMActionPathItem *)item;
 
-- (BOOL)checkVersion:(NSString *)curSysVersion;
 - (BOOL)checkAppVersion;
 
 - (void)resetItemState;

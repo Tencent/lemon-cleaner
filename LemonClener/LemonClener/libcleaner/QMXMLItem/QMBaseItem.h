@@ -22,6 +22,11 @@
 
 @property(nonatomic, assign) NSCellStateValue m_stateValue;
 
+// 对应的系统，默认为nil，全部系统
+@property (nonatomic, strong) NSString * os;
+
+- (BOOL)checkVersion:(NSString *)curSysVersion;
+
 // 扫描结果
 - (NSArray *)resultItemArray;
 // 移除所有结果

@@ -134,7 +134,19 @@
 
 - (NSString *)description
 {
-    return [NSString stringWithFormat:@"<%@ 0x%p %@>", self.class, self, BSDName];
+    return [NSString stringWithFormat:@"<%@, 0x%p, BSDName=%@, mounting=%@, mounted=%@, rejectedMount=%@, parentName=%@, childrenCount=%lu, mountArgs=%@, mountPath=%@, desc=%@ >",
+            self.class,
+            self,
+            self.BSDName,
+            self.isMounting ? @"yes" : @"no",
+            self.isMounted ? @"yes" : @"no",
+            self.rejectedMount ? @"yes" : @"no",
+            self.parent.BSDName,
+            (unsigned long)self.children.count,
+            self.mountArgs,
+            self.mountPath,
+            self.diskDescription
+    ];
 }
 
 - (void)diskDidDisappear

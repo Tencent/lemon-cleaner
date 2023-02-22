@@ -39,13 +39,13 @@
 #import "RegisterWindowController.h"
 #import "RegisterUtil.h"
 #import "LMSplashWindowController.h"
-#import <QMUICommon/LMAppThemeHelper.h>
 #import <QMCoreFunction/QMFullDiskAccessManager.h>
 #import <LemonSpaceAnalyse/McSpaceAnalyseWndController.h>
 #import "LemonVCModel.H"
 #endif
 #import "MasLoginItemManager.h"
 #import <LemonClener/LMWebWindowController.h>
+#import "LMAboutWindow.h"
 
 #define IS_INIT_PREFRENCE_CONFIGURERATION @"is_init_prefrence_configureration"
 #define DOCK_ON_OFF_STATE @"dock_on_off_state"
@@ -85,7 +85,7 @@ extern "C" int CmcGetCurrentAppVersion(char *version, int version_size, char *bu
 #else
     @property (nonatomic,strong) NSStatusItem *statusItem;
 #endif
-    @property (nonatomic,strong) NSString *versionTime;
+    @property (nonatomic,strong) NSDate *versionDate;
     @property (nonatomic, assign) BOOL getGuidResult;
     @end
     
@@ -905,100 +905,10 @@ extern "C" int CmcGetCurrentAppVersion(char *version, int version_size, char *bu
             return;
         }
         
-        NSUInteger style = NSWindowStyleMaskTitled | NSWindowStyleMaskClosable;// | NSWindowStyleMaskMiniaturizable ;
-        NSWindow* windowAbout = [[NSWindow alloc] initWithContentRect:CGRectMake(0, 0, 331, 235-22) styleMask:style backing:NSBackingStoreBuffered defer:YES];
-        windowAbout.backgroundColor = [LMAppThemeHelper getMainBgColor];
-        //    CGFloat i =  _windowAbout.contentView.frame.size.height;
-        //    CGFloat j =  _windowAbout.contentView.frame.size.width;
-        
-#ifndef APPSTORE_VERSION
-        windowAbout.title = NSLocalizedString(@"Appdelegate_about_windowAboutTitle_lemon", @"");
-        
-        //    [LMAppThemeHelper setTitleColorForTextField:windowAbout];
-        NSTextField* LemonProductName = [NSTextField labelWithStringCompat:NSLocalizedStringFromTableInBundle(@"LMMonitorTabController_rightAboutAction_LemonProductName_1", nil, [NSBundle bundleForClass:[self class]], @"")];
-        
-#else
-        windowAbout.title = NSLocalizedString(@"Appdelegate_about_windowAboutTitle_lemonlite", @"");
-        NSTextField* LemonProductName = [NSTextField labelWithStringCompat:NSLocalizedStringFromTableInBundle(@"LMMonitorTabController_rightAboutAction_LemonProductName_2", nil, [NSBundle bundleForClass:[self class]], @"")];
-#endif
-        
-        NSImageView* LemonIcon = [[NSImageView alloc] initWithFrame:CGRectMake(0, 0, 10, 10)];
-        [LemonIcon setImage:[[NSBundle mainBundle] imageForResource:@"new_app_icon"]];
-        [windowAbout.contentView addSubview:LemonIcon];
-        [LemonIcon mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.centerX.equalTo(windowAbout.contentView);
-            make.top.equalTo(windowAbout.contentView.mas_top).offset(12);
-            make.height.equalTo(@85);
-            make.width.equalTo(@85);
-        }];
-        
-        LemonProductName.font = [NSFont systemFontOfSize:16];
-        //    LemonProductName.textColor = [NSColor colorWithHex:0x333333 alpha:1.0];
-        LemonProductName.textColor = [LMAppThemeHelper getTitleColor];
-        [windowAbout.contentView addSubview:LemonProductName];
-        [LemonProductName mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.centerX.equalTo(windowAbout.contentView);
-            make.top.equalTo(LemonIcon.mas_bottom).offset(12);
-        }];
-        
-        // Version
-        NSString* strVersion = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
-        NSString* strBuild = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"];
-        NSString* strVersionAndBuild = [NSString stringWithFormat:@"%@(%@)", strVersion, strBuild];
-        NSTextField* LemonProductVersion = [NSTextField labelWithStringCompat:strVersionAndBuild];
-        LemonProductVersion.font = [NSFont systemFontOfSize:12];
-        LemonProductVersion.textColor = [NSColor colorWithHex:0x7E7E7E alpha:1.0];
-        [windowAbout.contentView addSubview:LemonProductVersion];
-        [LemonProductVersion mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.centerX.equalTo(windowAbout.contentView);
-            make.top.equalTo(LemonProductName.mas_bottom);
-        }];
-        
-        // company
-        NSTextField* LemonCompany = [NSTextField labelWithStringCompat:@"腾讯公司 版权所有"];
-        LemonCompany.font = [NSFont systemFontOfSize:10];
-        LemonCompany.textColor = [NSColor colorWithHex:0x7E7E7E alpha:1.0];
-        [windowAbout.contentView addSubview:LemonCompany];
-        [LemonCompany mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.centerX.equalTo(windowAbout.contentView);
-            make.top.equalTo(LemonProductVersion.mas_bottom).offset(20);
-        }];
-        if([LanguageHelper getCurrentSystemLanguageType] != SystemLanguageTypeChinese){
-            [LemonCompany setHidden:YES];
-        }else{
-            [LemonCompany setHidden:NO];
-        }
-        if(self.versionTime == nil){
-            NSDate *date = [NSDate date];
-            NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-            [formatter setDateFormat:@"YYYY"];
-            NSString  *versionTime = [formatter stringFromDate:date];
-            self.versionTime = versionTime;
-        }
-        // copyright
-        NSString *copyRight = [NSString stringWithFormat:@"Copyright©2018-%@ Tencent. All Rights Reserved",self.versionTime];
-        NSTextField* LemonCopyright = [NSTextField labelWithStringCompat:copyRight];
-        LemonCopyright.font = [NSFont systemFontOfSize:10];
-        LemonCopyright.textColor = [NSColor colorWithHex:0x7E7E7E alpha:1.0];
-        [windowAbout.contentView addSubview:LemonCopyright];
-        [LemonCopyright mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.centerX.equalTo(windowAbout.contentView);
-            make.top.equalTo(LemonCompany.mas_bottom);
-        }];
-        
-        //    CGFloat m =  _windowAbout.contentView.frame.size.height;
-        //    CGFloat n =  _windowAbout.contentView.frame.size.width;
-        
-        //
+        NSWindow* windowAbout = [LMAboutWindow windowWithVersionDate:self.versionDate];
         _aboutWC = [[NSWindowController alloc] initWithWindow:windowAbout];
-        //    [_windowAbout setReleasedWhenClosed:NO];
         [windowAbout center];
-        //    [_windowAbout orderFront:nil];
         [_aboutWC.window makeKeyAndOrderFront:nil];
-        
-        //    CGFloat x =  _windowAbout.contentView.frame.size.height;
-        //    CGFloat y =  _windowAbout.contentView.frame.size.width;
-        //    NSLog(@"ref count = %d", CFGetRetainCount((__bridge CFTypeRef)(_windowAbout)));
     }
     
     - (IBAction)feedback:(id)sender {
@@ -1025,9 +935,8 @@ extern "C" int CmcGetCurrentAppVersion(char *version, int version_size, char *bu
     }
     
     - (IBAction)lemonOpenPrivacyPolicy:(id)sender {
-        [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"http://privacy.qq.com/"]];
+        [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:kQMPrivacyLicenseLink]];
     }
-    
     
 #pragma mark - log
     -(void)redirctNSlog{

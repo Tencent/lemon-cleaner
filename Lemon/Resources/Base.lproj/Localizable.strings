@@ -26,7 +26,7 @@
 "PreferenceViewController_setupViews_1553049563_14" = "Fan\n speed";
 "PreferenceViewController_setupViews_1553049563_15" = "Network\n speed";
 "PreferenceViewController_setupViews_bootMonitorTitle _16" = "Show icons on menu bar on startup";
-"Appdelegate_about_windowAboutTitle_lemon" = "About Lemon Cleaner";
+"About_windowAboutTitle_lemon" = "About Lemon Cleaner";
 "Appdelegate_about_windowAboutTitle_lemonlite" = "About Lemon Cleaner";
 "AppDelegate_fetchResearchChannel_notification_1" = "Close";
 "AppDelegate_fetchResearchChannel_notification_2" = "Learn More";
@@ -78,3 +78,7 @@
 "LMMonitorTabController_rightAboutAction_LemonProductName_2" = "Lemon Cleaner Lite";
 
 "Share valuable suggestions" = "Share valuable suggestions";
+
+"Services Agreement" = "Services Agreement";
+"Privacy Policy" = "Privacy Policy";
+"Website" = "Website";
