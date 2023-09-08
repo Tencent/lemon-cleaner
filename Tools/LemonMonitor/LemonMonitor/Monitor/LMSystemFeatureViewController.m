@@ -844,7 +844,12 @@ static NSString * const kPidKey = @"pid";
         {
             _cpuTemperatureText.textColor = [NSColor colorWithHex:0xE6704C  alpha:1.0];
         }
-        _cpuTemperatureText.stringValue = [NSString stringWithFormat:@"%d°C", (int)(tempCpu)];
+        if (tempCpu < 10) {
+            // M2 pro max ultra系列 传感器返回异常温度 展示 --
+            _cpuTemperatureText.stringValue = @"--°C";
+        } else {
+            _cpuTemperatureText.stringValue = [NSString stringWithFormat:@"%d°C", (int)(tempCpu)];
+        }
     });
 }
 

@@ -12,7 +12,7 @@
 #import "QMFilterParse.h"
 #import "QMDirectoryScan.h"
 #import "QMAppLeftScan.h"
-#import "QMCleanUtils.h"
+#import "QMMFCleanUtils.h"
 #import "QMMailScan.h"
 #import "QMSoftScan.h"
 #import "QMXcodeScan.h"

@@ -9,7 +9,7 @@
 #import "QMFilterParse.h"
 #import "QMFilterItem.h"
 #import "QMActionItem.h"
-#import "QMCleanUtils.h"
+#import "QMMFCleanUtils.h"
 #import <QMCoreFunction/McCoreFunction.h>
 
 @implementation QMFilterParse
@@ -182,19 +182,19 @@
     BOOL cleanhiddenfile = m_actionItem.cleanhiddenfile;
     
     // 过滤自身程序
-    if ([QMCleanUtils checkQQMacMgrFile:path])
+    if ([QMMFCleanUtils checkQQMacMgrFile:path])
         return NO;
     
     // 过滤隐藏文件
-    if (!cleanhiddenfile && [QMCleanUtils isHiddenItemForPath:path])
+    if (!cleanhiddenfile && [QMMFCleanUtils isHiddenItemForPath:path])
         return NO;
     
     // 过滤文件名
-    if (fileName && ![QMCleanUtils assertRegex:fileName matchStr:[path lastPathComponent]])
+    if (fileName && ![QMMFCleanUtils assertRegex:fileName matchStr:[path lastPathComponent]])
         return NO;
     
     // 过滤清理空文件
-    if (!cleanemptyfolder && [QMCleanUtils isEmptyDirectory:path filterHiddenItem:cleanhiddenfile])
+    if (!cleanemptyfolder && [QMMFCleanUtils isEmptyDirectory:path filterHiddenItem:cleanhiddenfile])
         return NO;
     return YES;
 }
@@ -243,7 +243,7 @@
         NSArray * contentArray = [fm contentsOfDirectoryAtPath:path1 error:nil];
         for (NSString * temp in contentArray)
         {
-            if (![QMCleanUtils assertRegex:str matchStr:temp] && ![temp isEqualToString:str])
+            if (![QMMFCleanUtils assertRegex:str matchStr:temp] && ![temp isEqualToString:str])
                 continue;
             NSString * tempPath = [path1 stringByAppendingPathComponent:temp];
             tempPath = [tempPath stringByAppendingPathComponent:path2];
@@ -339,13 +339,13 @@
     if (scanApp)
     {
         // 缓存目录
-        NSArray * array = [QMCleanUtils cacheResultWithPath:path];
+        NSArray * array = [QMMFCleanUtils cacheResultWithPath:path];
         if (array)   return array;
     }
     NSDirectoryEnumerationOptions directoryEnum = 0;
     if (scanApp) directoryEnum = NSDirectoryEnumerationSkipsPackageDescendants;
     // 扫描路径
-    BOOL flags = [QMCleanUtils contentPathAtPath:path options:directoryEnum level:level propertiesKey:[NSArray arrayWithObject:NSURLIsAliasFileKey] block:^(NSURL *pathURL) {
+    BOOL flags = [QMMFCleanUtils contentPathAtPath:path options:directoryEnum level:level propertiesKey:[NSArray arrayWithObject:NSURLIsAliasFileKey] block:^(NSURL *pathURL) {
         if(level == -1){
             NSFileManager *fileManger = [NSFileManager defaultManager];
             BOOL isDir;
@@ -373,7 +373,7 @@
         }
         return [self->_delegate needStopScan];
     }];
-    if (scanApp && flags)    [QMCleanUtils setScanCacheResult:[NSDictionary dictionaryWithObject:retArray forKey:path]];
+    if (scanApp && flags)    [QMMFCleanUtils setScanCacheResult:[NSDictionary dictionaryWithObject:retArray forKey:path]];
     return retArray;
 }
 

@@ -1,4 +1,4 @@
-<garbage version="2021.09.16.1">
+<garbage version="2023.09.01.1">
     <filters>
         <!--临时目录下的缓存过滤-->
         <filter id="1" column="filename" relation="is" value="com.apple.dock" action="exclude"/>

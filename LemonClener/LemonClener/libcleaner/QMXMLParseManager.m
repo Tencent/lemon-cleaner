@@ -9,7 +9,7 @@
 #import "QMXMLParseManager.h"
 #import "QMXMLParse.h"
 #import "QMScanCategory.h"
-#import "QMCleanUtils.h"
+#import "QMMFCleanUtils.h"
 #import "QMDataConst.h"
 #import <QMCoreFunction/McCoreFunction.h>
 #import <QMCoreFunction/LanguageHelper.h>
@@ -84,7 +84,7 @@ NSString *kLMCleanKnowLedge = @"~/Library/Application Support/com.tencent.lemon/
         [categoryItem resetItemScanState];
     }
     // 移除清理缓存
-    [QMCleanUtils cleanScanCacheResult];
+    [QMMFCleanUtils cleanScanCacheResult];
 }
 
 - (NSDictionary *)filterItemDict

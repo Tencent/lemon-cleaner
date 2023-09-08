@@ -719,10 +719,15 @@ extern os_log_t logHandle;
     OSStatus status = -1;
     
     UInt32 isRunning = 0;
-    UInt32 propertySize = 0;
-    propertySize = sizeof(isRunning);
+    UInt32 propertySize = sizeof(isRunning);
     
-    status = AudioDeviceGetProperty(deviceID, 0, false, kAudioDevicePropertyDeviceIsRunningSomewhere, &propertySize, &isRunning);
+    AudioObjectPropertyAddress propertyAddress = {
+        kAudioDevicePropertyDeviceIsRunningSomewhere,
+        kAudioObjectPropertyScopeGlobal,
+        kAudioObjectPropertyElementMaster
+    };
+    
+    status = AudioObjectGetPropertyData(deviceID, &propertyAddress, 0, NULL, &propertySize, &isRunning);
     if (noErr != status)
     {
         os_log_error(logHandle, "ERROR: getting status of audio device failed with %d", status);
@@ -766,11 +771,11 @@ extern os_log_t logHandle;
         //from same client?
         // ignore if last event *just* occurred
         if ((self.lastMicEvent.client.pid == event.client.pid) &&
-            ([[NSDate date] timeIntervalSinceDate:self.lastMicEvent.timestamp] < 0.5f))
+            ([[NSDate date] timeIntervalSinceDate:self.lastMicEvent.timestamp] < 1.0f))
         {
             NSLog(@"!!!! mic ignoring mic event, as it happened <0.5s");
             os_log_debug(logHandle, "ignoring mic event, as it happened <0.5s ");
-            //return NO;
+            return NO;
         }
         
         //or, was a 2x off?

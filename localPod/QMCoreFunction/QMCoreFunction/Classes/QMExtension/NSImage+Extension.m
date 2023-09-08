@@ -8,6 +8,7 @@
 
 #import "NSImage+Extension.h"
 #import <QuartzCore/QuartzCore.h>
+#import <CoreImage/CIFilter.h>
 
 @implementation NSImage (Extension)
 

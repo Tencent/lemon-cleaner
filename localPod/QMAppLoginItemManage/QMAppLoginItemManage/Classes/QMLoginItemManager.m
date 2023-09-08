@@ -12,6 +12,7 @@
 #import <dlfcn.h>
 #import "QMAppLoginItem.h"
 #import <ServiceManagement/SMLoginItem.h>
+#import <ServiceManagement/ServiceManagement.h>
 #import "QMLocalAppHelper.h"
 #import <AppKit/NSWorkspace.h>
 

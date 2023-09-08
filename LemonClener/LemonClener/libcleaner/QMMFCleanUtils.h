@@ -1,5 +1,5 @@
 //
-//  QMCleanUtils.h
+//  QMMFCleanUtils.h
 //  QMCleanDemo
 //
 
@@ -10,7 +10,7 @@
 
 typedef BOOL (^FinderResultBlock)(NSURL * pathURL);
 
-@interface QMCleanUtils : NSObject
+@interface QMMFCleanUtils : NSObject
 
 + (uint64)caluactionSize:(NSString *)path;
 

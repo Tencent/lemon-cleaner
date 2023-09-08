@@ -164,13 +164,33 @@
             } else {
                 //   [NSWorkspace performFileOperation:NSWorkspaceRecycleOperation]  或者  [NSWorkspace recycleURLs:completionHandler:] 以及直接利用 命令行 `mv xxx ~/.Trash/` 移动到废纸篓, 都没有 "put back(放回原处)"的选项.
                 //    [NSWorkspace recycleURLs:completionHandler:] 会返回在 Trash 中的 URL.
-
-                [[NSWorkspace sharedWorkspace] performFileOperation:NSWorkspaceRecycleOperation
-                                                             source:[path stringByDeletingLastPathComponent]
-                                                        destination:@""
-                                                              files:@[[path lastPathComponent]]
-                                                                tag:nil];
-
+                
+                // MacOS 13 原有api放回原处功能已失效 用apple script代替
+                
+                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                    
+                    NSString *appleScriptSource = [NSString stringWithFormat:
+                                                   @"tell application \"Finder\"\n"
+                                                   @"set theFile to POSIX file \"%@\"\n"
+                                                   @"delete theFile\n"
+                                                   @"end tell", path];
+                    
+                    NSAppleScript *appleScript = [[NSAppleScript alloc] initWithSource:appleScriptSource];
+                    NSDictionary *errorDict;
+                    NSAppleEventDescriptor *returnDescriptor = [appleScript executeAndReturnError:&errorDict];
+                    
+                    if (returnDescriptor == nil) {
+                        if (errorDict != nil) {
+                            NSLog(@"QMDuplicateItemManager: moveFileToTrashError: %@", [errorDict objectForKey:NSAppleScriptErrorMessage]);
+                        } else {
+                            
+                            NSLog(@"QMDuplicateItemManager: moveFileToTrashError: unknownError");
+                        }
+                    }
+                });
+                
+                
+                
             }
 
 
