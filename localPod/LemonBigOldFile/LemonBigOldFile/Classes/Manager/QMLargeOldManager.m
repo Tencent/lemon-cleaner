@@ -469,9 +469,24 @@ static QMLargeOldManager * instance = nil;
 //                                                                tag:nil];
                 //api deprecated, modify by levey
                 @autoreleasepool {
-                    NSURL* url = [NSURL fileURLWithPath:path];
-                    NSArray* urls = @[url];
-                    [[NSWorkspace sharedWorkspace] recycleURLs:urls completionHandler:nil];
+                    NSString *appleScriptSource = [NSString stringWithFormat:
+                                                                       @"tell application \"Finder\"\n"
+                                                                       @"set theFile to POSIX file \"%@\"\n"
+                                                                       @"delete theFile\n"
+                                                                       @"end tell", path];
+                                        
+                                        NSAppleScript *appleScript = [[NSAppleScript alloc] initWithSource:appleScriptSource];
+                                        NSDictionary *errorDict;
+                                        NSAppleEventDescriptor *returnDescriptor = [appleScript executeAndReturnError:&errorDict];
+                                        
+                                        if (returnDescriptor == nil) {
+                                            if (errorDict != nil) {
+                                                NSLog(@"QMLargeOldManager: moveFileToTrashError: %@", [errorDict objectForKey:NSAppleScriptErrorMessage]);
+                                            } else {
+                                                
+                                                NSLog(@"QMLargeOldManager: moveFileToTrashError: unknownError");
+                                            }
+                                        }
                 }
             }
         }

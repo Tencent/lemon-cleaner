@@ -8,7 +8,7 @@
 
 #import "QMFilterItem.h"
 #import "QMXMLItemDefine.h"
-#import "QMCleanUtils.h"
+#import "QMMFCleanUtils.h"
 #import <QMCoreFunction/NSString+Extension.h>
 #import <QMCoreFunction/McCoreFunction.h>
 
@@ -111,7 +111,7 @@
         }
         else if ([relation isEqualToString:@"match"])
         {
-            if (![QMCleanUtils assertRegex:tempValue matchStr:compareValue])
+            if (![QMMFCleanUtils assertRegex:tempValue matchStr:compareValue])
                 retValue = NO;
         }
         else if ([relation isEqualToString:@"begin with"])
@@ -129,7 +129,7 @@
     else if ([column isEqualToString:@"filesize"])
     {
         // 比较文件大小
-        NSUInteger fileSize = [QMCleanUtils caluactionSize:path];
+        NSUInteger fileSize = [QMMFCleanUtils caluactionSize:path];
         if ([relation isEqualToString:@"greater"])
         {
             if (fileSize < [value longLongValue])
@@ -138,13 +138,13 @@
     }
     else if ([column isEqualToString:@"app"])
     {
-        if ([relation isEqualToString:@"is"] && [value isEqualToString:@"signed"] && ![QMCleanUtils isBinarySignCode:path])
+        if ([relation isEqualToString:@"is"] && [value isEqualToString:@"signed"] && ![QMMFCleanUtils isBinarySignCode:path])
             retValue = NO;
     }else if([column isEqualToString:@"time"])
     {
-        NSTimeInterval createTime = [QMCleanUtils createTime:path];
-        NSTimeInterval lastModifyTime = [QMCleanUtils lastModificateionTime:path];
-//        NSTimeInterval lastAccessTime = [QMCleanUtils lastAccessTime:path];
+        NSTimeInterval createTime = [QMMFCleanUtils createTime:path];
+        NSTimeInterval lastModifyTime = [QMMFCleanUtils lastModificateionTime:path];
+//        NSTimeInterval lastAccessTime = [QMMFCleanUtils lastAccessTime:path];
         NSTimeInterval recentTime = createTime > lastModifyTime ? createTime : lastModifyTime;
 //        recentTime = recentTime > lastAccessTime ? recentTime : lastAccessTime;
         NSTimeInterval currentTime = [[NSDate date] timeIntervalSince1970];

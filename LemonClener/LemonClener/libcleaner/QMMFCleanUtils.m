@@ -1,12 +1,12 @@
 //
-//  QMCleanUtils.m
+//  QMMFCleanUtils.m
 //  QMCleanDemo
 //
 
 //  Copyright (c) 2013年 yuanwen. All rights reserved.
 //
 
-#import "QMCleanUtils.h"
+#import "QMMFCleanUtils.h"
 #import <sys/stat.h>
 #import "QMCleanManager.h"
 #import <QMCoreFunction/MdlsToolsHelper.h>
@@ -16,7 +16,7 @@
 
 static NSMutableDictionary * m_cachePathDict = nil;
 
-@implementation QMCleanUtils
+@implementation QMMFCleanUtils
 
 // get total size by path
 + (uint64)caluactionSize:(NSString *)path
@@ -194,7 +194,7 @@ static NSMutableDictionary * m_cachePathDict = nil;
                 NSURL * curObject = [_pathEnumerator nextObject];
                 if (curObject == nil)
                     break;
-                if (!hiddenItem && [QMCleanUtils isHiddenItemForPath:path])
+                if (!hiddenItem && [QMMFCleanUtils isHiddenItemForPath:path])
                     continue;
                 NSDictionary * dict = [fm attributesOfItemAtPath:path error:nil];
                 if ([[dict objectForKey:NSFileSize] unsignedIntegerValue] > 0)
@@ -303,7 +303,7 @@ static NSMutableDictionary * m_cachePathDict = nil;
     for (NSURL * pathURL in dirEnumerator)
     {
         // 过滤快捷方式
-        if ([QMCleanUtils checkURLFileType:pathURL typeKey:NSURLIsAliasFileKey])
+        if ([QMMFCleanUtils checkURLFileType:pathURL typeKey:NSURLIsAliasFileKey])
             continue;
         
         if (level != -1 && [dirEnumerator level] == level)

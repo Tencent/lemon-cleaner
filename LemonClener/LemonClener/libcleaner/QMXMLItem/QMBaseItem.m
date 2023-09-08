@@ -9,7 +9,7 @@
 #import "QMBaseItem.h"
 #import "QMResultItem.h"
 #import "QMCategoryItem.h"
-#import "QMCleanUtils.h"
+#import "QMMFCleanUtils.h"
 
 @implementation QMBaseItem
 @synthesize progressValue;
@@ -47,7 +47,7 @@
     if (regexStr
         && ![@"" isEqualToString:regexStr])
     {
-        retValue = [QMCleanUtils assertRegex:regexStr matchStr:curSysVersion];
+        retValue = [QMMFCleanUtils assertRegex:regexStr matchStr:curSysVersion];
         if (!retValue)  return NO;
         
     }

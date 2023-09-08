@@ -10,7 +10,7 @@
 #import "QMFilterParse.h"
 #import "QMResultItem.h"
 #import "QMCacheEnumerator.h"
-#import "QMCleanUtils.h"
+#import "QMMFCleanUtils.h"
 
 @implementation QMSoftScan
 @synthesize delegate;
@@ -131,7 +131,7 @@
         NSMutableArray * resultPathArray = [NSMutableArray array];
         if (actionItem.cleanType == QMCleanTruncate)
         {
-            NSArray * subPaths = [QMCleanUtils processDirTruncatePath:result];
+            NSArray * subPaths = [QMMFCleanUtils processDirTruncatePath:result];
             if (subPaths)
             {
                 for (NSString * subPath in subPaths)
