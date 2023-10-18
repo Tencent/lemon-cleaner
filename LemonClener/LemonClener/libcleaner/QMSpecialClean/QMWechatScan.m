@@ -9,6 +9,7 @@
 #import "QMWechatScan.h"
 #import <QMCoreFunction/QMShellExcuteHelper.h>
 #import "QMResultItem.h"
+#import <sys/stat.h>
 
 @implementation QMWechatScan
 
@@ -95,16 +96,35 @@
             NSFileManager *fileManager = [NSFileManager defaultManager];
             NSDirectoryEnumerator *dirEnum = [fileManager enumeratorAtPath:path];
             NSString *tempPath = nil;
-            while ((tempPath = [dirEnum nextObject]) != nil) {
-                NSString *picPath = [path stringByAppendingPathComponent:tempPath];
-                NSDictionary* attr = [[NSFileManager defaultManager] attributesOfItemAtPath:picPath error:nil];
-                NSTimeInterval createTime = [[attr objectForKey:NSFileCreationDate] timeIntervalSince1970];
-                NSTimeInterval modifyTime = [[attr objectForKey:NSFileModificationDate] timeIntervalSince1970];
-                NSTimeInterval nowInterval = [[NSDate date] timeIntervalSince1970];
-                NSTimeInterval extraIntervalModify = nowInterval - modifyTime;
-                NSTimeInterval extraIntervalCreate = nowInterval - createTime;
-                if ((extraIntervalCreate < 90 * 24 * 60 * 60) || (extraIntervalModify < 90 * 24 * 60 * 60)) {
-                    [resultArr addObject:picPath];
+            
+            if (@available(macOS 14.0, *)) {
+                while ((tempPath = [dirEnum nextObject]) != nil) {
+                    NSString *picPath = [path stringByAppendingPathComponent:tempPath];
+                    struct stat statbuf;
+                    const char *cpath = [picPath fileSystemRepresentation];
+                    if (cpath && stat(cpath, &statbuf) == 0) {
+                        NSTimeInterval createTime = [[NSDate dateWithTimeIntervalSince1970:statbuf.st_ctime] timeIntervalSince1970];
+                        NSTimeInterval modifyTime = [[NSDate dateWithTimeIntervalSince1970:statbuf.st_mtime] timeIntervalSince1970];
+                        NSTimeInterval nowInterval = [[NSDate date] timeIntervalSince1970];
+                        NSTimeInterval extraIntervalModify = nowInterval - modifyTime;
+                        NSTimeInterval extraIntervalCreate = nowInterval - createTime;
+                        if ((extraIntervalCreate < 90 * 24 * 60 * 60) || (extraIntervalModify < 90 * 24 * 60 * 60)) {
+                            [resultArr addObject:picPath];
+                        }
+                    }
+                }
+            } else {
+                while ((tempPath = [dirEnum nextObject]) != nil) {
+                    NSString *picPath = [path stringByAppendingPathComponent:tempPath];
+                    NSDictionary* attr = [[NSFileManager defaultManager] attributesOfItemAtPath:picPath error:nil];
+                    NSTimeInterval createTime = [[attr objectForKey:NSFileCreationDate] timeIntervalSince1970];
+                    NSTimeInterval modifyTime = [[attr objectForKey:NSFileModificationDate] timeIntervalSince1970];
+                    NSTimeInterval nowInterval = [[NSDate date] timeIntervalSince1970];
+                    NSTimeInterval extraIntervalModify = nowInterval - modifyTime;
+                    NSTimeInterval extraIntervalCreate = nowInterval - createTime;
+                    if ((extraIntervalCreate < 90 * 24 * 60 * 60) || (extraIntervalModify < 90 * 24 * 60 * 60)) {
+                        [resultArr addObject:picPath];
+                    }
                 }
             }
         }
@@ -130,19 +150,36 @@
             NSFileManager *fileManager = [NSFileManager defaultManager];
             NSDirectoryEnumerator *dirEnum = [fileManager enumeratorAtPath:path];
             NSString *tempPath = nil;
-            while ((tempPath = [dirEnum nextObject]) != nil) {
-                NSString *picPath = [path stringByAppendingPathComponent:tempPath];
-                NSDictionary* attr = [[NSFileManager defaultManager] attributesOfItemAtPath:picPath error:nil];
-                NSTimeInterval createTime = [[attr objectForKey:NSFileCreationDate] timeIntervalSince1970];
-                NSTimeInterval modifyTime = [[attr objectForKey:NSFileModificationDate] timeIntervalSince1970];
-                NSTimeInterval nowInterval = [[NSDate date] timeIntervalSince1970];
-                NSTimeInterval extraIntervalModify = nowInterval - modifyTime;
-                NSTimeInterval extraIntervalCreate = nowInterval - createTime;
-                if ((extraIntervalCreate >= 90 * 24 * 60 * 60) && (extraIntervalModify >= 90 * 24 * 60 * 60)) {
-                    [resultArr addObject:picPath];
+            if (@available(macOS 14.0, *)) {
+                while ((tempPath = [dirEnum nextObject]) != nil) {
+                    NSString *picPath = [path stringByAppendingPathComponent:tempPath];
+                    struct stat statbuf;
+                    const char *cpath = [picPath fileSystemRepresentation];
+                    if (cpath && stat(cpath, &statbuf) == 0) {
+                        NSTimeInterval createTime = [[NSDate dateWithTimeIntervalSince1970:statbuf.st_ctime] timeIntervalSince1970];
+                        NSTimeInterval modifyTime = [[NSDate dateWithTimeIntervalSince1970:statbuf.st_mtime] timeIntervalSince1970];
+                        NSTimeInterval nowInterval = [[NSDate date] timeIntervalSince1970];
+                        NSTimeInterval extraIntervalModify = nowInterval - modifyTime;
+                        NSTimeInterval extraIntervalCreate = nowInterval - createTime;
+                        if ((extraIntervalCreate >= 90 * 24 * 60 * 60) && (extraIntervalModify >= 90 * 24 * 60 * 60)) {
+                            [resultArr addObject:picPath];
+                        }
+                    }
+                }
+            } else {
+                while ((tempPath = [dirEnum nextObject]) != nil) {
+                    NSString *picPath = [path stringByAppendingPathComponent:tempPath];
+                    NSDictionary* attr = [[NSFileManager defaultManager] attributesOfItemAtPath:picPath error:nil];
+                    NSTimeInterval createTime = [[attr objectForKey:NSFileCreationDate] timeIntervalSince1970];
+                    NSTimeInterval modifyTime = [[attr objectForKey:NSFileModificationDate] timeIntervalSince1970];
+                    NSTimeInterval nowInterval = [[NSDate date] timeIntervalSince1970];
+                    NSTimeInterval extraIntervalModify = nowInterval - modifyTime;
+                    NSTimeInterval extraIntervalCreate = nowInterval - createTime;
+                    if ((extraIntervalCreate >= 90 * 24 * 60 * 60) && (extraIntervalModify >= 90 * 24 * 60 * 60)) {
+                        [resultArr addObject:picPath];
+                    }
                 }
             }
-            
         }
     }
     
