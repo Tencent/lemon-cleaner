@@ -11,6 +11,10 @@
 #import "QMResultItem.h"
 #import <sys/stat.h>
 
+@interface QMWechatScan ()
+@property (nonatomic, strong) NSMutableArray *resultArrWechatImage90DayAgo;
+@end
+
 @implementation QMWechatScan
 
 -(NSArray *)getPathItemPathArr:(QMActionItem *)actionItem shellString:(NSString *)shellString keyword:(NSString *)keyWord{
@@ -88,6 +92,7 @@
     }
     //过滤90天前的图片
     NSMutableArray *resultArr = [NSMutableArray new];
+    self.resultArrWechatImage90DayAgo = [NSMutableArray new];
     for (NSString *path in pathArray) {
         @autoreleasepool {
             if (![path containsString:@"/Message/MessageTemp"]) {
@@ -110,6 +115,8 @@
                         NSTimeInterval extraIntervalCreate = nowInterval - createTime;
                         if ((extraIntervalCreate < 90 * 24 * 60 * 60) || (extraIntervalModify < 90 * 24 * 60 * 60)) {
                             [resultArr addObject:picPath];
+                        } else {
+                            [self.resultArrWechatImage90DayAgo addObject:picPath];
                         }
                     }
                 }
@@ -136,6 +143,14 @@
 
 //扫描聊天图片 90天前
 -(void)scanWechatImage90DayAgo:(QMActionItem *)actionItem{
+    
+    if (@available(macOS 14.0, *)) {
+        /// 减少重复扫描
+        NSMutableArray *resultArr = self.resultArrWechatImage90DayAgo ?: [NSMutableArray new];
+        [self callbackResultArray:resultArr cleanType:actionItem.cleanType];
+        return;
+    }
+    
     NSArray *pathArray = [self getPathItemPathArr:actionItem shellString:@"mdfind -onlyin \"%@\" 'kMDItemDisplayName=\"Image\"'" keyword:@"Image"];
     if ([pathArray count] == 0) {
         return;
@@ -150,34 +165,16 @@
             NSFileManager *fileManager = [NSFileManager defaultManager];
             NSDirectoryEnumerator *dirEnum = [fileManager enumeratorAtPath:path];
             NSString *tempPath = nil;
-            if (@available(macOS 14.0, *)) {
-                while ((tempPath = [dirEnum nextObject]) != nil) {
-                    NSString *picPath = [path stringByAppendingPathComponent:tempPath];
-                    struct stat statbuf;
-                    const char *cpath = [picPath fileSystemRepresentation];
-                    if (cpath && stat(cpath, &statbuf) == 0) {
-                        NSTimeInterval createTime = [[NSDate dateWithTimeIntervalSince1970:statbuf.st_ctime] timeIntervalSince1970];
-                        NSTimeInterval modifyTime = [[NSDate dateWithTimeIntervalSince1970:statbuf.st_mtime] timeIntervalSince1970];
-                        NSTimeInterval nowInterval = [[NSDate date] timeIntervalSince1970];
-                        NSTimeInterval extraIntervalModify = nowInterval - modifyTime;
-                        NSTimeInterval extraIntervalCreate = nowInterval - createTime;
-                        if ((extraIntervalCreate >= 90 * 24 * 60 * 60) && (extraIntervalModify >= 90 * 24 * 60 * 60)) {
-                            [resultArr addObject:picPath];
-                        }
-                    }
-                }
-            } else {
-                while ((tempPath = [dirEnum nextObject]) != nil) {
-                    NSString *picPath = [path stringByAppendingPathComponent:tempPath];
-                    NSDictionary* attr = [[NSFileManager defaultManager] attributesOfItemAtPath:picPath error:nil];
-                    NSTimeInterval createTime = [[attr objectForKey:NSFileCreationDate] timeIntervalSince1970];
-                    NSTimeInterval modifyTime = [[attr objectForKey:NSFileModificationDate] timeIntervalSince1970];
-                    NSTimeInterval nowInterval = [[NSDate date] timeIntervalSince1970];
-                    NSTimeInterval extraIntervalModify = nowInterval - modifyTime;
-                    NSTimeInterval extraIntervalCreate = nowInterval - createTime;
-                    if ((extraIntervalCreate >= 90 * 24 * 60 * 60) && (extraIntervalModify >= 90 * 24 * 60 * 60)) {
-                        [resultArr addObject:picPath];
-                    }
+            while ((tempPath = [dirEnum nextObject]) != nil) {
+                NSString *picPath = [path stringByAppendingPathComponent:tempPath];
+                NSDictionary* attr = [[NSFileManager defaultManager] attributesOfItemAtPath:picPath error:nil];
+                NSTimeInterval createTime = [[attr objectForKey:NSFileCreationDate] timeIntervalSince1970];
+                NSTimeInterval modifyTime = [[attr objectForKey:NSFileModificationDate] timeIntervalSince1970];
+                NSTimeInterval nowInterval = [[NSDate date] timeIntervalSince1970];
+                NSTimeInterval extraIntervalModify = nowInterval - modifyTime;
+                NSTimeInterval extraIntervalCreate = nowInterval - createTime;
+                if ((extraIntervalCreate >= 90 * 24 * 60 * 60) && (extraIntervalModify >= 90 * 24 * 60 * 60)) {
+                    [resultArr addObject:picPath];
                 }
             }
         }
