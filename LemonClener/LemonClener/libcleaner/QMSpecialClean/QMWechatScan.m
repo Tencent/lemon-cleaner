@@ -126,7 +126,7 @@
     if (@available(macOS 14.0, *)) {
         if (self.resultArrWechatImage90DayAgo.count > 0) {
             /// 减少重复扫描
-            [self callbackResultArray:self.resultArrWechatImage90DayAgo cleanType:actionItem.cleanType];
+            [self callbackResultArray:self.resultArrWechatImage90DayAgo.copy cleanType:actionItem.cleanType];
             /// 清空
             self.resultArrWechatImage90DayAgo = nil;
             return;
