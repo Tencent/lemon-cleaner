@@ -43,9 +43,9 @@
                 [task terminate];
             }
         }];
-        [task waitUntilExit];
         // 获取运行结果
         data = [file readDataToEndOfFile];
+        [task waitUntilExit];
         dispatch_semaphore_signal(semaphore);
     } else {
         data = [file readDataToEndOfFile];
