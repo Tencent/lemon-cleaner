@@ -58,7 +58,12 @@
         @catch (NSException *exception) {
             
         }
-        title = [[NSFileManager defaultManager] displayNameAtPath:rpath];
+        if (@available(macOS 14.0, *)) {
+            NSArray *rpathDir = [rpath componentsSeparatedByString:@"/"];
+            title = rpathDir.lastObject;
+        } else {
+            title = [[NSFileManager defaultManager] displayNameAtPath:rpath];
+        }
         path = rpath;
         showPath = rpath;
     }

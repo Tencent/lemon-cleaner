@@ -33,19 +33,51 @@
         return nil;
     }
     
-    // 获取运行结果
-    NSData *data = [file readDataToEndOfFile];
-    [task waitUntilExit];
+    NSData *data = [[NSData alloc] init];
+    __block BOOL terminatedForTimeout = NO;
+    if (@available(macOS 10.14, *)) {
+        dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+        [self taskTimeoutWithDispatchSemaphore:semaphore completion:^(BOOL timeout) {
+            terminatedForTimeout = timeout;
+            if (timeout) {
+                [task terminate];
+            }
+        }];
+        // 获取运行结果
+        data = [file readDataToEndOfFile];
+        [task waitUntilExit];
+        dispatch_semaphore_signal(semaphore);
+    } else {
+        data = [file readDataToEndOfFile];
+        [task waitUntilExit];
+    }
+    
     int status = [task terminationStatus];
     if (status == 0) {
         //NSLog(@"%s, Task succeeded.", __FUNCTION__);
     } else {
-        [task terminate];
+        if (!terminatedForTimeout) {
+            [task terminate];
+        }
         NSLog(@"%s, Task failed.", __FUNCTION__);
     }
     
     [file closeFile];
     return [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+}
+
++ (void)taskTimeoutWithDispatchSemaphore:(dispatch_semaphore_t)semaphore completion:(void(^)(BOOL))completion {
+    static dispatch_queue_t queue = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        queue = dispatch_queue_create(NULL, DISPATCH_QUEUE_SERIAL);
+    });
+    dispatch_async(queue, ^{
+        dispatch_time_t timeout = dispatch_time(DISPATCH_TIME_NOW, 10 * NSEC_PER_SEC);
+        long result = dispatch_semaphore_wait(semaphore, timeout);
+        BOOL value = result != 0;
+        completion(value);
+    });
 }
 
 
