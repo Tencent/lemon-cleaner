@@ -7351,8 +7351,8 @@
 		BFDFE7DC352907FC980B868725387E98 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1240;
-				LastUpgradeCheck = 1240;
+				LastSwiftUpdateCheck = 1300;
+				LastUpgradeCheck = 1300;
 			};
 			buildConfigurationList = 4821239608C13582E20E6DA73FD5F1F9 /* Build configuration list for PBXProject "Pods" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -9217,7 +9217,7 @@
 				INFOPLIST_FILE = "Target Support Files/AFNetworking/AFNetworking-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MODULEMAP_FILE = "Target Support Files/AFNetworking/AFNetworking.modulemap";
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_MODULE_NAME = AFNetworking;
@@ -9501,7 +9501,7 @@
 				INFOPLIST_FILE = "Target Support Files/LemonStat/LemonStat-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MODULEMAP_FILE = "Target Support Files/LemonStat/LemonStat.modulemap";
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_MODULE_NAME = LemonStat;
@@ -9533,7 +9533,7 @@
 				INFOPLIST_FILE = "Target Support Files/LemonStat/LemonStat-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MODULEMAP_FILE = "Target Support Files/LemonStat/LemonStat.modulemap";
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_MODULE_NAME = LemonStat;
@@ -9564,7 +9564,7 @@
 				INFOPLIST_FILE = "Target Support Files/Masonry/Masonry-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MODULEMAP_FILE = "Target Support Files/Masonry/Masonry.modulemap";
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_MODULE_NAME = Masonry;
@@ -9595,7 +9595,7 @@
 				INFOPLIST_FILE = "Target Support Files/AFNetworking/AFNetworking-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MODULEMAP_FILE = "Target Support Files/AFNetworking/AFNetworking.modulemap";
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_MODULE_NAME = AFNetworking;
@@ -9658,7 +9658,7 @@
 				INFOPLIST_FILE = "Target Support Files/Masonry/Masonry-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MODULEMAP_FILE = "Target Support Files/Masonry/Masonry.modulemap";
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_MODULE_NAME = Masonry;
@@ -9690,7 +9690,7 @@
 				INFOPLIST_FILE = "Target Support Files/YMTreeMap/YMTreeMap-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MODULEMAP_FILE = "Target Support Files/YMTreeMap/YMTreeMap.modulemap";
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_MODULE_NAME = YMTreeMap;
@@ -9817,7 +9817,7 @@
 				INFOPLIST_FILE = "Target Support Files/QMCoreFunction/QMCoreFunction-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MODULEMAP_FILE = "Target Support Files/QMCoreFunction/QMCoreFunction.modulemap";
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_MODULE_NAME = QMCoreFunction;
@@ -9884,7 +9884,7 @@
 				INFOPLIST_FILE = "Target Support Files/FMDB/FMDB-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MODULEMAP_FILE = "Target Support Files/FMDB/FMDB.modulemap";
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_MODULE_NAME = FMDB;
@@ -10047,7 +10047,7 @@
 				INFOPLIST_FILE = "Target Support Files/QMUICommon/QMUICommon-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MODULEMAP_FILE = "Target Support Files/QMUICommon/QMUICommon.modulemap";
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_MODULE_NAME = QMUICommon;
@@ -10079,7 +10079,7 @@
 				INFOPLIST_FILE = "Target Support Files/QMAppLoginItemManage/QMAppLoginItemManage-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MODULEMAP_FILE = "Target Support Files/QMAppLoginItemManage/QMAppLoginItemManage.modulemap";
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_MODULE_NAME = QMAppLoginItemManage;
@@ -10111,7 +10111,7 @@
 				INFOPLIST_FILE = "Target Support Files/LemonNetSpeed/LemonNetSpeed-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MODULEMAP_FILE = "Target Support Files/LemonNetSpeed/LemonNetSpeed.modulemap";
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_MODULE_NAME = LemonNetSpeed;
@@ -10201,7 +10201,7 @@
 				INFOPLIST_FILE = "Target Support Files/QMCoreFunction/QMCoreFunction-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MODULEMAP_FILE = "Target Support Files/QMCoreFunction/QMCoreFunction.modulemap";
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_MODULE_NAME = QMCoreFunction;
@@ -10265,7 +10265,7 @@
 				INFOPLIST_FILE = "Target Support Files/LemonNetSpeed/LemonNetSpeed-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MODULEMAP_FILE = "Target Support Files/LemonNetSpeed/LemonNetSpeed.modulemap";
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_MODULE_NAME = LemonNetSpeed;
@@ -10329,7 +10329,7 @@
 				INFOPLIST_FILE = "Target Support Files/QMUICommon/QMUICommon-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MODULEMAP_FILE = "Target Support Files/QMUICommon/QMUICommon.modulemap";
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_MODULE_NAME = QMUICommon;
@@ -10460,7 +10460,7 @@
 				INFOPLIST_FILE = "Target Support Files/FMDB/FMDB-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MODULEMAP_FILE = "Target Support Files/FMDB/FMDB.modulemap";
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_MODULE_NAME = FMDB;
@@ -10492,7 +10492,7 @@
 				INFOPLIST_FILE = "Target Support Files/YMTreeMap/YMTreeMap-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MODULEMAP_FILE = "Target Support Files/YMTreeMap/YMTreeMap.modulemap";
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_MODULE_NAME = YMTreeMap;
@@ -10589,7 +10589,7 @@
 				INFOPLIST_FILE = "Target Support Files/QMAppLoginItemManage/QMAppLoginItemManage-Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MODULEMAP_FILE = "Target Support Files/QMAppLoginItemManage/QMAppLoginItemManage.modulemap";
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_MODULE_NAME = QMAppLoginItemManage;
