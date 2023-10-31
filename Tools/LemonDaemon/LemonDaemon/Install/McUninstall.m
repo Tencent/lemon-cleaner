@@ -835,7 +835,13 @@ int UpdateCastle(char *newAppPath, const char *szUserName, const char *szVersion
     // 移动文件时先把卸载监听unload掉
     unloadPlistByLable(DAEMON_UNINSTALL_LAUNCHD_LABLE);
     unloadAgentPlistByLableForAllUser(DAEMON_UNINSTALL_LAUNCHD_LABLE);
-    if (fileMoveTo(newAppPath, (char *)[DEFAULT_APP_PATH UTF8String], MCCMD_MOVEFILE_MOVE) == -1)
+    
+    int action = MCCMD_MOVEFILE_MOVE;
+    if (@available(macOS 13.0, *)) {
+        action = MCCMD_MOVEFILE_COPY;
+    }
+    
+    if (fileMoveTo(newAppPath, (char *)[DEFAULT_APP_PATH UTF8String], action) == -1)
     {
         NSLog(@"Update fail when replacing APP file");
         return -1;
