@@ -13,6 +13,6 @@
 
 @property (nonatomic, assign) BOOL keyWindowMode;
 
-- (id)initWithContentRect:(NSRect)contentRect;
+- (instancetype)initWithContentRect:(NSRect)contentRect;
 
 @end

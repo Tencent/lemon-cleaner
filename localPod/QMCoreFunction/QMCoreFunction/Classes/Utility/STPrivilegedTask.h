@@ -53,8 +53,8 @@ enum
     NSFileHandle    *outputFileHandle;
     NSTimer         *checkStatusTimer;
 }
--(id)initWithLaunchPath: (NSString *)path;
--(id)initWithLaunchPath: (NSString *)path arguments:  (NSArray *)args;
+-(instancetype)initWithLaunchPath: (NSString *)path;
+-(instancetype)initWithLaunchPath: (NSString *)path arguments:  (NSArray *)args;
 +(STPrivilegedTask *)launchedPrivilegedTaskWithLaunchPath:(NSString *)path;
 +(STPrivilegedTask *)launchedPrivilegedTaskWithLaunchPath:(NSString *)path arguments:(NSArray *)arguments;
 -(NSArray *)arguments;

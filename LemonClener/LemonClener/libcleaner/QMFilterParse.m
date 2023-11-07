@@ -14,7 +14,7 @@
 
 @implementation QMFilterParse
 
-- (id)initFilterDict:(NSDictionary *)filterDict
+- (instancetype)initFilterDict:(NSDictionary *)filterDict
 {
     if (self = [super init])
     {

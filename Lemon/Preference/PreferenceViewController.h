@@ -17,7 +17,7 @@
 @property (weak, nonatomic) PreferenceWindowController* myWC;
 
 
--(id)initWithPreferenceWindowController:(PreferenceWindowController *)wdControler;
+-(instancetype)initWithPreferenceWindowController:(PreferenceWindowController *)wdControler;
 
 - (instancetype)init;
 #define STATUS_TYPE_LOGO 1

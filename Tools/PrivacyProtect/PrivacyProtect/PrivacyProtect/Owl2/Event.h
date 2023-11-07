@@ -16,7 +16,7 @@
 /* METHODS */
 
 //init
--(id)init:(Client*)client device:(int)device state:(NSControlStateValue)state;
+-(instancetype)init:(Client*)client device:(int)device state:(NSControlStateValue)state;
 
 /* PROPERTIES */
 

@@ -17,7 +17,7 @@ extern NSString *McLocalSoftManagerFinishKey;            //NSNumber of BOOL
 @class McLocalSoft;
 @interface McLocalSoftManager : NSObject
 
-+ (id)sharedManager;
++ (instancetype)sharedManager;
 
 - (void)monitorBundleID:(NSString *)bundleID;
 - (void)removeSoftWithBundleID:(NSString *)bundleID;

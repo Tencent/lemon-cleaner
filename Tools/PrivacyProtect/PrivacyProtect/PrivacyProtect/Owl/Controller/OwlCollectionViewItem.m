@@ -16,7 +16,7 @@
 
 @implementation OwlCollectionViewItem
 
-- (id)init
+- (instancetype)init
 {
     NSBundle *bundle = [NSBundle bundleForClass:[self class]];
     self = [super initWithNibName:NSStringFromClass(self.class) bundle:bundle];

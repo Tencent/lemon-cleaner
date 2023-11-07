@@ -21,7 +21,7 @@
 
 -(void)compareChild;
 - (long long)calculateSizeInBytesRecursively;
-- (id)initWithFullPath:(id)arg1;
-- (id)init;
+- (instancetype)initWithFullPath:(id)arg1;
+- (instancetype)init;
 
 @end

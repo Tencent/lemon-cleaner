@@ -38,7 +38,7 @@ typedef struct val_attrs {
 
 @implementation LMFileScanTask
 
-- (id)initWithRootDirItem:(LMItem *)dirItem{
+- (instancetype)initWithRootDirItem:(LMItem *)dirItem{
     
     self = [super init];
     if (self) {

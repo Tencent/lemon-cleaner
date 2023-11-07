@@ -41,7 +41,7 @@
 + (void) setKeychainPassword:(NSString*)password forUsername:(NSString*)username service:(NSString*)serviceName;
 + (NSString*) passwordForUsername:(NSString*)username service:(NSString*)serviceName;
 
-+ (id)genericKeychainItem:(SecKeychainItemRef)item forServiceName:(NSString *)serviceName username:(NSString *)username password:(NSString *)password;
++ (instancetype)genericKeychainItem:(SecKeychainItemRef)item forServiceName:(NSString *)serviceName username:(NSString *)username password:(NSString *)password;
 - (NSString *)serviceName;
 - (BOOL)setServiceName:(NSString *)newServiceName;
 @end
@@ -57,7 +57,7 @@
 + (LMInternetKeychainItem *)internetKeychainItemForServer:(NSString *)serverString withUsername:(NSString *)usernameString path:(NSString *)pathString port:(int)port protocol:(SecProtocolType)protocol;
 + (LMInternetKeychainItem *)addInternetKeychainItemForServer:(NSString *)serverString withUsername:(NSString *)usernameString password:(NSString *)passwordString path:(NSString *)pathString port:(int)port protocol:(SecProtocolType)protocol;
 
-+ (id)internetKeychainItem:(SecKeychainItemRef)item forServer:(NSString *)server username:(NSString *)username password:(NSString *)password path:(NSString *)path port:(int)port protocol:(SecProtocolType)protocol;
++ (instancetype)internetKeychainItem:(SecKeychainItemRef)item forServer:(NSString *)server username:(NSString *)username password:(NSString *)password path:(NSString *)path port:(int)port protocol:(SecProtocolType)protocol;
 - (NSString *)server;
 - (NSString *)path;
 - (int)port;

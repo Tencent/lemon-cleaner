@@ -12,7 +12,7 @@
 
 @implementation LMNetProcRowView
 
-- (id)initWithFrame:(NSRect)frameRect
+- (instancetype)initWithFrame:(NSRect)frameRect
 {
     if (self = [super initWithFrame:frameRect])
     {

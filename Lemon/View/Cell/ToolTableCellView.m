@@ -43,7 +43,7 @@ const int LMToolCellTopSpace = 10;
 
 @implementation ToolTableCellView
 
--(id)initWithFrame:(NSRect)frameRect{
+-(instancetype)initWithFrame:(NSRect)frameRect{
     self = [super initWithFrame:frameRect];
     if (self) {
         [self setupUI];

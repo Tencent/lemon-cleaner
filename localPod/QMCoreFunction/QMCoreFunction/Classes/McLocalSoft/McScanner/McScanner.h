@@ -11,7 +11,7 @@
 
 @interface McScanner : NSObject
 
-+ (id)scanner;
++ (instancetype)scanner;
 
 - (NSArray *)results;
 

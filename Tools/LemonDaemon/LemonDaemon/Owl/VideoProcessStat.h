@@ -10,7 +10,7 @@
 
 @interface VideoProcessStat : NSObject
 
-- (id)initWithWhiteArray:(NSArray*)array;
+- (instancetype)initWithWhiteArray:(NSArray*)array;
 - (NSMutableArray*)gradVedioProcessInfo;
 - (void)startCollectProcessInfo;
 - (void)stopCollectProcessInfo;

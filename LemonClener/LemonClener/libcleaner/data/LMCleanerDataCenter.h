@@ -54,7 +54,7 @@ typedef enum {
 @property (nonatomic, strong) NSMutableArray *subcateStatusArr;
 @property (nonatomic, assign) QMFullDiskAuthorationStatus authStatus;//完全磁盘访问权限的状态，每次上来如果没有权限，在第一次扫描生命期间都是无权限，直到下一次扫描
 
-+(id)shareInstance;
++(instancetype)shareInstance;
 
 //增加一条清理记录 按照category来进行存储
 -(void)addCleanRecordWithTotalSize:(UInt64) totalSize sysSize:(UInt64)sysSize appSize:(UInt64)appSize intSize:(UInt64)intSize cleanType:(NSInteger) cleanType fileNum:(NSUInteger) fileNum oprateTime:(NSUInteger) oprateTime;

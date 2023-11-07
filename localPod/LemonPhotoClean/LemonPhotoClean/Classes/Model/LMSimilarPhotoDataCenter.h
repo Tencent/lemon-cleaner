@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface LMSimilarPhotoDataCenter : NSObject
 
-+(id)shareInstance;
++(instancetype)shareInstance;
 
 -(void)addNewResultWithSourcePathKey:(NSString *)md5_key groupPathKey:(NSString *)dateString dictionary:(NSString *) result_dictionary;
 

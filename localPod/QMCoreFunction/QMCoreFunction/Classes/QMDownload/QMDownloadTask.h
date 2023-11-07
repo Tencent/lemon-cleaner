@@ -20,6 +20,6 @@
 @property (nonatomic, assign) id<QMDownloadTaskDelegate> delegate;
 @property (nonatomic, copy) NSString *downloadDirectory;
 
-- (id)initWithItem:(QMDownloadItem *)item;
+- (instancetype)initWithItem:(QMDownloadItem *)item;
 
 @end

@@ -15,7 +15,7 @@
 
 @interface MasLoginItemManager : NSObject<MASXPCAgent>
 
-+ (id)sharedManager;
++ (instancetype)sharedManager;
 
 -(BOOL) enableLoginItemAndXpcAtGuidePage;
 //通知托盘自动退出

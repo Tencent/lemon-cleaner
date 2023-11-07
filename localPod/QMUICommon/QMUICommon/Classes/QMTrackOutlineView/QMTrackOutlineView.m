@@ -20,7 +20,7 @@ NSString *QMTrackRowDidChangedNotification = @"QMTrackRowDidChangedNotification"
 @synthesize overView;
 @synthesize showLevel;
 
-- (id)initWithFrame:(NSRect)frameRect
+- (instancetype)initWithFrame:(NSRect)frameRect
 {
     self = [super initWithFrame:frameRect];
     if (self)
@@ -30,7 +30,7 @@ NSString *QMTrackRowDidChangedNotification = @"QMTrackRowDidChangedNotification"
     return self;
 }
 
-- (id)initWithCoder:(NSCoder *)aDecoder
+- (instancetype)initWithCoder:(NSCoder *)aDecoder
 {
     self = [super initWithCoder:aDecoder];
     if (self)

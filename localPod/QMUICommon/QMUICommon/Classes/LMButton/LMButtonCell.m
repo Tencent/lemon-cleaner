@@ -10,20 +10,20 @@
 
 @implementation LMButtonCell
 
--(id) init {
+-(instancetype) init {
     self = [super init];
     if (self) {
     }
     return self;
 }
 
--(id) initWithCoder:(NSCoder *)decoder {
+-(instancetype) initWithCoder:(NSCoder *)decoder {
     return [super initWithCoder:decoder];
 }
--(id) initImageCell:(NSImage *)image {
+-(instancetype) initImageCell:(NSImage *)image {
     return [super initImageCell:image];
 }
--(id) initTextCell:(NSString *)string {
+-(instancetype) initTextCell:(NSString *)string {
     return [super initTextCell:string];
 }
 

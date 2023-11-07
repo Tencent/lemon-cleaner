@@ -34,7 +34,7 @@ NSString*  McLocalSoftManagerUpdateListKey = @"McLocalSoftManagerUpdateListKey";
 NSString*  McLocalSoftManagerFlagKey = @"McLocalSoftManagerFlagKey";
 NSString*  McLocalSoftManagerFinishKey = @"McLocalSoftManagerFinishKey";
 
-+ (id)sharedManager
++ (instancetype)sharedManager
 {
     static id instance = nil;
     static dispatch_once_t onceToken;
@@ -44,7 +44,7 @@ NSString*  McLocalSoftManagerFinishKey = @"McLocalSoftManagerFinishKey";
     return instance;
 }
 
-- (id)init
+- (instancetype)init
 {
     self = [super init];
     if (self)

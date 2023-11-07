@@ -15,7 +15,7 @@
 
 @interface QMValueHistory : NSObject
 @property (readonly) NSArray *items;
-- (id)initWithCapacity:(NSUInteger)capacity;
+- (instancetype)initWithCapacity:(NSUInteger)capacity;
 - (void)feed:(NSValue *)value;
 - (void)clear;
 - (NSArray *)valueArray;

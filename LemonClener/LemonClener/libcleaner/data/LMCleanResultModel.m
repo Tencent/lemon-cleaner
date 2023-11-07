@@ -10,7 +10,7 @@
 
 @implementation LMCleanResultModel
 
--(id)initWithCreateTime:(long long) createTime{
+-(instancetype)initWithCreateTime:(long long) createTime{
     self = [super init];
     if (self) {
         self.resultId = 0;
@@ -27,7 +27,7 @@
     return self;
 }
 
--(id)initWithResultId:(NSInteger) resultId totalSize:(long long) totalSize sysSize:(long long)sysSize appSize:(long long)appSize intSize:(long long)intSize cleanType:(CleanResultType) cleanType fileNum:(NSUInteger) fileNum oprateTime:(long long)oprateTime createTime:(long long) createTime{
+-(instancetype)initWithResultId:(NSInteger) resultId totalSize:(long long) totalSize sysSize:(long long)sysSize appSize:(long long)appSize intSize:(long long)intSize cleanType:(CleanResultType) cleanType fileNum:(NSUInteger) fileNum oprateTime:(long long)oprateTime createTime:(long long) createTime{
     self = [super init];
     if(self){
         self.resultId = resultId;

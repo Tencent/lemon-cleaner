@@ -16,7 +16,7 @@
 
 @implementation QMSafeMutableDictionary
 
-- (id)init
+- (instancetype)init
 {
     self = [super init];
     if (self) {
@@ -28,7 +28,7 @@
     return self;
 }
 
-- (id)initWithCapacity:(NSUInteger)numItems
+- (instancetype)initWithCapacity:(NSUInteger)numItems
 {
     self = [super init];
     if (self)
@@ -41,7 +41,7 @@
     return self;
 }
 
-- (id)initWithObjects:(const id [])objects forKeys:(const id<NSCopying> [])keys count:(NSUInteger)cnt
+- (instancetype)initWithObjects:(const id [])objects forKeys:(const id<NSCopying> [])keys count:(NSUInteger)cnt
 {
     self = [self init];
     if (self)

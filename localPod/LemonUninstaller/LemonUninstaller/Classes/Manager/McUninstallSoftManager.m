@@ -48,7 +48,7 @@ NSString*  McUninstallSoftManagerChangedNotification = @"McUninstallSoftManagerC
     return instance;
 }
 
-- (id)init
+- (instancetype)init
 {
     self = [super init];
     if (self)

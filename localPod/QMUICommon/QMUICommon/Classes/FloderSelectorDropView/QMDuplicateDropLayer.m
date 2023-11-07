@@ -18,7 +18,7 @@
 
 @implementation QMDuplicateDropLayer
 
-- (id)initWithFrame:(NSRect)rect
+- (instancetype)initWithFrame:(NSRect)rect
 {
     if (self = [super init])
     {

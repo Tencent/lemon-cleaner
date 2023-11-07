@@ -32,7 +32,7 @@
 
 @implementation LMSpaceView
 
-- (id)initWithFrame:(NSRect)frameRect {
+- (instancetype)initWithFrame:(NSRect)frameRect {
     self = [super initWithFrame:frameRect];
     if (self) {
         [self setupUI:frameRect];

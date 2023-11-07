@@ -14,7 +14,7 @@
     NSUInteger _capacity;
 }
 @synthesize items = _items;
-- (id)initWithCapacity:(NSUInteger)capacity
+- (instancetype)initWithCapacity:(NSUInteger)capacity
 {
     self = [super init];
     if (self) {

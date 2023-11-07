@@ -12,6 +12,6 @@
 @property (nonatomic, assign) NSInteger status;
 @property (nonatomic, strong) id object;
 
-+ (id)itemWithObject:(id)object;
++ (instancetype)itemWithObject:(id)object;
 
 @end

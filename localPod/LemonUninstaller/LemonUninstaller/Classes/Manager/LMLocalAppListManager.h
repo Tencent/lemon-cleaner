@@ -36,7 +36,7 @@ enum
 typedef NSInteger LMSortType;
 
 @interface LMLocalAppListManager : NSObject
-+ (id)defaultManager;
++ (instancetype)defaultManager;
 - (NSArray<LMLocalApp *> *)enumLocalAppsWithPath;
 - (void)scanAllAppsItemAsync:(LMSortType)sortType  byAscendingOrder:(BOOL)ascendingOrder;
 - (BOOL)fastScan:(LMSortType)sortType  byAscendingOrder:(BOOL)ascendingOrder;

@@ -57,7 +57,7 @@ const float kDuplicateMaxSearchProgress = kDuplicateIndexFileProgress + kDuplica
 
 
 
-- (id)init {
+- (instancetype)init {
     if (self = [super init]) {
         _excludeArray = @[[@"~/Library/" stringByExpandingTildeInPathIgnoreSandbox], @"/Library", @"/System",
                 @"/Applications", @"/bin", @"/cores", @"/sbin", @"/usr", @"~/.Trash/",

@@ -100,7 +100,7 @@
     return self;
 }
 
-- (id)initWithFrame:(NSRect)frame
+- (instancetype)initWithFrame:(NSRect)frame
 {
     self = [super initWithFrame:frame];
     if (self) {
@@ -111,7 +111,7 @@
     return self;
 }
 
-- (id)initWithFrame:(NSRect)frame progressViewType:(QMProgressViewType) progressViewType
+- (instancetype)initWithFrame:(NSRect)frame progressViewType:(QMProgressViewType) progressViewType
 {
     self = [super initWithFrame:frame];
     if (self) {

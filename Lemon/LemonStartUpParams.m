@@ -19,7 +19,7 @@ NSString const *kMonitorRuning = @"kMonitorRuning";
     });
     return instance;
 }
-- (id)init{
+- (instancetype)init{
     self = [super init];
     if (self) {
         _paramsCmd = 0;

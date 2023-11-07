@@ -20,7 +20,7 @@
 
 @implementation AudioObserver
 
-- (id)init{
+- (instancetype)init{
     self = [super init];
     if (self) {
         _audioDevices = [[NSMutableArray alloc] init];

@@ -11,7 +11,7 @@
 
 @implementation LMCleanShowModel
 
--(id)initWithDateTime:(NSString *)dateTime{
+-(instancetype)initWithDateTime:(NSString *)dateTime{
     self = [super init];
     if (self) {
         self.totalSize = 0;
@@ -24,7 +24,7 @@
     return self;
 }
 
--(id)initTotalSize:(long long) totalSize sysJunkModel:(long long)systemJunkSize appJunkModel:(long long)appJunkSize interJunkModel:(long long)internetJunkSize dateTime:(NSString *) dateTime{
+-(instancetype)initTotalSize:(long long) totalSize sysJunkModel:(long long)systemJunkSize appJunkModel:(long long)appJunkSize interJunkModel:(long long)internetJunkSize dateTime:(NSString *) dateTime{
     self = [super init];
     if(self){
         self.totalSize = totalSize;

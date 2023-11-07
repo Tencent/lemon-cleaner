@@ -52,7 +52,7 @@
 
 @implementation LemonMainWndController
 
-- (id)init
+- (instancetype)init
 {
     static dispatch_once_t onceToken;
     static LemonMainWndController *mainWindow;

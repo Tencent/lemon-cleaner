@@ -46,7 +46,7 @@
 @synthesize isExecuting,isCancelled,isFinished;
 @synthesize item,delegate,downloadDirectory;
 
-- (id)initWithItem:(QMDownloadItem *)aItem
+- (instancetype)initWithItem:(QMDownloadItem *)aItem
 {
     self = [super init];
     if (self)

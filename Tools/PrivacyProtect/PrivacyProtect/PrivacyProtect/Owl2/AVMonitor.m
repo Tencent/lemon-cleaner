@@ -27,7 +27,7 @@ extern os_log_t logHandle;
 
 //init
 // create XPC connection & set remote obj interface
--(id)init
+-(instancetype)init
 {
     self = [super init];
     if (nil != self)

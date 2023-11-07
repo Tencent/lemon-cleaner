@@ -16,7 +16,7 @@
     CALayer * _backLayer;
     CGFloat _value;
 }
-- (id)initWithFrame:(NSRect)rect;
+- (instancetype)initWithFrame:(NSRect)rect;
 
 - (void)setProgressImagePostion:(CGPoint)point;
 - (CGPoint)progressImagePostion;

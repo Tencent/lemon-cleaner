@@ -31,7 +31,7 @@
 @implementation McUninstallSelectedCellView
 @synthesize cellRow;
 
-- (id)initWithCoder:(NSCoder *)aDecoder
+- (instancetype)initWithCoder:(NSCoder *)aDecoder
 {
     self = [super initWithCoder:aDecoder];
     if (self)
@@ -41,7 +41,7 @@
     return self;
 }
 
-- (id)initWithFrame:(NSRect)frameRect
+- (instancetype)initWithFrame:(NSRect)frameRect
 {
     self = [super initWithFrame:frameRect];
     if (self)
@@ -107,7 +107,7 @@
 @synthesize delegate;
 @synthesize soft;
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
@@ -116,7 +116,7 @@
     return self;
 }
 
-- (id)init
+- (instancetype)init
 {
     self = [super initWithNibName:@"McUninstallSelectedViewController" bundle:[NSBundle bundleForClass:self.class]];
     if (self)

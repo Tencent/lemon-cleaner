@@ -8,7 +8,7 @@
 #import <Foundation/Foundation.h>
 
 @interface AudioProcessStat : NSObject
-- (id)initWithWhiteArray:(NSArray*)array;
+- (instancetype)initWithWhiteArray:(NSArray*)array;
 - (NSMutableArray*)gradAudioProcessInfo;
 - (void)startCollectProcessInfo;
 - (void)stopCollectProcessInfo;

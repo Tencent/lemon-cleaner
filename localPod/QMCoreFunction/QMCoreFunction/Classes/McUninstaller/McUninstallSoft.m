@@ -29,7 +29,7 @@ NSString *McUninstallSoftPathKey = @"McUninstallSoftPathKey";
 @synthesize localSoft;
 @synthesize items;
 
-+ (id)uninstallSoftWithSoft:(McLocalSoft *)localsoft
++ (instancetype)uninstallSoftWithSoft:(McLocalSoft *)localsoft
 {
     McUninstallSoft *uninstallerSoft = [[self alloc] init];
     uninstallerSoft.localSoft = localsoft;
@@ -40,7 +40,7 @@ NSString *McUninstallSoftPathKey = @"McUninstallSoftPathKey";
     return uninstallerSoft;
 }
 
-+ (id)uninstallSoftWithPath:(NSString *)filePath
++ (instancetype)uninstallSoftWithPath:(NSString *)filePath
 {
     McLocalSoft *localsoft = [McLocalSoft softWithPath:filePath];
     if (!localsoft)
@@ -556,7 +556,7 @@ NSString *McUninstallSoftPathKey = @"McUninstallSoftPathKey";
 @implementation McUninstallSoftGroup
 @synthesize groupInfo;
 
-- (id)init
+- (instancetype)init
 {
     self = [super init];
     if (self)

@@ -67,8 +67,8 @@ static NSString const *SoftwareFileTypeName[12] = {
 @property (nonatomic, readonly) NSDictionary *pathInfo;
 @property (nonatomic, readonly) NSArray *items;
 
-+ (id)scannerWithPath:(NSString *)filePath;
-+ (id)scannerWithSoft:(McLocalSoft *)soft;
++ (instancetype)scannerWithPath:(NSString *)filePath;
++ (instancetype)scannerWithSoft:(McLocalSoft *)soft;
 
 - (void)start;
 

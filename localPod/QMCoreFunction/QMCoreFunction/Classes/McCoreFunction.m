@@ -22,7 +22,7 @@ BOOL gIsAppStoreVersion = NO;
     init_xpc();
 }
 
-- (id)init
+- (instancetype)init
 {
     self = [super init];
     if (self)
@@ -36,7 +36,7 @@ BOOL gIsAppStoreVersion = NO;
 }
 
 
-+ (id)shareCoreFuction
++ (instancetype)shareCoreFuction
 {
     static dispatch_once_t onceToken = 0;
     __strong static id instance = nil;

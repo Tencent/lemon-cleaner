@@ -10,7 +10,7 @@
 
 @implementation QMBubbleWindow
 
-- (id)initWithContentRect:(NSRect)contentRect
+- (instancetype)initWithContentRect:(NSRect)contentRect
 {
     self = [super initWithContentRect:contentRect styleMask:NSBorderlessWindowMask backing:NSBackingStoreBuffered defer:YES];
     if (self)
@@ -24,7 +24,7 @@
     return self;
 }
 
-- (id)initWithContentRect:(NSRect)contentRect styleMask:(NSUInteger)aStyle backing:(NSBackingStoreType)bufferingType defer:(BOOL)flag
+- (instancetype)initWithContentRect:(NSRect)contentRect styleMask:(NSUInteger)aStyle backing:(NSBackingStoreType)bufferingType defer:(BOOL)flag
 {
     return [self initWithContentRect:contentRect];
 }

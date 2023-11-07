@@ -17,7 +17,7 @@
 
 @implementation LMMainViewController
 
--(id)init{
+-(instancetype)init{
     self = [super initWithNibName:NSStringFromClass(self.class) bundle:[NSBundle bundleForClass:self.class]];
     if (self) {
         

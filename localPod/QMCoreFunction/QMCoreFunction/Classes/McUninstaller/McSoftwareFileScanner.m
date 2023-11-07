@@ -106,7 +106,7 @@
 @synthesize items;
 @synthesize pathInfo;
 
-+ (id)scannerWithSoft:(McLocalSoft *)soft
++ (instancetype)scannerWithSoft:(McLocalSoft *)soft
 {
     if (!soft)
     {
@@ -117,7 +117,7 @@
     return scanner;
 }
 
-+ (id)scannerWithPath:(NSString *)filePath
++ (instancetype)scannerWithPath:(NSString *)filePath
 {
     McLocalSoft *soft = [McLocalSoft softWithPath:filePath];
     if (!soft)

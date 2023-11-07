@@ -15,7 +15,7 @@ extern NSString *QMDownloadListChangedNotification;
 @property (nonatomic, strong) NSString *downloadDirectory;
 @property (nonatomic, assign) NSInteger concurrentCount;
 
-+ (id)sharedManager;
++ (instancetype)sharedManager;
 
 - (NSArray *)downloadItems;
 - (QMDownloadItem *)itemWithContext:(id)context;

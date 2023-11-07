@@ -18,7 +18,7 @@
 @synthesize northbgTemp;
 @synthesize hddTemp;
 
-- (id) init
+- (instancetype) init
 {
     if (self = [super init])
     {

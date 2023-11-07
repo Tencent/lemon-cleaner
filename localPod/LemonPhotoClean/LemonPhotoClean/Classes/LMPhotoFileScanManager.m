@@ -48,7 +48,7 @@ const float kMaxSearchProgress = 0.2f;
 
 #define kProtectArray @[[@"~/Library/" stringByExpandingTildeInPath], @"/Library", @"/System", @"/Applications", @"/bin", @"/cores", @"/sbin", @"/usr", @"~/.Trash/",[@"~/.Trash/" stringByExpandingTildeInPath]]
 
-- (id)init
+- (instancetype)init
 {
     if (self = [super init])
     {

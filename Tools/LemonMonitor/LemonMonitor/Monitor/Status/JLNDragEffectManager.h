@@ -68,7 +68,7 @@
 
 #pragma mark Factory
 
-+ (id)sharedDragEffectManager;
++ (instancetype)sharedDragEffectManager;
 
 
 #pragma mark Drag Configuration & Update

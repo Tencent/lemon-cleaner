@@ -10,7 +10,7 @@
 
 @interface QMViewAnimation : NSViewAnimation
 
-+ (id)animationWithInfos:(NSArray *)viewAnimations;
++ (instancetype)animationWithInfos:(NSArray *)viewAnimations;
 - (void)startAnimationWithHandler:(void(^)(BOOL finished))handler;
 
 @end

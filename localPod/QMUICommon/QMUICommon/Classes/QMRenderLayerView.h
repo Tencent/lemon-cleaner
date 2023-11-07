@@ -12,6 +12,6 @@
 @interface QMRenderLayerView : NSView
 @property (nonatomic, assign) BOOL staticMode;
 
-- (id)initWithLayer:(CALayer *)layer;
+- (instancetype)initWithLayer:(CALayer *)layer;
 
 @end

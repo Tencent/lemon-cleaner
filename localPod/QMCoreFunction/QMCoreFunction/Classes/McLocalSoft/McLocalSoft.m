@@ -23,7 +23,7 @@
 @synthesize icon;
 @synthesize type;
 
-+ (id)softWithPath:(NSString *)filePath
++ (instancetype)softWithPath:(NSString *)filePath
 {
     NSBundle *bundle = [NSBundle bundleWithPath:filePath];
     if (!bundle)
@@ -182,7 +182,7 @@
     *modifyDateRef = modifyDate;
 }
 
-+ (id)softWithBundle:(NSBundle *)bundle
++ (instancetype)softWithBundle:(NSBundle *)bundle
 {
     if (!bundle)
     {

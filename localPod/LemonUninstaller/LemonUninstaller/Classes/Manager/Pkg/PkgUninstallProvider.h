@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface PkgUninstallProvider : NSObject
 
-- (id)initWithPkgBundleId:(NSString *)pkgBundleId withKeyWording:(NSString *)keyWord;
+- (instancetype)initWithPkgBundleId:(NSString *)pkgBundleId withKeyWording:(NSString *)keyWord;
 
 - (void)searchAllItems;
 

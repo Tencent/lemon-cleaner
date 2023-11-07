@@ -52,7 +52,7 @@
     return instance;
 }
 
-- (id)init {
+- (instancetype)init {
     self = [super init];
     NSLog(@"LemonBizManager init begin");
     if (self) {

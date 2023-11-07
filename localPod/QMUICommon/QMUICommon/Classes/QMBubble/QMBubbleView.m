@@ -21,7 +21,7 @@
 @synthesize direction,drawArrow,arrowHeight,arrowWidth,arrowDistance,cornerRadius;
 @synthesize borderWidth,borderColor,backgroudColor;
 
-- (id)initWithFrame:(NSRect)frameRect
+- (instancetype)initWithFrame:(NSRect)frameRect
 {
     self = [super initWithFrame:frameRect];
     if (self)
@@ -31,7 +31,7 @@
     return self;
 }
 
-- (id)initWithCoder:(NSCoder *)aDecoder
+- (instancetype)initWithCoder:(NSCoder *)aDecoder
 {
     self = [super initWithCoder:aDecoder];
     if (self)

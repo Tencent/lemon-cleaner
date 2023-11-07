@@ -24,7 +24,7 @@
     CALayer * _addIconLayer;
 
 }
-- (id)initWithFrame:(NSRect)rect addTips:(NSString *)tips;
+- (instancetype)initWithFrame:(NSRect)rect addTips:(NSString *)tips;
 
 - (void)showNormalState:(BOOL)animation;
 - (void)showCompleteState:(BOOL)animation;

@@ -11,7 +11,7 @@
 
 @implementation QMTransparentWindow
 
-- (id)initWithContentRect:(NSRect)contentRect
+- (instancetype)initWithContentRect:(NSRect)contentRect
                 styleMask:(NSUInteger)aStyle
                   backing:(NSBackingStoreType)bufferingType
                     defer:(BOOL)flag {
@@ -27,7 +27,7 @@
     return self;
 }
 
-- (id)initWithContentRect:(NSRect)contentRect
+- (instancetype)initWithContentRect:(NSRect)contentRect
                 styleMask:(NSUInteger)aStyle
                   backing:(NSBackingStoreType)bufferingType
                     defer:(BOOL)flag

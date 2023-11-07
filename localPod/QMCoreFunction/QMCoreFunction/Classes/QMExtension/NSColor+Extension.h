@@ -50,6 +50,6 @@
 // 返回autoreleaseCGColor对象
 - (CGColorRef)convertToCGColor;
 
-+ (id)createCGColorWithSRGB:(float)r green:(float)g blue:(float)b alpha:(float)alpha;
++ (instancetype)createCGColorWithSRGB:(float)r green:(float)g blue:(float)b alpha:(float)alpha;
 
 @end

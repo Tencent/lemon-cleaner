@@ -34,7 +34,7 @@
 
 @implementation STPrivilegedTask
 
-- (id)init
+- (instancetype)init
 {
     if ((self = [super init])) 
     {
@@ -48,7 +48,7 @@
     return self;
 }
 
--(id)initWithLaunchPath: (NSString *)path arguments: (NSArray *)args
+-(instancetype)initWithLaunchPath: (NSString *)path arguments: (NSArray *)args
 {
     if ((self = [self initWithLaunchPath: path]))
     {
@@ -57,7 +57,7 @@
     return self;
 }
 
--(id)initWithLaunchPath: (NSString *)path
+-(instancetype)initWithLaunchPath: (NSString *)path
 {
     if ((self = [self init]))
     {

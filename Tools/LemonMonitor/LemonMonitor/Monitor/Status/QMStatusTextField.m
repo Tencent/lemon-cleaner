@@ -32,7 +32,7 @@
 }
 
 //这就是你需要去实现的一个方法，根据属性返回一个动画对象
-+ (id)defaultAnimationForKey:(NSString *)key
++ (instancetype)defaultAnimationForKey:(NSString *)key
 {
     if ([key isEqualToString:@"progress"])
     {

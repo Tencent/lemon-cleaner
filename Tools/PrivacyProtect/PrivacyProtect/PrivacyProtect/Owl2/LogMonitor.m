@@ -42,7 +42,7 @@ static OSLogEvent* parseEvent(OSLogEventProxy* event)
 
 //init
 // load private framework, etc
--(id)init
+-(instancetype)init
 {
     //error
     NSError* error = nil;

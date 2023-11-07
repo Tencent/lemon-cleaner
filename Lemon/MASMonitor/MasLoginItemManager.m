@@ -48,7 +48,7 @@
     [[NSDistributedNotificationCenter defaultCenter] removeObserver:self];
 }
 
-+ (id)sharedManager
++ (instancetype)sharedManager
 {
     static dispatch_once_t onceToken = 0;
     __strong static id instance = nil;

@@ -32,7 +32,7 @@
 
 @implementation QMEarlyWarning
 
-+ (id)sharedInstance
++ (instancetype)sharedInstance
 {
     static id instance = nil;
     static dispatch_once_t onceToken;
@@ -42,7 +42,7 @@
     return instance;
 }
 
-- (id)init
+- (instancetype)init
 {
     self = [super init];
     if (self)
