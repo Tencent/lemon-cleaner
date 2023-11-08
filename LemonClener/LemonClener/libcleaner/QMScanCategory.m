@@ -18,6 +18,7 @@
 #import "QMXcodeScan.h"
 #import "QMCacheEnumerator.h"
 #import "QMWechatScan.h"
+#import "QMWechatScan_MacOS_14_0.h"
 
 @interface QMScanCategory()<QMScanDelegate>
 
@@ -39,7 +40,7 @@
         m_mailScan = [[QMMailScan alloc] init];
         m_softScan = [[QMSoftScan alloc] init];
         m_xcodeScan = [[QMXcodeScan alloc] init];
-        m_wechatScan = [[QMWechatScan alloc] init];
+        m_wechatScan = [self wechatScanObject];
         m_appUnlessFile.delegate = self;
         m_brokenRegister.delegate = self;
         m_directoryScan.delegate = self;
@@ -60,6 +61,14 @@
     m_mailScan.delegate = nil;
     m_softScan.delegate = nil;
     m_xcodeScan.delegate = nil;
+}
+
+- (QMWechatScan *)wechatScanObject {
+    if (@available(macOS 14.0, *)) {
+        return [[QMWechatScan_MacOS_14_0 alloc] init];
+    } else {
+        return [[QMWechatScan alloc] init];
+    }
 }
 
 - (void)scanActiontem:(QMActionItem *)actionItem

@@ -51,6 +51,8 @@
 
 - (id)initWithPath:(NSString *)rpath;
 
+- (id)initWithPath:(NSString *)rpath icon:(NSImage *)icon;
+
 - (id)initWithLanguageKey:(NSString *)key;
 
 - (void)addResultWithPathArray:(NSArray *)pathArray;
