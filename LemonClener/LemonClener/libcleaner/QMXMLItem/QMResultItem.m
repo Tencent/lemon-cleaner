@@ -58,18 +58,30 @@
         @catch (NSException *exception) {
             
         }
-        if (@available(macOS 14.0, *)) {
-            NSArray *rpathDir = [rpath componentsSeparatedByString:@"/"];
-            title = rpathDir.lastObject;
-        } else {
-            title = [[NSFileManager defaultManager] displayNameAtPath:rpath];
-        }
+        title = [[NSFileManager defaultManager] displayNameAtPath:rpath];
         path = rpath;
         showPath = rpath;
     }
     return self;
 }
 
+- (id)initWithPath:(NSString *)rpath icon:(NSImage *)icon
+{
+    if (self = [self init])
+    {
+        static CGSize size;
+        static dispatch_once_t onceToken;
+        dispatch_once(&onceToken, ^{
+            size = NSMakeSize(kIconImageSize, kIconImageSize);
+        });
+        [icon setSize:size];
+        iconImage = icon;
+        title = [rpath lastPathComponent];
+        path = rpath;
+        showPath = rpath;
+    }
+    return self;
+}
 
 - (id)initWithLanguageKey:(NSString *)key
 {

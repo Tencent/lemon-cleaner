@@ -6,13 +6,10 @@
 //  Copyright © 2019 Tencent. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import "QMBaseScan.h"
 #import "QMActionItem.h"
 
-@interface QMWechatScan : NSObject
-
-@property (weak) id<QMScanDelegate> delegate;
-
+@interface QMWechatScan : QMBaseScan
 //扫描头像图片
 -(void)scanWechatAvatar:(QMActionItem *)actionItem;
 
