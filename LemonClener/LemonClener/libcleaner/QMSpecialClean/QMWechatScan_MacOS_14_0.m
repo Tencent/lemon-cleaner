@@ -136,8 +136,13 @@ static NSString * const kCommonPartsOfPath = @"/Message/MessageTemp";
 
 // 递归找出folders下的所有图片文件并返回
 - (void)scanFileWithFolders:(NSArray *)folders shell:(NSString *)shellString continueExec:(BOOL(^)(NSString *path))continueExec eachCompletion:(void(^)(NSArray *))completion {
-    for (NSString *path in folders) {
+    for(NSInteger i = 0; i < folders.count; i++) {
         @autoreleasepool {
+            NSString *path = folders[i];
+            if ([self.delegate scanProgressInfo:(i + 1.0) / [folders count] scanPath:path resultItem:nil]) {
+                break;
+            }
+            
             if (continueExec && !continueExec(path)) {
                 continue;
             }
