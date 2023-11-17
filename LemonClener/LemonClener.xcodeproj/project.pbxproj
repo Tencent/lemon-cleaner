@@ -200,10 +200,6 @@
 		7AE9F5F72865B8A60063E28E /* garbage_appstore_en.xml in Resources */ = {isa = PBXBuildFile; fileRef = 7AE9F5F32865B8A60063E28E /* garbage_appstore_en.xml */; };
 		7AE9F5F82865B8A60063E28E /* garbage_appstore_zh.xml in Resources */ = {isa = PBXBuildFile; fileRef = 7AE9F5F42865B8A60063E28E /* garbage_appstore_zh.xml */; };
 		805D3473EBC42DA7B37B9A80 /* Pods_LemonClener.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0CAB11E4EF733879C425039A /* Pods_LemonClener.framework */; };
-		B7B2B8552AF3761B0051F4E6 /* QMBuglyProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = B7B2B8532AF3761B0051F4E6 /* QMBuglyProxy.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		B7B2B8562AF3761B0051F4E6 /* QMBuglyProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = B7B2B8542AF3761B0051F4E6 /* QMBuglyProxy.m */; };
-		B7B2B85A2AF37B350051F4E6 /* QMScanReporter.h in Headers */ = {isa = PBXBuildFile; fileRef = B7B2B8582AF37B350051F4E6 /* QMScanReporter.h */; };
-		B7B2B85B2AF37B350051F4E6 /* QMScanReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = B7B2B8592AF37B350051F4E6 /* QMScanReporter.m */; };
 		B7B7038D2AFB7571002420C1 /* QMBaseScan.h in Headers */ = {isa = PBXBuildFile; fileRef = B7B7038B2AFB7571002420C1 /* QMBaseScan.h */; };
 		B7B7038E2AFB7571002420C1 /* QMBaseScan.m in Sources */ = {isa = PBXBuildFile; fileRef = B7B7038C2AFB7571002420C1 /* QMBaseScan.m */; };
 		B7E252E72AFA75C600201DF9 /* QMWechatScan_MacOS_14_0.h in Headers */ = {isa = PBXBuildFile; fileRef = B7E252E52AFA75C600201DF9 /* QMWechatScan_MacOS_14_0.h */; };
@@ -563,10 +559,6 @@
 		7AE9F5F32865B8A60063E28E /* garbage_appstore_en.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = garbage_appstore_en.xml; sourceTree = "<group>"; };
 		7AE9F5F42865B8A60063E28E /* garbage_appstore_zh.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = garbage_appstore_zh.xml; sourceTree = "<group>"; };
 		A9034E812C8560B577617437 /* Pods-LemonClener.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LemonClener.debug.xcconfig"; path = "../Pods/Target Support Files/Pods-LemonClener/Pods-LemonClener.debug.xcconfig"; sourceTree = "<group>"; };
-		B7B2B8532AF3761B0051F4E6 /* QMBuglyProxy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QMBuglyProxy.h; sourceTree = "<group>"; };
-		B7B2B8542AF3761B0051F4E6 /* QMBuglyProxy.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QMBuglyProxy.m; sourceTree = "<group>"; };
-		B7B2B8582AF37B350051F4E6 /* QMScanReporter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QMScanReporter.h; sourceTree = "<group>"; };
-		B7B2B8592AF37B350051F4E6 /* QMScanReporter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QMScanReporter.m; sourceTree = "<group>"; };
 		B7B7038B2AFB7571002420C1 /* QMBaseScan.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QMBaseScan.h; sourceTree = "<group>"; };
 		B7B7038C2AFB7571002420C1 /* QMBaseScan.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QMBaseScan.m; sourceTree = "<group>"; };
 		B7E252E52AFA75C600201DF9 /* QMWechatScan_MacOS_14_0.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QMWechatScan_MacOS_14_0.h; sourceTree = "<group>"; };
@@ -974,24 +966,6 @@
 				5CB0174A218AC0CD00247BAD /* arrow_00029@2x.png */,
 			);
 			path = arrow;
-			sourceTree = "<group>";
-		};
-		B7B2B8522AF375700051F4E6 /* QMBuglyProxy */ = {
-			isa = PBXGroup;
-			children = (
-				B7B2B8532AF3761B0051F4E6 /* QMBuglyProxy.h */,
-				B7B2B8542AF3761B0051F4E6 /* QMBuglyProxy.m */,
-			);
-			path = QMBuglyProxy;
-			sourceTree = "<group>";
-		};
-		B7B2B8572AF37AF50051F4E6 /* QMReport */ = {
-			isa = PBXGroup;
-			children = (
-				B7B2B8582AF37B350051F4E6 /* QMScanReporter.h */,
-				B7B2B8592AF37B350051F4E6 /* QMScanReporter.m */,
-			);
-			path = QMReport;
 			sourceTree = "<group>";
 		};
 		B7B7038A2AFB7552002420C1 /* Base */ = {
