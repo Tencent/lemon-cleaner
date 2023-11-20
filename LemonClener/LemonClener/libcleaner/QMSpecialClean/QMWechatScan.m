@@ -9,11 +9,6 @@
 #import "QMWechatScan.h"
 #import <QMCoreFunction/QMShellExcuteHelper.h>
 #import "QMResultItem.h"
-#import <sys/stat.h>
-
-@interface QMWechatScan ()
-@property (nonatomic, strong) NSMutableArray *resultArrWechatImage90DayAgo;
-@end
 
 @implementation QMWechatScan
 
@@ -92,7 +87,6 @@
     }
     //过滤90天前的图片
     NSMutableArray *resultArr = [NSMutableArray new];
-    self.resultArrWechatImage90DayAgo = [NSMutableArray new];
     for (NSString *path in pathArray) {
         @autoreleasepool {
             if (![path containsString:@"/Message/MessageTemp"]) {
@@ -103,15 +97,15 @@
             NSString *tempPath = nil;
             while ((tempPath = [dirEnum nextObject]) != nil) {
                 NSString *picPath = [path stringByAppendingPathComponent:tempPath];
-                [self queryFileTimeWithPath:picPath completion:^(NSTimeInterval extraIntervalModify, NSTimeInterval extraIntervalCreate) {
-                    if ((extraIntervalCreate < 90 * 24 * 60 * 60) || (extraIntervalModify < 90 * 24 * 60 * 60)) {
-                        [resultArr addObject:picPath];
-                    } else {
-                        if (@available(macOS 14.0, *)) {
-                            [self.resultArrWechatImage90DayAgo addObject:picPath];
-                        }
-                    }
-                }];
+                NSDictionary* attr = [[NSFileManager defaultManager] attributesOfItemAtPath:picPath error:nil];
+                NSTimeInterval createTime = [[attr objectForKey:NSFileCreationDate] timeIntervalSince1970];
+                NSTimeInterval modifyTime = [[attr objectForKey:NSFileModificationDate] timeIntervalSince1970];
+                NSTimeInterval nowInterval = [[NSDate date] timeIntervalSince1970];
+                NSTimeInterval extraIntervalModify = nowInterval - modifyTime;
+                NSTimeInterval extraIntervalCreate = nowInterval - createTime;
+                if ((extraIntervalCreate < 90 * 24 * 60 * 60) || (extraIntervalModify < 90 * 24 * 60 * 60)) {
+                    [resultArr addObject:picPath];
+                }
             }
         }
         
@@ -122,17 +116,6 @@
 
 //扫描聊天图片 90天前
 -(void)scanWechatImage90DayAgo:(QMActionItem *)actionItem{
-    
-    if (@available(macOS 14.0, *)) {
-        if (self.resultArrWechatImage90DayAgo.count > 0) {
-            /// 减少重复扫描
-            [self callbackResultArray:self.resultArrWechatImage90DayAgo.copy cleanType:actionItem.cleanType];
-            /// 清空
-            self.resultArrWechatImage90DayAgo = nil;
-            return;
-        }
-    }
-    
     NSArray *pathArray = [self getPathItemPathArr:actionItem shellString:@"mdfind -onlyin \"%@\" 'kMDItemDisplayName=\"Image\"'" keyword:@"Image"];
     if ([pathArray count] == 0) {
         return;
@@ -149,46 +132,21 @@
             NSString *tempPath = nil;
             while ((tempPath = [dirEnum nextObject]) != nil) {
                 NSString *picPath = [path stringByAppendingPathComponent:tempPath];
-                [self queryFileTimeWithPath:picPath completion:^(NSTimeInterval extraIntervalModify, NSTimeInterval extraIntervalCreate) {
-                    if ((extraIntervalCreate >= 90 * 24 * 60 * 60) && (extraIntervalModify >= 90 * 24 * 60 * 60)) {
-                        [resultArr addObject:picPath];
-                    }
-                }];
+                NSDictionary* attr = [[NSFileManager defaultManager] attributesOfItemAtPath:picPath error:nil];
+                NSTimeInterval createTime = [[attr objectForKey:NSFileCreationDate] timeIntervalSince1970];
+                NSTimeInterval modifyTime = [[attr objectForKey:NSFileModificationDate] timeIntervalSince1970];
+                NSTimeInterval nowInterval = [[NSDate date] timeIntervalSince1970];
+                NSTimeInterval extraIntervalModify = nowInterval - modifyTime;
+                NSTimeInterval extraIntervalCreate = nowInterval - createTime;
+                if ((extraIntervalCreate >= 90 * 24 * 60 * 60) && (extraIntervalModify >= 90 * 24 * 60 * 60)) {
+                    [resultArr addObject:picPath];
+                }
             }
+            
         }
     }
     
     [self callbackResultArray:resultArr cleanType:actionItem.cleanType];
-}
-
-- (void)queryFileTimeWithPath:(NSString *)path completion:(void(^)(NSTimeInterval extraIntervalModify, NSTimeInterval extraIntervalCreate))completion {
-    NSTimeInterval extraIntervalModify = 0;
-    NSTimeInterval extraIntervalCreate = 0;
-    if (@available(macOS 14.0, *)) {
-        /// 在macos 14.0 上通过NSFileManager获取文件元数据耗时较高。因为NSFileManager会包装文件中的所有元信息。
-        /// 在iOS 、tvOS、watchos新版本上增加了一个key值，不知道是否由于这个变更影响的。
-        /// struct stat 则可以按需获取，文件较多时，耗时更少
-        struct stat statbuf;
-        const char *cpath = [path fileSystemRepresentation];
-        if (cpath && stat(cpath, &statbuf) == 0) {
-            NSTimeInterval createTime = [[NSDate dateWithTimeIntervalSince1970:statbuf.st_ctime] timeIntervalSince1970];
-            NSTimeInterval modifyTime = [[NSDate dateWithTimeIntervalSince1970:statbuf.st_mtime] timeIntervalSince1970];
-            NSTimeInterval nowInterval = [[NSDate date] timeIntervalSince1970];
-            extraIntervalModify = nowInterval - modifyTime;
-            extraIntervalCreate = nowInterval - createTime;
-        }
-    } else {
-        NSDictionary* attr = [[NSFileManager defaultManager] attributesOfItemAtPath:path error:nil];
-        NSTimeInterval createTime = [[attr objectForKey:NSFileCreationDate] timeIntervalSince1970];
-        NSTimeInterval modifyTime = [[attr objectForKey:NSFileModificationDate] timeIntervalSince1970];
-        NSTimeInterval nowInterval = [[NSDate date] timeIntervalSince1970];
-        extraIntervalModify = nowInterval - modifyTime;
-        extraIntervalCreate = nowInterval - createTime;
-    }
-    
-    if (completion) {
-        completion(extraIntervalModify, extraIntervalCreate);
-    }
 }
 
 //扫描接收的文件
