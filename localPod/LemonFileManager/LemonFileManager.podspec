@@ -1,5 +1,5 @@
 #
-# Be sure to run `pod lib lint LemonBigOldFile.podspec' to ensure this is a
+# Be sure to run `pod lib lint LemonFileManager.podspec' to ensure this is a
 # valid spec before submitting.
 #
 # Any lines starting with a # are optional, but their use is encouraged
@@ -7,9 +7,9 @@
 #
 
 Pod::Spec.new do |s|
-  s.name             = 'LemonBigOldFile'
+  s.name             = 'LemonFileManager'
   s.version          = '0.1.0'
-  s.summary          = 'A short description of LemonBigOldFile.'
+  s.summary          = 'A short description of LemonFileManager.'
 
 # This description is used to generate tags and improve search results.
 #   * Think: What does it do? Why did you write it? What is the focus?
@@ -21,27 +21,24 @@ Pod::Spec.new do |s|
 TODO: Add long description of the pod here.
                        DESC
 
-  s.homepage         = 'https://github.com/lemon/LemonBigOldFile'
+  s.homepage         = 'https://github.com/Lemon/LemonFileManager'
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
-  s.author           = { 'lemon' => 'lemon@tencent.com' }
-  s.source           = { :git => 'https://github.com/lemon/LemonBigOldFile.git', :tag => s.version.to_s }
+  s.author           = { 'Lemon' => 'lemon@tencent.com' }
+  s.source           = { :git => 'https://github.com/Lemon/LemonFileManager.git', :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
   s.platform = :osx
   s.osx.deployment_target = "10.11"
 
-  s.source_files = 'LemonBigOldFile/Classes/**/*'
+  s.source_files = 'LemonFileManager/Classes/**/*'
 
-  s.resources = ['LemonBigOldFile/Assets/**/*']
-  
-  s.dependency 'AFNetworking', '3.2.1'
-  s.dependency "QMCoreFunction"
-  s.dependency "Masonry", '1.1.0'
-  s.dependency "QMUICommon"
+  s.public_header_files = 'LemonFileManager/Classes/**/*.h'
+  # s.resource_bundles = {
+  #   'LemonFileManager' => ['LemonFileManager/Assets/*.png']
+  # }
 
-  s.public_header_files = 'LemonBigOldFile/Classes/Controller/McBigFileWndController.h'
-  s.dependency 'LemonFileManager'
+  # s.public_header_files = 'Pod/Classes/**/*.h'
   # s.frameworks = 'Cocoa'
   # s.dependency 'AFNetworking', '~> 2.3'
 end

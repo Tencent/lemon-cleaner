@@ -918,14 +918,12 @@
 - (void)innerClean{
     LMDuplicateWindowController *windowController = self.view.window.windowController;
     if (windowController) {
-        
-        uint64 cleanSize = [windowController.itemManager removeDuplicateItem:_resultArray toTrash:YES block:^(float value) {
+        [windowController.itemManager removeDuplicateItem:_resultArray toTrash:YES block:^(uint64 value) {
+            // show clean result viewController
+            LMDuplicateCleanResultViewController *controller = [[LMDuplicateCleanResultViewController alloc] init];
+            controller.cleanSize = value;
+            self.view.window.contentViewController = controller;
         }];
-        
-        // show clean result viewController
-        LMDuplicateCleanResultViewController *controller = [[LMDuplicateCleanResultViewController alloc] init];
-        controller.cleanSize = cleanSize;
-        self.view.window.contentViewController = controller;
     }
 }
 

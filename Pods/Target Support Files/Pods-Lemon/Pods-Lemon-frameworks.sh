@@ -18,7 +18,7 @@ echo "mkdir -p ${CONFIGURATION_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}"
 mkdir -p "${CONFIGURATION_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}"
 
 COCOAPODS_PARALLEL_CODE_SIGN="${COCOAPODS_PARALLEL_CODE_SIGN:-false}"
-SWIFT_STDLIB_PATH="${DT_TOOLCHAIN_DIR}/usr/lib/swift/${PLATFORM_NAME}"
+SWIFT_STDLIB_PATH="${TOOLCHAIN_DIR}/usr/lib/swift/${PLATFORM_NAME}"
 BCSYMBOLMAP_DIR="BCSymbolMaps"
 
 
@@ -180,6 +180,7 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "${BUILT_PRODUCTS_DIR}/FMDB/FMDB.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/LemonBigOldFile/LemonBigOldFile.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/LemonDuplicateFile/LemonDuplicateFile.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/LemonFileManager/LemonFileManager.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/LemonFileMove/LemonFileMove.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/LemonLoginItemManager/LemonLoginItemManager.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/LemonPhotoClean/LemonPhotoClean.framework"
@@ -198,6 +199,7 @@ if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "${BUILT_PRODUCTS_DIR}/FMDB/FMDB.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/LemonBigOldFile/LemonBigOldFile.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/LemonDuplicateFile/LemonDuplicateFile.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/LemonFileManager/LemonFileManager.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/LemonFileMove/LemonFileMove.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/LemonLoginItemManager/LemonLoginItemManager.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/LemonPhotoClean/LemonPhotoClean.framework"

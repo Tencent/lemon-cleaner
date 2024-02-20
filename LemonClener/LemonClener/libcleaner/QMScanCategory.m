@@ -2,8 +2,6 @@
 //  QMScanCategory.m
 //  QMCleanDemo
 //
-
-//  Copyright (c) 2013年 yuanwen. All rights reserved.
 //
 
 #import "QMScanCategory.h"
@@ -18,7 +16,6 @@
 #import "QMXcodeScan.h"
 #import "QMCacheEnumerator.h"
 #import "QMWechatScan.h"
-#import "QMWechatScan_MacOS_14_0.h"
 
 @interface QMScanCategory()<QMScanDelegate>
 
@@ -40,7 +37,7 @@
         m_mailScan = [[QMMailScan alloc] init];
         m_softScan = [[QMSoftScan alloc] init];
         m_xcodeScan = [[QMXcodeScan alloc] init];
-        m_wechatScan = [self wechatScanObject];
+        m_wechatScan = [[QMWechatScan alloc] init];
         m_appUnlessFile.delegate = self;
         m_brokenRegister.delegate = self;
         m_directoryScan.delegate = self;
@@ -61,14 +58,6 @@
     m_mailScan.delegate = nil;
     m_softScan.delegate = nil;
     m_xcodeScan.delegate = nil;
-}
-
-- (QMWechatScan *)wechatScanObject {
-    if (@available(macOS 14.0, *)) {
-        return [[QMWechatScan_MacOS_14_0 alloc] init];
-    } else {
-        return [[QMWechatScan alloc] init];
-    }
 }
 
 - (void)scanActiontem:(QMActionItem *)actionItem
@@ -160,18 +149,14 @@
         return;
     
     categoryItem.progressValue = 0;
-    NSUInteger count = [categoryItem.m_categorySubItemArray count];
     NSUInteger totalCount = 0;
     //计算所有需要扫描的action，每个action下面有一个或者多个扫描路径
-    for (int i = 0; i < count; i++)
-    {
-        // 未勾选不进行扫描
-        QMCategorySubItem * subItem = [categoryItem.m_categorySubItemArray objectAtIndex:i];
-//        if (subItem.state == NSOffState)
-//            continue;
+    NSArray *m_categorySubItemArray_copy = [categoryItem.m_categorySubItemArray copy];
+    for (QMCategorySubItem *subItem in m_categorySubItemArray_copy) {
         NSUInteger subCount = [subItem.m_actionItemArray count];
         totalCount += subCount;
     }
+    
     // 计算扫描进度
     m_scanCount = 0;
     if (totalCount != 0) {
@@ -181,15 +166,11 @@
     }
     m_curScanCategoryItem = categoryItem;
     
-    for (int i = 0; i < count && !isStopScan; i++)
-    {
-        @autoreleasepool
-        {
-            QMCategorySubItem * subItem = [categoryItem.m_categorySubItemArray objectAtIndex:i];
-            
-            // 未勾选不进行扫描
-//            if (subItem.state == NSOffState)
-//                continue;
+    for (QMCategorySubItem * subItem in m_categorySubItemArray_copy) {
+        @autoreleasepool {
+            if (isStopScan) {
+                break;
+            }
             
             m_curScanSubCategoryItem = subItem;
             

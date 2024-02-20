@@ -5,9 +5,7 @@
 //  
 //
 
-#import <Foundation/Foundation.h>
-#import "LMResultItem.h"
-#import "LMFileMoveManger.h"
+#import "LMBaseScan.h"
 
 @protocol LMQQScanDelegate <NSObject>
 
@@ -16,7 +14,7 @@
 @end
 
 
-@interface LMQQScan : NSObject
+@interface LMQQScan : LMBaseScan
 
 @property (nonatomic, weak) id<LMQQScanDelegate> delegate;
 

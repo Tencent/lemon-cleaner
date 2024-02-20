@@ -58,7 +58,8 @@
 //            onlyinPath = [onlyinPath stringByReplacingOccurrencesOfString:@" " withString:@"\\ "];
 //        }
 //        onlyinPath = @"/Users/junior/photo";
-        outputString = [QMShellExcuteHelper excuteCmd:[NSString stringWithFormat:@"mdfind -onlyin \"%@\" 'kMDItemKind = \"*PNG*\" || kMDItemKind = \"*JPEG*\" || kMDItemKind = \"*image*\"'", onlyinPath]];
+        NSString *shellString = [NSString stringWithFormat:@"find \"%@\" -type f \\( -iname \\*.jpg -o -iname \\*.jpeg -o -iname \\*.png -o -iname \\*.gif \\)", onlyinPath];
+        outputString = [QMShellExcuteHelper excuteCmd:shellString];
 //        NSLog(@"outputString = %@", outputString);
         
         NSArray *picArr = [outputString componentsSeparatedByString:@"\n"];

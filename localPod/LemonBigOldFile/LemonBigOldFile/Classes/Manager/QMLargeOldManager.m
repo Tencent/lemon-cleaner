@@ -9,7 +9,7 @@
 #import "QMLargeOldManager.h"
 #import "NSString+Extension.h"
 #import "QMTimeHelp.h"
-
+#import <LemonFileManager/LMAppleScriptTool.h>
 
 #define k50MBSize       50 * 1000 * 1000
 #define k100MBSize      2 * k50MBSize
@@ -452,52 +452,29 @@ static QMLargeOldManager * instance = nil;
     });
     return removeSize;
 #else
-    dispatch_apply(removePathArray.count, dispatch_get_global_queue(0, 0), ^(size_t index) {
-        __strong typeof(self) strongSelf = weakSelf;
-        if(strongSelf == nil || strongSelf->_isStop) return;
-        NSString * path = [removePathArray objectAtIndex:index];
-        NSFileManager * fm = [NSFileManager defaultManager];
-        if ([fm fileExistsAtPath:path])
-        {
+    dispatch_queue_t removeQueue =  dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    dispatch_group_t removeGroup =  dispatch_group_create();
+    LMAppleScriptTool *removeTool = [[LMAppleScriptTool alloc] init];
+    for(NSString * path in removePathArray) {
+        NSInteger index = [removePathArray indexOfObject:path];
+        dispatch_group_async(removeGroup, removeQueue, ^{
+            NSFileManager *fm = [NSFileManager defaultManager];
+            if (![fm fileExistsAtPath:path]) {
+                return;
+            }
             if (!toTrash) {
                 [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
-            } else {
-//                [[NSWorkspace sharedWorkspace] performFileOperation:NSWorkspaceRecycleOperation
-//                                                             source:[path stringByDeletingLastPathComponent]
-//                                                        destination:@""
-//                                                              files:[NSArray arrayWithObject:[path lastPathComponent]]
-//                                                                tag:nil];
-                //api deprecated, modify by levey
-                @autoreleasepool {
-                    NSString *appleScriptSource = [NSString stringWithFormat:
-                                                                       @"tell application \"Finder\"\n"
-                                                                       @"set theFile to POSIX file \"%@\"\n"
-                                                                       @"delete theFile\n"
-                                                                       @"end tell", path];
-                                        
-                                        NSAppleScript *appleScript = [[NSAppleScript alloc] initWithSource:appleScriptSource];
-                                        NSDictionary *errorDict;
-                                        NSAppleEventDescriptor *returnDescriptor = [appleScript executeAndReturnError:&errorDict];
-                                        
-                                        if (returnDescriptor == nil) {
-                                            if (errorDict != nil) {
-                                                NSLog(@"QMLargeOldManager: moveFileToTrashError: %@", [errorDict objectForKey:NSAppleScriptErrorMessage]);
-                                            } else {
-                                                
-                                                NSLog(@"QMLargeOldManager: moveFileToTrashError: unknownError");
-                                            }
-                                        }
-                }
+                return;
             }
-        }
-        dispatch_async(dispatch_get_main_queue(), ^{
-            //i++;
-            // 获取进度信息，index由于dispatch_apply原有，会同时起几个线程，导致不是线性增大的，但是可以在界面忽略掉比上次值小的值
-            float progresss = (index + 0.0) / totalCount;
-            block(progresss, path);
+            [removeTool removeFileToTrash:path];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                //i++;
+                // 获取进度信息，index由于dispatch_apply原有，会同时起几个线程，导致不是线性增大的，但是可以在界面忽略掉比上次值小的值
+                float progresss = (index + 0.0) / totalCount;
+                block(progresss, path);
+            });
         });
-//        [NSThread sleepForTimeInterval:(2.0 / totalCount)];
-    });
+    }
     return removeSize;
 #endif
 }

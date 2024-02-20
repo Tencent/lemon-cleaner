@@ -128,7 +128,7 @@
     
     // Drawing code here.
     if (self.isGradient) {
-        NSBezierPath *path = [NSBezierPath bezierPathWithRoundedRect:dirtyRect xRadius:self.radius yRadius:self.radius];
+        NSBezierPath *path = [NSBezierPath bezierPathWithRoundedRect:self.bounds xRadius:self.radius yRadius:self.radius];
         NSGradient *gradient = nil;
         NSColor *textColor = nil;
         gradient = [[NSGradient alloc] initWithColors:self.normalColorArray];

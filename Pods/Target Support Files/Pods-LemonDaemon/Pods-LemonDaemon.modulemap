@@ -1,6 +1,0 @@
-framework module Pods_LemonDaemon {
-  umbrella header "Pods-LemonDaemon-umbrella.h"
-
-  export *
-  module * { export * }
-}

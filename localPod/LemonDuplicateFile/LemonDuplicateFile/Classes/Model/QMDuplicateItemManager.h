@@ -20,7 +20,7 @@
 
 - (void)cancelAllSelectedResult;
 
-- (uint64)removeDuplicateItem:(NSArray *)itemArray toTrash:(BOOL)toTrash block:(void(^)(float value))block;
+- (void)removeDuplicateItem:(NSArray *)itemArray toTrash:(BOOL)toTrash block:(void(^)(uint64_t value))block;
 
 - (uint64)duplicateResultSize;
 

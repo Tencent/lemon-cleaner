@@ -9,6 +9,8 @@
 #import "QMBaseScan.h"
 #import "QMActionItem.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface QMWechatScan : QMBaseScan
 //扫描头像图片
 -(void)scanWechatAvatar:(QMActionItem *)actionItem;
@@ -29,3 +31,5 @@
 -(void)scanWechatAudio:(QMActionItem *)actionItem;
 
 @end
+
+NS_ASSUME_NONNULL_END
