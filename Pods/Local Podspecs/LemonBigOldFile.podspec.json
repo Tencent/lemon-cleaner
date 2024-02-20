@@ -34,6 +34,9 @@
     ],
     "QMUICommon": [
 
+    ],
+    "LemonFileManager": [
+
     ]
   },
   "public_header_files": "LemonBigOldFile/Classes/Controller/McBigFileWndController.h"

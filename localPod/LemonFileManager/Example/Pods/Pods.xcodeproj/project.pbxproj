@@ -1,0 +1,782 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 48;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0A4C66416E5027D5EC23DD98D38CA594 /* Pods-LemonFileManager_Example-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = EF2DD0B25CA134A6F0BF377BDF7B397D /* Pods-LemonFileManager_Example-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1DD6F3754F6B0BF4FD796A35FE410713 /* Pods-LemonFileManager_Tests-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = AC9921FBBC70441B0177B050D2501129 /* Pods-LemonFileManager_Tests-dummy.m */; };
+		20B902149F565C8B9B8D07A462188A8B /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1430F003D39D9906881A6AC724B7931 /* Cocoa.framework */; };
+		411F43917CA127D2D673747F4F2B20BE /* Pods-LemonFileManager_Example-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = C8BBE9B0D0EB76151E417C8AC0D4F4F3 /* Pods-LemonFileManager_Example-dummy.m */; };
+		51296238A6D98DB54C8B1B1DD34AAA15 /* LemonFileManager-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 63F7C32B8B400075AA268ED33E7B831B /* LemonFileManager-dummy.m */; };
+		5576AF07D0CF5BC95D4B911A8F919220 /* LemonFileManager-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = EC8D2420B2467C6E475FAB9F1D76C5B7 /* LemonFileManager-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		9DDFBAFB8A5761961133614A7CB07F9F /* LMAppleScriptTool.h in Headers */ = {isa = PBXBuildFile; fileRef = 72B8A92432504CC90A217B848D268C83 /* LMAppleScriptTool.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		AFA279A47537FE4305E5BDE4E7FDDE52 /* LMAppleScriptTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 489A7BEF277C2C0246734D6C3C740252 /* LMAppleScriptTool.m */; };
+		B243DB6E0E5BF9DEEB46B0E05A7C4720 /* Pods-LemonFileManager_Tests-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 1AD5895BA754AF23E3AD26E002E238EF /* Pods-LemonFileManager_Tests-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B58B0CFD48C7E50869DBCB84D9C3E7F4 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1430F003D39D9906881A6AC724B7931 /* Cocoa.framework */; };
+		BD42F70FC4BC1C7A2AD8085A2378AB6F /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1430F003D39D9906881A6AC724B7931 /* Cocoa.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		0A27B3ABE207E8EBAD57EF2DDCB87B98 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 4A496147E6C2A16D89C12609EA5918B1;
+			remoteInfo = LemonFileManager;
+		};
+		792BBAC21FFE4423ABC57456D47942C1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8F36BBAB68FCB9A5AF46CD02627AD0F5;
+			remoteInfo = "Pods-LemonFileManager_Example";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		07766A7878ABF91D9AD4B25DE702404E /* Pods-LemonFileManager_Tests-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-LemonFileManager_Tests-acknowledgements.plist"; sourceTree = "<group>"; };
+		13A772D1D5D4FF5C06CA9745F5207B54 /* Pods-LemonFileManager_Example-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-LemonFileManager_Example-frameworks.sh"; sourceTree = "<group>"; };
+		1AD5895BA754AF23E3AD26E002E238EF /* Pods-LemonFileManager_Tests-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-LemonFileManager_Tests-umbrella.h"; sourceTree = "<group>"; };
+		38FD8FD7FF48C37B718347849AF18EBE /* LemonFileManager.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = LemonFileManager.debug.xcconfig; sourceTree = "<group>"; };
+		3A624BA1C1E181F072219EFE8E84DDBE /* Pods-LemonFileManager_Tests-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-LemonFileManager_Tests-acknowledgements.markdown"; sourceTree = "<group>"; };
+		3AAD1A513909E433896BD74FD94A18DB /* Pods-LemonFileManager_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-LemonFileManager_Tests.release.xcconfig"; sourceTree = "<group>"; };
+		3CC4B12FE7275DD2DA917DD63F7E1395 /* LemonFileManager-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "LemonFileManager-prefix.pch"; sourceTree = "<group>"; };
+		3E141139C752151728B9E194552F5703 /* LemonFileManager.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = LemonFileManager.modulemap; sourceTree = "<group>"; };
+		43340E245DA0C6DE9A5335A876E90687 /* Pods-LemonFileManager_Tests */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = "Pods-LemonFileManager_Tests"; path = Pods_LemonFileManager_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		489A7BEF277C2C0246734D6C3C740252 /* LMAppleScriptTool.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = LMAppleScriptTool.m; path = LemonFileManager/Classes/Controller/LMAppleScriptTool.m; sourceTree = "<group>"; };
+		4FFA5D270A59EE86FEA67F8866006D91 /* Pods-LemonFileManager_Tests-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-LemonFileManager_Tests-Info.plist"; sourceTree = "<group>"; };
+		63F7C32B8B400075AA268ED33E7B831B /* LemonFileManager-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "LemonFileManager-dummy.m"; sourceTree = "<group>"; };
+		6F85A8479E9DC1D91D7983E4327F2F7C /* Pods-LemonFileManager_Example.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-LemonFileManager_Example.modulemap"; sourceTree = "<group>"; };
+		728EAD6E849813C4598DD8B23A51DAAA /* Pods-LemonFileManager_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-LemonFileManager_Example.debug.xcconfig"; sourceTree = "<group>"; };
+		72B8A92432504CC90A217B848D268C83 /* LMAppleScriptTool.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = LMAppleScriptTool.h; path = LemonFileManager/Classes/Controller/LMAppleScriptTool.h; sourceTree = "<group>"; };
+		778CD216BDD26305393397FCB493C26B /* Pods-LemonFileManager_Example-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-LemonFileManager_Example-acknowledgements.markdown"; sourceTree = "<group>"; };
+		7C72E4ED47B360FD2C1D25A6E7D7323A /* LemonFileManager.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; path = LemonFileManager.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		967896B16E3A53935BF1D61808F57284 /* LemonFileManager */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = LemonFileManager; path = LemonFileManager.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		A08BCDF0850790E7D1551395290DF2A2 /* Pods-LemonFileManager_Example */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = "Pods-LemonFileManager_Example"; path = Pods_LemonFileManager_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		AC9921FBBC70441B0177B050D2501129 /* Pods-LemonFileManager_Tests-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-LemonFileManager_Tests-dummy.m"; sourceTree = "<group>"; };
+		B030CFFC5F1DFB6047F35E9AF8BAC6F6 /* LemonFileManager.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = LemonFileManager.release.xcconfig; sourceTree = "<group>"; };
+		C0B541C40E7F900ED7EB1F3E4ACA9B26 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		C1430F003D39D9906881A6AC724B7931 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.15.sdk/System/Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
+		C2B739507AC464572978C8315A02295D /* Pods-LemonFileManager_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-LemonFileManager_Example.release.xcconfig"; sourceTree = "<group>"; };
+		C8BBE9B0D0EB76151E417C8AC0D4F4F3 /* Pods-LemonFileManager_Example-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-LemonFileManager_Example-dummy.m"; sourceTree = "<group>"; };
+		D246246BF43F11201A604CEBF148DE12 /* Pods-LemonFileManager_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-LemonFileManager_Tests.debug.xcconfig"; sourceTree = "<group>"; };
+		DDA5E2280A14D747787EBE464CB8B846 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		E6B73B3C4A7D17A3EFEF27DA0F7025C3 /* Pods-LemonFileManager_Example-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-LemonFileManager_Example-Info.plist"; sourceTree = "<group>"; };
+		EC8D2420B2467C6E475FAB9F1D76C5B7 /* LemonFileManager-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "LemonFileManager-umbrella.h"; sourceTree = "<group>"; };
+		EE2DF20D3DCDA0C84F2B48B3D97C319E /* Pods-LemonFileManager_Example-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-LemonFileManager_Example-acknowledgements.plist"; sourceTree = "<group>"; };
+		EF2DD0B25CA134A6F0BF377BDF7B397D /* Pods-LemonFileManager_Example-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-LemonFileManager_Example-umbrella.h"; sourceTree = "<group>"; };
+		F4B0736F9D1B7D3F1B7CBA89089B21F5 /* LemonFileManager-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "LemonFileManager-Info.plist"; sourceTree = "<group>"; };
+		FE016AA091836DC53CFAC9D6535F3500 /* Pods-LemonFileManager_Tests.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-LemonFileManager_Tests.modulemap"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		06C78A906B52296C9E6D9FEC91C4A851 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B58B0CFD48C7E50869DBCB84D9C3E7F4 /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2296FDF72A9CD3D61A10A2DC38D5966C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BD42F70FC4BC1C7A2AD8085A2378AB6F /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AE0DCFE3CA003217C4C387278D0B6A15 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				20B902149F565C8B9B8D07A462188A8B /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		BDF73605880A0F4713B9F2234BA78E05 /* Development Pods */ = {
+			isa = PBXGroup;
+			children = (
+				C753E02095CD8F15A16C7140CE484913 /* LemonFileManager */,
+			);
+			name = "Development Pods";
+			sourceTree = "<group>";
+		};
+		C753E02095CD8F15A16C7140CE484913 /* LemonFileManager */ = {
+			isa = PBXGroup;
+			children = (
+				72B8A92432504CC90A217B848D268C83 /* LMAppleScriptTool.h */,
+				489A7BEF277C2C0246734D6C3C740252 /* LMAppleScriptTool.m */,
+				EF5D5C698E6E2368A5EBDA031A539DA7 /* Pod */,
+				FDAF07C3C905C3192D628438B3933360 /* Support Files */,
+			);
+			name = LemonFileManager;
+			path = ../..;
+			sourceTree = "<group>";
+		};
+		CF1408CF629C7361332E53B88F7BD30C = {
+			isa = PBXGroup;
+			children = (
+				9D940727FF8FB9C785EB98E56350EF41 /* Podfile */,
+				BDF73605880A0F4713B9F2234BA78E05 /* Development Pods */,
+				E0A1E60606E0BF6E2E10F1F01350DFE8 /* Frameworks */,
+				DAAA38A57268FFF61C158440B7B9F659 /* Products */,
+				D923E27DFEC4D4EAD322AA0301EEE1E2 /* Targets Support Files */,
+			);
+			sourceTree = "<group>";
+		};
+		D923E27DFEC4D4EAD322AA0301EEE1E2 /* Targets Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				ED11BCE0829E28BC87A93CA6061606F7 /* Pods-LemonFileManager_Example */,
+				F0FF49D47CE401F3FBC6595FDFF8732B /* Pods-LemonFileManager_Tests */,
+			);
+			name = "Targets Support Files";
+			sourceTree = "<group>";
+		};
+		DAAA38A57268FFF61C158440B7B9F659 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				967896B16E3A53935BF1D61808F57284 /* LemonFileManager */,
+				A08BCDF0850790E7D1551395290DF2A2 /* Pods-LemonFileManager_Example */,
+				43340E245DA0C6DE9A5335A876E90687 /* Pods-LemonFileManager_Tests */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		E0A1E60606E0BF6E2E10F1F01350DFE8 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				E2A8756CA1FF5258A0344D53C5C60EC1 /* OS X */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		E2A8756CA1FF5258A0344D53C5C60EC1 /* OS X */ = {
+			isa = PBXGroup;
+			children = (
+				C1430F003D39D9906881A6AC724B7931 /* Cocoa.framework */,
+			);
+			name = "OS X";
+			sourceTree = "<group>";
+		};
+		ED11BCE0829E28BC87A93CA6061606F7 /* Pods-LemonFileManager_Example */ = {
+			isa = PBXGroup;
+			children = (
+				6F85A8479E9DC1D91D7983E4327F2F7C /* Pods-LemonFileManager_Example.modulemap */,
+				778CD216BDD26305393397FCB493C26B /* Pods-LemonFileManager_Example-acknowledgements.markdown */,
+				EE2DF20D3DCDA0C84F2B48B3D97C319E /* Pods-LemonFileManager_Example-acknowledgements.plist */,
+				C8BBE9B0D0EB76151E417C8AC0D4F4F3 /* Pods-LemonFileManager_Example-dummy.m */,
+				13A772D1D5D4FF5C06CA9745F5207B54 /* Pods-LemonFileManager_Example-frameworks.sh */,
+				E6B73B3C4A7D17A3EFEF27DA0F7025C3 /* Pods-LemonFileManager_Example-Info.plist */,
+				EF2DD0B25CA134A6F0BF377BDF7B397D /* Pods-LemonFileManager_Example-umbrella.h */,
+				728EAD6E849813C4598DD8B23A51DAAA /* Pods-LemonFileManager_Example.debug.xcconfig */,
+				C2B739507AC464572978C8315A02295D /* Pods-LemonFileManager_Example.release.xcconfig */,
+			);
+			name = "Pods-LemonFileManager_Example";
+			path = "Target Support Files/Pods-LemonFileManager_Example";
+			sourceTree = "<group>";
+		};
+		EF5D5C698E6E2368A5EBDA031A539DA7 /* Pod */ = {
+			isa = PBXGroup;
+			children = (
+				7C72E4ED47B360FD2C1D25A6E7D7323A /* LemonFileManager.podspec */,
+				C0B541C40E7F900ED7EB1F3E4ACA9B26 /* LICENSE */,
+				DDA5E2280A14D747787EBE464CB8B846 /* README.md */,
+			);
+			name = Pod;
+			sourceTree = "<group>";
+		};
+		F0FF49D47CE401F3FBC6595FDFF8732B /* Pods-LemonFileManager_Tests */ = {
+			isa = PBXGroup;
+			children = (
+				FE016AA091836DC53CFAC9D6535F3500 /* Pods-LemonFileManager_Tests.modulemap */,
+				3A624BA1C1E181F072219EFE8E84DDBE /* Pods-LemonFileManager_Tests-acknowledgements.markdown */,
+				07766A7878ABF91D9AD4B25DE702404E /* Pods-LemonFileManager_Tests-acknowledgements.plist */,
+				AC9921FBBC70441B0177B050D2501129 /* Pods-LemonFileManager_Tests-dummy.m */,
+				4FFA5D270A59EE86FEA67F8866006D91 /* Pods-LemonFileManager_Tests-Info.plist */,
+				1AD5895BA754AF23E3AD26E002E238EF /* Pods-LemonFileManager_Tests-umbrella.h */,
+				D246246BF43F11201A604CEBF148DE12 /* Pods-LemonFileManager_Tests.debug.xcconfig */,
+				3AAD1A513909E433896BD74FD94A18DB /* Pods-LemonFileManager_Tests.release.xcconfig */,
+			);
+			name = "Pods-LemonFileManager_Tests";
+			path = "Target Support Files/Pods-LemonFileManager_Tests";
+			sourceTree = "<group>";
+		};
+		FDAF07C3C905C3192D628438B3933360 /* Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				3E141139C752151728B9E194552F5703 /* LemonFileManager.modulemap */,
+				63F7C32B8B400075AA268ED33E7B831B /* LemonFileManager-dummy.m */,
+				F4B0736F9D1B7D3F1B7CBA89089B21F5 /* LemonFileManager-Info.plist */,
+				3CC4B12FE7275DD2DA917DD63F7E1395 /* LemonFileManager-prefix.pch */,
+				EC8D2420B2467C6E475FAB9F1D76C5B7 /* LemonFileManager-umbrella.h */,
+				38FD8FD7FF48C37B718347849AF18EBE /* LemonFileManager.debug.xcconfig */,
+				B030CFFC5F1DFB6047F35E9AF8BAC6F6 /* LemonFileManager.release.xcconfig */,
+			);
+			name = "Support Files";
+			path = "Example/Pods/Target Support Files/LemonFileManager";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		101561AF56F9F4AABA8084CCE51FF370 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5576AF07D0CF5BC95D4B911A8F919220 /* LemonFileManager-umbrella.h in Headers */,
+				9DDFBAFB8A5761961133614A7CB07F9F /* LMAppleScriptTool.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		31A2B40B3CB74A52A42CC35C1200C1CC /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B243DB6E0E5BF9DEEB46B0E05A7C4720 /* Pods-LemonFileManager_Tests-umbrella.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		91203DA713EE7C09D35233332252A501 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0A4C66416E5027D5EC23DD98D38CA594 /* Pods-LemonFileManager_Example-umbrella.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		4A496147E6C2A16D89C12609EA5918B1 /* LemonFileManager */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 929CE7C9F1CEC5106DD84120B1F60760 /* Build configuration list for PBXNativeTarget "LemonFileManager" */;
+			buildPhases = (
+				101561AF56F9F4AABA8084CCE51FF370 /* Headers */,
+				F22B268D75D5A0DF9879826B1E4C8BB5 /* Sources */,
+				AE0DCFE3CA003217C4C387278D0B6A15 /* Frameworks */,
+				9D250F57A5C8DE53A10FD114112E70B4 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = LemonFileManager;
+			productName = LemonFileManager;
+			productReference = 967896B16E3A53935BF1D61808F57284 /* LemonFileManager */;
+			productType = "com.apple.product-type.framework";
+		};
+		8F36BBAB68FCB9A5AF46CD02627AD0F5 /* Pods-LemonFileManager_Example */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D0515BE4BFEA60268C6607249E7DBC0A /* Build configuration list for PBXNativeTarget "Pods-LemonFileManager_Example" */;
+			buildPhases = (
+				91203DA713EE7C09D35233332252A501 /* Headers */,
+				C372E6EF223BABD4721F66C4DC8FB5ED /* Sources */,
+				06C78A906B52296C9E6D9FEC91C4A851 /* Frameworks */,
+				AF5E92CAF62898BF7F1D742550EC67C1 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				2702E54483A41EEC12F75394075A7731 /* PBXTargetDependency */,
+			);
+			name = "Pods-LemonFileManager_Example";
+			productName = Pods_LemonFileManager_Example;
+			productReference = A08BCDF0850790E7D1551395290DF2A2 /* Pods-LemonFileManager_Example */;
+			productType = "com.apple.product-type.framework";
+		};
+		A5832A0DBBCB427B85F11E4991FF4582 /* Pods-LemonFileManager_Tests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FC80C2D4E70DA43B5CE70E7FFE30650C /* Build configuration list for PBXNativeTarget "Pods-LemonFileManager_Tests" */;
+			buildPhases = (
+				31A2B40B3CB74A52A42CC35C1200C1CC /* Headers */,
+				289F3E8525A222176EF087A4CDCC9373 /* Sources */,
+				2296FDF72A9CD3D61A10A2DC38D5966C /* Frameworks */,
+				D1258AF7F7EF93BB4677AC61DBAC8B93 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				0236B09E64A0737421DA44BCFF71136E /* PBXTargetDependency */,
+			);
+			name = "Pods-LemonFileManager_Tests";
+			productName = Pods_LemonFileManager_Tests;
+			productReference = 43340E245DA0C6DE9A5335A876E90687 /* Pods-LemonFileManager_Tests */;
+			productType = "com.apple.product-type.framework";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		BFDFE7DC352907FC980B868725387E98 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1500;
+				LastUpgradeCheck = 1500;
+			};
+			buildConfigurationList = 4821239608C13582E20E6DA73FD5F1F9 /* Build configuration list for PBXProject "Pods" */;
+			compatibilityVersion = "Xcode 8.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = CF1408CF629C7361332E53B88F7BD30C;
+			productRefGroup = DAAA38A57268FFF61C158440B7B9F659 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				4A496147E6C2A16D89C12609EA5918B1 /* LemonFileManager */,
+				8F36BBAB68FCB9A5AF46CD02627AD0F5 /* Pods-LemonFileManager_Example */,
+				A5832A0DBBCB427B85F11E4991FF4582 /* Pods-LemonFileManager_Tests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		9D250F57A5C8DE53A10FD114112E70B4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AF5E92CAF62898BF7F1D742550EC67C1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D1258AF7F7EF93BB4677AC61DBAC8B93 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		289F3E8525A222176EF087A4CDCC9373 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1DD6F3754F6B0BF4FD796A35FE410713 /* Pods-LemonFileManager_Tests-dummy.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C372E6EF223BABD4721F66C4DC8FB5ED /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				411F43917CA127D2D673747F4F2B20BE /* Pods-LemonFileManager_Example-dummy.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F22B268D75D5A0DF9879826B1E4C8BB5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				51296238A6D98DB54C8B1B1DD34AAA15 /* LemonFileManager-dummy.m in Sources */,
+				AFA279A47537FE4305E5BDE4E7FDDE52 /* LMAppleScriptTool.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		0236B09E64A0737421DA44BCFF71136E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "Pods-LemonFileManager_Example";
+			target = 8F36BBAB68FCB9A5AF46CD02627AD0F5 /* Pods-LemonFileManager_Example */;
+			targetProxy = 792BBAC21FFE4423ABC57456D47942C1 /* PBXContainerItemProxy */;
+		};
+		2702E54483A41EEC12F75394075A7731 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = LemonFileManager;
+			target = 4A496147E6C2A16D89C12609EA5918B1 /* LemonFileManager */;
+			targetProxy = 0A27B3ABE207E8EBAD57EF2DDCB87B98 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		11960DB3F794ECB5BE10DEBC0618AC30 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = D246246BF43F11201A604CEBF148DE12 /* Pods-LemonFileManager_Tests.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "Target Support Files/Pods-LemonFileManager_Tests/Pods-LemonFileManager_Tests-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				MACH_O_TYPE = staticlib;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				MODULEMAP_FILE = "Target Support Files/Pods-LemonFileManager_Tests/Pods-LemonFileManager_Tests.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		12BA21E07934C7932AD12532879D4B53 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 38FD8FD7FF48C37B718347849AF18EBE /* LemonFileManager.debug.xcconfig */;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/LemonFileManager/LemonFileManager-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/LemonFileManager/LemonFileManager-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MODULEMAP_FILE = "Target Support Files/LemonFileManager/LemonFileManager.modulemap";
+				PRODUCT_MODULE_NAME = LemonFileManager;
+				PRODUCT_NAME = LemonFileManager;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 4.0;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		4E051DEFA3BC61E6FE347B781170E8D1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = B030CFFC5F1DFB6047F35E9AF8BAC6F6 /* LemonFileManager.release.xcconfig */;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/LemonFileManager/LemonFileManager-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/LemonFileManager/LemonFileManager-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MODULEMAP_FILE = "Target Support Files/LemonFileManager/LemonFileManager.modulemap";
+				PRODUCT_MODULE_NAME = LemonFileManager;
+				PRODUCT_NAME = LemonFileManager;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 4.0;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		58B2E7B614587B9E546E556E0986B7EA /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3AAD1A513909E433896BD74FD94A18DB /* Pods-LemonFileManager_Tests.release.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "Target Support Files/Pods-LemonFileManager_Tests/Pods-LemonFileManager_Tests-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				MACH_O_TYPE = staticlib;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				MODULEMAP_FILE = "Target Support Files/Pods-LemonFileManager_Tests/Pods-LemonFileManager_Tests.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		7599BD86FD28576C20F8B9B6B5ACBEC9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"POD_CONFIGURATION_DEBUG=1",
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRIP_INSTALLED_PRODUCT = NO;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				SYMROOT = "${SRCROOT}/../build";
+			};
+			name = Debug;
+		};
+		AA19A794BF5312BE09CD662E1059018E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 728EAD6E849813C4598DD8B23A51DAAA /* Pods-LemonFileManager_Example.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "Target Support Files/Pods-LemonFileManager_Example/Pods-LemonFileManager_Example-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				MACH_O_TYPE = staticlib;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				MODULEMAP_FILE = "Target Support Files/Pods-LemonFileManager_Example/Pods-LemonFileManager_Example.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		BFBD7A2E86A475907F62AB7A234167D2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = C2B739507AC464572978C8315A02295D /* Pods-LemonFileManager_Example.release.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "Target Support Files/Pods-LemonFileManager_Example/Pods-LemonFileManager_Example-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				MACH_O_TYPE = staticlib;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				MODULEMAP_FILE = "Target Support Files/Pods-LemonFileManager_Example/Pods-LemonFileManager_Example.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		C0AB89DB0533D8E2B9201FA6579824B7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"POD_CONFIGURATION_RELEASE=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRIP_INSTALLED_PRODUCT = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 5.0;
+				SYMROOT = "${SRCROOT}/../build";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		4821239608C13582E20E6DA73FD5F1F9 /* Build configuration list for PBXProject "Pods" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7599BD86FD28576C20F8B9B6B5ACBEC9 /* Debug */,
+				C0AB89DB0533D8E2B9201FA6579824B7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		929CE7C9F1CEC5106DD84120B1F60760 /* Build configuration list for PBXNativeTarget "LemonFileManager" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				12BA21E07934C7932AD12532879D4B53 /* Debug */,
+				4E051DEFA3BC61E6FE347B781170E8D1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		D0515BE4BFEA60268C6607249E7DBC0A /* Build configuration list for PBXNativeTarget "Pods-LemonFileManager_Example" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AA19A794BF5312BE09CD662E1059018E /* Debug */,
+				BFBD7A2E86A475907F62AB7A234167D2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FC80C2D4E70DA43B5CE70E7FFE30650C /* Build configuration list for PBXNativeTarget "Pods-LemonFileManager_Tests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				11960DB3F794ECB5BE10DEBC0618AC30 /* Debug */,
+				58B2E7B614587B9E546E556E0986B7EA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+}

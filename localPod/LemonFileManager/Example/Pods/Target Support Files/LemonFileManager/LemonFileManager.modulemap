@@ -1,0 +1,6 @@
+framework module LemonFileManager {
+  umbrella header "LemonFileManager-umbrella.h"
+
+  export *
+  module * { export * }
+}

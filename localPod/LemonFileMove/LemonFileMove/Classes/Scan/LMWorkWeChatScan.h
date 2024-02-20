@@ -5,10 +5,7 @@
 //  
 //
 
-#import <Foundation/Foundation.h>
-#import "LMResultItem.h"
-#import "LMFileMoveManger.h"
-
+#import "LMBaseScan.h"
 
 @protocol LMWorkWeChatScanDelegate <NSObject>
 
@@ -17,7 +14,7 @@
 @end
 
 
-@interface LMWorkWeChatScan : NSObject
+@interface LMWorkWeChatScan : LMBaseScan
 
 @property (nonatomic, weak) id<LMWorkWeChatScanDelegate> delegate;
 

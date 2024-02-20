@@ -42,5 +42,8 @@ TODO: Add long description of the pod here.
   s.dependency 'QMUICommon'
   s.dependency 'QMCoreFunction'
   s.dependency 'LemonStat'
-
+  s.dependency 'LemonFileManager'
+  # s.public_header_files = 'Pod/Classes/**/*.h'
+  # s.frameworks = 'Cocoa'
+  # s.dependency 'AFNetworking', '~> 2.3'
 end

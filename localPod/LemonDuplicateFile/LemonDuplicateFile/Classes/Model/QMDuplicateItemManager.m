@@ -7,6 +7,7 @@
 //
 
 #import "QMDuplicateItemManager.h"
+#import <LemonFileManager/LMAppleScriptTool.h>
 
 @interface QMDuplicateItemManager () {
     NSMutableArray *_resultItemArray;
@@ -124,11 +125,11 @@
 #pragma mark-
 #pragma mark remove item
 
-
-- (uint64)removeDuplicateItem:(NSArray *)itemArray toTrash:(BOOL)toTrash block:(void (^)(float value))block {
+- (void)removeDuplicateItem:(NSArray *)itemArray toTrash:(BOOL)toTrash block:(void (^)(uint64_t value))block {
     NSMutableArray *needRemovePathArray = [NSMutableArray array];
     NSMutableArray *tempRemoveItemArrayForRefresh = [NSMutableArray array];
-    UInt64 removeSize = 0;
+    uint64_t removeSize = 0;
+    
 
     // 计算出所有需要移除的 path,并且更新原有的 array
     for (QMDuplicateBatch *item in itemArray) {
@@ -153,53 +154,24 @@
     }
     // 移除item(避免遍历时移除,遍历结束后再移除)
     [_resultItemArray removeObjectsInArray:tempRemoveItemArrayForRefresh];
-
-    dispatch_apply(needRemovePathArray.count, dispatch_get_global_queue(0, 0), ^(size_t index) {
-
-        NSString *path = [needRemovePathArray[index] filePath];
-        NSFileManager *fm = [NSFileManager defaultManager];
-        if ([fm fileExistsAtPath:path]) {
-            if (!toTrash) {
-                [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
-            } else {
-                //   [NSWorkspace performFileOperation:NSWorkspaceRecycleOperation]  或者  [NSWorkspace recycleURLs:completionHandler:] 以及直接利用 命令行 `mv xxx ~/.Trash/` 移动到废纸篓, 都没有 "put back(放回原处)"的选项.
-                //    [NSWorkspace recycleURLs:completionHandler:] 会返回在 Trash 中的 URL.
-                
-                // MacOS 13 原有api放回原处功能已失效 用apple script代替
-                
-                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                    
-                    NSString *appleScriptSource = [NSString stringWithFormat:
-                                                   @"tell application \"Finder\"\n"
-                                                   @"set theFile to POSIX file \"%@\"\n"
-                                                   @"delete theFile\n"
-                                                   @"end tell", path];
-                    
-                    NSAppleScript *appleScript = [[NSAppleScript alloc] initWithSource:appleScriptSource];
-                    NSDictionary *errorDict;
-                    NSAppleEventDescriptor *returnDescriptor = [appleScript executeAndReturnError:&errorDict];
-                    
-                    if (returnDescriptor == nil) {
-                        if (errorDict != nil) {
-                            NSLog(@"QMDuplicateItemManager: moveFileToTrashError: %@", [errorDict objectForKey:NSAppleScriptErrorMessage]);
-                        } else {
-                            
-                            NSLog(@"QMDuplicateItemManager: moveFileToTrashError: unknownError");
-                        }
-                    }
-                });
-                
-                
-                
+    dispatch_queue_t removeQueue =  dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    dispatch_group_t removeGroup =  dispatch_group_create();
+    LMAppleScriptTool *removeTool = [[LMAppleScriptTool alloc] init];
+    
+    for (QMDuplicateFile *needRemoveItem in needRemovePathArray) {
+        dispatch_group_async(removeGroup, removeQueue, ^{
+            NSString *path = [needRemoveItem filePath];
+            NSFileManager *fm = [NSFileManager defaultManager];
+            if (![fm fileExistsAtPath:path]) {
+                return;
             }
-
-
-        }
+            [removeTool removeFileToTrash:path];
+        });
+    }
+    dispatch_group_notify(removeGroup, dispatch_get_main_queue(), ^{
+        block(removeSize);
     });
-    return removeSize;
-//#endif
 }
-
 
 - (uint64)duplicateResultSize {
     UInt64 totalSize = 0;

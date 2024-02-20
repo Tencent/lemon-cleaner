@@ -58,7 +58,7 @@
     self.addViewController= [[LMFloderAddViewController alloc] init];
     self.window.contentViewController = self.addViewController;
     if(nil != self.scanViewController ){
-        self.scanViewController  = nil;
+        self.scanViewController = nil;
     }
     
     if(nil != self.resultViewController ){
@@ -94,6 +94,7 @@
     self.cleanFinishViewController = [[LMPhotoCleanFinishedViewController alloc] init];
     self.cleanFinishViewController.deleteCount = deleteCount;
     self.window.contentViewController = self.cleanFinishViewController;
+    self.cleanViewController = nil;
 }
 
 - (void)showNoSimilarPhotoViewController:(NSString *)descriptionString {

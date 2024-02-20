@@ -40,5 +40,8 @@ TODO: Add long description of the pod here.
   s.dependency "Masonry", '1.1.0'
   s.dependency "QMUICommon"
 
-   s.public_header_files = 'LemonBigOldFile/Classes/Controller/McBigFileWndController.h'
+  s.public_header_files = 'LemonBigOldFile/Classes/Controller/McBigFileWndController.h'
+  s.dependency 'LemonFileManager'
+  # s.frameworks = 'Cocoa'
+  # s.dependency 'AFNetworking', '~> 2.3'
 end

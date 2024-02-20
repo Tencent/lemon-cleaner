@@ -7,7 +7,6 @@
 
 #import "LMQQScan.h"
 #import "NSString+Extension.h"
-#import <QMCoreFunction/QMShellExcuteHelper.h>
 
 
 #define QQScanPath    @"~/Library/Containers/com.tencent.qq/Data/Library/Caches"
@@ -46,84 +45,24 @@
     //过滤90天/90天后
     NSMutableArray *resultArr = [NSMutableArray new];
     for (NSString *path in pathArray) {
-        @autoreleasepool {
-            if (![path containsString:@"/Caches/Images"] && ![path containsString:@"/Caches/Videos"] && ![path containsString:@"/Caches/Files"]) {
-                continue;
-            }
-            
-            NSArray *subArr = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:nil];
-            for(int num = 0; num < subArr.count; num++) {
-                NSString *picPath = [path stringByAppendingPathComponent:subArr[num]];
-                NSDictionary* attr = [[NSFileManager defaultManager] attributesOfItemAtPath:picPath error:nil];
-                NSTimeInterval createTime = [[attr objectForKey:NSFileCreationDate] timeIntervalSince1970];
-                NSTimeInterval nowInterval = [[NSDate date] timeIntervalSince1970];
-                NSTimeInterval extraIntervalCreate = nowInterval - createTime;
-                if(before == YES) {
-                    if ((extraIntervalCreate > 90 * 24 * 60 * 60)) {
-                        [resultArr addObject:picPath];
-                    }
-                } else {
-                    if ((extraIntervalCreate <= 90 * 24 * 60 * 60)) {
-                        [resultArr addObject:picPath];
-                    }
-                }
-            }
-            
+        if (![path containsString:@"/Caches/Images"] && ![path containsString:@"/Caches/Videos"] && ![path containsString:@"/Caches/Files"]) {
+            continue;
         }
-    }
-
-    [self callbackResultArray:resultArr type:type before:before];
-}
-
-- (void)callbackResultArray:(NSArray *)resultArray type:(LMFileMoveScanType)type  before:(BOOL)before{
-    for (int i = 0; i <[resultArray count]; i ++) {
-        NSString *result = [resultArray objectAtIndex:i];
-        LMResultItem * resultItem = [[LMResultItem alloc] init];
-        resultItem.originPath = result;
-        resultItem.appType = LMAppCategoryItemType_QQ;
-        resultItem.fileType = type;
         
-        NSArray *titleArr = [result componentsSeparatedByString:@"/"];
-        if (titleArr && titleArr.count > 0) {
-            resultItem.title = titleArr.lastObject;
-        }
-        if (before) {
-            resultItem.selecteState = NSControlStateValueOn;
-        } else {
-            resultItem.selecteState = NSControlStateValueOff;
-        }
-        // 添加结果
-        if (resultItem.fileSize == 0) {
-            resultItem = nil;
-        } else {
-            if ([self.delegate respondsToSelector:@selector(QQScanWithType:resultItem:)]) {
-                [self.delegate QQScanWithType:type resultItem:resultItem];
-            }
-        }
+        NSArray *subArr = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:nil];
+        NSArray *subResultArr = [self filterPathArray:subArr parentDir:path continueExec:^BOOL(NSString * path) {
+            return YES;
+        } before:before];
+        [resultArr addObjectsFromArray:subResultArr];
     }
-}
 
-// 获取相关目录
-- (NSArray *)getPath:(NSString *)path shellString:(NSString *)shellString keyword:(NSString *)keyWord{
-    NSMutableArray *resultArray = [NSMutableArray new];
-    path = [path stringByReplacingOccurrencesOfString:@"~" withString:[NSString getUserHomePath]];
-    
-    NSString *cmd = [NSString stringWithFormat:shellString, path];
-    NSString *retPath = [QMShellExcuteHelper excuteCmd:cmd];
-    if ([retPath isKindOfClass:[NSNull class]]) {
-        return nil;
-    }
-    if ((retPath == nil) || ([retPath isEqualToString:@""])) {
-        return nil;
-    }
-    NSArray *retArray = [retPath componentsSeparatedByString:@"\n"];
-    for (NSString *resultPath in retArray) {
-        if ([resultPath containsString:keyWord]) {
-            [resultArray addObject:resultPath];
+    __weak typeof(self) weakSelf = self;
+    [self callbackResultArray:resultArr.copy appType:LMAppCategoryItemType_QQ type:type before:before completion:^(LMResultItem *resultItem) {
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        if ([strongSelf.delegate respondsToSelector:@selector(QQScanWithType:resultItem:)]) {
+            [strongSelf.delegate QQScanWithType:type resultItem:resultItem];
         }
-    }
-    return resultArray;
+    }];
 }
-
 
 @end

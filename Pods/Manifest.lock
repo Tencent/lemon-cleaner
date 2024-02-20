@@ -17,16 +17,19 @@ PODS:
   - FMDB/standard (2.7.5)
   - LemonBigOldFile (0.1.0):
     - AFNetworking (= 3.2.1)
+    - LemonFileManager
     - Masonry (= 1.1.0)
     - QMCoreFunction
     - QMUICommon
   - LemonDuplicateFile (0.1.0):
     - AFNetworking (= 3.2.1)
     - FMDB (= 2.7.5)
+    - LemonFileManager
     - LemonStat
     - Masonry (= 1.1.0)
     - QMCoreFunction
     - QMUICommon
+  - LemonFileManager (0.1.0)
   - LemonFileMove (0.1.0):
     - Masonry (= 1.1.0)
     - QMCoreFunction
@@ -91,6 +94,7 @@ DEPENDENCIES:
   - FMDB (= 2.7.5)
   - LemonBigOldFile (from `./localPod/LemonBigOldFile`)
   - LemonDuplicateFile (from `./localPod/LemonDuplicateFile`)
+  - LemonFileManager (from `./localPod/LemonFileManager`)
   - LemonFileMove (from `./localPod/LemonFileMove`)
   - LemonHardware (from `./localPod/LemonHardware`)
   - LemonLoginItemManager (from `./localPod/LemonLoginItemManager`)
@@ -117,6 +121,8 @@ EXTERNAL SOURCES:
     :path: "./localPod/LemonBigOldFile"
   LemonDuplicateFile:
     :path: "./localPod/LemonDuplicateFile"
+  LemonFileManager:
+    :path: "./localPod/LemonFileManager"
   LemonFileMove:
     :path: "./localPod/LemonFileMove"
   LemonHardware:
@@ -145,8 +151,9 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   AFNetworking: cb604b1c2bded0871f5f61f5d53653739e841d6b
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
-  LemonBigOldFile: cb5df431c9b9e5d4533b910b6b4b552821b3e8b2
-  LemonDuplicateFile: e5d7ac4f7599950979eed9c9b2640c87bd88c793
+  LemonBigOldFile: a07cc1b63a02a3798dd4695084ef4ada9c98dc20
+  LemonDuplicateFile: 07356a541fe41e1ca2673d8df48a2cd00dc5b9ff
+  LemonFileManager: e4c91c0b3f67290bc609ebe730d82d160691181b
   LemonFileMove: 0a6058bde54b959b249652d280a44251ddb9bb38
   LemonHardware: ea0edbcf97605090f859f670d53baaf8dcb149fd
   LemonLoginItemManager: 51ea13aff020ebb82ef5f76859fc154b6196b808
@@ -162,6 +169,6 @@ SPEC CHECKSUMS:
   QMUICommon: e2f5520cce7e70c46b2297294d7656a30b8e0c4f
   YMTreeMap: 8bd766573bc5005cf6b6f5d2674e4225ee734f6e
 
-PODFILE CHECKSUM: 33774415f55a48cd4fda1fafca5a169e049d65b2
+PODFILE CHECKSUM: c57a2f194f18078af36aff4818c711401f541de8
 
 COCOAPODS: 1.12.1

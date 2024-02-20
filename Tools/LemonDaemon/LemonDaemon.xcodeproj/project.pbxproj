@@ -11,15 +11,16 @@
 		2FA7A4A621C38D8C00B93EF5 /* DaemonStartup.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FA7A4A521C38D8C00B93EF5 /* DaemonStartup.m */; };
 		2FA7A53F21C3C65C00B93EF5 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2FA7A53E21C3C65C00B93EF5 /* main.m */; };
 		76B4C27C287294C000F61386 /* LMDMVersionHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 76B4C27B287294C000F61386 /* LMDMVersionHelper.m */; };
-		76B4C2922872981400F61386 /* CmcSmartQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = 76B4C2852872981400F61386 /* CmcSmartQuery.m */; };
-		76B4C2932872981400F61386 /* CmcAppleSmc2.m in Sources */ = {isa = PBXBuildFile; fileRef = 76B4C2872872981400F61386 /* CmcAppleSmc2.m */; };
-		76B4C2942872981400F61386 /* McTemperatureInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 76B4C2882872981400F61386 /* McTemperatureInfo.m */; };
-		76B4C2952872981400F61386 /* CmcTemperature.m in Sources */ = {isa = PBXBuildFile; fileRef = 76B4C28A2872981400F61386 /* CmcTemperature.m */; };
-		76B4C2962872981400F61386 /* CmcAppleSmc.m in Sources */ = {isa = PBXBuildFile; fileRef = 76B4C28E2872981400F61386 /* CmcAppleSmc.m */; };
-		76B4C2972872981400F61386 /* CmcFan.m in Sources */ = {isa = PBXBuildFile; fileRef = 76B4C2902872981400F61386 /* CmcFan.m */; };
-		76B4C2982872981400F61386 /* McFanInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 76B4C2912872981400F61386 /* McFanInfo.m */; };
 		785CA6227A7C5B29A3F7C3D5 /* libPods-LemonDaemon.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 71B3D3D30CBDF7DC92261FBF /* libPods-LemonDaemon.a */; };
 		7A0221CD2865BED8000F9FD4 /* CmcSystem.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A0221CC2865BED8000F9FD4 /* CmcSystem.c */; };
+		B79C27C32B84925400838B76 /* CmcSmartQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = B79C27B72B84925000838B76 /* CmcSmartQuery.m */; };
+		B79C27C42B84925400838B76 /* CmcFan.m in Sources */ = {isa = PBXBuildFile; fileRef = B79C27B92B84925100838B76 /* CmcFan.m */; };
+		B79C27C52B84925400838B76 /* CmcAppleSmc.m in Sources */ = {isa = PBXBuildFile; fileRef = B79C27BA2B84925100838B76 /* CmcAppleSmc.m */; };
+		B79C27C62B84925400838B76 /* CmcAppleSmc2.m in Sources */ = {isa = PBXBuildFile; fileRef = B79C27BB2B84925200838B76 /* CmcAppleSmc2.m */; };
+		B79C27C72B84925400838B76 /* CmcTemperature.m in Sources */ = {isa = PBXBuildFile; fileRef = B79C27BC2B84925200838B76 /* CmcTemperature.m */; };
+		B79C27C82B84925400838B76 /* McFanInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = B79C27BE2B84925300838B76 /* McFanInfo.m */; };
+		B79C27C92B84925400838B76 /* McTemperatureInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = B79C27C22B84925400838B76 /* McTemperatureInfo.m */; };
+		B79C27D12B84957700838B76 /* McCpuInfoSMC.m in Sources */ = {isa = PBXBuildFile; fileRef = B79C27D02B84957700838B76 /* McCpuInfoSMC.m */; };
 		BC6842B8225E0E980074B2D2 /* ExecuteCmdHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = BC6842B6225E0E970074B2D2 /* ExecuteCmdHelper.m */; };
 		BC8254EE22FA7DF100292FA5 /* LMKextManager.m in Sources */ = {isa = PBXBuildFile; fileRef = BC8254ED22FA7DF100292FA5 /* LMKextManager.m */; };
 		D466802221AE8B6500704647 /* LMDaemonXPCService.m in Sources */ = {isa = PBXBuildFile; fileRef = D466802121AE8B6500704647 /* LMDaemonXPCService.m */; };
@@ -83,25 +84,27 @@
 		71B3D3D30CBDF7DC92261FBF /* libPods-LemonDaemon.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-LemonDaemon.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		76B4C27A287294C000F61386 /* LMDMVersionHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMDMVersionHelper.h; sourceTree = "<group>"; };
 		76B4C27B287294C000F61386 /* LMDMVersionHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMDMVersionHelper.m; sourceTree = "<group>"; };
-		76B4C2842872981400F61386 /* CmcFan.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CmcFan.h; sourceTree = "<group>"; };
-		76B4C2852872981400F61386 /* CmcSmartQuery.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CmcSmartQuery.m; sourceTree = "<group>"; };
-		76B4C2862872981400F61386 /* CmcTemperature.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CmcTemperature.h; sourceTree = "<group>"; };
-		76B4C2872872981400F61386 /* CmcAppleSmc2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CmcAppleSmc2.m; sourceTree = "<group>"; };
-		76B4C2882872981400F61386 /* McTemperatureInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = McTemperatureInfo.m; sourceTree = "<group>"; };
-		76B4C2892872981400F61386 /* McFanInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = McFanInfo.h; sourceTree = "<group>"; };
-		76B4C28A2872981400F61386 /* CmcTemperature.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CmcTemperature.m; sourceTree = "<group>"; };
-		76B4C28B2872981400F61386 /* CmcAppleSmc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CmcAppleSmc.h; sourceTree = "<group>"; };
-		76B4C28C2872981400F61386 /* CmcSmartQuery.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CmcSmartQuery.h; sourceTree = "<group>"; };
-		76B4C28D2872981400F61386 /* CmcAppleSmc2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CmcAppleSmc2.h; sourceTree = "<group>"; };
-		76B4C28E2872981400F61386 /* CmcAppleSmc.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CmcAppleSmc.m; sourceTree = "<group>"; };
-		76B4C28F2872981400F61386 /* McTemperatureInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = McTemperatureInfo.h; sourceTree = "<group>"; };
-		76B4C2902872981400F61386 /* CmcFan.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CmcFan.m; sourceTree = "<group>"; };
-		76B4C2912872981400F61386 /* McFanInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = McFanInfo.m; sourceTree = "<group>"; };
 		76B4C29E2872996400F61386 /* McPipeCmdStruct.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = McPipeCmdStruct.h; sourceTree = "<group>"; };
 		76B4C29F2872996400F61386 /* McPipeStruct.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = McPipeStruct.h; sourceTree = "<group>"; };
 		7A0221CB2865BED8000F9FD4 /* CmcSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CmcSystem.h; sourceTree = "<group>"; };
 		7A0221CC2865BED8000F9FD4 /* CmcSystem.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = CmcSystem.c; sourceTree = "<group>"; };
 		8A36FA88920478B5FBB32539 /* Pods-LemonDaemon.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LemonDaemon.debug.xcconfig"; path = "../../Pods/Target Support Files/Pods-LemonDaemon/Pods-LemonDaemon.debug.xcconfig"; sourceTree = "<group>"; };
+		B79C27B42B84925000838B76 /* McTemperatureInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = McTemperatureInfo.h; sourceTree = "<group>"; };
+		B79C27B52B84925000838B76 /* CmcSmartQuery.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CmcSmartQuery.h; sourceTree = "<group>"; };
+		B79C27B62B84925000838B76 /* CmcAppleSmc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CmcAppleSmc.h; sourceTree = "<group>"; };
+		B79C27B72B84925000838B76 /* CmcSmartQuery.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CmcSmartQuery.m; sourceTree = "<group>"; };
+		B79C27B82B84925100838B76 /* CmcAppleSmc2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CmcAppleSmc2.h; sourceTree = "<group>"; };
+		B79C27B92B84925100838B76 /* CmcFan.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CmcFan.m; sourceTree = "<group>"; };
+		B79C27BA2B84925100838B76 /* CmcAppleSmc.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CmcAppleSmc.m; sourceTree = "<group>"; };
+		B79C27BB2B84925200838B76 /* CmcAppleSmc2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CmcAppleSmc2.m; sourceTree = "<group>"; };
+		B79C27BC2B84925200838B76 /* CmcTemperature.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CmcTemperature.m; sourceTree = "<group>"; };
+		B79C27BD2B84925200838B76 /* McFanInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = McFanInfo.h; sourceTree = "<group>"; };
+		B79C27BE2B84925300838B76 /* McFanInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = McFanInfo.m; sourceTree = "<group>"; };
+		B79C27C02B84925300838B76 /* CmcTemperature.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CmcTemperature.h; sourceTree = "<group>"; };
+		B79C27C12B84925400838B76 /* CmcFan.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CmcFan.h; sourceTree = "<group>"; };
+		B79C27C22B84925400838B76 /* McTemperatureInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = McTemperatureInfo.m; sourceTree = "<group>"; };
+		B79C27CF2B84957700838B76 /* McCpuInfoSMC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = McCpuInfoSMC.h; sourceTree = "<group>"; };
+		B79C27D02B84957700838B76 /* McCpuInfoSMC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = McCpuInfoSMC.m; sourceTree = "<group>"; };
 		BC6842B6225E0E970074B2D2 /* ExecuteCmdHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExecuteCmdHelper.m; sourceTree = "<group>"; };
 		BC6842B7225E0E970074B2D2 /* ExecuteCmdHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExecuteCmdHelper.h; sourceTree = "<group>"; };
 		BC8254EC22FA7DF100292FA5 /* LMKextManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LMKextManager.h; sourceTree = "<group>"; };
@@ -211,27 +214,6 @@
 			path = LemonDaemonActivator;
 			sourceTree = "<group>";
 		};
-		76B4C2832872980A00F61386 /* SMC */ = {
-			isa = PBXGroup;
-			children = (
-				76B4C28B2872981400F61386 /* CmcAppleSmc.h */,
-				76B4C28E2872981400F61386 /* CmcAppleSmc.m */,
-				76B4C28D2872981400F61386 /* CmcAppleSmc2.h */,
-				76B4C2872872981400F61386 /* CmcAppleSmc2.m */,
-				76B4C2842872981400F61386 /* CmcFan.h */,
-				76B4C2902872981400F61386 /* CmcFan.m */,
-				76B4C28C2872981400F61386 /* CmcSmartQuery.h */,
-				76B4C2852872981400F61386 /* CmcSmartQuery.m */,
-				76B4C2862872981400F61386 /* CmcTemperature.h */,
-				76B4C28A2872981400F61386 /* CmcTemperature.m */,
-				76B4C2892872981400F61386 /* McFanInfo.h */,
-				76B4C2912872981400F61386 /* McFanInfo.m */,
-				76B4C28F2872981400F61386 /* McTemperatureInfo.h */,
-				76B4C2882872981400F61386 /* McTemperatureInfo.m */,
-			);
-			path = SMC;
-			sourceTree = "<group>";
-		};
 		7A0221CE2865BEE7000F9FD4 /* oshlp */ = {
 			isa = PBXGroup;
 			children = (
@@ -239,6 +221,29 @@
 				7A0221CB2865BED8000F9FD4 /* CmcSystem.h */,
 			);
 			path = oshlp;
+			sourceTree = "<group>";
+		};
+		B79C27B32B84923700838B76 /* SMC */ = {
+			isa = PBXGroup;
+			children = (
+				B79C27B62B84925000838B76 /* CmcAppleSmc.h */,
+				B79C27BA2B84925100838B76 /* CmcAppleSmc.m */,
+				B79C27B82B84925100838B76 /* CmcAppleSmc2.h */,
+				B79C27BB2B84925200838B76 /* CmcAppleSmc2.m */,
+				B79C27C12B84925400838B76 /* CmcFan.h */,
+				B79C27B92B84925100838B76 /* CmcFan.m */,
+				B79C27B52B84925000838B76 /* CmcSmartQuery.h */,
+				B79C27B72B84925000838B76 /* CmcSmartQuery.m */,
+				B79C27C02B84925300838B76 /* CmcTemperature.h */,
+				B79C27BC2B84925200838B76 /* CmcTemperature.m */,
+				B79C27BD2B84925200838B76 /* McFanInfo.h */,
+				B79C27BE2B84925300838B76 /* McFanInfo.m */,
+				B79C27B42B84925000838B76 /* McTemperatureInfo.h */,
+				B79C27C22B84925400838B76 /* McTemperatureInfo.m */,
+				B79C27CF2B84957700838B76 /* McCpuInfoSMC.h */,
+				B79C27D02B84957700838B76 /* McCpuInfoSMC.m */,
+			);
+			path = SMC;
 			sourceTree = "<group>";
 		};
 		BC68427D225D8D260074B2D2 /* cmd */ = {
@@ -330,7 +335,7 @@
 		D4E1D85720F5F75A001FA263 /* Monitor */ = {
 			isa = PBXGroup;
 			children = (
-				76B4C2832872980A00F61386 /* SMC */,
+				B79C27B32B84923700838B76 /* SMC */,
 				D4E1D85820F5F75A001FA263 /* Network */,
 				D4E1D85B20F5F75A001FA263 /* Filemon */,
 				D4E1D86020F5F75A001FA263 /* ProcessMon */,
@@ -572,15 +577,16 @@
 				D4E1D89D20F5F7C8001FA263 /* QMLaunchpadClean.m in Sources */,
 				D4E1D89F20F5F7C8001FA263 /* FMDatabaseQueue.m in Sources */,
 				D4E1D8A220F5F7C8001FA263 /* FMDatabaseAdditions.m in Sources */,
+				B79C27C82B84925400838B76 /* McFanInfo.m in Sources */,
 				D4E1D8A320F5F7C8001FA263 /* FMDatabase.m in Sources */,
 				D4E1D8A720F5F7C8001FA263 /* FMDatabasePool.m in Sources */,
+				B79C27C52B84925400838B76 /* CmcAppleSmc.m in Sources */,
 				BC8254EE22FA7DF100292FA5 /* LMKextManager.m in Sources */,
 				D4B7253F21393F8B003B59B5 /* VideoProcessStat.m in Sources */,
-				76B4C2942872981400F61386 /* McTemperatureInfo.m in Sources */,
+				B79C27D12B84957700838B76 /* McCpuInfoSMC.m in Sources */,
 				D4E1D8A820F5F7C8001FA263 /* FMResultSet.m in Sources */,
 				D4E1D8A920F5F7C8001FA263 /* LemonDaemon-Prefix.pch in Sources */,
 				D4E1D8AB20F5F7C8001FA263 /* CmcNetSocket.m in Sources */,
-				76B4C2932872981400F61386 /* CmcAppleSmc2.m in Sources */,
 				D4E1D8AE20F5F7C8001FA263 /* Cmcfsdata.c in Sources */,
 				D485708A21425F720018B0FB /* AudioProcessStat.m in Sources */,
 				D466802221AE8B6500704647 /* LMDaemonXPCService.m in Sources */,
@@ -588,20 +594,20 @@
 				76B4C27C287294C000F61386 /* LMDMVersionHelper.m in Sources */,
 				D4E1D8B320F5F7C8001FA263 /* CmcProcess.m in Sources */,
 				2FA7A4A621C38D8C00B93EF5 /* DaemonStartup.m in Sources */,
-				76B4C2962872981400F61386 /* CmcAppleSmc.m in Sources */,
-				76B4C2982872981400F61386 /* McFanInfo.m in Sources */,
 				D466802921AE91A600704647 /* LMDaemonListenerDelegate.m in Sources */,
+				B79C27C72B84925400838B76 /* CmcTemperature.m in Sources */,
 				D466802621AE8D8700704647 /* LMXPCFunction.m in Sources */,
 				D4B14D2821A2E41D001E6064 /* LemonBizManager.m in Sources */,
+				B79C27C92B84925400838B76 /* McTemperatureInfo.m in Sources */,
+				B79C27C62B84925400838B76 /* CmcAppleSmc2.m in Sources */,
 				D4B72589213D3013003B59B5 /* OwlManageDaemon.m in Sources */,
-				76B4C2922872981400F61386 /* CmcSmartQuery.m in Sources */,
-				76B4C2972872981400F61386 /* CmcFan.m in Sources */,
+				B79C27C32B84925400838B76 /* CmcSmartQuery.m in Sources */,
 				2FA7A48321C2869200B93EF5 /* LMPlistHelper.m in Sources */,
+				B79C27C42B84925400838B76 /* CmcFan.m in Sources */,
 				D4E1D8BA20F5F7C8001FA263 /* McPipeThread.m in Sources */,
 				D4E1D8BD20F5F7C8001FA263 /* McRemoveTrojan.m in Sources */,
 				D4E1D85020F5F6D9001FA263 /* main.m in Sources */,
 				7A0221CD2865BED8000F9FD4 /* CmcSystem.c in Sources */,
-				76B4C2952872981400F61386 /* CmcTemperature.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

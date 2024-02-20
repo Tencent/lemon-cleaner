@@ -16,7 +16,11 @@
 #import <Masonry/Masonry.h>
 #import <QMCoreFunction/LanguageHelper.h>
 #import <QMCoreFunction/NSButton+Extension.h>
+#import <QMCoreFunction/NSTimer+Extension.h>
 #import <QMUICommon/LMAppThemeHelper.h>
+
+static NSTimeInterval kCollectionPathsProgressTimeInterval = 0.3;
+
 @interface LMScanViewController ()
 
 
@@ -74,7 +78,10 @@
     [self initViewText];
     [self setupViews];
     self.timerCount = 0;
-    self.collectionPathsProgressTimer = [NSTimer timerWithTimeInterval:0.3 target:self selector:@selector(timerAction) userInfo:nil repeats:YES];
+    __weak typeof(self) weakSelf = self;
+    self.collectionPathsProgressTimer = [NSTimer timerWithTimeInterval:kCollectionPathsProgressTimeInterval repeats:YES handler:^{
+        [weakSelf timerAction];
+    }];
     
     [[NSRunLoop currentRunLoop]addTimer:self.collectionPathsProgressTimer forMode:NSRunLoopCommonModes];
     [self.collectionPathsProgressTimer fire];

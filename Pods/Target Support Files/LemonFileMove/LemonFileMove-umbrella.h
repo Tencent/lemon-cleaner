@@ -27,6 +27,7 @@
 #import "LMResultItem.h"
 #import "Disk.h"
 #import "DiskArbitrationPrivateFunctions.h"
+#import "LMBaseScan.h"
 #import "LMFileMoveManger.h"
 #import "LMQQScan.h"
 #import "LMWeChatScan.h"

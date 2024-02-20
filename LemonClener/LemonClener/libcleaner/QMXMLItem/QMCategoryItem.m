@@ -219,6 +219,12 @@
 
 @end
 
+@interface QMCategoryItem ()
+
+@property (nonatomic, strong) NSRecursiveLock *lock;
+
+@end
+
 @implementation QMCategoryItem
 @synthesize categoryID;
 @synthesize title;
@@ -230,6 +236,7 @@
 {
     if (self = [super init])
     {
+        _lock = [[NSRecursiveLock alloc] init];
         recommend = YES;
         self.m_stateValue = NSOnState;
         m_resultItemArray = [[NSMutableArray alloc] init];
@@ -438,6 +445,21 @@
     }
     
     return cleanFileNum;
+}
+
+#pragma mark - setter or getter
+
+- (NSArray *)m_categorySubItemArray {
+    [_lock lock];
+    NSArray *array = [m_categorySubItemArray copy];
+    [_lock unlock];
+    return array;
+}
+
+- (void)setM_categorySubItemArray:(NSArray *)array {
+    [_lock lock];
+    m_categorySubItemArray = array.mutableCopy;
+    [_lock unlock];
 }
 
 @end
