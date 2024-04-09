@@ -10,6 +10,7 @@
 #include <sys/sysctl.h>
 #import "HardwareHeader.h"
 #import <QMUICommon/SharedPrefrenceManager.h>
+#import "BatteryModel.h"
 
 #define kSIMachineAttributesPath    @"/System/Library/PrivateFrameworks/ServerInformation.framework/Versions/A/Resources/English.lproj/SIMachineAttributes.plist"
 #define HARDWARE_PLIST @"hardware.plist"
@@ -442,6 +443,100 @@ NSDate * manufacureDate(NSString *serial)
 
 -(NSString *)description{
     return [NSString stringWithFormat:@"machineName = %@, yearString = %@, thunderbolts = %ld, ports = %ld, cpuName = %@, cpuSpeed = %@, cpuCores = %@, L2Cache = %@, L3Cache = %@", self.machineName, self.yearString, self.thunderbolts, self.ports, self.cpuName, self.cpuSpeed, self.cpuCores, self.L2Cache, self.L3Cache];
+}
+
+@end
+
+// MacBook Pro https://support.apple.com/zh-cn/HT201300
+NSString * const kMacBookPro_15_3 = @"Mac15,3";
+NSString * const kMacBookPro_15_6 = @"Mac15,6";
+NSString * const kMacBookPro_15_8 = @"Mac15,8";
+NSString * const kMacBookPro_15_10 = @"Mac15,10";
+NSString * const kMacBookPro_15_7 = @"Mac15,7";
+NSString * const kMacBookPro_15_9 = @"Mac15,9";
+NSString * const kMacBookPro_15_11 = @"Mac15,11";
+NSString * const kMacBookPro_14_5 = @"Mac14,5";
+NSString * const kMacBookPro_14_9 = @"Mac14,9";
+NSString * const kMacBookPro_14_6 = @"Mac14,6";
+NSString * const kMacBookPro_14_10 = @"Mac14,10";
+NSString * const kMacBookPro_early_18_3 = @"MacBookPro18,3";
+NSString * const kMacBookPro_early_18_4 = @"MacBookPro18,4";
+NSString * const kMacBookPro_early_18_1 = @"MacBookPro18,1";
+NSString * const kMacBookPro_early_18_2 = @"MacBookPro18,2";
+
+// MacBook Air https://support.apple.com/zh-cn/102869
+NSString * const kMacBookAir_15_13 = @"Mac15,13";
+NSString * const kMacBookAir_15_12 = @"Mac15,12";
+NSString * const kMacBookAir_14_15 = @"Mac14,15";
+NSString * const kMacBookAir_14_2 = @"Mac14,2";
+NSString * const kMacBookAir_early_10_1 = @"MacBookAir10,1";
+
+@implementation MachineModel (LHScreen)
+
++ (BOOL)isLiquidScreen {
+    static BOOL isLiquid = NO;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        isLiquid = [self __isLiquidScreen];
+    });
+    return isLiquid;
+}
+
+#pragma mark - private
+
++ (BOOL)__isLiquidScreen {
+    BOOL isLiquid = NO;
+    MachineModel *model = [[MachineModel alloc] init];
+    NSString *machineName =  model.machineName ? : @"Unknown Mac";
+    NSArray *list = @[
+        kMacBookPro_15_3,
+        kMacBookPro_15_6,
+        kMacBookPro_15_8,
+        kMacBookPro_15_10,
+        kMacBookPro_15_7,
+        kMacBookPro_15_9,
+        kMacBookPro_15_11,
+        kMacBookPro_14_5,
+        kMacBookPro_14_9,
+        kMacBookPro_14_6,
+        kMacBookPro_14_10,
+        kMacBookPro_early_18_3,
+        kMacBookPro_early_18_4,
+        kMacBookPro_early_18_1,
+        kMacBookPro_early_18_2,
+        kMacBookAir_15_13,
+        kMacBookAir_15_12,
+        kMacBookAir_14_15,
+        kMacBookAir_14_2,
+        kMacBookAir_early_10_1
+    ];
+    if ([list containsObject:machineName]) {
+        isLiquid = YES;
+    } else if ([machineName containsString:@"iMac"]) {
+        isLiquid = NO;
+    } else if ([machineName containsString:@"Macmini"]) {
+        isLiquid = NO;
+    } else if ([machineName containsString:@"MacPro"]) {
+        isLiquid = NO;
+    } else if ([machineName containsString:@"MacBookAir"]) {
+        isLiquid = NO;
+    } else if ([machineName containsString:@"MacBookPro"]) {
+        isLiquid = NO;
+    } else if ([self __assertRegex:@"Mac(\\d{1,2}),(\\d{1,2})" matchStr:machineName]) {
+        // 有电池则是笔记本，否则为iMac、Mac Mini、Mac Pro、Mac studio
+        BatteryModel *batteryModel = [[BatteryModel alloc] init];
+        isLiquid = [batteryModel isExistBattery];
+    } else {
+        isLiquid = NO;
+    }
+    return isLiquid;
+}
+
+// 正则比较
++ (BOOL)__assertRegex:(NSString*)regexString matchStr:(NSString *)str
+{
+    NSPredicate *regex = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", regexString];
+    return [regex evaluateWithObject:str];
 }
 
 @end

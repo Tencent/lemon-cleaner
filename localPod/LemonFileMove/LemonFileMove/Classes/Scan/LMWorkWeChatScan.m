@@ -12,16 +12,8 @@
 
 @implementation LMWorkWeChatScan
 
-+ (instancetype)shareInstance {
-    static LMWorkWeChatScan *shareInstance = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        shareInstance = [[[self class] alloc] init];
-    });
-    return shareInstance;
-}
-
-- (void)starScanWorkWeChat {
+- (void)startScanWorkWeChat {
+    [self start];
     [self scanWorkWeChat:LMFileMoveScanType_Image before:YES];
     [self scanWorkWeChat:LMFileMoveScanType_Image before:NO];
     [self scanWorkWeChat:LMFileMoveScanType_File before:YES];
@@ -65,7 +57,7 @@
     __weak typeof(self) weakSelf = self;
     [self callbackResultArray:resultArr.copy appType:LMAppCategoryItemType_WeCom type:type before:before completion:^(LMResultItem *resultItem) {
         __strong typeof(weakSelf) strongSelf = weakSelf;
-        if ([strongSelf.delegate respondsToSelector:@selector(workWeChatScanWithType:resultItem:)]) {
+        if ([strongSelf.delegate respondsToSelector:@selector(workWeChatScanWithType:resultItem:)] && !self.cancel) {
             [strongSelf.delegate workWeChatScanWithType:type resultItem:resultItem];
         }
     }];

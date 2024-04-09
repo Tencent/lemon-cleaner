@@ -28,6 +28,7 @@
 #import <QMCoreFunction/NSBundle+LMLanguage.h>
 #import <PrivacyProtect/OwlWindowController.h>
 #import <LemonHardware/LemonHardwareWindowController.h>
+#import <LemonHardware/MachineModel.h>
 #import <LemonUninstaller/AppTrashDel.h>
 #import "LMHardWareDataUtil.h"
 #import <QMCoreFunction/QMFullDiskAccessManager.h>
@@ -223,31 +224,14 @@ enum
 
 -(void)setupViews
 {
-    
     [self setupStatusItem];
     [self configureMenuBarForDarkModeChange];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        if (!self.timer && [self isRunOnAppleNewScreen]) {
+        if (!self.timer && [MachineModel isLiquidScreen]) {
             self.timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(processAnimate) userInfo:nil repeats:YES];
             [[NSRunLoop currentRunLoop] addTimer:self.timer forMode:NSRunLoopCommonModes];
         }
     });
-}
-
-- (BOOL)isRunOnAppleNewScreen {
-    BOOL result = NO;
-    if (@available(macOS 11, *)) {
-        char buf[100];
-        size_t buflen = 100;
-        sysctlbyname("machdep.cpu.brand_string", &buf, &buflen, NULL, 0);
-        NSString *cupArch = [[NSString alloc] initWithCString:(char*)buf encoding:NSASCIIStringEncoding];
-        if ([cupArch containsString:@"Apple M1 Pro"] ||[cupArch containsString:@"Apple M1 Max"] ) {
-            result = YES;
-        } else {
-            result = NO;
-        }
-    }
-    return result;
 }
 
 - (void)processAnimate {

@@ -18,10 +18,8 @@
 
 @property (nonatomic, weak) id<LMWeChatScanDelegate> delegate;
 
-+ (instancetype)shareInstance;
+- (void)startScanWeChat;
 
-- (void)starScanWechat;
-
-- (void)scanWechat:(LMFileMoveScanType)type before:(BOOL)before;
+- (void)scanWeChat:(LMFileMoveScanType)type before:(BOOL)before;
 
 @end

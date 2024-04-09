@@ -26,3 +26,10 @@
 
 
 @end
+
+@interface MachineModel (LHScreen)
+
+// 刘海屏
++ (BOOL)isLiquidScreen;
+
+@end

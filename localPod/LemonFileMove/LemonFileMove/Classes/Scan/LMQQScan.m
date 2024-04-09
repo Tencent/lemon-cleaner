@@ -14,16 +14,8 @@
 
 @implementation LMQQScan
 
-+ (instancetype)shareInstance {
-    static LMQQScan *shareInstance = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        shareInstance = [[[self class] alloc] init];
-    });
-    return shareInstance;
-}
-
-- (void)starScanQQ {
+- (void)startScanQQ {
+    [self start];
     [self scanQQ:LMFileMoveScanType_Image before:YES];
     [self scanQQ:LMFileMoveScanType_Image before:NO];
     [self scanQQ:LMFileMoveScanType_File before:YES];
@@ -67,7 +59,7 @@
     __weak typeof(self) weakSelf = self;
     [self callbackResultArray:resultArr.copy appType:LMAppCategoryItemType_QQ type:type before:before completion:^(LMResultItem *resultItem) {
         __strong typeof(weakSelf) strongSelf = weakSelf;
-        if ([strongSelf.delegate respondsToSelector:@selector(QQScanWithType:resultItem:)]) {
+        if ([strongSelf.delegate respondsToSelector:@selector(QQScanWithType:resultItem:)] && !self.cancel) {
             [strongSelf.delegate QQScanWithType:type resultItem:resultItem];
         }
     }];
@@ -105,7 +97,7 @@
     __weak typeof(self) weakSelf = self;
     [self callbackResultArray:resultArr appType:LMAppCategoryItemType_QQ type:type before:before completion:^(LMResultItem *resultItem) {
         __strong typeof(weakSelf) strongSelf = weakSelf;
-        if ([strongSelf.delegate respondsToSelector:@selector(QQScanWithType:resultItem:)]) {
+        if ([strongSelf.delegate respondsToSelector:@selector(QQScanWithType:resultItem:)] && !self.cancel) {
             [strongSelf.delegate QQScanWithType:type resultItem:resultItem];
         }
     }];

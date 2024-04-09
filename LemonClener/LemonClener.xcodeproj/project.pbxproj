@@ -200,8 +200,13 @@
 		7AE9F5F72865B8A60063E28E /* garbage_appstore_en.xml in Resources */ = {isa = PBXBuildFile; fileRef = 7AE9F5F32865B8A60063E28E /* garbage_appstore_en.xml */; };
 		7AE9F5F82865B8A60063E28E /* garbage_appstore_zh.xml in Resources */ = {isa = PBXBuildFile; fileRef = 7AE9F5F42865B8A60063E28E /* garbage_appstore_zh.xml */; };
 		805D3473EBC42DA7B37B9A80 /* Pods_LemonClener.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0CAB11E4EF733879C425039A /* Pods_LemonClener.framework */; };
+		B7302C432BDB9155001A81FC /* QMScanFileSizeCacheManager.h in Headers */ = {isa = PBXBuildFile; fileRef = B7302C412BDB9155001A81FC /* QMScanFileSizeCacheManager.h */; };
+		B7302C442BDB9155001A81FC /* QMScanFileSizeCacheManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B7302C422BDB9155001A81FC /* QMScanFileSizeCacheManager.m */; };
+		B79FF4FC2BFB3A6F00F99813 /* LMCleanerDataCenter+LMCleanPatch.h in Headers */ = {isa = PBXBuildFile; fileRef = B79FF4FA2BFB3A6F00F99813 /* LMCleanerDataCenter+LMCleanPatch.h */; };
+		B79FF4FD2BFB3A6F00F99813 /* LMCleanerDataCenter+LMCleanPatch.m in Sources */ = {isa = PBXBuildFile; fileRef = B79FF4FB2BFB3A6F00F99813 /* LMCleanerDataCenter+LMCleanPatch.m */; };
 		B7B7038D2AFB7571002420C1 /* QMBaseScan.h in Headers */ = {isa = PBXBuildFile; fileRef = B7B7038B2AFB7571002420C1 /* QMBaseScan.h */; };
 		B7B7038E2AFB7571002420C1 /* QMBaseScan.m in Sources */ = {isa = PBXBuildFile; fileRef = B7B7038C2AFB7571002420C1 /* QMBaseScan.m */; };
+		B7CE30782BF6083A00F4AF89 /* QMCleanerDefine.h in Headers */ = {isa = PBXBuildFile; fileRef = B7CE30772BF6075B00F4AF89 /* QMCleanerDefine.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B7E252E72AFA75C600201DF9 /* QMWechatScan.h in Headers */ = {isa = PBXBuildFile; fileRef = B7E252E52AFA75C600201DF9 /* QMWechatScan.h */; };
 		B7E252E82AFA75C600201DF9 /* QMWechatScan.m in Sources */ = {isa = PBXBuildFile; fileRef = B7E252E62AFA75C600201DF9 /* QMWechatScan.m */; };
 		BC215A1C215C737100CBC906 /* QMMailUtil.h in Headers */ = {isa = PBXBuildFile; fileRef = BC215A1A215C737000CBC906 /* QMMailUtil.h */; };
@@ -557,8 +562,13 @@
 		7AE9F5F32865B8A60063E28E /* garbage_appstore_en.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = garbage_appstore_en.xml; sourceTree = "<group>"; };
 		7AE9F5F42865B8A60063E28E /* garbage_appstore_zh.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = garbage_appstore_zh.xml; sourceTree = "<group>"; };
 		A9034E812C8560B577617437 /* Pods-LemonClener.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LemonClener.debug.xcconfig"; path = "../Pods/Target Support Files/Pods-LemonClener/Pods-LemonClener.debug.xcconfig"; sourceTree = "<group>"; };
+		B7302C412BDB9155001A81FC /* QMScanFileSizeCacheManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QMScanFileSizeCacheManager.h; sourceTree = "<group>"; };
+		B7302C422BDB9155001A81FC /* QMScanFileSizeCacheManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QMScanFileSizeCacheManager.m; sourceTree = "<group>"; };
+		B79FF4FA2BFB3A6F00F99813 /* LMCleanerDataCenter+LMCleanPatch.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "LMCleanerDataCenter+LMCleanPatch.h"; sourceTree = "<group>"; };
+		B79FF4FB2BFB3A6F00F99813 /* LMCleanerDataCenter+LMCleanPatch.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "LMCleanerDataCenter+LMCleanPatch.m"; sourceTree = "<group>"; };
 		B7B7038B2AFB7571002420C1 /* QMBaseScan.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QMBaseScan.h; sourceTree = "<group>"; };
 		B7B7038C2AFB7571002420C1 /* QMBaseScan.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QMBaseScan.m; sourceTree = "<group>"; };
+		B7CE30772BF6075B00F4AF89 /* QMCleanerDefine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QMCleanerDefine.h; sourceTree = "<group>"; };
 		B7E252E52AFA75C600201DF9 /* QMWechatScan.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QMWechatScan.h; sourceTree = "<group>"; };
 		B7E252E62AFA75C600201DF9 /* QMWechatScan.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QMWechatScan.m; sourceTree = "<group>"; };
 		BC215A1A215C737000CBC906 /* QMMailUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMMailUtil.h; sourceTree = "<group>"; };
@@ -1108,6 +1118,7 @@
 		F854B1F620F77677009102CF /* QMCleanerManager */ = {
 			isa = PBXGroup;
 			children = (
+				B7CE30772BF6075B00F4AF89 /* QMCleanerDefine.h */,
 				F854B1FD20F77677009102CF /* QMCleanerUtils.h */,
 				F854B1F720F77677009102CF /* QMCleanerUtils.m */,
 				F854B1FF20F77677009102CF /* QMRemoveManager.h */,
@@ -1155,6 +1166,8 @@
 				F854B25320F89D3E009102CF /* QMXMLItem */,
 				BC215A1A215C737000CBC906 /* QMMailUtil.h */,
 				BC215A1B215C737000CBC906 /* QMMailUtil.m */,
+				B7302C412BDB9155001A81FC /* QMScanFileSizeCacheManager.h */,
+				B7302C422BDB9155001A81FC /* QMScanFileSizeCacheManager.m */,
 				F854B24820F89D3E009102CF /* QMCleanUtils.h */,
 				F854B26520F89D3E009102CF /* QMCleanUtils.m */,
 				F854B26620F89D3E009102CF /* QMScanCategory.h */,
@@ -1228,6 +1241,8 @@
 				F86CE17221411C88009352F1 /* LMCleanResultModel.m */,
 				F893D5C72134193A00208817 /* LMCleanerDataCenter.h */,
 				F893D5C82134193A00208817 /* LMCleanerDataCenter.m */,
+				B79FF4FA2BFB3A6F00F99813 /* LMCleanerDataCenter+LMCleanPatch.h */,
+				B79FF4FB2BFB3A6F00F99813 /* LMCleanerDataCenter+LMCleanPatch.m */,
 				F86CE17A21412152009352F1 /* LMCleanShowModel.h */,
 				F86CE17B21412152009352F1 /* LMCleanShowModel.m */,
 			);
@@ -1292,6 +1307,7 @@
 				F85E76AE21C8ACFD005A3A19 /* InstallAppHelper.h in Headers */,
 				DEE6CED327BFB1F400B557C7 /* SubCategoryCellView.h in Headers */,
 				F871ED7621DDAA0000F178ED /* QMSoftScan.h in Headers */,
+				B79FF4FC2BFB3A6F00F99813 /* LMCleanerDataCenter+LMCleanPatch.h in Headers */,
 				F8457F81212BF121006D8ECB /* LMCleanScanViewController.h in Headers */,
 				F854B20320F77677009102CF /* QMLiteCleanerManager.h in Headers */,
 				DEA5D585279D06A800E96666 /* LMFileMoveIntroduceVC.h in Headers */,
@@ -1301,6 +1317,7 @@
 				F86CE17521411C89009352F1 /* LMCleanResultModel.h in Headers */,
 				F81C9074225F30C8008F260B /* LMAppSandboxHelper.h in Headers */,
 				DE7EA4072744D83F00187F73 /* LMWebViewController.h in Headers */,
+				B7302C432BDB9155001A81FC /* QMScanFileSizeCacheManager.h in Headers */,
 				F8457FA3212ECFC7006D8ECB /* CleanerCantant.h in Headers */,
 				F854B1F520F774D8009102CF /* QMDataConst.h in Headers */,
 				F820953B219BC9ED004B58C8 /* LMCleanerTableView.h in Headers */,
@@ -1353,6 +1370,7 @@
 				DEE6CED527BFB1F400B557C7 /* BigCleanParaentCellView.h in Headers */,
 				DE9E4F262797F5F200474163 /* LMMaskView.h in Headers */,
 				BC215A20215C750600CBC906 /* QMMailScan.h in Headers */,
+				B7CE30782BF6083A00F4AF89 /* QMCleanerDefine.h in Headers */,
 				B7B7038D2AFB7571002420C1 /* QMBaseScan.h in Headers */,
 				5C9AD2F821DDA5AF002AB2A2 /* AnimationHelper.h in Headers */,
 				DEE6CED627BFB1F400B557C7 /* CategoryCellView.h in Headers */,
@@ -1710,6 +1728,7 @@
 				F854B20120F77677009102CF /* QMCleanerUtils.m in Sources */,
 				DEE6CED427BFB1F400B557C7 /* ActionItemCellView.m in Sources */,
 				DEE6CED827BFB1F400B557C7 /* QMResultTableRowView.m in Sources */,
+				B7302C442BDB9155001A81FC /* QMScanFileSizeCacheManager.m in Sources */,
 				F86C7006222D05880070F9E0 /* QMItemCreateHelper.m in Sources */,
 				F8538A6A2190352F00BED180 /* LMBackImageButton.m in Sources */,
 				F854B27820F89D3F009102CF /* QMBaseItem.m in Sources */,
@@ -1733,6 +1752,7 @@
 				DE9E4F272797F5F200474163 /* LMMaskView.m in Sources */,
 				B7B7038E2AFB7571002420C1 /* QMBaseScan.m in Sources */,
 				F899F791215DC6E600947003 /* MacDeviceHelper.m in Sources */,
+				B79FF4FD2BFB3A6F00F99813 /* LMCleanerDataCenter+LMCleanPatch.m in Sources */,
 				F86CE17421411C89009352F1 /* LMCleanResultModel.m in Sources */,
 				F854B28720F89D3F009102CF /* QMCleanUtils.m in Sources */,
 				BC215A21215C750600CBC906 /* QMMailScan.m in Sources */,

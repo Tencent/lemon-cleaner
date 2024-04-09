@@ -11,6 +11,10 @@
 
 @implementation LMBaseScan
 
+- (void)start {
+    self.cancel = NO;
+}
+
 //过滤90天/90天后
 - (NSArray *)filterPathArray:(NSArray *)pathArray
                    parentDir:(NSString *)parentDir
@@ -19,6 +23,9 @@
       NSMutableArray *resultArr = [NSMutableArray new];
       for (NSString *_path in pathArray) {
           @autoreleasepool {
+              if (self.cancel) {
+                  break;
+              }
               NSString *path = _path;
               if (parentDir) {
                   path = [parentDir stringByAppendingPathComponent:path];
@@ -78,6 +85,10 @@
         } else if (completion) {
             completion(resultItem);
         }
+        
+        if (self.cancel) {
+            break;
+        }
     }
 }
 
@@ -100,6 +111,9 @@
     for (NSString *resultPath in retArray) {
         if ([resultPath containsString:keyWord]) {
             [resultArray addObject:resultPath];
+        }
+        if (self.cancel) {
+            break;
         }
     }
     return resultArray;
@@ -129,6 +143,9 @@
             }
         } else {
             [enumerator skipDescendants];
+        }
+        if (self.cancel) {
+            break;
         }
     }
     return subdirectories.copy;

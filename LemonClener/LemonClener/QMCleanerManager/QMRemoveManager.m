@@ -646,7 +646,8 @@
 
 
 
-- (void)processClean:(NSMutableDictionary *)resultDict {
+- (void)processClean:(NSMutableDictionary *)resultDict actionSource:(QMCleanerActionSource)source {
+    
     NSInteger totalwarnSize = 0;
     self->cleanedItemCount = 0;
     [self processLanguageItemArray:resultDict];
@@ -665,7 +666,7 @@
     });
 }
 
-- (BOOL)startCleaner:(NSMutableDictionary *)resultDict
+- (BOOL)startCleaner:(NSMutableDictionary *)resultDict actionSource:(QMCleanerActionSource)source
 {
     __weak QMRemoveManager *weakSelf = self;
     NSLog(@"%p, %p, startCleaner", self, self.class);
@@ -715,12 +716,12 @@
         dispatch_async(dispatch_get_global_queue(0, 0), ^{
             QMRemoveManager *strongSelf = weakSelf;
             
-            [strongSelf processClean:removeItemDict];
+            [strongSelf processClean:removeItemDict actionSource:source];
         });
     }
     else
     {
-        [self processClean:removeItemDict];
+        [self processClean:removeItemDict actionSource:source];
     }
     return YES;
 }

@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "QMCategoryItem.h"
 #import "QMWarnReultItem.h"
+#import "QMCleanerDefine.h"
 
 @protocol QMRemoveManagerDelegate <NSObject>
 
@@ -44,7 +45,7 @@
 
 + (QMRemoveManager *)getInstance;
 
-- (BOOL)startCleaner:(NSDictionary *)categoryDict;
+- (BOOL)startCleaner:(NSDictionary *)categoryDict actionSource:(QMCleanerActionSource)source;
 
 - (NSArray *)warnResultItemArray;
 - (BOOL)canRemoveWarnItem;

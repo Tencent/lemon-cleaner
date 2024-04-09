@@ -103,7 +103,7 @@
         
         [qmLiteCleanerManager startScan];
         _trashSize = [qmLiteCleanerManager resultSize];
-        [qmLiteCleanerManager startClean];
+        [qmLiteCleanerManager startCleanWithActionSource:QMCleanerActionSourceMonitor];
         
         mLastCleanTime = [[NSDate date] timeIntervalSince1970];
         _trashSize = 0;

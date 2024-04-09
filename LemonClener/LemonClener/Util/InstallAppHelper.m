@@ -7,12 +7,11 @@
 //
 
 #import "InstallAppHelper.h"
-#import "QMCleanUtils.h"
 
 @implementation InstallAppHelper
 
 //白名单  比如有的软件适配始终无垃圾的白名单过滤
-static NSArray * getWhiteAppList() {
+static NSArray * getWhiteAppList(void) {
     static NSArray *whiteAppLists = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -35,10 +34,23 @@ static NSArray * getWhiteAppList() {
     NSArray *properties = nil;
     NSArray *installArr = nil;
     @try {
+        /*
+         在macOS13.0之后 '/Applications/Safari.app' 默认为隐藏文件。
+         因此不能再使用NSDirectoryEnumerationSkipsHiddenFiles，修改为NSDirectoryEnumerationSkipsSubdirectoryDescendants|NSDirectoryEnumerationSkipsPackageDescendants,浅层遍历，不会遍历子目录，也不会遍历Package，更加符合需求
+         
+         后续判断（扩展名 != .app）会将隐藏的非应用的路径过滤掉
+ 
+         NSString *path = [appUrl path];
+         if (![[[path pathExtension] lowercaseString] isEqualToString:@"app"]){
+             continue;
+         }
+         
+         */
+        
         installArr = [[NSFileManager defaultManager]
                                contentsOfDirectoryAtURL:[urls objectAtIndex:0]
                                includingPropertiesForKeys:properties
-                               options:(NSDirectoryEnumerationSkipsHiddenFiles)
+                               options:NSDirectoryEnumerationSkipsSubdirectoryDescendants|NSDirectoryEnumerationSkipsPackageDescendants
                                error:&error];
     } @catch (NSException *exception) {
         NSLog(@"getInstallBundleIds exception = %@", exception);

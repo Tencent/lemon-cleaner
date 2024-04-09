@@ -18,9 +18,7 @@
 
 @property (nonatomic, weak) id<LMQQScanDelegate> delegate;
 
-+ (instancetype)shareInstance;
-
-- (void)starScanQQ;
+- (void)startScanQQ;
 
 - (void)scanQQ:(LMFileMoveScanType)type before:(BOOL)before;
 

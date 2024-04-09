@@ -180,6 +180,13 @@
                 <path type="abs" filename=".+\.ipsw" level="-1" value="~/Library/iTunes/"/>
             </action>
         </item>
+        <item id="1008" recommend="NO" fastmode="NO">
+            <title><![CDATA[iOS Device Backup]]></title>
+            <tips><![CDATA[Please make sure all backup files can be removed before you select it]]></tips>
+            <action type="file">
+                <path type="abs"  level="1" value="~/Library/Application Support/MobileSync/Backup"/>
+            </action>
+        </item>
         <item id="1006" recommend="NO" fastmode="NO">
             <title><![CDATA[Trash]]></title>
             <tips><![CDATA[Please make sure all the files in your trash can be removed before you select it]]></tips>
@@ -338,6 +345,13 @@
             <!--Internet Cache-->
             <action id="3111" type="file" recommend="YES">
                 <path type="abs" level="0" value="~/Library/Caches/Microsoft Edge/Default/Cache/"/>
+            </action>
+        </item>
+        <item id="312" recommend="YES" fastmode="NO">
+            <title><![CDATA[Download Logs]]></title>
+            <tips><![CDATA[Logs of applications downloaded from untrusted sources]]></tips>
+            <action id="3121" type="file">
+                <path type="abs" level="0" value="~/Library/Preferences/com.apple.LaunchServices.QuarantineEventsV2"/>
             </action>
         </item>
     </category>

@@ -10,6 +10,7 @@
 #import <QMCoreFunction/MdlsToolsHelper.h>
 #import "QMLiteCleanerManager.h"
 #import <LemonFileManager/LMFileAttributesTool.h>
+#import "QMScanFileSizeCacheManager.h"
 
 #define MINBLOCK 4096
 
@@ -47,17 +48,6 @@ off_t getFileSize(const char *path) {
     return -1;
 }
 
-/// 0 未隐藏，-1错误、其他值隐藏
-int isFileHidden(const char *path) {
-    struct stat attrib;
-
-    if (stat(path, &attrib) == 0) {
-        return attrib.st_flags & UF_HIDDEN;
-    }
-
-    return -1;
-}
-
 BOOL isPipe(const char *path) {
     struct stat fileStat;
     if (stat(path, &fileStat) == 0) {
@@ -76,47 +66,31 @@ static NSMutableDictionary * m_cachePathDict = nil;
 // get total size by path
 + (uint64)caluactionSize:(NSString *)path
 {
-    if (![[NSFileManager defaultManager] fileExistsAtPath:path])
-        return 0;
-    uint64 fileSize = 0;
-    BOOL diskMode = YES;
-    
-    struct stat fileStat;
-    if (lstat([path fileSystemRepresentation], &fileStat) == noErr)
-    {
-        if (fileStat.st_mode & S_IFDIR){
-            //判断是否是app类型
-            NSString *fileName = [path lastPathComponent];
-            if ([[fileName pathExtension] isEqualToString:@"app"]) {
-//                NSLog(@"path = %@", path);
-                //使用mdls 来获取App类型的数据大小
-                NSInteger size = [MdlsToolsHelper getAppSizeByPath:path andFileType:@"app"];
-                if (size == 0) {
-                    fileSize = [self fastFolderSizeAtFSRef:path diskMode:diskMode];
-                }else{
-                    fileSize = size;
-                }
-            }else if ([[fileName pathExtension] isEqualToString:@"xcarchive"]){
-//                NSLog(@"path = %@", path);
-                //使用mdls 来获取App类型的数据大小
-                NSInteger size = [MdlsToolsHelper getAppSizeByPath:path andFileType:@"xcarchive"];
-                if (size == 0) {
-                    fileSize = [self fastFolderSizeAtFSRef:path diskMode:diskMode];
-                }else{
-                    fileSize = size;
-                }
-            }else{
-                fileSize = [self fastFolderSizeAtFSRef:path diskMode:diskMode];
-            }
-        }
-        else
-        {
-            if (diskMode && fileStat.st_blocks != 0)
-                fileSize += fileStat.st_blocks * 512;
-            else
-                fileSize += fileStat.st_size;
-        }
+    QMScanFileSizeCacheManager *manager = [QMScanFileSizeCacheManager manager];
+    if ([manager hasCachedFileSizeWithPath:path]) {
+        return [manager getCachedFileSizeWithPath:path];
     }
+    LMFileAttributesCleanItem *associatedItem = [[LMFileAttributesCleanItem alloc] init];
+    associatedItem.isStopped = ^BOOL(NSString * _Nonnull path) {
+        BOOL isStopScan = NO;
+        NSString *bundleId = [[NSBundle mainBundle] bundleIdentifier];
+        if ([bundleId isEqualToString:@"com.tencent.Lemon"] || [bundleId isEqualToString:@"com.tencent.LemonLite"]) {
+            isStopScan = [[QMCleanManager sharedManger] isStopScan];
+        }else if([bundleId isEqualToString:@"com.tencent.LemonMonitor"]){
+            isStopScan = [[QMLiteCleanerManager sharedManger] isStopScan];
+        }
+        if (isStopScan) {
+            return YES;
+        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if ([bundleId isEqualToString:@"com.tencent.Lemon"] || [bundleId isEqualToString:@"com.tencent.LemonLite"]) {
+                [[QMCleanManager sharedManger] caculateSizeScanPath:path];
+            }
+        });
+        return NO;
+    };
+    uint64 fileSize = [LMFileAttributesTool caluactionSize:path associatedItem:associatedItem diskMode:YES];
+    [manager cacheFileAtPath:path withSize:fileSize];
     return fileSize;
 }
 
@@ -143,86 +117,17 @@ static NSMutableDictionary * m_cachePathDict = nil;
     return accessTime.tv_sec;
 }
 
-/// 5.1.7 扫描超时时间先改为30秒，涉及到stopcan 和ui刷新，后续再看如何合入 LMFileAttributesTool
-+ (unsigned long long) fastFolderSizeAtFSRef:(NSString*)path diskMode:(BOOL)diskMode
-{
-    CFAbsoluteTime startTime = CFAbsoluteTimeGetCurrent();
-    NSFileManager * fm = [NSFileManager defaultManager];
-    NSDirectoryEnumerator * dirEnumerator = [fm enumeratorAtURL:[NSURL fileURLWithPath:path]
-                                     includingPropertiesForKeys:nil
-                                                        options:0
-                                                   errorHandler:nil];
-    NSUInteger totalSize = 0;
-    NSInteger scanCount = 0;
-    for (NSURL * pathURL in dirEnumerator)
-    {
-        @autoreleasepool
-        {
-            NSString * resultPath = [pathURL path];
-            struct stat fileStat;
-            if (lstat([resultPath fileSystemRepresentation], &fileStat) != 0)
-                continue;
-            if (fileStat.st_mode & S_IFDIR)
-                continue;
-            scanCount++;
-            if (scanCount > 100) {
-                BOOL isStopScan = NO;
-                NSString *bundleId = [[NSBundle mainBundle] bundleIdentifier];
-                if ([bundleId isEqualToString:@"com.tencent.Lemon"] || [bundleId isEqualToString:@"com.tencent.LemonLite"]) {
-                    isStopScan = [[QMCleanManager sharedManger] isStopScan];
-                }else if([bundleId isEqualToString:@"com.tencent.LemonMonitor"]){
-                    isStopScan = [[QMLiteCleanerManager sharedManger] isStopScan];
-                }
-                if (isStopScan) {
-                    break;
-                }
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    if ([bundleId isEqualToString:@"com.tencent.Lemon"] || [bundleId isEqualToString:@"com.tencent.LemonLite"]) {
-                        [[QMCleanManager sharedManger] caculateSizeScanPath:resultPath];
-                    }
-                });
-                scanCount = 0;
-            }
-            
-            if (diskMode)
-            {
-                if (fileStat.st_flags != 0)
-                    totalSize += (((fileStat.st_size +
-                                    MINBLOCK - 1) / MINBLOCK) * MINBLOCK);
-                else
-                    totalSize += fileStat.st_blocks * 512;
-                
-            }
-            else
-                totalSize += fileStat.st_size;
-            
-            // 5.1.7 超时时间先由原来10秒改为30秒，大文件超过30秒的还是会有问题，需要后续优化
-            if (CFAbsoluteTimeGetCurrent() - startTime > 30)
-                break;
-        }
-    }
-    return totalSize;
-}
-
-
 // 正则比较
 + (BOOL)assertRegex:(NSString*)regexString matchStr:(NSString *)str
 {
-    NSPredicate *regex = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", regexString];
-    return [regex evaluateWithObject:str];
+    return [LMFileAttributesTool assertRegex:regexString matchStr:str];
 }
 
 
 // 判断隐藏文件
 + (BOOL)isHiddenItemForPath:(NSString *)path
 {
-     if ([[path lastPathComponent] hasPrefix:@"."])
-         return YES;
-     
-     int result = isFileHidden(path.UTF8String);
-     BOOL isHidden = (result != 0 && result != -1);
-     
-     return isHidden;
+    return [LMFileAttributesTool isHiddenItemForPath:path];
 }
 
 // 检查是否是空目录/文件

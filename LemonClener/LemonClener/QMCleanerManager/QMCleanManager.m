@@ -10,7 +10,6 @@
 #import "QMResultItem.h"
 #import <QMCoreFunction/McCoreFunction.h>
 #import "QMCleanerUtils.h"
-#import "QMCleanUtils.h"
 #import "QMDataConst.h"
 #import <QMCoreFunction/QMDataCenter.h>
 #import "QMScanCategory.h"
@@ -391,7 +390,7 @@
         [removeItemDict setObject:removeSubItemDict forKey:categoryItem.categoryID];
     }
     
-    return [_removeManager startCleaner:removeItemDict];
+    return [_removeManager startCleaner:removeItemDict actionSource:QMCleanerActionSourceHome];
 }
 
 - (void)cleanCategoryStart:(NSString *)categoryId{
