@@ -271,7 +271,7 @@
 - (void)openFullDiskAccessSettingGuidePage {
     if (!self.getFullAccessWndController) {
         self.getFullAccessWndController = [GetFullAccessWndController shareInstance];
-        self.getFullAccessWndController.isLemonMonitor = YES;
+        self.getFullAccessWndController.style = GetFullDiskPopVCStyleMonitor;
         [self.getFullAccessWndController setParaentCenterPos:[self getCenterPoint] suceessSeting:nil];
     }
     

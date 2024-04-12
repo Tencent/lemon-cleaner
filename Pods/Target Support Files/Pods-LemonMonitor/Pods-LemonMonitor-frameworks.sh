@@ -178,6 +178,7 @@ code_sign_if_enabled() {
 if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "${BUILT_PRODUCTS_DIR}/AFNetworking/AFNetworking.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/FMDB/FMDB.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/LemonFileManager/LemonFileManager.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/LemonFileMove/LemonFileMove.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/LemonStat/LemonStat.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/LemonUninstaller/LemonUninstaller.framework"
@@ -190,6 +191,7 @@ fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "${BUILT_PRODUCTS_DIR}/AFNetworking/AFNetworking.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/FMDB/FMDB.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/LemonFileManager/LemonFileManager.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/LemonFileMove/LemonFileMove.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/LemonStat/LemonStat.framework"
   install_framework "${BUILT_PRODUCTS_DIR}/LemonUninstaller/LemonUninstaller.framework"

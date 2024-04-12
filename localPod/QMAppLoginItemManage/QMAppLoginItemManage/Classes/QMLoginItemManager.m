@@ -67,6 +67,11 @@ typedef char (*SMLoginItemSetEnabledWithURL_ptr) ( void* ptr, char enabled);
 方法：遍历应用列表，筛选出包含LoginItem目录的应用
 */
 -(NSMutableArray *)getAppLoginItems{
+    /// macOS 13之后LoginItem不能被非应用本身来注册，仅支持应用自身使用SMAppService注册。
+    if (@available(macOS 13.0, *)) {
+        return [NSMutableArray array];
+    }
+    
     NSMutableArray *loginItemArray = [[NSMutableArray alloc]init];
     NSArray<QMLocalApp *> *appArray = [[QMLocalAppHelper shareInstance] getLocalAppData];
     NSFileManager *fileManager = [NSFileManager defaultManager];

@@ -41,6 +41,8 @@
 #import "LMGSView.h"
 #import "LMFileMoveIntroduceVC.h"
 #import <LemonFileMove/LMFileMoveDefines.h>
+#import <QMUICommon/GetFullAccessWndController.h>
+#import <LemonStat/McSystemInfo.h>
 
 #define kQMNetworkFileChangedNotificaton    @"QMNetworkFileChangedNotificaton"    //数据文件更新的通知
 #define kCategoryNil    @"0"    //空占位
@@ -76,6 +78,11 @@
 #define DEFAULT_APP_PATH        @"/Applications/Tencent Lemon.app"
 
 #define kLemonUserDidEnterWeb_505 @"kLemonUserDidEnterWeb_505"              // 用户进入过web活动页
+
+
+#define kLMFullAccessDisplayAfterInstallation_Count @"kLMFullAccessDisplayAfterInstallation_Count"
+#define kLMFullAccessDisplayAfterInstallation_LastBootTime @"kLMFullAccessDisplayAfterInstallation_LastBootTime"
+#define LemonFullAccessMaxDisplayAfterInstallation 2 // 最多展示2次
 
 @interface LMCleanScanViewController ()<QMCleanManagerDelegate, CategoryProgressViewDelegate, ChooseCategoryDelegate, CAAnimationDelegate, NSOpenSavePanelDelegate, QMWindowDelegate, LMMaskViewDelegete, LMGSViewDelegete, LMFileMoveIntroduceVCDelegate>
 {
@@ -125,6 +132,11 @@
     
     NSBundle *bundle;
     BOOL isUserGiveHomePathPermission;
+    
+    //动画计数，用于屏蔽动画中点击事件或跳转逻辑（切换动画同一时间只有一套，可以用一个计数简单处理）
+    GetFullAccessWndController *_getFullAccessController;
+    // 用于标记本次启动是否展示过首次安装的权限弹窗
+    BOOL _isShowedFullAccessWhenFirstInstallation;
 }
 @property (assign, nonatomic) CleanStatus cleanStatus;
 // 扫描的类别
@@ -254,6 +266,7 @@
     [self setShowToolBtnWithOpenState:[SharedPrefrenceManager getBool:IS_SHOW_BIG_VIEW]];
     if([FullDiskAccessPermissionViewController needShowRequestFullDiskAccessPermissionAlert]){
         [FullDiskAccessPermissionViewController showFullDiskAccessRequestIfNeededWithParentController:self sourceType:MAIN_CLEANER_SMALL_VIEW];
+        _isShowedFullAccessWhenFirstInstallation = YES;
     }
     
     // 如果进入过活动 则不显示文案动画
@@ -1751,6 +1764,18 @@
 }
 
 - (IBAction)startScan:(id)sender {
+    if ([self shouldShowFullDiskPrivacySettingPage]) {
+        NSInteger count = [[NSUserDefaults standardUserDefaults] integerForKey:kLMFullAccessDisplayAfterInstallation_Count];
+        [[NSUserDefaults standardUserDefaults] setInteger:++count forKey:kLMFullAccessDisplayAfterInstallation_Count];
+        
+        McSystemInfo *systemInfo = [[McSystemInfo alloc] init];
+        NSDate *currentBootTime = [systemInfo UpdateBootTime];
+        [[NSUserDefaults standardUserDefaults] setObject:currentBootTime forKey:kLMFullAccessDisplayAfterInstallation_LastBootTime];
+        
+        [self showFullDiskPrivacySettingPage];
+        return;
+    }
+    
     if ([McCoreFunction isAppStoreVersion]){
         if (!isUserGiveHomePathPermission) {
             [self showOpenPanelGetPermission];
@@ -1995,6 +2020,48 @@
     }];
 }
 
+#pragma mark -- 弹出完全磁盘访问权限页面
+
+- (BOOL)shouldShowFullDiskPrivacySettingPage {
+    if (@available(macOS 14.0, *)) {
+        // 初次安装
+        if (_isShowedFullAccessWhenFirstInstallation) {
+            return NO;
+        }
+        
+        QMFullDiskAuthorationStatus authStatus = [QMFullDiskAccessManager getFullDiskAuthorationStatus];
+        if (authStatus == QMFullDiskAuthorationStatusAuthorized) {
+            return NO;
+        }
+        
+        NSInteger count = [[NSUserDefaults standardUserDefaults] integerForKey:kLMFullAccessDisplayAfterInstallation_Count];
+        if (count >= LemonFullAccessMaxDisplayAfterInstallation) {
+            return NO;
+        }
+    
+        NSDate *lastBootTime = [[NSUserDefaults standardUserDefaults] objectForKey:kLMFullAccessDisplayAfterInstallation_LastBootTime];
+        McSystemInfo *systemInfo = [[McSystemInfo alloc] init];
+        NSDate *currentBootTime = [systemInfo UpdateBootTime];
+        
+        /// 上次开机时间和本次开机时间相同
+        if ([lastBootTime isEqualToDate:currentBootTime]) {
+            return NO;
+        }
+        
+        return YES;
+    }
+    
+    return NO;
+}
+
+- (void)showFullDiskPrivacySettingPage {
+    if (_getFullAccessController == nil) {
+        _getFullAccessController = [GetFullAccessWndController shareInstance];
+        _getFullAccessController.style = GetFullDiskPopVCStylePreScan;
+        [_getFullAccessController setParaentCenterPos:[self getCenterPoint] suceessSeting:nil];
+    }
+    [_getFullAccessController.window makeKeyAndOrderFront:nil];
+}
 
 #pragma mark -- NSOpenSavePanelDelegate
 #pragma mark -- - 获取权限选择方法回调

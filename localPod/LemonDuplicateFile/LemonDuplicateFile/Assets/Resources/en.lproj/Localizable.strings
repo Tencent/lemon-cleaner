@@ -31,6 +31,7 @@
 "LMDuplicateCleanResultViewController_viewWillAppear_NSString_1" = "%@ recovered. The files have been moved to trash";
 "LMDuplicateCleanResultViewController_viewWillAppear_cleanSubTitleLabel_2" = "You have moved duplicate files to trash successfully";
 "LMDuplicateScanViewController_setupTextViews_titleLabel_1" = "Scanning duplicate files...";
+"LMDuplicateCleanViewController_setupTextViews_titleLabel_1" = "Cleaning duplicate files...";
 "LMDuplicateScanViewController_setupTextViews_cancelButton_2" = "Cancel";
 "LMDuplicateScanViewController_progressRate_1553072147_1" = "Comparing.";
 "SelectTextView_initWithFrame__textField_1" = "Description";
@@ -50,3 +51,8 @@
 "LMDuplicateScanResultViewController_Alert_message" = "Turn on \“Smart Select\”,  lemon will keep the latest one in each item, and move the other files to the Trash. Are you sure to clean up?";
 "LMDuplicateScanResultViewController_Alert_button_ok" = "Clean";
 "LMDuplicateScanResultViewController_Alert_button_cancel" = "Cancel";
+
+"LMDuplicateCleanViewController_cancelAlert_messageText" = "Stop the cleaning？";
+"LMDuplicateCleanViewController_cancelAlert_informativeText" = "It will discard all current progress.";
+"LMDuplicateCleanViewController_cancelAlert_button_stop" = "Stop";
+"LMDuplicateCleanViewController_cancelAlert_button_continue" = "Continue";

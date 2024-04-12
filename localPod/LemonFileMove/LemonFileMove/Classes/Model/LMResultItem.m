@@ -18,7 +18,7 @@
 #include <stddef.h>
 #include <string.h>
 #include <stdbool.h>
-#import "QMCleanUtils.h"
+#import "QMFMCleanUtils.h"
 
 typedef struct val_attrs {
     uint32_t          length;
@@ -68,7 +68,7 @@ typedef struct val_attrs {
 
 - (void)setPath:(NSString *)path {
     _path = path;
-    self.fileSize = [QMCleanUtils caluactionSize:path];
+    self.fileSize = [QMFMCleanUtils caluactionSize:path];
 }
 
 - (NSString *)availableFilePath {

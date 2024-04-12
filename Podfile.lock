@@ -29,8 +29,10 @@ PODS:
     - Masonry (= 1.1.0)
     - QMCoreFunction
     - QMUICommon
-  - LemonFileManager (0.1.0)
+  - LemonFileManager (0.1.0):
+    - QMCoreFunction
   - LemonFileMove (0.1.0):
+    - LemonFileManager
     - Masonry (= 1.1.0)
     - QMCoreFunction
     - QMUICommon
@@ -55,6 +57,7 @@ PODS:
   - LemonPhotoClean (0.1.0):
     - AFNetworking (= 3.2.1)
     - FMDB (= 2.7.5)
+    - LemonFileManager
     - LemonStat
     - Masonry (= 1.1.0)
     - QMCoreFunction
@@ -153,12 +156,12 @@ SPEC CHECKSUMS:
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
   LemonBigOldFile: a07cc1b63a02a3798dd4695084ef4ada9c98dc20
   LemonDuplicateFile: 07356a541fe41e1ca2673d8df48a2cd00dc5b9ff
-  LemonFileManager: e4c91c0b3f67290bc609ebe730d82d160691181b
-  LemonFileMove: 0a6058bde54b959b249652d280a44251ddb9bb38
+  LemonFileManager: 34e8907a876162f04ae7cc1ccaaf762d262ca604
+  LemonFileMove: 3d9fed730fab0a26a97b432d6f9c203fbded169a
   LemonHardware: ea0edbcf97605090f859f670d53baaf8dcb149fd
   LemonLoginItemManager: 51ea13aff020ebb82ef5f76859fc154b6196b808
   LemonNetSpeed: 3f86794e238cefad6b12c4b10c00771707f695dc
-  LemonPhotoClean: 22fa5ab50394f65eac0f0475e3926e3134ede3b5
+  LemonPhotoClean: b612767f6390905383ccce0409b5818e365292b9
   LemonPrivacyClean: d08bd618403267818421f052a25ec78ac8f0871c
   LemonSpaceAnalyse: b4bd7bc9d709c36b5c96c41d551e9a7fe720a22d
   LemonStat: ef56b4f1d8f30ef8f168aaecb905baa2691c20c9
@@ -171,4 +174,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: c57a2f194f18078af36aff4818c711401f541de8
 
-COCOAPODS: 1.12.1
+COCOAPODS: 1.15.2

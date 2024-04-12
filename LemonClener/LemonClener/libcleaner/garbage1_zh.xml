@@ -1,4 +1,4 @@
-<garbage version="2023.09.01.1">
+<garbage version="2024.03.21.1">
     <filters>
         <!--临时目录下的缓存过滤-->
         <filter id="1" column="filename" relation="is" value="com.apple.dock" action="exclude"/>
@@ -187,6 +187,13 @@
                 <path type="abs" level="1" value="~/.Trash/"/>
             </action>
         </item>
+        <item id="1007" recommend="NO" fastmode="NO">
+            <title><![CDATA[下载]]></title>
+            <tips><![CDATA[清理前请确认下载中的文件都是可删除的]]></tips>
+            <action type="file">
+                <path type="abs" level="1" value="~/Downloads"/>
+            </action>
+        </item>
     </category>
     
     <category id="2">
@@ -200,29 +207,39 @@
                 <path type="abs" level="1" value="~/Library/Caches/com.apple.dt.Xcode/"/>
                 <path type="special" level="1" value="SystemTempDir" value1="com.apple.dt.Xcode"/>
             </action>
-            <action id="20012" recommend="NO" type="derivedapp">
+            <action id="20012" type="file">
                 <title><![CDATA[Xcode DerivedData]]></title>
-                <path type="abs" filename=".+\.app" level="-1" value="~/Library/Developer/Xcode/DerivedData/"/>
+                <path type="abs" level="1" value="~/Library/Developer/Xcode/DerivedData/"/>
             </action>
             <action id="20013" recommend="NO" type="file">
                 <title><![CDATA[iOS Device Support]]></title>
                 <path type="abs" level="1" value="~/Library/Developer/Xcode/iOS DeviceSupport/"/>
             </action>
+            <action id="200110" recommend="NO" type="file">
+                <title><![CDATA[macOS Device Support]]></title>
+                <path type="abs" level="1" value="~/Library/Developer/Xcode/macOS DeviceSupport/"/>
+            </action>
             <action id="20014" recommend="NO" type="archive">
                 <title><![CDATA[Archives]]></title>
                 <path type="abs" filename=".+\.xcarchive" level="-1" value="~/Library/Developer/Xcode/Archives/"/>
             </action>
-            <action id="20015" recommend="NO" type="file">
-                <title><![CDATA[Module Caches]]></title>
-                <path type="abs" level="0" value="~/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/"/>
-            </action>
             <action id="20016" recommend="NO" type="file">
-                <title><![CDATA[iOS Device Logs]]></title>
+                <title><![CDATA[Device Logs]]></title>
                 <path type="abs" level="0" value="~/Library/Developer/Xcode/iOS Device Logs/"/>
+                <path type="abs" level="0" value="~/Library/Developer/Xcode/DeviceLogs/"/>
             </action>
             <action id="20017" recommend="NO" type="file">
                 <title><![CDATA[DocumentationCache]]></title>
                 <path type="abs" level="0" value="~/Library/Developer/Xcode/DocumentationCache/"/>
+            </action>
+            <action id="20018" recommend="NO" type="file">
+                <title><![CDATA[Simulator]]></title>
+                <path type="abs" level="0" value="~/Library/Developer/CoreSimulator/"/>
+            </action>
+            <action id="20019" recommend="NO" type="file">
+                <title><![CDATA[Simulator Runtimes]]></title>
+                <path type="abs" level="1" value="/Library/Developer/CoreSimulator/Volumes/(.+)/Library/Developer/CoreSimulator/Profiles/Runtimes/"/>
+                <path type="abs" level="1" value="/Library/Developer/CoreSimulator/Profiles/Runtimes/"/>
             </action>
         </item>
         <item id="2102" fastmode="YES" showaction="YES" defaultstate="-1" bundleid="com.bohemiancoding.sketch3">

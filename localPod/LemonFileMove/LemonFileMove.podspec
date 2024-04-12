@@ -38,5 +38,5 @@ TODO: Add long description of the pod here.
   s.dependency "QMCoreFunction"
   s.dependency "Masonry", '1.1.0'
   s.dependency "QMUICommon"
-  
+  s.dependency "LemonFileManager"
 end

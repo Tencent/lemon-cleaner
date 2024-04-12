@@ -8,7 +8,7 @@
 
 #import "QMResultItem.h"
 #import "QMXMLItemDefine.h"
-#import "QMMFCleanUtils.h"
+#import "QMCleanUtils.h"
 #import <QMCoreFunction/McCoreFunction.h>
 
 @implementation QMResultBrowerItem
@@ -110,7 +110,7 @@
         return;    
     [m_pathSet addObject:rpath];
     if (self.cleanType != QMCleanCutBinary && self.cleanType != QMCleanDeleteBinary)
-        m_resultFileSize += [QMMFCleanUtils caluactionSize:rpath];
+        m_resultFileSize += [QMCleanUtils caluactionSize:rpath];
     if (self.cleanType == QMCleanDeleteBinary) {
         NSFileManager * manager = [NSFileManager defaultManager];
         NSDictionary * attributes = [manager attributesOfItemAtPath:rpath error:nil];
