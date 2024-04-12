@@ -11,6 +11,8 @@
 "GetFullDiskPopViewController_currentApplicationChnage_settingBtn_2" = "前往设置";
 "GetFullDiskPopViewController_setupViews_titleLabel_1" = "Lemon不会上传你的文件信息，请放心使用";
 "GetFullDiskPopViewController_setupViews_descLabel_2" = "步骤：【解锁】——【添加】——【应用程序】——【Lemon】";
+"GetFullDiskPopViewController_setupViews_preScan_titleLabel_1" = "建议macOS 14.0及以上开启【完全磁盘访问权限】，提升用户体验";
+"GetFullDiskPopViewController_setupViews_preScan_descLabel_2" = "步骤：【隐私与安全性】——【完全磁盘访问权限】——【添加】——【Tencent Lemon】";
 "GetFullDiskPremission_Title_10_15" = "10.15系统上，Lemon无权限访问废纸篓、桌面等文件夹，需要开启“完全磁盘访问权限”才能扫描并清理垃圾。";
 "GetFullDiskPremission_Button_OK_10_15" = "前往授权";
 "GetFullDiskPremission_Button_Cancel_10_15" = "取消";

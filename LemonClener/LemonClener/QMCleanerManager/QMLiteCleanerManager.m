@@ -10,7 +10,7 @@
 #import "QMScanCategory.h"
 #import "QMRemoveManager.h"
 #import "QMXMLParseManager.h"
-#import "QMMFCleanUtils.h"
+#import "QMCleanUtils.h"
 #import "LMCleanerDataCenter.h"
 
 @interface QMLiteCleanerManager()

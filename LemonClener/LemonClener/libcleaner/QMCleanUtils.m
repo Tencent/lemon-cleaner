@@ -1,22 +1,77 @@
 //
-//  QMMFCleanUtils.m
+//  QMCleanUtils.m
 //  QMCleanDemo
 //
-
-//  Copyright (c) 2013年 yuanwen. All rights reserved.
 //
 
-#import "QMMFCleanUtils.h"
+#import "QMCleanUtils.h"
 #import <sys/stat.h>
 #import "QMCleanManager.h"
 #import <QMCoreFunction/MdlsToolsHelper.h>
 #import "QMLiteCleanerManager.h"
+#import <LemonFileManager/LMFileAttributesTool.h>
 
 #define MINBLOCK 4096
 
+#pragma mark - for performance
+
+time_t getFileCreationTime(const char *path) {
+    struct stat attrib;
+    
+    if (stat(path, &attrib) == 0) {
+        // 1970 年 1 月 1 日 00:00:00 开始的秒数
+        return attrib.st_birthtime;
+    }
+    
+    return -1;
+}
+
+time_t getFileModificationTime(const char *path) {
+    struct stat attrib;
+    
+    if (stat(path, &attrib) == 0) {
+        // 1970 年 1 月 1 日 00:00:00 开始的秒数
+        return attrib.st_mtime;
+    }
+    
+    return -1;
+}
+
+off_t getFileSize(const char *path) {
+    struct stat attrib;
+
+    if (stat(path, &attrib) == 0) {
+        return attrib.st_size;
+    }
+
+    return -1;
+}
+
+/// 0 未隐藏，-1错误、其他值隐藏
+int isFileHidden(const char *path) {
+    struct stat attrib;
+
+    if (stat(path, &attrib) == 0) {
+        return attrib.st_flags & UF_HIDDEN;
+    }
+
+    return -1;
+}
+
+BOOL isPipe(const char *path) {
+    struct stat fileStat;
+    if (stat(path, &fileStat) == 0) {
+        if (S_ISFIFO(fileStat.st_mode)) {
+            // isPipe
+            return YES;
+        }
+    }
+    return NO;
+}
+
 static NSMutableDictionary * m_cachePathDict = nil;
 
-@implementation QMMFCleanUtils
+@implementation QMCleanUtils
 
 // get total size by path
 + (uint64)caluactionSize:(NSString *)path
@@ -67,20 +122,12 @@ static NSMutableDictionary * m_cachePathDict = nil;
 
 +(NSTimeInterval)createTime:(NSString *)filePath
 {
-    if (![[NSFileManager defaultManager] fileExistsAtPath:filePath])
-        return 0;
-    
-    NSDictionary* attr = [[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:nil];
-    return [[attr objectForKey:NSFileCreationDate] timeIntervalSince1970];
+    return (NSTimeInterval)getFileCreationTime(filePath.UTF8String);
 }
 
 +(NSTimeInterval)lastModificateionTime:(NSString *)filePath
 {
-    if (![[NSFileManager defaultManager] fileExistsAtPath:filePath])
-        return 0;
-    
-    NSDictionary* attr = [[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:nil];
-    return [[attr objectForKey:NSFileModificationDate] timeIntervalSince1970];
+    return (NSTimeInterval)getFileModificationTime(filePath.UTF8String);
 }
 
 +(NSTimeInterval)lastAccessTime:(NSString *)filePath
@@ -96,6 +143,7 @@ static NSMutableDictionary * m_cachePathDict = nil;
     return accessTime.tv_sec;
 }
 
+/// 5.1.7 扫描超时时间先改为30秒，涉及到stopcan 和ui刷新，后续再看如何合入 LMFileAttributesTool
 + (unsigned long long) fastFolderSizeAtFSRef:(NSString*)path diskMode:(BOOL)diskMode
 {
     CFAbsoluteTime startTime = CFAbsoluteTimeGetCurrent();
@@ -148,7 +196,8 @@ static NSMutableDictionary * m_cachePathDict = nil;
             else
                 totalSize += fileStat.st_size;
             
-            if (CFAbsoluteTimeGetCurrent() - startTime > 10)
+            // 5.1.7 超时时间先由原来10秒改为30秒，大文件超过30秒的还是会有问题，需要后续优化
+            if (CFAbsoluteTimeGetCurrent() - startTime > 30)
                 break;
         }
     }
@@ -167,13 +216,13 @@ static NSMutableDictionary * m_cachePathDict = nil;
 // 判断隐藏文件
 + (BOOL)isHiddenItemForPath:(NSString *)path
 {
-    if ([[path lastPathComponent] hasPrefix:@"."])
-        return YES;
-    
-    LSItemInfoRecord itemInfo;
-    LSCopyItemInfoForURL((__bridge CFURLRef)([NSURL fileURLWithPath:path]), kLSRequestAllFlags, &itemInfo);
-    BOOL isInvisible = itemInfo.flags & kLSItemInfoIsInvisible;
-    return isInvisible;
+     if ([[path lastPathComponent] hasPrefix:@"."])
+         return YES;
+     
+     int result = isFileHidden(path.UTF8String);
+     BOOL isHidden = (result != 0 && result != -1);
+     
+     return isHidden;
 }
 
 // 检查是否是空目录/文件
@@ -194,18 +243,17 @@ static NSMutableDictionary * m_cachePathDict = nil;
                 NSURL * curObject = [_pathEnumerator nextObject];
                 if (curObject == nil)
                     break;
-                if (!hiddenItem && [QMMFCleanUtils isHiddenItemForPath:path])
+                if (!hiddenItem && [QMCleanUtils isHiddenItemForPath:path])
                     continue;
-                NSDictionary * dict = [fm attributesOfItemAtPath:path error:nil];
-                if ([[dict objectForKey:NSFileSize] unsignedIntegerValue] > 0)
+                if (getFileSize(path.UTF8String) > 0) 
+                {
                     return NO;
+                }
             }
         }
-        else
+        else if (getFileSize(path.UTF8String) > 0)
         {
-            NSDictionary * dict = [fm attributesOfItemAtPath:path error:nil];
-            if ([[dict objectForKey:NSFileSize] unsignedIntegerValue] > 0)
-                return NO;
+            return NO;
         }
     }
     return YES;
@@ -271,14 +319,24 @@ static NSMutableDictionary * m_cachePathDict = nil;
 // 判断是否替身文件
 + (BOOL)checkURLFileType:(NSURL *)pathURL typeKey:(NSString *)typeKey
 {
-    NSError *error;
-    NSString *type;
-    // 测试文件是否存在，easyconnect 里有一个文件是pipe类型，但属性又是可执行的，open的时候会卡死，这里通过NSURLTypeIdentifierKey测试文件
-    // 类型是否为pipe，如果是pipe文件类型，会返回一个NSFileReadNoSuchFileError的error
-    [pathURL getResourceValue:&type forKey:NSURLTypeIdentifierKey error:&error];
-    if (error && error.code == NSFileReadNoSuchFileError) {
+    
+//    NSError *error;
+//    NSString *type;
+//    // 测试文件是否存在，easyconnect 里有一个文件是pipe类型，但属性又是可执行的，open的时候会卡死，这里通过NSURLTypeIdentifierKey测试文件
+//    // 类型是否为pipe，如果是pipe文件类型，会返回一个NSFileReadNoSuchFileError的error
+//    [pathURL getResourceValue:&type forKey:NSURLTypeIdentifierKey error:&error];
+//    if (error && error.code == NSFileReadNoSuchFileError) {
+//        return NO;
+//    }
+    
+    // 代替旧方案的原因是在macos 14.3上，旧方案耗时增加了，影响到扫描。
+    // 新方案耗时回归到原有的水平
+    // 旧： 0.000x
+    // 新： 0.00000x
+    if (isPipe(pathURL.absoluteString.UTF8String)) {
         return NO;
     }
+    
     
     NSNumber * result = nil;
     [pathURL getResourceValue:&result forKey:typeKey error:NULL];
@@ -303,7 +361,7 @@ static NSMutableDictionary * m_cachePathDict = nil;
     for (NSURL * pathURL in dirEnumerator)
     {
         // 过滤快捷方式
-        if ([QMMFCleanUtils checkURLFileType:pathURL typeKey:NSURLIsAliasFileKey])
+        if ([QMCleanUtils checkURLFileType:pathURL typeKey:NSURLIsAliasFileKey])
             continue;
         
         if (level != -1 && [dirEnumerator level] == level)

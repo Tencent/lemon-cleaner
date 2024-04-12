@@ -55,7 +55,7 @@ static BOOL isSettingSuccess = NO;
 
 - (void)loadView {
     NSRect rect;
-    if (self.isLemonMonitor == YES) {
+    if (self.style == GetFullDiskPopVCStyleMonitor) {
         rect = NSMakeRect(0, 0, 610, 524);
     } else {
         rect = NSMakeRect(0, 0, 610, 476);
@@ -133,13 +133,25 @@ static BOOL isSettingSuccess = NO;
     [self.view addSubview:descLabel];
     [descLabel setFont:[NSFontHelper getLightSystemFont:12]];
     
-    if (self.isLemonMonitor == YES) {
-        [titleLabel setStringValue:NSLocalizedStringFromTableInBundle(@"GetFullDiskPopViewController_setupViews_titleLabel_monitor", nil, [NSBundle bundleForClass:[self class]], @"")];
-        [descLabel setStringValue:NSLocalizedStringFromTableInBundle(@"GetFullDiskPopViewController_setupViews_descLabel_monitor", nil, [NSBundle bundleForClass:[self class]], @"")];
-    } else {
-        [titleLabel setStringValue:NSLocalizedStringFromTableInBundle(@"GetFullDiskPopViewController_setupViews_titleLabel_1", nil, [NSBundle bundleForClass:[self class]], @"")];
-        [descLabel setStringValue:NSLocalizedStringFromTableInBundle(@"GetFullDiskPopViewController_setupViews_descLabel_2", nil, [NSBundle bundleForClass:[self class]], @"")];
+    NSString *title = @"";
+    NSString *des = @"";
+    switch (self.style) {
+        case GetFullDiskPopVCStyleMonitor:
+            title = @"GetFullDiskPopViewController_setupViews_titleLabel_monitor";
+            des = @"GetFullDiskPopViewController_setupViews_descLabel_monitor";
+            break;
+        case GetFullDiskPopVCStylePreScan:
+            title = @"GetFullDiskPopViewController_setupViews_preScan_titleLabel_1";
+            des = @"GetFullDiskPopViewController_setupViews_preScan_descLabel_2";
+            break;
+        case GetFullDiskPopVCStyleDefault:
+        default:
+            title = @"GetFullDiskPopViewController_setupViews_titleLabel_1";
+            des = @"GetFullDiskPopViewController_setupViews_descLabel_2";
+            break;
     }
+    [titleLabel setStringValue:NSLocalizedStringFromTableInBundle(title, nil, [NSBundle bundleForClass:[self class]], @"")];
+    [descLabel setStringValue:NSLocalizedStringFromTableInBundle(des, nil, [NSBundle bundleForClass:[self class]], @"")];
     NSScrollView *container = [[NSScrollView alloc] init];
     self.scrollView = container;
     [self.view addSubview:container];
@@ -184,7 +196,7 @@ static BOOL isSettingSuccess = NO;
     cancelButton.font = [NSFont systemFontOfSize:12];
     
     
-    if (self.isLemonMonitor == YES) {
+    if (self.style == GetFullDiskPopVCStyleMonitor) {
         [alertImageView mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(self.view).offset(30);
             make.left.equalTo(self.view).offset(20);
@@ -341,13 +353,13 @@ static BOOL isSettingSuccess = NO;
         }
     } else {
         if ([LanguageHelper getCurrentSystemLanguageType] == SystemLanguageTypeEnglish) {
-            if (self.isLemonMonitor == YES) {
+            if (self.style == GetFullDiskPopVCStyleMonitor) {
                 imageName = @"setstep_en_monitor";
             } else {
                 imageName = @"setstep_en";
             }
         } else {
-            if (self.isLemonMonitor == YES) {
+            if (self.style == GetFullDiskPopVCStyleMonitor) {
                 imageName = @"setstep_ch_monitor";
             } else {
                 imageName = @"setstep_ch";

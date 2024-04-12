@@ -13,6 +13,7 @@
 #import "ExpandOutlineView.h"
 #import "LMDuplicateSelectFoldersViewController.h"
 #import "LMDuplicateCleanResultViewController.h"
+#import "LMDuplicateCleanViewController.h"
 #import "QMDuplicateItemManager.h"
 #import <Quartz/Quartz.h>
 #import <QMCoreFunction/NSImage+Extension.h>
@@ -918,12 +919,11 @@
 - (void)innerClean{
     LMDuplicateWindowController *windowController = self.view.window.windowController;
     if (windowController) {
-        [windowController.itemManager removeDuplicateItem:_resultArray toTrash:YES block:^(uint64 value) {
-            // show clean result viewController
-            LMDuplicateCleanResultViewController *controller = [[LMDuplicateCleanResultViewController alloc] init];
-            controller.cleanSize = value;
-            self.view.window.contentViewController = controller;
-        }];
+        // 显示开始清除进度页面
+        LMDuplicateCleanViewController *cleanProgressController = [[LMDuplicateCleanViewController alloc] init];
+        self.view.window.contentViewController = cleanProgressController;
+        windowController.itemManager.delegate = cleanProgressController;
+        [windowController.itemManager removeDuplicateItem:_resultArray toTrash:YES];
     }
 }
 

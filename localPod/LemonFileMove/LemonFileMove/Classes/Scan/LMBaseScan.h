@@ -16,6 +16,15 @@ NS_ASSUME_NONNULL_BEGIN
          shellString:(NSString *)shellString
              keyword:(NSString *)keyWord;
 
+/// 查找子文件夹
+/// - Parameters:
+///   - path: 根目录
+///   - destinationLevel: 遍历到设置的level结束
+///   - isMatching: 判断是否为目标文件夹
+- (NSArray *)enumerateSubdirectoriesAtPath:(NSString *)path
+                          destinationLevel:(NSInteger)destinationLevel
+                                isMatching:(BOOL (^)(NSString *fullPath, NSInteger currentLevel))isMatching;
+
 //过滤90天/90天后
 - (NSArray *)filterPathArray:(NSArray *)pathArray
                    parentDir:(nullable NSString *)parentDir

@@ -11,6 +11,8 @@
 "GetFullDiskPopViewController_currentApplicationChnage_settingBtn_2" = "Go to Settings";
 "GetFullDiskPopViewController_setupViews_titleLabel_1" = "Please rest assured that Lemon never or ever upload your files.";
 "GetFullDiskPopViewController_setupViews_descLabel_2" = "Click the lock —— Click add icon —— Find \"Tencent Lemon\" in Application";
+"GetFullDiskPopViewController_setupViews_preScan_titleLabel_1" = "Enable 'Full Disk Access' on macOS 14.0+ for enhanced user experience.";
+"GetFullDiskPopViewController_setupViews_preScan_descLabel_2" = "Click \"Privacy & Security\" —— Click \"Full Disk Access\" —— Click \"Tencent Lemon\"";
 "GetFullDiskPremission_Title_10_15" = "From macOS 10.15, you have to grant permission \"Full Disk Access\" to clean trash and mail cache.";
 "GetFullDiskPremission_Button_OK_10_15" = "Grant permission";
 "GetFullDiskPremission_Button_Cancel_10_15" = "Cancel";

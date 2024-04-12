@@ -1,20 +1,21 @@
 //
-//  QMCleanUtils.m
+//  QMFMCleanUtils.m
 //  QMCleanDemo
 //
-//  
-//  Copyright (c) 2013年 yuanwen. All rights reserved.
+
+//  Copyright (c) 2013年 Tencent. All rights reserved.
 //
 
-#import "QMCleanUtils.h"
+#import "QMFMCleanUtils.h"
 #import <sys/stat.h>
 #import <QMCoreFunction/MdlsToolsHelper.h>
+#import <LemonFileManager/LMFileAttributesTool.h>
 
 #define MINBLOCK 4096
 
 static NSMutableDictionary * m_cachePathDict = nil;
 
-@implementation QMCleanUtils
+@implementation QMFMCleanUtils
 
 // get total size by path
 + (uint64)caluactionSize:(NSString *)path
@@ -35,7 +36,7 @@ static NSMutableDictionary * m_cachePathDict = nil;
                 //使用mdls 来获取App类型的数据大小
                 NSInteger size = [MdlsToolsHelper getAppSizeByPath:path andFileType:@"app"];
                 if (size == 0) {
-                    fileSize = [self fastFolderSizeAtFSRef:path diskMode:diskMode];
+                    fileSize = [LMFileAttributesTool lmFastFolderSizeAtFSRef:path diskMode:diskMode];
                 }else{
                     fileSize = size;
                 }
@@ -44,12 +45,12 @@ static NSMutableDictionary * m_cachePathDict = nil;
                 //使用mdls 来获取App类型的数据大小
                 NSInteger size = [MdlsToolsHelper getAppSizeByPath:path andFileType:@"xcarchive"];
                 if (size == 0) {
-                    fileSize = [self fastFolderSizeAtFSRef:path diskMode:diskMode];
+                    fileSize = [LMFileAttributesTool lmFastFolderSizeAtFSRef:path diskMode:diskMode];
                 }else{
                     fileSize = size;
                 }
             }else{
-                fileSize = [self fastFolderSizeAtFSRef:path diskMode:diskMode];
+                fileSize = [LMFileAttributesTool lmFastFolderSizeAtFSRef:path diskMode:diskMode];
             }
         }
         else
@@ -92,57 +93,6 @@ static NSMutableDictionary * m_cachePathDict = nil;
         return 0;
     struct timespec accessTime = output.st_atimespec;
     return accessTime.tv_sec;
-}
-
-+ (unsigned long long) fastFolderSizeAtFSRef:(NSString*)path diskMode:(BOOL)diskMode
-{
-    CFAbsoluteTime startTime = CFAbsoluteTimeGetCurrent();
-    NSFileManager * fm = [NSFileManager defaultManager];
-    NSDirectoryEnumerator * dirEnumerator = [fm enumeratorAtURL:[NSURL fileURLWithPath:path]
-                                     includingPropertiesForKeys:nil
-                                                        options:0
-                                                   errorHandler:nil];
-    NSUInteger totalSize = 0;
-    NSInteger scanCount = 0;
-    for (NSURL * pathURL in dirEnumerator)
-    {
-        @autoreleasepool
-        {
-            NSString * resultPath = [pathURL path];
-            struct stat fileStat;
-            if (lstat([resultPath fileSystemRepresentation], &fileStat) != 0)
-                continue;
-            if (fileStat.st_mode & S_IFDIR)
-                continue;
-            scanCount++;
-            if (scanCount > 100) {
-                BOOL isStopScan = NO;
-//                NSString *bundleId = [[NSBundle mainBundle] bundleIdentifier];
-            
-                if (isStopScan) {
-                    break;
-                }
-                
-                scanCount = 0;
-            }
-            
-            if (diskMode)
-            {
-                if (fileStat.st_flags != 0)
-                    totalSize += (((fileStat.st_size +
-                                    MINBLOCK - 1) / MINBLOCK) * MINBLOCK);
-                else
-                    totalSize += fileStat.st_blocks * 512;
-                
-            }
-            else
-                totalSize += fileStat.st_size;
-            
-            if (CFAbsoluteTimeGetCurrent() - startTime > 10)
-                break;
-        }
-    }
-    return totalSize;
 }
 
 
@@ -258,7 +208,7 @@ static NSMutableDictionary * m_cachePathDict = nil;
     for (NSURL * pathURL in dirEnumerator)
     {
         // 过滤快捷方式
-        if ([QMCleanUtils checkURLFileType:pathURL typeKey:NSURLIsAliasFileKey])
+        if ([QMFMCleanUtils checkURLFileType:pathURL typeKey:NSURLIsAliasFileKey])
             continue;
         
         if (level != -1 && [dirEnumerator level] == level)

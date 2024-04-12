@@ -1,16 +1,16 @@
 //
-//  QMMFCleanUtils.h
+//  QMFMCleanUtils.h
 //  QMCleanDemo
 //
 
-//  Copyright (c) 2013年 yuanwen. All rights reserved.
+//  Copyright (c) 2013年 Tencent. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
 
 typedef BOOL (^FinderResultBlock)(NSURL * pathURL);
 
-@interface QMMFCleanUtils : NSObject
+@interface QMFMCleanUtils : NSObject
 
 + (uint64)caluactionSize:(NSString *)path;
 
@@ -23,8 +23,6 @@ typedef BOOL (^FinderResultBlock)(NSURL * pathURL);
 + (BOOL)assertRegex:(NSString*)regexString matchStr:(NSString *)str;
 
 + (BOOL)isHiddenItemForPath:(NSString *)path;
-
-+ (BOOL)isEmptyDirectory:(NSString *)path filterHiddenItem:(BOOL)hiddenItem;
 
 + (BOOL)isBinarySignCode:(NSString *)executablePath;
 

@@ -72,6 +72,44 @@
      return NO;
 }
 
+/// 通过判断可读，来判断是否有权限。
+- (BOOL)isReadableDownloadPath {
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSString *downloadPath = NSSearchPathForDirectoriesInDomains(NSDownloadsDirectory, NSUserDomainMask, YES).firstObject;
+    
+    BOOL isWritable = [fileManager isReadableFileAtPath:downloadPath];
+    return isWritable;
+}
+
+- (BOOL)shouldShowPrivacyAlertWithItem:(id)item {
+    if ([QMFullDiskAccessManager getFullDiskAuthorationStatus] == QMFullDiskAuthorationStatusAuthorized) {
+        return NO;
+    }
+    
+    if (![item isScaned]) {
+        return NO;
+    }
+    
+    NSString *subCategoryID = [item subCategoryID] ?:@"";
+
+    // 邮件
+    if ([subCategoryID isEqualToString:@"301"]) {
+        return YES;
+    }
+    
+    // 垃圾篓
+    if ([subCategoryID isEqualToString:@"1006"] && [self isVersion1015]) {
+        return YES;
+    }
+    
+    // 下载 且 无可读权限 且 扫描结果为0
+    if ([subCategoryID isEqualToString:@"1007"] && ![self isReadableDownloadPath] && [item resultFileSize] == 0) {
+        return YES;
+    }
+    
+    return NO;
+}
+
 -(void)setCellData:(id)item {
     [super setCellData:item];
     [self.signImageView removeFromSuperview];
@@ -112,7 +150,7 @@
         }];
     }
     //如果是邮件 有权限则继续往下 否则 return
-    if (([[item subCategoryID] isEqualToString:@"301"] || ([[item subCategoryID] isEqualToString:@"1006"] && [self isVersion1015])) && ([QMFullDiskAccessManager getFullDiskAuthorationStatus] != QMFullDiskAuthorationStatusAuthorized) && [item isScaned]){
+    if ([self shouldShowPrivacyAlertWithItem:item]){
         //通知LMCleanBigViewController 弹出popViewController
         [self.sizeLabel setTextColor:[NSColor colorWithHex:0xFF9600]];
         [self.sizeLabel setStringValue:@""];
@@ -176,9 +214,6 @@
 -(void)clickNoFullDiskPrivacyBtn{
     [[NSNotificationCenter defaultCenter] postNotificationName:START_TO_SHOW_FULL_DISK_PRIVACY_SETTING object:nil];
 }
-
-
-
 
 @end
 

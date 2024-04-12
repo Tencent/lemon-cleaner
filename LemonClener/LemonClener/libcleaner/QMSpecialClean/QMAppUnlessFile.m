@@ -13,7 +13,7 @@
 #import "QMResultItem.h"
 #import "QMCoreFunction/QMDataCenter.h"
 #import "QMDataConst.h"
-#import "QMMFCleanUtils.h"
+#import "QMCleanUtils.h"
 #import "CutBinary.h"
 #import "InstallAppHelper.h"
 #import <QMCoreFunction/QMShellExcuteHelper.h>
@@ -76,11 +76,11 @@ options:flags errorHandler:nil]
         NSMutableDictionary * lprojFileDict = [[NSMutableDictionary alloc] init];
         for (NSURL * pathURL in dirEnumerator)
         {
-            if ([QMMFCleanUtils checkURLFileType:pathURL typeKey:NSURLIsAliasFileKey])
+            if ([QMCleanUtils checkURLFileType:pathURL typeKey:NSURLIsAliasFileKey])
                 continue;
             
             // 处理目录
-            if ([QMMFCleanUtils checkURLFileType:pathURL typeKey:NSURLIsDirectoryKey])
+            if ([QMCleanUtils checkURLFileType:pathURL typeKey:NSURLIsDirectoryKey])
             {
                 NSString * fileName = nil;
                 [pathURL getResourceValue:&fileName forKey:NSURLNameKey error:NULL];
@@ -333,11 +333,11 @@ options:flags errorHandler:nil]
         for (NSURL * pathURL in dirEnumerator)
         {
             // 过滤快捷方式
-            if ([QMMFCleanUtils checkURLFileType:pathURL typeKey:NSURLIsAliasFileKey])
+            if ([QMCleanUtils checkURLFileType:pathURL typeKey:NSURLIsAliasFileKey])
                 continue;
             
             // 处理目录
-            if ([QMMFCleanUtils checkURLFileType:pathURL typeKey:NSURLIsDirectoryKey])
+            if ([QMCleanUtils checkURLFileType:pathURL typeKey:NSURLIsDirectoryKey])
             {
                 NSString * pathExtension = [pathURL pathExtension];
                 if ([pathExtension isEqualToString:@"lproj"] || [pathExtension isEqualToString:@"nib"])
@@ -348,7 +348,7 @@ options:flags errorHandler:nil]
             }
             else
             {
-                if ([QMMFCleanUtils checkURLFileType:pathURL typeKey:NSURLIsExecutableKey])
+                if ([QMCleanUtils checkURLFileType:pathURL typeKey:NSURLIsExecutableKey])
                 {
                     [binaryArray addObject:[pathURL path]];
                 }
@@ -645,11 +645,11 @@ options:flags errorHandler:nil]
         for (NSURL * pathURL in dirEnumerator)
         {
             NSLog(@"path url is = %@-1", [pathURL pathExtension]);
-            if ([QMMFCleanUtils checkURLFileType:pathURL typeKey:NSURLIsAliasFileKey])
+            if ([QMCleanUtils checkURLFileType:pathURL typeKey:NSURLIsAliasFileKey])
                 continue;
             NSLog(@"path url is = %@-2", [pathURL pathExtension]);
             // 处理目录
-            if ([QMMFCleanUtils checkURLFileType:pathURL typeKey:NSURLIsDirectoryKey])
+            if ([QMCleanUtils checkURLFileType:pathURL typeKey:NSURLIsDirectoryKey])
             {
                 NSLog(@"path url is = %@-3", [pathURL pathExtension]);
                 NSString * fileName = nil;

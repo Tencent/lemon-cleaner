@@ -10,7 +10,7 @@
 #import "QMResultItem.h"
 #import <QMCoreFunction/McCoreFunction.h>
 #import "QMCleanerUtils.h"
-#import "QMMFCleanUtils.h"
+#import "QMCleanUtils.h"
 #import "QMDataConst.h"
 #import <QMCoreFunction/QMDataCenter.h>
 #import "QMScanCategory.h"

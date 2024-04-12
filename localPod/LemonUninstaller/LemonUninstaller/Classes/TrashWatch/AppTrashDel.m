@@ -10,6 +10,7 @@
 #import "LmTrashWatchUninstallWindowController.h"
 #import "LemonDaemonConst.h"
 #import "LMLocalApp.h"
+#import <QMCoreFunction/QMShellExcuteHelper.h>
 
 @interface AppTrashDel() <McUninstallWindowControllerDelegate>{
     dispatch_queue_t checkQueue;
@@ -52,7 +53,13 @@
         }
 
         cmd = [NSString stringWithFormat:@"launchctl load -w %@", plistDstPath];
-        system([cmd UTF8String]);
+        int ret = system([cmd UTF8String]);
+        NSLog(@"[TraskWatch] load failed : %d", ret);
+        if (0 != ret) {
+            cmd = [NSString stringWithFormat:@"launchctl bootstrap gui/501 %@", plistDstPath];
+            ret = system([cmd UTF8String]);
+            NSLog(@"[TraskWatch] bootstrap result : %d", ret);
+        }
     } else {
         cmd = [NSString stringWithFormat:@"launchctl remove %@", TRASH_MONITOR_LAUNCHD_LABLE];
         system([cmd UTF8String]);
@@ -60,6 +67,24 @@
     }
     
     return YES;
+}
+
+#pragma mark - check trash watcher enable
+
++ (BOOL)isTrashWatcherEnable {
+    NSString *cmd = [NSString stringWithFormat:@"launchctl list | grep '%@'", TRASH_MONITOR_LAUNCHD_LABLE];
+    NSString *retString = [QMShellExcuteHelper excuteCmd:cmd];
+    if (retString == nil || [retString isEqualToString:@""]) {
+        return NO;
+    }
+    return YES;
+}
+
++ (void)keepTrashWatcherAlive {
+    if (![self isTrashWatcherEnable]) {
+        NSLog(@"[TraskWatch] trask watcher disable");
+        [self enableTrashWatch:YES];
+    }
 }
 
 //+ (BOOL)enableTrashWatchFromMonitor:(BOOL)isEnable{

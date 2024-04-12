@@ -80,13 +80,16 @@
     if (self.layer){
         CGContextSetShouldSmoothFonts([[NSGraphicsContext currentContext] graphicsPort], YES);
     }
+    
+    // xcode15上直接draw会看到超出bounds范围的内容
+    [[NSBezierPath bezierPathWithRect:self.bounds] addClip];
+    
     //[self refreshXoffsetValue];
     if (self.bounds.size.width > m_strWidth && _rightAlignment) {
         m_xOffset = MAX(0, self.bounds.size.width - m_strWidth);
     }
     NSPoint point = NSMakePoint(m_xOffset, (self.bounds.size.height - [[m_pathArray objectAtIndex:0] size].height) / 2);
-    
-    
+        
     for (NSMutableAttributedString * attrStr in m_pathArray)
     {
         [attrStr drawAtPoint:point];
@@ -185,6 +188,7 @@
         
         [curAttrStr setAttributes:m_attrs range:NSMakeRange(1, attrStr.length - 1)];
     }
+    m_xOffset = 0;  // 鼠标移出，还原显示，不然会停留在最后鼠标的位置
     [self setNeedsDisplay:YES];
 }
 

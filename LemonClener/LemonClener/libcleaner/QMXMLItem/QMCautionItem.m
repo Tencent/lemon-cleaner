@@ -7,7 +7,7 @@
 //
 
 #import "QMCautionItem.h"
-#import "QMMFCleanUtils.h"
+#import "QMCleanUtils.h"
 #import "QMResultItem.h"
 
 @implementation QMCautionItem
@@ -22,12 +22,12 @@
     *name = appName;
     if ([column isEqualToString:@"filename"])
     {
-        if ([QMMFCleanUtils assertRegex:_value matchStr:[path lastPathComponent]])
+        if ([QMCleanUtils assertRegex:_value matchStr:[path lastPathComponent]])
             return YES;
     }
     else if ([column isEqualToString:@"filepath"])
     {
-        if ([QMMFCleanUtils assertRegex:_value matchStr:path])
+        if ([QMCleanUtils assertRegex:_value matchStr:path])
             return YES;
     }
     return NO;

@@ -7,7 +7,7 @@
 //
 
 #import "QMActionItem.h"
-#import "QMMFCleanUtils.h"
+#import "QMCleanUtils.h"
 #import "QMResultItem.h"
 
 @implementation QMActionAtomItem
@@ -222,8 +222,8 @@
     if (!bundle) return NO;
     NSString * shortVersion = [[bundle infoDictionary] objectForKey:@"CFBundleShortVersionString"];
     NSString * bundleVersion = [[bundle infoDictionary] objectForKey:@"CFBundleVersion"];
-    return ([QMMFCleanUtils assertRegex:appVersion matchStr:shortVersion]
-            || [QMMFCleanUtils assertRegex:buildVersion matchStr:bundleVersion]);
+    return ([QMCleanUtils assertRegex:appVersion matchStr:shortVersion]
+            || [QMCleanUtils assertRegex:buildVersion matchStr:bundleVersion]);
 }
 
 - (BOOL)checkAppVersion

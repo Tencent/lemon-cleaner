@@ -10,7 +10,7 @@
 #import "QMFilterParse.h"
 #import "QMActionItem.h"
 #import "QMFilterItem.h"
-#import "QMMFCleanUtils.h"
+#import "QMCleanUtils.h"
 #import "QMResultItem.h"
 
 @implementation QMDirectoryScan
@@ -41,7 +41,7 @@
         NSMutableArray * resultPathArray = [NSMutableArray array];
         if (actionItem.cleanType == QMCleanTruncate)
         {
-            NSArray * subPaths = [QMMFCleanUtils processDirTruncatePath:result];
+            NSArray * subPaths = [QMCleanUtils processDirTruncatePath:result];
             if (subPaths)
             {
                 for (NSString * subPath in subPaths)

@@ -19,5 +19,10 @@
     "osx": "10.11"
   },
   "source_files": "LemonFileManager/Classes/**/*",
-  "public_header_files": "LemonFileManager/Classes/**/*.h"
+  "public_header_files": "LemonFileManager/Classes/**/*.h",
+  "dependencies": {
+    "QMCoreFunction": [
+
+    ]
+  }
 }

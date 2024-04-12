@@ -31,6 +31,7 @@
 "LMDuplicateCleanResultViewController_viewWillAppear_NSString_1" = "%@ 文件已移到废纸篓";
 "LMDuplicateCleanResultViewController_viewWillAppear_cleanSubTitleLabel_2" = "已成功将重复文件移到废纸篓";
 "LMDuplicateScanViewController_setupTextViews_titleLabel_1" = "正在扫描重复文件";
+"LMDuplicateCleanViewController_setupTextViews_titleLabel_1" = "正在清理重复文件";
 "LMDuplicateScanViewController_setupTextViews_cancelButton_2" = "取消";
 "LMDuplicateScanViewController_progressRate_1553072147_1" = "正在比对中.";
 "SelectTextView_initWithFrame__textField_1" = "文字描述";
@@ -54,3 +55,7 @@
 "LMDuplicateSelectFoldersViewController_addFolder_button_tips" = "点击或拖拽添加文件夹";
 "LMDuplicateSelectFoldersViewController_addFolder_button_continue_tips" = "继续添加";
 
+"LMDuplicateCleanViewController_cancelAlert_messageText" = "确认取消清理？";
+"LMDuplicateCleanViewController_cancelAlert_informativeText" = "退出后清理进度将会丢失，下次需重新开始清理";
+"LMDuplicateCleanViewController_cancelAlert_button_stop" = "取消清理";
+"LMDuplicateCleanViewController_cancelAlert_button_continue" = "继续清理";

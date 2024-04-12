@@ -10,7 +10,7 @@
 #import "QMFilterParse.h"
 #import "QMActionItem.h"
 #import "QMResultItem.h"
-#import "QMMFCleanUtils.h"
+#import "QMCleanUtils.h"
 #import "QMCoreFunction/McLocalSoftManager.h"
 #import "QMCoreFunction/McLocalSoft.h"
 
@@ -105,12 +105,12 @@
     NSArray * curAppArray = nil;
     if (!localCopySoftArray || [localCopySoftArray count] == 0)
     {
-        curAppArray = [QMMFCleanUtils cacheResultWithPath:kApplicationsPath];
+        curAppArray = [QMCleanUtils cacheResultWithPath:kApplicationsPath];
         if (!curAppArray)
         {
             NSMutableArray * array = [NSMutableArray array];
             
-            BOOL flags = [QMMFCleanUtils contentPathAtPath:kApplicationsPath
+            BOOL flags = [QMCleanUtils contentPathAtPath:kApplicationsPath
                                                  options:NSDirectoryEnumerationSkipsPackageDescendants
                                                    level:0
                                            propertiesKey:[NSArray arrayWithObject:NSURLIsAliasFileKey]
@@ -125,7 +125,7 @@
                                                        }
                                                        return [self->delegate needStopScan];
                                                    }];
-            if (flags) [QMMFCleanUtils setScanCacheResult:[NSDictionary dictionaryWithObject:array forKey:kApplicationsPath]];
+            if (flags) [QMCleanUtils setScanCacheResult:[NSDictionary dictionaryWithObject:array forKey:kApplicationsPath]];
             curAppArray = array;
         }
     }

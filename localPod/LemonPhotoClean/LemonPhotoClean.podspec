@@ -41,5 +41,5 @@ TODO: Add long description of the pod here.
   s.dependency 'QMUICommon'
   s.dependency 'QMCoreFunction'
   s.dependency 'LemonStat'
-  
+  s.dependency 'LemonFileManager'
 end

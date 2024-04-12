@@ -92,6 +92,7 @@
     
     
     if ([item isScanning]) {
+        [self.titleLabel setStringValue:[item title]];
         [self.sizeLabel setStringValue:NSLocalizedStringFromTableInBundle(@"CategoryCellView_setCellData_sizeLabel_1", nil, [NSBundle bundleForClass:[self class]], @"")];
         [self.sizeSelectLabel setHidden:YES];
         [self.categoryProgessView startAni];
