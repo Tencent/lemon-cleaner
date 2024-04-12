@@ -12,6 +12,10 @@
 @interface QMDuplicateItemManager () {
     NSMutableArray *_resultItemArray;
 }
+
+@property (nonatomic, assign) BOOL isCleaning;
+@property (nonatomic, assign) BOOL isCleaningCanceled;
+
 @end
 
 @implementation QMDuplicateItemManager
@@ -122,13 +126,25 @@
 }
 
 
-#pragma mark-
+#pragma mark - cancel
+
+- (void)cancelCleaning {
+    self.isCleaningCanceled = YES;
+}
+
 #pragma mark remove item
 
-- (void)removeDuplicateItem:(NSArray *)itemArray toTrash:(BOOL)toTrash block:(void (^)(uint64_t value))block {
+- (void)removeDuplicateItem:(NSArray *)itemArray toTrash:(BOOL)toTrash {
+    self.isCleaningCanceled = NO;
+    self.isCleaning = YES;
+    
+    if ([self.delegate respondsToSelector:@selector(cleanDuplicateItemBegin)]) {
+        [self.delegate cleanDuplicateItemBegin];
+    }
+    
     NSMutableArray *needRemovePathArray = [NSMutableArray array];
     NSMutableArray *tempRemoveItemArrayForRefresh = [NSMutableArray array];
-    uint64_t removeSize = 0;
+    __block uint64_t removeSize = 0;
     
 
     // 计算出所有需要移除的 path,并且更新原有的 array
@@ -136,7 +152,6 @@
         NSMutableArray *tempSubItemArray = [NSMutableArray array];
         for (QMDuplicateFile *subItem in item.subItems) {
             if (subItem.selected) {
-                removeSize += subItem.fileSize;
                 [tempSubItemArray addObject:subItem];
             }
 
@@ -155,21 +170,36 @@
     // 移除item(避免遍历时移除,遍历结束后再移除)
     [_resultItemArray removeObjectsInArray:tempRemoveItemArrayForRefresh];
     dispatch_queue_t removeQueue =  dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    removeQueue = dispatch_queue_create("remove.duplicate.item", DISPATCH_QUEUE_SERIAL);
     dispatch_group_t removeGroup =  dispatch_group_create();
     LMAppleScriptTool *removeTool = [[LMAppleScriptTool alloc] init];
     
     for (QMDuplicateFile *needRemoveItem in needRemovePathArray) {
         dispatch_group_async(removeGroup, removeQueue, ^{
+            if (self.isCleaningCanceled) {
+                return;
+            }
             NSString *path = [needRemoveItem filePath];
             NSFileManager *fm = [NSFileManager defaultManager];
             if (![fm fileExistsAtPath:path]) {
                 return;
             }
-            [removeTool removeFileToTrash:path];
+            [removeTool removeFileToTrashInSerialQueue:path];
+            removeSize += needRemoveItem.fileSize;
+            
+            if ([self.delegate respondsToSelector:@selector(cleanDuplicateItem:currentIndex:totalItemCounts:)]) {
+                NSInteger index = [needRemovePathArray indexOfObject:needRemoveItem];
+                NSInteger total = needRemovePathArray.count;
+                [self.delegate cleanDuplicateItem:path currentIndex:index totalItemCounts:total];
+            }
         });
     }
+
     dispatch_group_notify(removeGroup, dispatch_get_main_queue(), ^{
-        block(removeSize);
+        self.isCleaning = NO;
+        if ([self.delegate respondsToSelector:@selector(cleanDuplicateItemEnd:)]) {
+            [self.delegate cleanDuplicateItemEnd:removeSize];
+        }
     });
 }
 

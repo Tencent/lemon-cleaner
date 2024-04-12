@@ -14,7 +14,7 @@ typedef void(^SuccessSettingBlock)(void);
 /// 完全磁盘访问权限引导窗口 ( 单例)
 @interface GetFullAccessWndController : NSWindowController
 
-@property (nonatomic, assign) BOOL isLemonMonitor;
+@property (nonatomic, assign) GetFullDiskPopVCStyle style;
 
 -(void)closeWindow;
 

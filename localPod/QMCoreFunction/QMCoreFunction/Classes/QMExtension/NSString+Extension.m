@@ -10,6 +10,21 @@
 #import "NSString+Extension.h"
 #import "NSData+Extension.h"
 
+// 硬盘模式
+static const BOOL __diskMode__ = YES;
+
+// 二进制倍数
+NS_INLINE NSInteger __binary_multiple__(BOOL diskMode);
+
+inline NSInteger binary_multiple(void) {
+    return __binary_multiple__(__diskMode__);
+}
+
+NS_INLINE NSInteger __binary_multiple__(BOOL diskMode) {
+    return diskMode ? 1000 : 1024;
+}
+
+
 @implementation NSString(FileSize)
 
 + (NSString *)stringFromDiskSize:(uint64_t)theSize
@@ -19,7 +34,7 @@
 
 + (NSString *)stringFromDiskSize:(uint64_t)theSize delimiter:(NSString *)delimiter
 {
-    return [self stringFromSize:theSize delimiter:delimiter diskMode:YES];
+    return [self stringFromSize:theSize delimiter:delimiter diskMode:__diskMode__];
 }
 
 + (NSString *)sizeStringFromSize:(uint64_t)theSize diskMode:(BOOL)diskMode{
@@ -33,10 +48,7 @@
     while (floatSize>1000 && idx < (sizeof(sizeUnit)/sizeof(sizeUnit[0])-1))
     {
         idx++;
-        if (diskMode)
-            floatSize /= 1000;
-        else
-            floatSize /= 1024;
+        floatSize /= __binary_multiple__(diskMode);
     }
     
     return [NSString stringWithFormat:@"%@",sizeUnit[idx]];
@@ -96,7 +108,7 @@
     static const char units[] = { '\0', 'K', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y' };
     static int maxUnits = sizeof units - 1;
     
-    int multiplier = (!diskMode) ? 1024 : 1000;
+    int multiplier = (int)__binary_multiple__(diskMode);
     int exponent = 0;
     double bytes = theSize;
     while (bytes >= multiplier && exponent < maxUnits) {
@@ -138,10 +150,7 @@
     while (floatSize>1000 && idx < (sizeof(sizeUnit)/sizeof(sizeUnit[0])-1))
     {
         idx++;
-        if (diskMode)
-            floatSize /= 1000;
-        else
-            floatSize /= 1024;
+        floatSize /= __binary_multiple__(diskMode);
     }
     
     if (idx == 0)
@@ -164,10 +173,7 @@
     while (floatSize>1000 && idx < (sizeof(sizeUnit)/sizeof(sizeUnit[0])-1))
     {
         idx++;
-        if (diskMode)
-            floatSize /= 1000;
-        else
-            floatSize /= 1024;
+        floatSize /= __binary_multiple__(diskMode);
     }
     
     if (idx == 0)

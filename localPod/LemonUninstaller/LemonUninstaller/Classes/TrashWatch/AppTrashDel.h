@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface AppTrashDel : NSObject
 - (void)delTrashOfApps:(NSArray *)apps;
 + (BOOL)enableTrashWatch:(BOOL)isEnable;
++ (void)keepTrashWatcherAlive;
 @end
 
 NS_ASSUME_NONNULL_END

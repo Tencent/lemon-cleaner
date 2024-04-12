@@ -23,7 +23,7 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
-        _isLemonMonitor = NO;
+        _style = GetFullDiskPopVCStyleDefault;
         [self hookMulitLanguage];
     }
     return self;
@@ -60,7 +60,7 @@
 
 -(void)loadWindow{
     NSRect frame;
-    if (self.isLemonMonitor == YES) {
+    if (self.style == GetFullDiskPopVCStyleMonitor) {
         frame = NSMakeRect(0, 0, 610, 524);
     } else {
         frame = NSMakeRect(0, 0, 610, 476);
@@ -90,7 +90,7 @@
     GetFullDiskPopViewController *viewCon = [[GetFullDiskPopViewController alloc] initWithCLoseSetting:^{
         [weakSelf.window close];
     }];
-    viewCon.isLemonMonitor = self.isLemonMonitor;
+    viewCon.style = self.style;
     self.contentViewController = viewCon;
 }
 

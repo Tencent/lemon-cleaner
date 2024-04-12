@@ -15,7 +15,7 @@
 #import "LMQQScan.h"
 #import "LMFileHelper.h"
 #import "LMFileCategoryItem.h"
-#import "QMCleanUtils.h"
+#import "QMFMCleanUtils.h"
 #import "LMFileMoveFeatureDefines.h"
 
 #define KB_LEVEL 1000000.0

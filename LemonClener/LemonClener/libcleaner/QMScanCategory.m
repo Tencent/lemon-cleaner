@@ -10,7 +10,7 @@
 #import "QMFilterParse.h"
 #import "QMDirectoryScan.h"
 #import "QMAppLeftScan.h"
-#import "QMMFCleanUtils.h"
+#import "QMCleanUtils.h"
 #import "QMMailScan.h"
 #import "QMSoftScan.h"
 #import "QMXcodeScan.h"
@@ -200,35 +200,27 @@
 {
     self.isStopScan = NO;
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        int i = 0;
-//        NSTimeInterval startTime = [[NSDate date] timeIntervalSince1970];
-        for (QMCategoryItem * item in itemArray)
-        {
-            // 开始扫描
-            if (self->delegate)   [self->delegate startScanCategory:item.categoryID];
-            // 扫描item
-            if ([item.categoryID isEqualToString:@"2"]) {
-                QMCacheEnumerator *cacheEnumerator = [QMCacheEnumerator shareInstance];
-                [cacheEnumerator initialData];
-            }
-//            if (item.state != NSOffState)
-                [self scanCategoryWithItem:item];
-            //初始化所有caches内容
-            
-            
-            // 延迟处理
-//            if (i == [itemArray count] - 1 || self->isStopScan)
-//            {
-//                NSTimeInterval endTime = [[NSDate date] timeIntervalSince1970];
-//                if (endTime - startTime < 1)
-//                    [NSThread sleepForTimeInterval:(1 - (endTime - startTime))];
-//            }
-            // 扫描结束
-            if (self->delegate)   [self->delegate scanCategoryDidEnd:item.categoryID];
-            if (self->isStopScan) break;
-            i++;
-        }
+        [self performAllCategoryScanWithArray:itemArray];
     });
+}
+
+- (void)performAllCategoryScanWithArray:(NSArray *)itemArray {
+    int i = 0;
+    for (QMCategoryItem * item in itemArray)
+    {
+        // 开始扫描
+        if (self->delegate)   [self->delegate startScanCategory:item.categoryID];
+        if ([item.categoryID isEqualToString:@"2"]) {
+            QMCacheEnumerator *cacheEnumerator = [QMCacheEnumerator shareInstance];
+            [cacheEnumerator initialData];
+        }
+        // 扫描item
+        [self scanCategoryWithItem:item];
+        // 扫描结束
+        if (self->delegate)   [self->delegate scanCategoryDidEnd:item.categoryID];
+        if (self->isStopScan) break;
+        i++;
+    }
 }
 
 - (void)scanQuickCategoryWithItem:(QMCategoryItem *)categoryItem

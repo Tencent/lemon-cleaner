@@ -285,7 +285,7 @@
 		F854B20920F77677009102CF /* QMRemoveManager.h in Headers */ = {isa = PBXBuildFile; fileRef = F854B1FF20F77677009102CF /* QMRemoveManager.h */; };
 		F854B20A20F77677009102CF /* QMLiteCleanerManager.m in Sources */ = {isa = PBXBuildFile; fileRef = F854B20020F77677009102CF /* QMLiteCleanerManager.m */; };
 		F854B20C20F776ED009102CF /* LemonClener-Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = F854B20B20F776ED009102CF /* LemonClener-Prefix.pch */; };
-		F854B26C20F89D3F009102CF /* QMMFCleanUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = F854B24820F89D3E009102CF /* QMMFCleanUtils.h */; };
+		F854B26C20F89D3F009102CF /* QMCleanUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = F854B24820F89D3E009102CF /* QMCleanUtils.h */; };
 		F854B26D20F89D3F009102CF /* QMAppUnlessFile.h in Headers */ = {isa = PBXBuildFile; fileRef = F854B24A20F89D3E009102CF /* QMAppUnlessFile.h */; };
 		F854B26E20F89D3F009102CF /* QMDirectoryScan.h in Headers */ = {isa = PBXBuildFile; fileRef = F854B24B20F89D3E009102CF /* QMDirectoryScan.h */; };
 		F854B26F20F89D3F009102CF /* QMBrokenRegister.m in Sources */ = {isa = PBXBuildFile; fileRef = F854B24C20F89D3E009102CF /* QMBrokenRegister.m */; };
@@ -310,7 +310,7 @@
 		F854B28220F89D3F009102CF /* QMXMLParseManager.h in Headers */ = {isa = PBXBuildFile; fileRef = F854B26020F89D3E009102CF /* QMXMLParseManager.h */; };
 		F854B28320F89D3F009102CF /* QMFilterParse.m in Sources */ = {isa = PBXBuildFile; fileRef = F854B26120F89D3E009102CF /* QMFilterParse.m */; };
 		F854B28520F89D3F009102CF /* QMXMLParse.m in Sources */ = {isa = PBXBuildFile; fileRef = F854B26320F89D3E009102CF /* QMXMLParse.m */; };
-		F854B28720F89D3F009102CF /* QMMFCleanUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = F854B26520F89D3E009102CF /* QMMFCleanUtils.m */; };
+		F854B28720F89D3F009102CF /* QMCleanUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = F854B26520F89D3E009102CF /* QMCleanUtils.m */; };
 		F854B28820F89D3F009102CF /* QMScanCategory.h in Headers */ = {isa = PBXBuildFile; fileRef = F854B26620F89D3E009102CF /* QMScanCategory.h */; };
 		F854B28920F89D3F009102CF /* QMXMLItemDefine.h in Headers */ = {isa = PBXBuildFile; fileRef = F854B26720F89D3E009102CF /* QMXMLItemDefine.h */; };
 		F854B28A20F89D3F009102CF /* QMXMLParseManager.m in Sources */ = {isa = PBXBuildFile; fileRef = F854B26820F89D3E009102CF /* QMXMLParseManager.m */; };
@@ -648,7 +648,7 @@
 		F854B1FF20F77677009102CF /* QMRemoveManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMRemoveManager.h; sourceTree = "<group>"; };
 		F854B20020F77677009102CF /* QMLiteCleanerManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMLiteCleanerManager.m; sourceTree = "<group>"; };
 		F854B20B20F776ED009102CF /* LemonClener-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "LemonClener-Prefix.pch"; sourceTree = "<group>"; };
-		F854B24820F89D3E009102CF /* QMMFCleanUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMMFCleanUtils.h; sourceTree = "<group>"; };
+		F854B24820F89D3E009102CF /* QMCleanUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMCleanUtils.h; sourceTree = "<group>"; };
 		F854B24A20F89D3E009102CF /* QMAppUnlessFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMAppUnlessFile.h; sourceTree = "<group>"; };
 		F854B24B20F89D3E009102CF /* QMDirectoryScan.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMDirectoryScan.h; sourceTree = "<group>"; };
 		F854B24C20F89D3E009102CF /* QMBrokenRegister.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMBrokenRegister.m; sourceTree = "<group>"; };
@@ -673,7 +673,7 @@
 		F854B26020F89D3E009102CF /* QMXMLParseManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMXMLParseManager.h; sourceTree = "<group>"; };
 		F854B26120F89D3E009102CF /* QMFilterParse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMFilterParse.m; sourceTree = "<group>"; };
 		F854B26320F89D3E009102CF /* QMXMLParse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMXMLParse.m; sourceTree = "<group>"; };
-		F854B26520F89D3E009102CF /* QMMFCleanUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMMFCleanUtils.m; sourceTree = "<group>"; };
+		F854B26520F89D3E009102CF /* QMCleanUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMCleanUtils.m; sourceTree = "<group>"; };
 		F854B26620F89D3E009102CF /* QMScanCategory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMScanCategory.h; sourceTree = "<group>"; };
 		F854B26720F89D3E009102CF /* QMXMLItemDefine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMXMLItemDefine.h; sourceTree = "<group>"; };
 		F854B26820F89D3E009102CF /* QMXMLParseManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMXMLParseManager.m; sourceTree = "<group>"; };
@@ -1155,8 +1155,8 @@
 				F854B25320F89D3E009102CF /* QMXMLItem */,
 				BC215A1A215C737000CBC906 /* QMMailUtil.h */,
 				BC215A1B215C737000CBC906 /* QMMailUtil.m */,
-				F854B24820F89D3E009102CF /* QMMFCleanUtils.h */,
-				F854B26520F89D3E009102CF /* QMMFCleanUtils.m */,
+				F854B24820F89D3E009102CF /* QMCleanUtils.h */,
+				F854B26520F89D3E009102CF /* QMCleanUtils.m */,
 				F854B26620F89D3E009102CF /* QMScanCategory.h */,
 				F854B25220F89D3E009102CF /* QMScanCategory.m */,
 				F854B26720F89D3E009102CF /* QMXMLItemDefine.h */,
@@ -1341,7 +1341,7 @@
 				F854B28920F89D3F009102CF /* QMXMLItemDefine.h in Headers */,
 				DEE6CEDA27BFB1F400B557C7 /* ActionItemCellView.h in Headers */,
 				F8112C4621526D1A0024C55F /* LMCleanerProgressView.h in Headers */,
-				F854B26C20F89D3F009102CF /* QMMFCleanUtils.h in Headers */,
+				F854B26C20F89D3F009102CF /* QMCleanUtils.h in Headers */,
 				F824973222646FEA0061B892 /* QMCacheEnumerator.h in Headers */,
 				F854B28B20F89D3F009102CF /* QMXMLParse.h in Headers */,
 				DEA5D55E279831D300E96666 /* LMActivityCard.h in Headers */,
@@ -1734,7 +1734,7 @@
 				B7B7038E2AFB7571002420C1 /* QMBaseScan.m in Sources */,
 				F899F791215DC6E600947003 /* MacDeviceHelper.m in Sources */,
 				F86CE17421411C89009352F1 /* LMCleanResultModel.m in Sources */,
-				F854B28720F89D3F009102CF /* QMMFCleanUtils.m in Sources */,
+				F854B28720F89D3F009102CF /* QMCleanUtils.m in Sources */,
 				BC215A21215C750600CBC906 /* QMMailScan.m in Sources */,
 				F854B20620F77677009102CF /* QMWarnReultItem.m in Sources */,
 				F854B28320F89D3F009102CF /* QMFilterParse.m in Sources */,

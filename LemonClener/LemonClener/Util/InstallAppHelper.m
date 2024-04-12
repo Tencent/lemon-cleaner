@@ -7,7 +7,7 @@
 //
 
 #import "InstallAppHelper.h"
-#import "QMMFCleanUtils.h"
+#import "QMCleanUtils.h"
 
 @implementation InstallAppHelper
 

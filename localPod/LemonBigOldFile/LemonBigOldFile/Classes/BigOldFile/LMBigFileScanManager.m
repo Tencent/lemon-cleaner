@@ -14,6 +14,7 @@
 #include <sys/attr.h>
 #import <QMCoreFunction/QMShellExcuteHelper.h>
 #import <QMCoreFunction/NSString+Extension.h>
+#import <LemonFileManager/LMFileAttributesTool.h>
 
 @implementation LMBigFileItem
 
@@ -337,7 +338,7 @@ const float kMaxSearchProgress = 1.0f;
     if (lstat([path fileSystemRepresentation], &fileStat) == noErr)
     {
         if (fileStat.st_mode & S_IFDIR)
-            fileSize = [self fastFolderSizeAtFSRef:path diskMode:diskMode];
+            fileSize = [LMFileAttributesTool lmFastFolderSizeAtFSRef:path diskMode:diskMode];
         else
         {
             //codecc 平台deadCode: if条件永远不成立
@@ -348,39 +349,6 @@ const float kMaxSearchProgress = 1.0f;
         }
     }
     return fileSize;
-}
-+ (unsigned long long) fastFolderSizeAtFSRef:(NSString*)path diskMode:(BOOL)diskMode
-{
-    CFAbsoluteTime startTime = CFAbsoluteTimeGetCurrent();
-    NSFileManager * fm = [NSFileManager defaultManager];
-    NSDirectoryEnumerator * dirEnumerator = [fm enumeratorAtURL:[NSURL fileURLWithPath:path]
-                                     includingPropertiesForKeys:nil
-                                                        options:0
-                                                   errorHandler:nil];
-    NSUInteger totalSize = 0;
-    for (NSURL * pathURL in dirEnumerator)
-    {
-        NSString * resultPath = [pathURL path];
-        struct stat fileStat;
-        if (lstat([resultPath fileSystemRepresentation], &fileStat) != 0)
-            continue;
-        if (fileStat.st_mode & S_IFDIR)
-            continue;
-        if (diskMode)
-        {
-            if (fileStat.st_flags != 0)
-                totalSize += (((fileStat.st_size +
-                                MINBLOCK - 1) / MINBLOCK) * MINBLOCK);
-            else
-                totalSize += fileStat.st_blocks * 512;
-            
-        }
-        else
-            totalSize += fileStat.st_size;
-        if (CFAbsoluteTimeGetCurrent() - startTime > 10)
-            break;
-    }
-    return totalSize;
 }
 
 

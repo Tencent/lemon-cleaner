@@ -98,4 +98,30 @@
     self.itemManager = [[QMDuplicateItemManager alloc] init];
 }
 
+#pragma mark - window should close
+
+- (BOOL)windowShouldClose:(NSWindow *)sender {
+    if (self.itemManager.isCleaning) {
+        [self showAlertDuplicateWindowShouldClose];
+        return NO;
+    }
+    return YES;
+}
+
+- (void)showAlertDuplicateWindowShouldClose {
+    NSAlert *alert = [NSAlert new];
+    [alert addButtonWithTitle:NSLocalizedStringFromTableInBundle(@"LMDuplicateCleanViewController_cancelAlert_button_continue", nil, [NSBundle bundleForClass:[self class]], @"")];
+    [alert addButtonWithTitle:NSLocalizedStringFromTableInBundle(@"LMDuplicateCleanViewController_cancelAlert_button_stop", nil, [NSBundle bundleForClass:[self class]], @"")];
+    [alert setMessageText:NSLocalizedStringFromTableInBundle(@"LMDuplicateCleanViewController_cancelAlert_messageText", nil, [NSBundle bundleForClass:[self class]], @"")];
+    [alert setInformativeText:NSLocalizedStringFromTableInBundle(@"LMDuplicateCleanViewController_cancelAlert_informativeText", nil, [NSBundle bundleForClass:[self class]], @"")];
+
+    [alert beginSheetModalForWindow:[self window] completionHandler:^(NSModalResponse returnCode) {
+        if (returnCode == NSAlertSecondButtonReturn) {
+            [self.itemManager cancelCleaning];
+            [[self window] close];
+        }
+    }];
+}
+
+
 @end

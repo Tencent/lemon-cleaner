@@ -105,4 +105,33 @@
     return resultArray;
 }
 
+- (NSArray *)enumerateSubdirectoriesAtPath:(NSString *)path destinationLevel:(NSInteger)destinationLevel isMatching:(BOOL (^)(NSString *, NSInteger))isMatching {
+    
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSDirectoryEnumerator *enumerator = [fileManager enumeratorAtPath:path];
+    
+    NSMutableArray *subdirectories = [NSMutableArray array];
+    NSString *subPath;
+    while ((subPath = [enumerator nextObject])) {
+        NSString *fullPath = [path stringByAppendingPathComponent:subPath];
+        BOOL isDirectory;
+        [fileManager fileExistsAtPath:fullPath isDirectory:&isDirectory];
+        if (!isDirectory) {
+            /// 非文件夹
+            continue;
+        }
+        /// 路径层级level，从1开始
+        NSInteger currentLevel = enumerator.level;
+        if (isMatching && isMatching(fullPath, currentLevel) ) {
+            if (currentLevel == destinationLevel) {
+                [subdirectories addObject:fullPath];
+                [enumerator skipDescendants];
+            }
+        } else {
+            [enumerator skipDescendants];
+        }
+    }
+    return subdirectories.copy;
+}
+
 @end

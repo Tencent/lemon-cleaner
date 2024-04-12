@@ -15,6 +15,9 @@ NS_INLINE NSString* QMSafeSTR(id string)
     return string;
 }
 
+// 二进制倍数；通常情况Mac上硬盘是以1000计算
+extern NSInteger binary_multiple(void);
+
 @interface NSString(FileSize)
 
 + (NSString *)stringFromDiskSize:(uint64_t)theSize;
