@@ -18,7 +18,7 @@
 #include <stddef.h>
 #include <string.h>
 #include <stdbool.h>
-#import "QMFMCleanUtils.h"
+#import <LemonFileManager/LMFileAttributesTool.h>
 
 typedef struct val_attrs {
     uint32_t          length;
@@ -68,7 +68,7 @@ typedef struct val_attrs {
 
 - (void)setPath:(NSString *)path {
     _path = path;
-    self.fileSize = [QMFMCleanUtils caluactionSize:path];
+    self.fileSize = [LMFileAttributesTool caluactionSize:path diskMode:YES];
 }
 
 - (NSString *)availableFilePath {

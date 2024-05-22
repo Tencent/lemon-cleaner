@@ -284,26 +284,7 @@ const float kMaxSearchProgress = 0.2f;
 // get total size by path
 + (uint64)caluactionSize:(NSString *)path
 {
-    if (![[NSFileManager defaultManager] fileExistsAtPath:path])
-        return 0;
-    uint64 fileSize = 0;
-    BOOL diskMode = NO;
-    
-    struct stat fileStat;
-    if (lstat([path fileSystemRepresentation], &fileStat) == noErr)
-    {
-        if (fileStat.st_mode & S_IFDIR)
-            fileSize = [LMFileAttributesTool lmFastFolderSizeAtFSRef:path diskMode:diskMode];
-        else
-        {
-            //codecc 平台deadCode: if条件永远不成立
-//            if (diskMode && fileStat.st_blocks != 0)
-//                fileSize += fileStat.st_blocks * 512;
-//            else
-                fileSize += fileStat.st_size;
-        }
-    }
-    return fileSize;
+    return [LMFileAttributesTool caluactionSize:path diskMode:NO];
 }
 
 

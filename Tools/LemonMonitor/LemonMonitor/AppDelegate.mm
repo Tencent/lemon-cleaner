@@ -122,6 +122,13 @@
         [center addObserver:self selector:@selector(updateTheme) name:NOTIFICATION_THEME_CHANGED object:nil];
         [self updateTheme];
     }
+    
+    [[[NSWorkspace sharedWorkspace] notificationCenter] addObserver: self
+                                                              selector: @selector(willSleepNotification:)
+                                                                  name: NSWorkspaceWillSleepNotification object: NULL];
+    [[[NSWorkspace sharedWorkspace] notificationCenter] addObserver: self
+                                                              selector: @selector(didWakeNotification:)
+                                                                  name: NSWorkspaceDidWakeNotification object: NULL];
 }
 
 -(void)updateTheme{
@@ -194,6 +201,14 @@
     trashSizeCheckWndController.trashSize = trashSizeNumber.floatValue;
     NSLog(@"%s,%@, trashSize: %f",__FUNCTION__,trashSizeCheckWndController, trashSizeCheckWndController.trashSize);
     [trashSizeCheckWndController show];
+}
+
+- (void)willSleepNotification:(NSNotification *)notify {
+    NSLog(@"系统将要进入休眠");
+}
+
+- (void)didWakeNotification:(NSNotification *)notify {
+    NSLog(@"系统已唤醒");
 }
 
 - (void)needTeminateSelf

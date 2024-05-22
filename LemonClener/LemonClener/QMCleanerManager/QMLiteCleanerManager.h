@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "QMCleanerDefine.h"
 
 @protocol QMLiteCleanerDelegate <NSObject>
 
@@ -31,7 +32,7 @@
 - (void)startScan;    // 同步方法, 需在子线程调用.
 - (void)stopScan;
 
-- (void)startClean;   // 同步方法, 需在子线程调用.
+- (void)startCleanWithActionSource:(QMCleanerActionSource)source;   // 同步方法, 需在子线程调用.
 
 - (UInt64)resultSize;
 

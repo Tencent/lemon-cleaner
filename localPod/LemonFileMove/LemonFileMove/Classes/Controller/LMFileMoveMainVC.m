@@ -120,11 +120,9 @@
     self.scanBigText.textColor = [LMAppThemeHelper getTitleColor];
     self.currentScanFileName.stringValue = @" ";
     //
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_global_queue(0, 0), ^{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [LMFileMoveManger shareInstance].delegate = self;
         [[LMFileMoveManger shareInstance] startScan];
-        self.appArr = [LMFileMoveManger shareInstance].appArr;
-        [self showSelectView];
     });
 }
 
@@ -620,6 +618,11 @@
             self.currentScanFileName.stringValue = path;
         }
     });
+}
+
+- (void)fileMoveMangerScanFinished {
+    self.appArr = [LMFileMoveManger shareInstance].appArr;
+    [self showSelectView];
 }
 
 #pragma mark - Report

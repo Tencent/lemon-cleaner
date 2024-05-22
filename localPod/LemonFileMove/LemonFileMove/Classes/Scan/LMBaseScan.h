@@ -11,6 +11,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface LMBaseScan : NSObject
 
+@property (nonatomic, assign) BOOL cancel;
+
+- (void)start;
+
 // 获取相关目录
 - (NSArray *)getPath:(NSString *)path
          shellString:(NSString *)shellString

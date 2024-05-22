@@ -7,6 +7,7 @@
 //
 
 #import "LMCleanerDataCenter.h"
+#import "LMCleanerDataCenter+LMCleanPatch.h"
 #import <FMDB/FMDB.h>
 #import "DeamonTimeHelper.h"
 #include <semaphore.h>
@@ -44,6 +45,9 @@
         }else{
             [self copyDbToMonitorContainers];
         }
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [self lmClean_resetDownloadSelectStatus];
+        });
     }
     
     return self;

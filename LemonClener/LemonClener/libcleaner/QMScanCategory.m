@@ -10,12 +10,12 @@
 #import "QMFilterParse.h"
 #import "QMDirectoryScan.h"
 #import "QMAppLeftScan.h"
-#import "QMCleanUtils.h"
 #import "QMMailScan.h"
 #import "QMSoftScan.h"
 #import "QMXcodeScan.h"
 #import "QMCacheEnumerator.h"
 #import "QMWechatScan.h"
+#import "QMScanFileSizeCacheManager.h"
 
 @interface QMScanCategory()<QMScanDelegate>
 
@@ -205,6 +205,7 @@
 }
 
 - (void)performAllCategoryScanWithArray:(NSArray *)itemArray {
+    [[QMScanFileSizeCacheManager manager] start];
     int i = 0;
     for (QMCategoryItem * item in itemArray)
     {
@@ -221,6 +222,7 @@
         if (self->isStopScan) break;
         i++;
     }
+    [[QMScanFileSizeCacheManager manager] end];
 }
 
 - (void)scanQuickCategoryWithItem:(QMCategoryItem *)categoryItem
@@ -285,8 +287,13 @@
     }
     categoryItem.progressValue = 1;
 }
-- (void)startQuickScanCategoryArray:(NSArray *)itemArray;
+
+- (void)startQuickScanCategoryArray:(NSArray *)itemArray
 {
+    [self performQuickScanCategoryArray:itemArray];
+}
+
+- (void)performQuickScanCategoryArray:(NSArray *)itemArray {
     QMCacheEnumerator *cacheEnumerator = [QMCacheEnumerator shareInstance];
     [cacheEnumerator initialData];
     NSMutableArray * scanCategoryArray = [NSMutableArray array];

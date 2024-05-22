@@ -11,6 +11,7 @@
 #endif
 
 #import "LMAppleScriptTool.h"
+#import "LMFileAttributesBaseItem.h"
 #import "LMFileAttributesTool.h"
 
 FOUNDATION_EXPORT double LemonFileManagerVersionNumber;

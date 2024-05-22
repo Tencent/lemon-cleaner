@@ -12,25 +12,17 @@
 
 @implementation LMWeChatScan
 
-+ (instancetype)shareInstance {
-    static LMWeChatScan *shareInstance = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        shareInstance = [[[self class] alloc] init];
-    });
-    return shareInstance;
+- (void)startScanWeChat {
+    [self start];
+    [self scanWeChat:LMFileMoveScanType_Image before:YES];
+    [self scanWeChat:LMFileMoveScanType_Image before:NO];
+    [self scanWeChat:LMFileMoveScanType_File before:YES];
+    [self scanWeChat:LMFileMoveScanType_File before:NO];
+    [self scanWeChat:LMFileMoveScanType_Video before:YES];
+    [self scanWeChat:LMFileMoveScanType_Video before:NO];
 }
 
-- (void)starScanWechat {
-    [self scanWechat:LMFileMoveScanType_Image before:YES];
-    [self scanWechat:LMFileMoveScanType_Image before:NO];
-    [self scanWechat:LMFileMoveScanType_File before:YES];
-    [self scanWechat:LMFileMoveScanType_File before:NO];
-    [self scanWechat:LMFileMoveScanType_Video before:YES];
-    [self scanWechat:LMFileMoveScanType_Video before:NO];
-}
-
-- (void)scanWechat:(LMFileMoveScanType)type before:(BOOL)before {
+- (void)scanWeChat:(LMFileMoveScanType)type before:(BOOL)before {
     NSString *keyWord;
     NSString *shellString;
     if (type == LMFileMoveScanType_Image) {
@@ -56,7 +48,7 @@
     __weak typeof(self) weakSelf = self;
     [self callbackResultArray:resultArr appType:LMAppCategoryItemType_WeChat type:type before:before completion:^(LMResultItem *resultItem) {
         __strong typeof(weakSelf) strongSelf = weakSelf;
-        if ([strongSelf.delegate respondsToSelector:@selector(weChatScanWithType:resultItem:)]) {
+        if ([strongSelf.delegate respondsToSelector:@selector(weChatScanWithType:resultItem:)] && !self.cancel) {
             [strongSelf.delegate weChatScanWithType:type resultItem:resultItem];
         }
     }];

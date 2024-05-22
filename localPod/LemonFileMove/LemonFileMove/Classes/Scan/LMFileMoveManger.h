@@ -26,7 +26,12 @@ typedef NS_ENUM(NSUInteger, LMFileMoveTargetPathType) {
 
 @optional
 
+#pragma mark - 扫描过程回调
+
 - (void)fileMoveMangerScan:(NSString *)path size:(long long)size;
+
+/// 扫描结束
+- (void)fileMoveMangerScanFinished;
 
 #pragma mark - 迁移过程回调
 

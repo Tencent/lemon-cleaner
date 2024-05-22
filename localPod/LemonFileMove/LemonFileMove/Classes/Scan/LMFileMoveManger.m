@@ -15,7 +15,6 @@
 #import "LMQQScan.h"
 #import "LMFileHelper.h"
 #import "LMFileCategoryItem.h"
-#import "QMFMCleanUtils.h"
 #import "LMFileMoveFeatureDefines.h"
 
 #define KB_LEVEL 1000000.0
@@ -37,6 +36,8 @@
 @property (nonatomic, assign) BOOL isMoveFailed;
 
 @property (nonatomic, strong) dispatch_queue_t queue;
+
+@property (nonatomic, strong) NSMutableArray *scanningList;
 
 @end
 
@@ -61,6 +62,7 @@
 }
 
 - (void)resetData {
+    _scanningList = [NSMutableArray array];
     _appArr = [NSMutableArray array];
     _movedFileSize = 0;
     [self setupAppArr];
@@ -85,20 +87,40 @@
 }
 
 - (void)stopScan {
-    [self resetData];
+    dispatch_async(self.queue, ^{
+        for (__kindof LMBaseScan *scan in self.scanningList) {
+            scan.cancel = YES;
+        }
+        [self resetData];
+    });
 }
 
 - (void)startScan {
+    dispatch_async(self.queue, ^{
+        [self __startScan];
+    });
+}
+
+- (void)__startScan {
+    
     NSTimeInterval startScanTime = [[NSDate date] timeIntervalSince1970];
     // 微信
-    [LMWeChatScan shareInstance].delegate = self;
-    [[LMWeChatScan shareInstance] starScanWechat];
+    LMWeChatScan *weChatScan = [[LMWeChatScan alloc] init];
+    weChatScan.delegate = self;
+    [weChatScan startScanWeChat];
     // 企业微信
-    [LMWorkWeChatScan shareInstance].delegate = self;
-    [[LMWorkWeChatScan shareInstance] starScanWorkWeChat];
+    LMWorkWeChatScan *workWeChatScan = [[LMWorkWeChatScan alloc] init];
+    workWeChatScan.delegate = self;
+    [workWeChatScan startScanWorkWeChat];
     // qq
-    [LMQQScan shareInstance].delegate = self;
-    [[LMQQScan shareInstance] starScanQQ];
+    LMQQScan *qqScan = [[LMQQScan alloc] init];
+    qqScan.delegate = self;
+    [qqScan startScanQQ];
+    
+    [_scanningList addObject:weChatScan];
+    [_scanningList addObject:workWeChatScan];
+    [_scanningList addObject:qqScan];
+
     // 计算大小
     for (LMAppCategoryItem *item in self.appArr) {
         for (int num = 0; num < 6; num ++) {
@@ -117,6 +139,9 @@
     self.appArr = [NSMutableArray arrayWithArray:sortArr];
     //
     [self caculateSize];
+    if ([self.delegate respondsToSelector:@selector(fileMoveMangerScanFinished)]) {
+        [self.delegate fileMoveMangerScanFinished];
+    }
 }
 
 - (long long)caculateSize {

@@ -1005,6 +1005,7 @@ static NSString * const kLemonFileMoveIntroduceVCDidAppear = @"kLemonFileMoveInt
     }
     
     if ([item isKindOfClass:[QMCategorySubItem class]]) {
+        // Category - item
         QMCategorySubItem *currentItem = (QMCategorySubItem *)item;
         if (totalSubCount == 0) {
             if (item.m_stateValue != NSOffState) {
@@ -1018,10 +1019,11 @@ static NSString * const kLemonFileMoveIntroduceVCDidAppear = @"kLemonFileMoveInt
             } else if (checkOnFlags == 0 && checkMixFlags ==0) {
                 [[LMCleanerDataCenter shareInstance] addSubcateStatusToDatabaseWithId:[currentItem subCategoryID] selectStatus:CleanSubcateSelectStatusDeselect];
             } else {
-                [[LMCleanerDataCenter shareInstance] addSubcateStatusToDatabaseWithId:[currentItem subCategoryID] selectStatus:CleanSubcateSelectStatusSelect];
+                [[LMCleanerDataCenter shareInstance] addSubcateStatusToDatabaseWithId:[currentItem subCategoryID] selectStatus:CleanSubcateSelectStatusDeselect];
             }
         }
     } else if ([item isKindOfClass:[QMActionItem class]]) {
+        // Category - item - action
         QMActionItem *currentItem = (QMActionItem *)item;
         if (totalSubCount == 0) {
             if (item.m_stateValue != NSOffState) {
@@ -1031,11 +1033,13 @@ static NSString * const kLemonFileMoveIntroduceVCDidAppear = @"kLemonFileMoveInt
             }
         } else {
             if (checkOnFlags == totalSubCount) {
+                // 子项全选
                 [[LMCleanerDataCenter shareInstance] addSubcateStatusToDatabaseWithId:[currentItem actionID ] selectStatus:CleanSubcateSelectStatusSelect];
             } else if (checkOnFlags == 0 && checkMixFlags ==0) {
+                // 子项全选数量等于0 且 子项混合选中数量等于0（子项下还有子项）
                 [[LMCleanerDataCenter shareInstance] addSubcateStatusToDatabaseWithId:[currentItem actionID ] selectStatus:CleanSubcateSelectStatusDeselect];
             } else {
-                [[LMCleanerDataCenter shareInstance] addSubcateStatusToDatabaseWithId:[currentItem actionID ] selectStatus:CleanSubcateSelectStatusSelect];
+                [[LMCleanerDataCenter shareInstance] addSubcateStatusToDatabaseWithId:[currentItem actionID ] selectStatus:CleanSubcateSelectStatusDeselect];
             }
         }
     }

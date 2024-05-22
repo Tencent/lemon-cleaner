@@ -7,7 +7,7 @@
 
 #import "LMFileHelper.h"
 #import "QMShellExcuteHelper.h"
-#import "QMFMCleanUtils.h"
+#import <LemonFileManager/LMFileAttributesTool.h>
 
 @interface LMFileHelper ()
 
@@ -109,7 +109,7 @@
                 // 文件夹，继续遍历
                 [dirArray addObject:tempPath];
             } else {
-                if (filterHiddenItem && [QMFMCleanUtils isHiddenItemForPath:tempPath]) {
+                if (filterHiddenItem && [LMFileAttributesTool isHiddenItemForPath:tempPath]) {
                     // 无视隐藏文件
                 } else {
                     // 确实有普通文件，返回NO
@@ -133,7 +133,7 @@
 
 + (long long)sizeForFilePath:(NSString *)filePath isDirectory:(BOOL)isDirectory {
     if (isDirectory) {
-        return [QMFMCleanUtils caluactionSize:filePath];
+        return [LMFileAttributesTool caluactionSize:filePath diskMode:YES];
     } else {
         NSDictionary *attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:nil];
         NSNumber *fileSize = [attributes objectForKey:NSFileSize];

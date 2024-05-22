@@ -61,6 +61,7 @@ target 'LemonClener' do
     inherit! :search_paths
     project 'LemonClener/LemonClener.xcodeproj'
     pod 'LemonFileMove',:path => './localPod/LemonFileMove'
+    pod 'LemonFileManager',:path => './localPod/LemonFileManager'
     available_pods
 end
 

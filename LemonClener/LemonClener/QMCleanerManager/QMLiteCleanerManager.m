@@ -10,7 +10,6 @@
 #import "QMScanCategory.h"
 #import "QMRemoveManager.h"
 #import "QMXMLParseManager.h"
-#import "QMCleanUtils.h"
 #import "LMCleanerDataCenter.h"
 
 @interface QMLiteCleanerManager()
@@ -117,7 +116,7 @@
     [_scanCategory setIsStopScan:YES];
 }
 
-- (void)startClean
+- (void)startCleanWithActionSource:(QMCleanerActionSource)source
 {
     //在进入方法时,判断是否有清理在执行. 如果在执行,等待这次清理结束,采用这次清理的结果,否则,重新进行清理.
     BOOL needWait = cleanning ? YES: NO;
@@ -150,7 +149,7 @@
         
         [removeItemDict setObject:removeSubItemDict forKey:categoryItem.categoryID];
     }
-    [_removeManager startCleaner:removeItemDict];
+    [_removeManager startCleaner:removeItemDict actionSource:source];
     
     cleanning = NO;
     [mTrashCleaningLock unlock];
