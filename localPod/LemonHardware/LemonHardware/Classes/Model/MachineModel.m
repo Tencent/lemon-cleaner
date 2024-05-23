@@ -469,7 +469,9 @@ NSString * const kMacBookAir_15_13 = @"Mac15,13";
 NSString * const kMacBookAir_15_12 = @"Mac15,12";
 NSString * const kMacBookAir_14_15 = @"Mac14,15";
 NSString * const kMacBookAir_14_2 = @"Mac14,2";
-NSString * const kMacBookAir_early_10_1 = @"MacBookAir10,1";
+
+// 非刘海屏，但是model是Macxx,xx
+NSString * const kMacBookPro_14_7 = @"Mac14,7";
 
 @implementation MachineModel (LHScreen)
 
@@ -487,7 +489,7 @@ NSString * const kMacBookAir_early_10_1 = @"MacBookAir10,1";
 + (BOOL)__isLiquidScreen {
     BOOL isLiquid = NO;
     MachineModel *model = [[MachineModel alloc] init];
-    NSString *machineName =  model.machineName ? : @"Unknown Mac";
+    NSString *machineName = model.machineName ? : @"Unknown Mac";
     NSArray *list = @[
         kMacBookPro_15_3,
         kMacBookPro_15_6,
@@ -507,8 +509,7 @@ NSString * const kMacBookAir_early_10_1 = @"MacBookAir10,1";
         kMacBookAir_15_13,
         kMacBookAir_15_12,
         kMacBookAir_14_15,
-        kMacBookAir_14_2,
-        kMacBookAir_early_10_1
+        kMacBookAir_14_2
     ];
     if ([list containsObject:machineName]) {
         isLiquid = YES;
@@ -521,6 +522,8 @@ NSString * const kMacBookAir_early_10_1 = @"MacBookAir10,1";
     } else if ([machineName containsString:@"MacBookAir"]) {
         isLiquid = NO;
     } else if ([machineName containsString:@"MacBookPro"]) {
+        isLiquid = NO;
+    } else if ([machineName isEqualToString:kMacBookPro_14_7]) {
         isLiquid = NO;
     } else if ([self __assertRegex:@"Mac(\\d{1,2}),(\\d{1,2})" matchStr:machineName]) {
         // 有电池则是笔记本，否则为iMac、Mac Mini、Mac Pro、Mac studio
