@@ -154,6 +154,38 @@ void _dm_uninstall_all_async(block_v_i block)
     
 }
 
+// mark : full disk access
+void full_disk_access_prepare(const char *userHomePath, const char *userHomePath2, mc_pipe_cmd **ppcmd, xpc_operation **ppoperation)
+{
+    full_disk_access_param param;
+    strncpy(param.userHomePath, userHomePath, sizeof(param.userHomePath) - 1);
+    strncpy(param.userHomePath2, userHomePath2, sizeof(param.userHomePath2) - 1);
+    
+    // total size
+    int cmd_size = sizeof(mc_pipe_cmd) + sizeof(full_disk_access_param);
+    mc_pipe_cmd *pcmd = (mc_pipe_cmd *)malloc(cmd_size);
+    
+    // set parameters
+    pcmd->size = cmd_size;
+    pcmd->cmd_magic = MCCMD_FULL_DISK_ACCESS;
+    memcpy(pcmd + 1, &param, sizeof(full_disk_access_param));
+    
+    *ppcmd = pcmd;
+    
+    operation_prepare(ppoperation);
+}
+
+// 判断守护进程是否有完全磁盘访问权限
+int _full_disk_access(const char *userHomePath, const char *userHomePath2) {
+    mc_pipe_cmd *pcmd = NULL; // malloc
+    xpc_operation *operation = NULL; // stack var
+    full_disk_access_prepare(userHomePath, userHomePath2, &pcmd, &operation);
+    __block mc_pipe_result *presult = NULL;
+    
+    int return_code = executeXPCCommandQueueSync(pcmd, &presult ,operation);
+    return pack_normal_return_data(pcmd, presult, operation, return_code);
+}
+
 
 // mark : kill process
 void kill_process_prepare(pid_t pid,mc_pipe_cmd **ppcmd, xpc_operation **ppoperation){

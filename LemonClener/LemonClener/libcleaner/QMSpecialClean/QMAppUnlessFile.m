@@ -17,6 +17,7 @@
 #import "CutBinary.h"
 #import "InstallAppHelper.h"
 #import <QMCoreFunction/QMShellExcuteHelper.h>
+#import <QMCoreFunction/McCoreFunction.h>
 #include <sys/sysctl.h>
 
 #define MAX_FAT_HEADER_SIZE (20*20)
@@ -26,7 +27,18 @@ includingPropertiesForKeys:[NSArray arrayWithObjects:NSURLIsAliasFileKey, NSURLI
 options:flags errorHandler:nil]
 
 #define kWhiteAppleAppBundleID @[@"com.apple.Safari",@"com.apple.dt.Xcode",@"com.apple.appleseed.FeedbackAssistant"]
-#define kWhiteCommonAppBundleID @[@"com.microsoft.VSCode",@"com.parallels.desktop.console"]
+#define kWhiteCommonAppBundleID @[ \
+@"com.microsoft.VSCode", \
+@"com.parallels.desktop.console", \
+@"com.tencent.xinWeChat", \
+@"com.tencent.WeWorkMac", \
+@"com.tencent.qq", \
+@"com.tencent.meeting", \
+@"com.alibaba.DingTalkMac", \
+@"5ZSL2CJU2T.com.dingtalk.mac", \
+@"com.electron.lark", \
+@"com.bytedance.macos.feishu",\
+]
 
 @implementation QMAppUnlessFile
 @synthesize delegate;
@@ -448,7 +460,14 @@ options:flags errorHandler:nil]
 }
 
 - (void)scanAppGeneralBinary:(QMActionItem *)actionItem {
-   
+    // 根据线上反馈13.0以上需要判断
+    if (@available(macOS 13.0, *)) {
+        /// 守护进程无 完全磁盘访问权限，lipo [input path] -thin [架构] -output [output path] 时output会失败，导致Application/下的二进制文件为空
+        if ([[McCoreFunction shareCoreFuction] getFullDiskAccessForDaemon] != QMFullDiskAuthorationStatusAuthorized) {
+            return;
+        }
+    }
+    
     NSMutableDictionary *installBundleIdDic = [InstallAppHelper getInstallBundleIds];
     dispatch_group_t group = dispatch_group_create();
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
@@ -489,9 +508,12 @@ options:flags errorHandler:nil]
                 NSString *libraryPath = [NSString stringWithFormat:@"%@/Contents/Library",appPath];
                 NSArray *libraryArr = [manager subpathsOfDirectoryAtPath:libraryPath error:&err];
                 if (libraryArr != nil && libraryArr.count > 0) {
-                    for (NSString *str in frameworksArr) {
-                        NSString *path = [NSString stringWithFormat:@"%@/%@",libraryPath,str];
-                        [dirArr addObject:path];
+                    for (NSString *str in libraryArr) {
+                        // Library下除LoginItems外作为资源文件参与gatekeeper验证
+                        if ([str hasPrefix:@"LoginItems"]) {
+                            NSString *path = [NSString stringWithFormat:@"%@/%@",libraryPath,str];
+                            [dirArr addObject:path];
+                        }
                     }
                 }
         
@@ -521,6 +543,10 @@ options:flags errorHandler:nil]
                 if (AppBinaryType_None != type) {
                     //获取app中有对应架构的二进制
                     for (NSString *path in dirArr) {
+                        // gatekeeper会验证资源文件的完整性，不完整则会损坏
+                        if ([path containsString:@"/Resources/"]) {
+                            continue;
+                        }
                         NSString *newPath = path;//[appPath stringByAppendingPathComponent:path];
                         NSString *description = [workSpace localizedDescriptionForType:[workSpace typeOfFile:newPath error:nil]];
                         if ([description containsString:@"可执行"] || [description containsString:@"Unix executable"] ) {
@@ -552,8 +578,10 @@ options:flags errorHandler:nil]
         });
     }
     dispatch_time_t time = dispatch_time(DISPATCH_TIME_NOW, 120ull * NSEC_PER_SEC);
-    dispatch_group_wait(group, time);
-
+    long result = dispatch_group_wait(group, time);
+    if (result != 0) {
+        NSLog(@"scan binary timeout");
+    }
 }
 
 #pragma mark-

@@ -108,6 +108,13 @@
 
 #define kIconImageSize    16
 
+#pragma mark - 清理项相关Id定义
+#define QMCategoryTrashItemId @"1006" // 垃圾篓
+#define QMCategoryDownloadItemId @"1007" // 下载
+#define QMCategoryUniversalBinaryItemId @"20402" // 通用二进制
+#define QMCategoryMailCacheItemId @"301" // Mail缓存
+
+
 // 扫描类型
 typedef enum
 {

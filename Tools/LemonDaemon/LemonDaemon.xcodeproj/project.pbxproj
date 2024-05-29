@@ -13,6 +13,7 @@
 		76B4C27C287294C000F61386 /* LMDMVersionHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 76B4C27B287294C000F61386 /* LMDMVersionHelper.m */; };
 		785CA6227A7C5B29A3F7C3D5 /* libPods-LemonDaemon.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 71B3D3D30CBDF7DC92261FBF /* libPods-LemonDaemon.a */; };
 		7A0221CD2865BED8000F9FD4 /* CmcSystem.c in Sources */ = {isa = PBXBuildFile; fileRef = 7A0221CC2865BED8000F9FD4 /* CmcSystem.c */; };
+		B70F56EC2C070B3800CF49FA /* NSString+Extension.m in Sources */ = {isa = PBXBuildFile; fileRef = B70F56EB2C070B3800CF49FA /* NSString+Extension.m */; };
 		B79C27C32B84925400838B76 /* CmcSmartQuery.m in Sources */ = {isa = PBXBuildFile; fileRef = B79C27B72B84925000838B76 /* CmcSmartQuery.m */; };
 		B79C27C42B84925400838B76 /* CmcFan.m in Sources */ = {isa = PBXBuildFile; fileRef = B79C27B92B84925100838B76 /* CmcFan.m */; };
 		B79C27C52B84925400838B76 /* CmcAppleSmc.m in Sources */ = {isa = PBXBuildFile; fileRef = B79C27BA2B84925100838B76 /* CmcAppleSmc.m */; };
@@ -21,6 +22,7 @@
 		B79C27C82B84925400838B76 /* McFanInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = B79C27BE2B84925300838B76 /* McFanInfo.m */; };
 		B79C27C92B84925400838B76 /* McTemperatureInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = B79C27C22B84925400838B76 /* McTemperatureInfo.m */; };
 		B79C27D12B84957700838B76 /* McCpuInfoSMC.m in Sources */ = {isa = PBXBuildFile; fileRef = B79C27D02B84957700838B76 /* McCpuInfoSMC.m */; };
+		B7C120542BF2308400E7FC82 /* MCPermissions.m in Sources */ = {isa = PBXBuildFile; fileRef = B7C120532BF2308400E7FC82 /* MCPermissions.m */; };
 		BC6842B8225E0E980074B2D2 /* ExecuteCmdHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = BC6842B6225E0E970074B2D2 /* ExecuteCmdHelper.m */; };
 		BC8254EE22FA7DF100292FA5 /* LMKextManager.m in Sources */ = {isa = PBXBuildFile; fileRef = BC8254ED22FA7DF100292FA5 /* LMKextManager.m */; };
 		D466802221AE8B6500704647 /* LMDaemonXPCService.m in Sources */ = {isa = PBXBuildFile; fileRef = D466802121AE8B6500704647 /* LMDaemonXPCService.m */; };
@@ -89,6 +91,8 @@
 		7A0221CB2865BED8000F9FD4 /* CmcSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CmcSystem.h; sourceTree = "<group>"; };
 		7A0221CC2865BED8000F9FD4 /* CmcSystem.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = CmcSystem.c; sourceTree = "<group>"; };
 		8A36FA88920478B5FBB32539 /* Pods-LemonDaemon.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LemonDaemon.debug.xcconfig"; path = "../../Pods/Target Support Files/Pods-LemonDaemon/Pods-LemonDaemon.debug.xcconfig"; sourceTree = "<group>"; };
+		B70F56EA2C070B3800CF49FA /* NSString+Extension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSString+Extension.h"; path = "../../../../localPod/QMCoreFunction/QMCoreFunction/Classes/QMExtension/NSString+Extension.h"; sourceTree = "<group>"; };
+		B70F56EB2C070B3800CF49FA /* NSString+Extension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSString+Extension.m"; path = "../../../../localPod/QMCoreFunction/QMCoreFunction/Classes/QMExtension/NSString+Extension.m"; sourceTree = "<group>"; };
 		B79C27B42B84925000838B76 /* McTemperatureInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = McTemperatureInfo.h; sourceTree = "<group>"; };
 		B79C27B52B84925000838B76 /* CmcSmartQuery.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CmcSmartQuery.h; sourceTree = "<group>"; };
 		B79C27B62B84925000838B76 /* CmcAppleSmc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CmcAppleSmc.h; sourceTree = "<group>"; };
@@ -105,6 +109,8 @@
 		B79C27C22B84925400838B76 /* McTemperatureInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = McTemperatureInfo.m; sourceTree = "<group>"; };
 		B79C27CF2B84957700838B76 /* McCpuInfoSMC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = McCpuInfoSMC.h; sourceTree = "<group>"; };
 		B79C27D02B84957700838B76 /* McCpuInfoSMC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = McCpuInfoSMC.m; sourceTree = "<group>"; };
+		B7C120522BF2308400E7FC82 /* MCPermissions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCPermissions.h; sourceTree = "<group>"; };
+		B7C120532BF2308400E7FC82 /* MCPermissions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCPermissions.m; sourceTree = "<group>"; };
 		BC6842B6225E0E970074B2D2 /* ExecuteCmdHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExecuteCmdHelper.m; sourceTree = "<group>"; };
 		BC6842B7225E0E970074B2D2 /* ExecuteCmdHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExecuteCmdHelper.h; sourceTree = "<group>"; };
 		BC8254EC22FA7DF100292FA5 /* LMKextManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LMKextManager.h; sourceTree = "<group>"; };
@@ -246,6 +252,15 @@
 			path = SMC;
 			sourceTree = "<group>";
 		};
+		B7C120512BF22FE500E7FC82 /* Permission */ = {
+			isa = PBXGroup;
+			children = (
+				B7C120522BF2308400E7FC82 /* MCPermissions.h */,
+				B7C120532BF2308400E7FC82 /* MCPermissions.m */,
+			);
+			path = Permission;
+			sourceTree = "<group>";
+		};
 		BC68427D225D8D260074B2D2 /* cmd */ = {
 			isa = PBXGroup;
 			children = (
@@ -269,6 +284,8 @@
 				D466802821AE91A600704647 /* LMDaemonListenerDelegate.m */,
 				BC8254EC22FA7DF100292FA5 /* LMKextManager.h */,
 				BC8254ED22FA7DF100292FA5 /* LMKextManager.m */,
+				B70F56EA2C070B3800CF49FA /* NSString+Extension.h */,
+				B70F56EB2C070B3800CF49FA /* NSString+Extension.m */,
 			);
 			path = DaemonXpcService;
 			sourceTree = "<group>";
@@ -316,6 +333,7 @@
 				D4E1D88E20F5F75A001FA263 /* Install */,
 				D4E1D87620F5F75A001FA263 /* KextMgr */,
 				D4E1D87A20F5F75A001FA263 /* Launchpad */,
+				B7C120512BF22FE500E7FC82 /* Permission */,
 				D4B14D2621A2E41D001E6064 /* LemonBizManager.h */,
 				D4B14D2721A2E41D001E6064 /* LemonBizManager.m */,
 				D4E1D85620F5F75A001FA263 /* LemonDaemon-Prefix.pch */,
@@ -574,12 +592,14 @@
 				D4E1D89520F5F7C8001FA263 /* CmcFileAction.m in Sources */,
 				D4E1D89720F5F7C8001FA263 /* McUninstall.m in Sources */,
 				D4E1D89920F5F7C8001FA263 /* McKextMgr.m in Sources */,
+				B7C120542BF2308400E7FC82 /* MCPermissions.m in Sources */,
 				D4E1D89D20F5F7C8001FA263 /* QMLaunchpadClean.m in Sources */,
 				D4E1D89F20F5F7C8001FA263 /* FMDatabaseQueue.m in Sources */,
 				D4E1D8A220F5F7C8001FA263 /* FMDatabaseAdditions.m in Sources */,
 				B79C27C82B84925400838B76 /* McFanInfo.m in Sources */,
 				D4E1D8A320F5F7C8001FA263 /* FMDatabase.m in Sources */,
 				D4E1D8A720F5F7C8001FA263 /* FMDatabasePool.m in Sources */,
+				B70F56EC2C070B3800CF49FA /* NSString+Extension.m in Sources */,
 				B79C27C52B84925400838B76 /* CmcAppleSmc.m in Sources */,
 				BC8254EE22FA7DF100292FA5 /* LMKextManager.m in Sources */,
 				D4B7253F21393F8B003B59B5 /* VideoProcessStat.m in Sources */,

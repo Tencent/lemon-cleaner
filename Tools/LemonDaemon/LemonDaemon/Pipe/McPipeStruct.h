@@ -86,6 +86,14 @@ typedef struct _client_exit_param
 } client_exit_param;
 
 
+// DAEMON FULL DISK ACCESS
+#define MCCMD_FULL_DISK_ACCESS     9304
+typedef struct _full_disk_access_param
+{
+    char                userHomePath[512];
+    char                userHomePath2[512];
+} full_disk_access_param;
+
 #define MCCMD_TASKFORPID    8001
 
 typedef struct _taskforpid_param

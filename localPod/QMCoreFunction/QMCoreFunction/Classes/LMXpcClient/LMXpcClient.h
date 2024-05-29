@@ -25,6 +25,8 @@ void init_xpc(void);
 int _dm_uninstall_all(void);
 void _dm_uninstall_all_async(block_v_i block);
 
+int _full_disk_access(const char *userHomePath, const char *userHomePath2);
+
 // kill process
 int _dm_kill_process(pid_t pid);
 void _dm_kill_process_async(pid_t pid, block_v_i block);

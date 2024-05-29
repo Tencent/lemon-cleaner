@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "McCoreFunctionCommon.h"
+#import "QMFullDiskAccessManager.h"
 
 typedef enum: NSUInteger {
     AppBinaryType_None = 0,
@@ -65,6 +66,8 @@ typedef enum: NSUInteger {
 - (int)updateAPP:(NSString *)newAppPath fullVersion:(NSString *)fullVersion;
 - (void)updateAPP:(NSString *)newAppPath fullVersion:(NSString *)fullVersion block:(block_v_i)block_i;
 
+// get full disk access for Daemon
+- (QMFullDiskAuthorationStatus)getFullDiskAccessForDaemon;
 
 // set fan speed
 - (void)setFanMinSpeeds:(int)index minSpeed:(float)speed;
