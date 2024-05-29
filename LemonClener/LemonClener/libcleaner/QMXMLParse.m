@@ -240,7 +240,11 @@
     
     //判读bundleid不为空，并且没有安装 --- 将已经适配过的软件加入进来
     if ((m_curCategorySubItem.bundleId == nil) || ([m_installBundleIdDic objectForKey:m_curCategorySubItem.bundleId]) || [m_installBundleIdDic objectForKey:m_curCategorySubItem.appStoreBundleId]) {
-        [m_curCategoryItem addSubCategoryItem:m_curCategorySubItem];
+        if ([m_curCategorySubItem.subCategoryID isEqualToString:QMCategoryUniversalBinaryItemId]) {
+            [self createCategorySubItemLogicWhenTypeIsOtherBinary];
+        } else {
+            [m_curCategoryItem addSubCategoryItem:m_curCategorySubItem];
+        }
         //加入进来的软件进行移除 剩余的软件进行自适配
         if (m_curCategorySubItem.bundleId != nil) {
             [m_installBundleIdDic removeObjectForKey:m_curCategorySubItem.bundleId];
@@ -248,6 +252,17 @@
         if (m_curCategorySubItem.appStoreBundleId != nil) {
             [m_installBundleIdDic removeObjectForKey:m_curCategorySubItem.appStoreBundleId];
         }
+    }
+}
+
+- (void)createCategorySubItemLogicWhenTypeIsOtherBinary {
+    if (@available(macOS 13.0, *)) {
+        /// 守护进程无 完全磁盘访问权限，lipo [input path] -thin [架构] -output [output path] 时output会失败，导致Application/下的二进制文件为空
+        if ([[McCoreFunction shareCoreFuction] getFullDiskAccessForDaemon] == QMFullDiskAuthorationStatusAuthorized) {
+            [m_curCategoryItem addSubCategoryItem:m_curCategorySubItem];
+        }
+    } else {
+        [m_curCategoryItem addSubCategoryItem:m_curCategorySubItem];
     }
 }
 

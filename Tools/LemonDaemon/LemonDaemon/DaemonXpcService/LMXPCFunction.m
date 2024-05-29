@@ -20,6 +20,7 @@
 #import "ExecuteCmdHelper.h"
 #import "LMKextManager.h"
 #import <Libproc.h>
+#import "MCPermissions.h"
 
 @implementation LMXPCFunction
 
@@ -429,6 +430,13 @@ int kill_proc_if_match_keyword(mc_pipe_cmd *pcmd, mc_pipe_result **ppresult);
             NSLog(@"[info] MCCMD_CLIENT_EXIT cmd");
             client_exit_param *params = (client_exit_param *) (pcmd + 1);
             fun_ret = clientExit(params->pid);
+            *ppresult = [self cmdSimpleReply:fun_ret magic:pcmd->cmd_magic];
+            break;
+        }
+        case MCCMD_FULL_DISK_ACCESS: {
+            NSLog(@"[info] MCCMD_FULL_DISK_ACCESS cmd");
+            full_disk_access_param *params = (full_disk_access_param *)(pcmd + 1);
+            fun_ret = full_disk_access_permission(params->userHomePath, params->userHomePath2);
             *ppresult = [self cmdSimpleReply:fun_ret magic:pcmd->cmd_magic];
             break;
         }
