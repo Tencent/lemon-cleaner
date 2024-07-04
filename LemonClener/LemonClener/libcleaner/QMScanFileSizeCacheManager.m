@@ -41,7 +41,7 @@
         return NO;
     }
     
-    return [self.mutableDict.allKeys containsObject:path];
+    return self.mutableDict[path] != nil;
 }
 
 - (uint64)getCachedFileSizeWithPath:(NSString *)path {

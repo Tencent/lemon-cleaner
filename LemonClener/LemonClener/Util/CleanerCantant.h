@@ -84,4 +84,7 @@ typedef NS_ENUM(NSUInteger, SysSubcategoryIdType) {
 
 #define IS_SHOW_BIG_VIEW @"is_show_big_view" //打开主界面后，是否展示大界面
 
+// alert 标识符
+#define LMCLEAN_DOWNLOAD_SELECT_ALL_ALERT_SHOWED @"LMCLEAN_DOWNLOAD_SELECT_ALL_ALERT_SHOWED"
+
 #endif /* CleanerCantant_h */

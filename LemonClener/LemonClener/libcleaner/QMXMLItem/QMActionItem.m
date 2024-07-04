@@ -182,6 +182,8 @@
 - (void)addResultItem:(QMResultItem *)item
 {
     @synchronized (self) {
+        /// array 中元素较多时 containsObject：耗时较高
+        /// set的containsObject 的时间复杂度为O(1)
         if (![self.m_resultItemArray containsObject:item])
         {
             [self.m_resultItemArray addObject:item];

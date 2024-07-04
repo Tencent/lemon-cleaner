@@ -212,8 +212,10 @@
 		D47D64BB215D203700E411AE /* AFNetworking.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = AFNetworking.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D47D64C0215D22BF00E411AE /* AFNetworking.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AFNetworking.framework; path = "../../../../../Library/Developer/Xcode/DerivedData/Lemon-gmfqyfrusrvxopduwpphgyjaxeqx/Build/Products/Debug/AFNetworking/AFNetworking.framework"; sourceTree = "<group>"; };
 		D49FA4C221DDA2A3004A416E /* PrivacyProtect.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = PrivacyProtect.xcodeproj; path = ../PrivacyProtect/PrivacyProtect.xcodeproj; sourceTree = "<group>"; };
-		D49FA52921DDA797004A416E /* QMUserNotificationCenter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QMUserNotificationCenter.h; sourceTree = "<group>"; };
-		D49FA52B21DDA797004A416E /* QMUserNotificationCenter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QMUserNotificationCenter.m; sourceTree = "<group>"; };
+		DE1A9470274B9DDE00411011 /* LemonShark.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = LemonShark.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		DE27948B26A03000007B4443 /* LMMonitorUpdateVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LMMonitorUpdateVC.h; sourceTree = "<group>"; };
+		DE27948C26A03000007B4443 /* LMMonitorUpdateVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LMMonitorUpdateVC.m; sourceTree = "<group>"; };
+		DE27948D26A03000007B4443 /* LMMonitorUpdateVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LMMonitorUpdateVC.xib; sourceTree = "<group>"; };
 		DE27949826A038BE007B4443 /* LMUpdatePopoverBackgroundView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMUpdatePopoverBackgroundView.h; sourceTree = "<group>"; };
 		DE27949926A038BE007B4443 /* LMUpdatePopoverRootView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMUpdatePopoverRootView.h; sourceTree = "<group>"; };
 		DE27949A26A038BE007B4443 /* LMUpdatePopoverBackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMUpdatePopoverBackgroundView.m; sourceTree = "<group>"; };
@@ -544,8 +546,6 @@
 		D49FA52721DDA797004A416E /* notification */ = {
 			isa = PBXGroup;
 			children = (
-				D49FA52921DDA797004A416E /* QMUserNotificationCenter.h */,
-				D49FA52B21DDA797004A416E /* QMUserNotificationCenter.m */,
 			);
 			path = notification;
 			sourceTree = "<group>";

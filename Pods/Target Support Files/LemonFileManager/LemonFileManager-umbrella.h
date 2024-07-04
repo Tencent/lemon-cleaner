@@ -10,6 +10,7 @@
 #endif
 #endif
 
+#import "NSObject+LMDataCheck.h"
 #import "LMAppleScriptTool.h"
 #import "LMFileAttributesBaseItem.h"
 #import "LMFileAttributesTool.h"

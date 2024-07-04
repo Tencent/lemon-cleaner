@@ -16,6 +16,7 @@
 #import "QMCacheEnumerator.h"
 #import "QMWechatScan.h"
 #import "QMScanFileSizeCacheManager.h"
+#import "CleanerCantant.h"
 
 @interface QMScanCategory()<QMScanDelegate>
 
@@ -198,6 +199,7 @@
 
 - (void)startScanAllCategoryArray:(NSArray *)itemArray
 {
+    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:LMCLEAN_DOWNLOAD_SELECT_ALL_ALERT_SHOWED];
     self.isStopScan = NO;
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         [self performAllCategoryScanWithArray:itemArray];

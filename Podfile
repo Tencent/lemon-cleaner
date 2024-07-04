@@ -19,6 +19,7 @@ def available_pods
     pod 'QMCoreFunction',:path => './localPod/QMCoreFunction'
     pod 'Masonry', '= 1.1.0'
     pod 'FMDB', '= 2.7.5'
+    pod 'LemonFileManager',:path => './localPod/LemonFileManager'
 end
 target 'Lemon' do
    use_frameworks!
@@ -35,7 +36,6 @@ target 'Lemon' do
   pod 'LemonUninstaller',:path => './localPod/LemonUninstaller'
   pod 'LemonLoginItemManager',:path => './localPod/LemonLoginItemManager'
   pod 'LemonFileMove',:path => './localPod/LemonFileMove'
-  pod 'LemonFileManager',:path => './localPod/LemonFileManager'
 
 end
 
@@ -61,7 +61,6 @@ target 'LemonClener' do
     inherit! :search_paths
     project 'LemonClener/LemonClener.xcodeproj'
     pod 'LemonFileMove',:path => './localPod/LemonFileMove'
-    pod 'LemonFileManager',:path => './localPod/LemonFileManager'
     available_pods
 end
 

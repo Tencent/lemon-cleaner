@@ -28,6 +28,10 @@
 "LMCleanBigViewController_rememberCleanSetting_alert_titleLabelString_2" = "Cancel cleanup items next time";
 "LMCleanBigViewController_rememberCleanSetting_alert_okButtonString_1" = "OK";
 "LMCleanBigViewController_rememberCleanSetting_alert_cancelButtonString_1" = "Cancel";
+"LMCleanBigViewController_downloadSelectAll_alert_titleString_1" = "Delete Download Files";
+"LMCleanBigViewController_downloadSelectAll_alert_descString_1" = "Downloaded files may contain important files, such as those downloaded through a browser, Please confirm and select them.";
+"LMCleanBigViewController_downloadSelectAll_alert_okButtonString_1" = "Confirm Selection";
+"LMCleanBigViewController_downloadSelectAll_alert_cancelButtonString_1" = "Cancel";
 "LMCleanScanViewController_initView_startScanBtn_1" = "Grant access";
 "LMCleanScanViewController_initView_mainViewDescLabel_2" = "Welcome to Lemon Cleaner Lite";
 "LMCleanScanViewController_initView_mainViewDescLabel_3" = "Welcome to Lemon Cleaner";

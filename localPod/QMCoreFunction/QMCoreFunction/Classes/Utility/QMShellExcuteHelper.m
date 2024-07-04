@@ -8,10 +8,25 @@
 
 #import "QMShellExcuteHelper.h"
 
+// 默认cmd 10.0s超时
+static NSTimeInterval kDefaultTimeout = 10.0;
+
 @implementation QMShellExcuteHelper
 
 +(NSString *)excuteCmd:(NSString *)cmd
 {
+    return [self excuteCmd:cmd timeout:kDefaultTimeout];
+}
+
++ (NSString *)excuteCmd:(NSString *)cmd timeout:(NSTimeInterval)timeout {
+    if (@available(macOS 14.0, *)) {
+        return [self __excuteCmd:cmd timeout:timeout];
+    } else {
+        return [self __excuteCmd:cmd timeout:0];
+    }
+}
+
++ (NSString *)__excuteCmd:(NSString *)cmd timeout:(NSTimeInterval)timeout {
     // 初始化并设置shell路径
     NSTask *task = [[NSTask alloc] init];
     [task setLaunchPath:@"/bin/bash"];
@@ -35,11 +50,11 @@
     
     NSData *data = [[NSData alloc] init];
     __block BOOL terminatedForTimeout = NO;
-    if (@available(macOS 10.14, *)) {
+    if (timeout > 0) {
         dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
-        [self taskTimeoutWithDispatchSemaphore:semaphore completion:^(BOOL timeout) {
-            terminatedForTimeout = timeout;
-            if (timeout) {
+        [self taskWithTimeout:timeout semaphore:semaphore completion: ^(BOOL isTimedOut){
+            terminatedForTimeout = isTimedOut;
+            if (isTimedOut) {
                 [task terminate];
             }
         }];
@@ -66,15 +81,15 @@
     return [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 }
 
-+ (void)taskTimeoutWithDispatchSemaphore:(dispatch_semaphore_t)semaphore completion:(void(^)(BOOL))completion {
++ (void)taskWithTimeout:(NSTimeInterval)timeout semaphore:(dispatch_semaphore_t)semaphore completion:(void(^)(BOOL))completion {
     static dispatch_queue_t queue = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         queue = dispatch_queue_create(NULL, DISPATCH_QUEUE_SERIAL);
     });
     dispatch_async(queue, ^{
-        dispatch_time_t timeout = dispatch_time(DISPATCH_TIME_NOW, 10 * NSEC_PER_SEC);
-        long result = dispatch_semaphore_wait(semaphore, timeout);
+        dispatch_time_t timeout_time_t = dispatch_time(DISPATCH_TIME_NOW, timeout * NSEC_PER_SEC);
+        long result = dispatch_semaphore_wait(semaphore, timeout_time_t);
         BOOL value = result != 0;
         completion(value);
     });

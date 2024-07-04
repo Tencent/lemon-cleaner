@@ -10,7 +10,7 @@
 #import "LemonDaemonConst.h"
 #import "QMDataConst.h"
 #import "QMDataCenter.h"
-#import "QMUserNotificationCenter.h"
+#import <PrivacyProtect/QMUserNotificationCenter.h>
 
 #define EARLY_NODE @"earlywarning"
 #define EARLY_VERSION @"version"

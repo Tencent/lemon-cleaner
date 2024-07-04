@@ -12,6 +12,7 @@
 #import "McFunCleanFile.h"
 #import "McPipeStruct.h"
 #import "LMXpcClient.h"
+#import "NSString+Extension.h"
 
 BOOL gIsAppStoreVersion = NO;
 @implementation McCoreFunction
@@ -420,6 +421,17 @@ static void getVersionByPath(NSString **fullVersion, NSString *newAppPath) {
         block_i(-2);
     
     _dm_update_async([newAppPath UTF8String], [fullVersion UTF8String], block_i);
+}
+
+#pragma mark - get full disk access from Daemon
+- (QMFullDiskAuthorationStatus)getFullDiskAccessForDaemon {
+    const char * userHomePath = [[NSString getUserHomePath] UTF8String];
+    const char * userHomePath2 = [[@"~" stringByExpandingTildeInPath] UTF8String];
+    if (userHomePath == NULL) {
+        return QMFullDiskAuthorationStatusNotDetermined;
+    } else {
+        return _full_disk_access(userHomePath, userHomePath2);
+    }
 }
 
 #pragma get info from Daemon
