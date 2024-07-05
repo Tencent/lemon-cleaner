@@ -10,8 +10,17 @@
 #import "NSString+Extension.h"
 
 @implementation QMFullDiskAccessManager
-
 +(QMFullDiskAuthorationStatus)getFullDiskAuthorationStatus{
+    // 完全磁盘修改生效必须重启
+    static QMFullDiskAuthorationStatus status = 0;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        status = [self __getFullDiskAuthorationStatus];
+    });
+    return status;
+}
+
++(QMFullDiskAuthorationStatus)__getFullDiskAuthorationStatus{
     if (@available(macOS 10.14, *)) {
         //用户目录可能获取不准确，所以通过两种方法获取用户路径并进行验证
         NSString *userHomePath = [NSString getUserHomePath];

@@ -24,7 +24,6 @@ NS_INLINE NSInteger __binary_multiple__(BOOL diskMode) {
     return diskMode ? 1000 : 1024;
 }
 
-
 @implementation NSString(FileSize)
 
 + (NSString *)stringFromDiskSize:(uint64_t)theSize

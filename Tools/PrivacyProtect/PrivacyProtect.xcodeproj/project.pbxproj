@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		C056A793D8556494C303D17F /* Pods_PrivacyProtect.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 46CB59997A70409F5BCA15ED /* Pods_PrivacyProtect.framework */; };
+		B7FCD2412C2AB88D00351D31 /* QMUserNotificationCenter.h in Headers */ = {isa = PBXBuildFile; fileRef = D49FA51B21DDA626004A416E /* QMUserNotificationCenter.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C4B3172B26458232006FC154 /* AVMonitor.h in Headers */ = {isa = PBXBuildFile; fileRef = C4B3172226458232006FC154 /* AVMonitor.h */; };
 		C4B3172C26458232006FC154 /* Client.h in Headers */ = {isa = PBXBuildFile; fileRef = C4B3172326458232006FC154 /* Client.h */; };
 		C4B3172D26458232006FC154 /* utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = C4B3172426458232006FC154 /* utilities.h */; };
@@ -286,6 +287,7 @@
 				D49FA50221DDA5D9004A416E /* AudioObserver.h in Headers */,
 				D49FA51721DDA5D9004A416E /* OwlWhiteListViewController.h in Headers */,
 				D49FA50E21DDA5D9004A416E /* OwlTableRowView.h in Headers */,
+				B7FCD2412C2AB88D00351D31 /* QMUserNotificationCenter.h in Headers */,
 				D49FA50121DDA5D9004A416E /* CameraDeviceModel.h in Headers */,
 				D49FA51021DDA5D9004A416E /* OwlSelectViewController.h in Headers */,
 				D49FA50F21DDA5D9004A416E /* OwlCollectionViewItem.h in Headers */,

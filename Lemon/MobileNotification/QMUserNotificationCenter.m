@@ -11,6 +11,10 @@
 #define kNotificationKey @"_notification_key"
 #define kNotificationCategoryKey @"_category_key"
 
+@interface QMUserNotificationCenter ()
+@property (nonatomic, copy) void (^actionCallBack)(QMUNCNotificationAction action, NSString *notificationKey);
+@end
+
 @implementation QMUserNotificationCenter
 
 - (id)init
@@ -83,18 +87,13 @@
         request = [UNNotificationRequest requestWithIdentifier:notification.identifier content:content trigger:NULL];
 
         //send notification
+        __weak typeof(self) weakSelf = self;
         NSSet *categories = [NSSet setWithArray:@[[self categoryWithUserNotification:notification]]];
         [[UNUserNotificationCenter currentNotificationCenter] setNotificationCategories:categories];
         [[UNUserNotificationCenter currentNotificationCenter] addNotificationRequest:request withCompletionHandler:^(NSError *_Nullable error)
         {
             if (!error) {
-                NSString * key = [dict objectForKey:kNotificationKey];
-                if (key) {
-                    id obj = [self->_delegateDict objectForKey:key];
-                    if ([obj respondsToSelector:@selector(userNotificationCenter:didDeliverNotification:)])
-                        [obj userNotificationCenter:[NSUserNotificationCenter defaultUserNotificationCenter]
-                             didDeliverNotification:notification];
-                }
+                [weakSelf presentedWhenAuthorizedWithNotification:notification key:key];
             }
         }];
         
@@ -104,6 +103,24 @@
     }
     
     return;
+}
+
+- (void)presentedWhenAuthorizedWithNotification:(NSUserNotification *)notification key:(NSString *)key API_AVAILABLE(macos(10.14)) {
+    __weak typeof(self) weakSelf = self;
+    [[UNUserNotificationCenter currentNotificationCenter] getNotificationSettingsWithCompletionHandler:^(UNNotificationSettings * _Nonnull settings) {
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        if (settings.authorizationStatus == UNAuthorizationStatusAuthorized
+            || settings.authorizationStatus == UNAuthorizationStatusProvisional) {
+            if (key) {
+                // 通知被展示（添加的通知均为立即展示）
+                [strongSelf notificationPresentedWithNotificationKey:key];
+                id obj = [strongSelf->_delegateDict objectForKey:key];
+                if ([obj respondsToSelector:@selector(userNotificationCenter:didDeliverNotification:)])
+                    [obj userNotificationCenter:[NSUserNotificationCenter defaultUserNotificationCenter]
+                         didDeliverNotification:notification];
+            }
+        }
+    }];
 }
 
 - (void)removeAllDeliveredNotifications {
@@ -196,6 +213,7 @@
     NSString * key = [userInfo objectForKey:kNotificationKey];
     if (key)
     {
+        [self notificationPresentedWithNotificationKey:key];
         id obj = [_delegateDict objectForKey:key];
         if ([obj respondsToSelector:@selector(userNotificationCenter:didDeliverNotification:)])
             [obj userNotificationCenter:center didDeliverNotification:notification];
@@ -211,6 +229,13 @@
         return;
     }
     NSString * key = [userInfo objectForKey:kNotificationKey];
+    if (notification.activationType == NSUserNotificationActivationTypeContentsClicked) {
+        [self notificationContentClickedWithNotificationKey:key];
+    } else if (notification.activationType == NSUserNotificationActivationTypeActionButtonClicked) {
+        [self notificationButtonClickedWithNotificationKey:key];
+    } else if (notification.activationType == NSUserNotificationActivationTypeNone) {
+        [self notificationDismissedWithNotificationKey:key];
+    }
     if (key)
     {
         id obj = [_delegateDict objectForKey:key];
@@ -284,6 +309,13 @@
 - (void)userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void(^)(void))completionHandler API_AVAILABLE(macos(10.14)) {
     
     NSString *key = [response.notification.request.content.userInfo objectForKey:kNotificationKey];
+        if ([response.actionIdentifier isEqualToString:UNNotificationDefaultActionIdentifier]) {
+            [self notificationContentClickedWithNotificationKey:key];
+        } else if ([response.actionIdentifier isEqualToString:UNNotificationDismissActionIdentifier]) {
+            [self notificationDismissedWithNotificationKey:key];
+        } else  {
+            [self notificationButtonClickedWithNotificationKey:key];
+        }
     if (key) {
         id obj = [_delegateDict objectForKey:key];
         
@@ -304,6 +336,38 @@
     
 }
 
+#pragma mark - private
 
+/// 通知被展示
+- (void)notificationPresentedWithNotificationKey:(NSString *)key {
+    if (self.actionCallBack) {
+        self.actionCallBack(QMUNCNotificationActionShown, key?:@"");
+    }
+}
+
+/// 通知内容被点击
+- (void)notificationContentClickedWithNotificationKey:(NSString *)key {
+    if (self.actionCallBack) {
+        self.actionCallBack(QMUNCNotificationActionContentClicked, key?:@"");
+    }
+}
+
+/// 通知按钮被点击
+- (void)notificationButtonClickedWithNotificationKey:(NSString *)key {
+    if (self.actionCallBack) {
+        self.actionCallBack(QMUNCNotificationActionButtonClicked, key?:@"");
+    }
+}
+
+/// 通知被关闭
+- (void)notificationDismissedWithNotificationKey:(NSString *)key {
+    if (self.actionCallBack) {
+        self.actionCallBack(QMUNCNotificationActionDismissed, key?:@"");
+    }
+}
+
+- (void)addNotificationActionCallBack:(void (^)(QMUNCNotificationAction, NSString *))callBack {
+    self.actionCallBack = callBack;
+}
 
 @end

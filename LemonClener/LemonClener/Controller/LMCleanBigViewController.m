@@ -26,7 +26,6 @@
 #import <QMCoreFunction/NSColor+Extension.h>
 #import <QMCoreFunction/McCoreFunction.h>
 #import <QMCleanManager.h>
-#import "CleanerCantant.h"
 #import <Masonry/Masonry.h>
 #import <QMUICommon/QMProgressView.h>
 #import <QMUICommon/LMBorderButton.h>
@@ -45,6 +44,7 @@
 #import <LemonFileMove/LMFileMoveFeatureDefines.h>
 
 #define Lemon_KB_To_GB 1000000000.0
+#define kItemIdDownloadSubItemID @"1007"
 
 static NSString * const kLemonFileMoveIntroduceVCDidAppear = @"kLemonFileMoveIntroduceVCDidAppear";
 
@@ -876,6 +876,10 @@ static NSString * const kLemonFileMoveIntroduceVCDidAppear = @"kLemonFileMoveInt
             return;
         }
         
+        if (checkBtn.state == NSOnState) {
+            [self showAlertIfNeededWhenSelectItem:item control:checkBtn];
+        }
+
         if ([item isKindOfClass:[QMCategorySubItem class]] && [item isScaned]) {
             //写入数据库，记住用户选择
             if (checkBtn.state == NSOnState) {
@@ -1046,6 +1050,39 @@ static NSString * const kLemonFileMoveIntroduceVCDidAppear = @"kLemonFileMoveInt
     
 }
 
+- (void)showAlertIfNeededWhenSelectItem:(QMCategorySubItem *)item control:(NSButton *)button{
+    if (![item isKindOfClass:QMCategorySubItem.class]) {
+        return;
+    }
+    if (![item.subCategoryID isEqualToString:kItemIdDownloadSubItemID]) {
+        return;
+    }
+    BOOL isShowed = [[NSUserDefaults standardUserDefaults] boolForKey:LMCLEAN_DOWNLOAD_SELECT_ALL_ALERT_SHOWED];
+    if (isShowed) {
+        return;
+    }
+    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:LMCLEAN_DOWNLOAD_SELECT_ALL_ALERT_SHOWED];
+    
+    NSAlert *alert = [[NSAlert alloc] init];
+    
+    [alert.accessoryView setFrameOrigin:NSMakePoint(0, 0)];
+    alert.alertStyle = NSAlertStyleInformational;
+    alert.messageText = NSLocalizedStringFromTableInBundle(@"LMCleanBigViewController_downloadSelectAll_alert_titleString_1", nil, [NSBundle bundleForClass:[self class]], @"");
+    alert.informativeText = NSLocalizedStringFromTableInBundle(@"LMCleanBigViewController_downloadSelectAll_alert_descString_1", nil, [NSBundle bundleForClass:[self class]], @"");
+    [alert addButtonWithTitle:NSLocalizedStringFromTableInBundle(@"LMCleanBigViewController_downloadSelectAll_alert_okButtonString_1", nil, [NSBundle bundleForClass:[self class]], @"")];
+    [alert addButtonWithTitle:NSLocalizedStringFromTableInBundle(@"LMCleanBigViewController_downloadSelectAll_alert_cancelButtonString_1", nil, [NSBundle bundleForClass:[self class]], @"")];
+
+    __weak typeof(self) weakSelf = self;
+    [alert beginSheetModalForWindow:self.view.window completionHandler:^(NSModalResponse returnCode) {
+        if (returnCode == NSAlertFirstButtonReturn) {
+            
+        } else {
+            button.state = NSControlStateValueOff;
+            [weakSelf checkButtonAction:button];
+        }
+    }];
+    
+}
 
 #pragma mark -- 扫描或者清理定时器回调方法
 - (void)scanProgressRefresh:(id)sender

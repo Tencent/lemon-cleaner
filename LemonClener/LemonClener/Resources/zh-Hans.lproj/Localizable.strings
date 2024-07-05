@@ -28,6 +28,10 @@
 "LMCleanBigViewController_rememberCleanSetting_alert_titleLabelString_2" = "如果不需要清理，将不会记住这个目录！";
 "LMCleanBigViewController_rememberCleanSetting_alert_okButtonString_1" = "确定";
 "LMCleanBigViewController_rememberCleanSetting_alert_cancelButtonString_1" = "取消";
+"LMCleanBigViewController_downloadSelectAll_alert_titleString_1" = "是否删除下载文件";
+"LMCleanBigViewController_downloadSelectAll_alert_descString_1" = "下载文件可能包含重要文件。例如通过浏览器下载的文件，请确认后勾选";
+"LMCleanBigViewController_downloadSelectAll_alert_okButtonString_1" = "确认勾选";
+"LMCleanBigViewController_downloadSelectAll_alert_cancelButtonString_1" = "取消";
 "LMCleanScanViewController_initView_startScanBtn_1" = "获取权限";
 "LMCleanScanViewController_initView_mainViewDescLabel_2" = "欢迎使用 Lemon Cleaner Lite";
 "LMCleanScanViewController_initView_mainViewDescLabel_3" = "欢迎使用 Lemon Cleaner";

@@ -23,7 +23,8 @@
 #import <PrivacyProtect/OwlManager.h>
 #endif
 #import <AFNetworking/AFNetworking.h>
-#import "QMUserNotificationCenter.h"
+#import <PrivacyProtect/QMUserNotificationCenter.h>
+#import <UserNotifications/UserNotifications.h>
 //#import <Rqd/CrashReporter.h>
 #import <QMCoreFunction/CCMBase64.h>
 #import <QMCoreFunction/CCMCryptor.h>

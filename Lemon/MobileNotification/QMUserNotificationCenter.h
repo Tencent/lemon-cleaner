@@ -7,8 +7,15 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <UserNotifications/UserNotifications.h>
 
-@import UserNotifications;
+typedef NS_ENUM(NSUInteger, QMUNCNotificationAction) {
+    QMUNCNotificationActionNone,
+    QMUNCNotificationActionShown,
+    QMUNCNotificationActionContentClicked,
+    QMUNCNotificationActionButtonClicked,
+    QMUNCNotificationActionDismissed,
+};
 
 #define UNNotificationActionDidBlock @"UNNotificationActionDidBlock" // 弹窗中选择【拒绝】按钮操作
 
@@ -29,5 +36,8 @@
 // Note: UNUserNotification
 - (void)deliverNotification:(NSUserNotification *)notification key:(NSString *)key;
 - (void)removeAllDeliveredNotifications;
+
+/// 通知弹窗行为回调
+- (void)addNotificationActionCallBack:(void(^)(QMUNCNotificationAction action, NSString *notificationKey))callBack;
 
 @end
