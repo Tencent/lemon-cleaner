@@ -202,7 +202,10 @@ enum
                                                 selector:@selector(receivedCPUInfoChanged:)
                                                     name:kStatCPUInfoNotification
                                                   object:nil];
-    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                                selector:@selector(receivedGpuInfoChanged:)
+                                                    name:kStatGpuInfoNotification
+                                                  object:nil];
 }
 
 - (void)dealloc
@@ -467,6 +470,7 @@ enum
                                                     name:kDiskInfoNotification
                                                   object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:kStatCPUInfoNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:kStatGpuInfoNotification object:nil];
     
     [[McStatMonitor shareMonitor] stopRunMonitor];
     [dataCenter setBool:YES forKey:kQMMonitorClosed];
@@ -629,6 +633,14 @@ enum
     double cpuUsage = [[(NSDictionary *)notification.object objectForKey:@"CpuUsage"] doubleValue];
     dispatch_async(dispatch_get_main_queue(), ^{
         [statusView setCpuUsed:cpuUsage];
+    });
+    
+}
+
+-(void)receivedGpuInfoChanged:(NSNotification *)notification {
+    double cpuUsage = [[(NSDictionary *)notification.object objectForKey:@"usage"] doubleValue];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [statusView setGpuUsed:cpuUsage];
     });
     
 }

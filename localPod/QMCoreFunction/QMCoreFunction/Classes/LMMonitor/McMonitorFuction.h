@@ -10,6 +10,7 @@
 
 @class McBatteryInfo;
 @class McCpuInfo;
+@class McGpuInfo;
 @class McDiskInfo;
 @class McMemoryInfo;
 @class McNetInfo;
@@ -20,6 +21,7 @@
     BOOL isExistBattery;
     
     McCpuInfo * cpuInfo;
+    McGpuInfo * gpuInfo;
     McDiskInfo * diskInfo;
     McMemoryInfo * memInfo;
     McNetInfo * netInfo;
@@ -31,6 +33,7 @@
 
 - (NSDictionary *)batteryStateInfo;
 - (NSDictionary *)cpuStateInfo;
+- (NSDictionary *)gpuStateInfo;
 - (NSDictionary *)diskStateInfo;
 - (NSDictionary *)memoryStateInfo;
 - (NSDictionary *)netStateInfo:(BOOL)interfaceInfo;

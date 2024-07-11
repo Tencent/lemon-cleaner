@@ -26,6 +26,7 @@
 "PreferenceViewController_setupViews_1553049563_14" = "Fan\n speed";
 "PreferenceViewController_setupViews_1553049563_15" = "Network\n speed";
 "PreferenceViewController_setupViews_1553049563_16" = "CPU\n usage";
+"PreferenceViewController_setupViews_1553049563_17" = "GPU\n usage";
 "PreferenceViewController_setupViews_bootMonitorTitle _16" = "Show icons on menu bar on startup";
 "About_windowAboutTitle_lemon" = "About Lemon Cleaner";
 "Appdelegate_about_windowAboutTitle_lemonlite" = "About Lemon Cleaner Lite";

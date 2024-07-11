@@ -15,6 +15,7 @@
 #define kTempCpuInfoNotification    @"StatTempCpuInfoNotification"
 #define kFanCpuInfoNotification     @"StatFanCpuInfoNotification"
 #define kDiskInfoNotification       @"StatDiskInfoNotification"
+#define kStatGpuInfoNotification    @"StatGpuInfoNotification"
 
 #define kStatusChangedNotification  @"StatusChangedNotification"
 
