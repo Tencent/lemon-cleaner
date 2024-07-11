@@ -24,6 +24,7 @@
 @property (nonatomic, assign) float fanSpeedValue;
 @property (nonatomic, assign) BOOL paused;
 @property (nonatomic, assign) double cpuUsed;
+@property (nonatomic, assign) double gpuUsed;
 
 - (void)startLoadingAnimation;
 - (void)stopLoadingAnimation;

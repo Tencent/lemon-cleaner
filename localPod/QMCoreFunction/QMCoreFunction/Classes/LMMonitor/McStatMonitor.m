@@ -15,19 +15,21 @@
 #import "McStatInfoConst.h"
 #import "QMSampleStorage.h"
 
-#define STATUS_TYPE_LOGO 1
-#define STATUS_TYPE_MEM  2
-#define STATUS_TYPE_DISK 4
-#define STATUS_TYPE_TEP  8
-#define STATUS_TYPE_FAN  16
-#define STATUS_TYPE_NET  32
-#define STATUS_TYPE_CPU  64
+#define STATUS_TYPE_LOGO (1 << 0)
+#define STATUS_TYPE_MEM  (1 << 1)
+#define STATUS_TYPE_DISK (1 << 2)
+#define STATUS_TYPE_TEP  (1 << 3)
+#define STATUS_TYPE_FAN  (1 << 4)
+#define STATUS_TYPE_NET  (1 << 5)
+#define STATUS_TYPE_CPU  (1 << 6)
+#define STATUS_TYPE_GPU  (1 << 7)
 
 @interface McStatMonitor()
 {
     McMonitorFuction * m_monitorFunction;
     
     NSDictionary * m_cpuDict;
+    NSDictionary * m_gpuDict;
     NSDictionary * m_fanDict;
     NSDictionary * m_memoryDict;
     NSDictionary * m_networkDict;
@@ -98,6 +100,9 @@
                                    }
                                    if ((self.trayType & STATUS_TYPE_TEP) || (self.isTrayPageOpen)) {
                                        [self tempInfo];
+                                   }
+                                   if ((self.trayType & STATUS_TYPE_GPU) || (self.isTrayPageOpen)) {
+                                       [self gpuInfo];
                                    }
                                    //                                   [self batteryStateInfo];
                                    if (self.processSamplerOn) {
@@ -179,6 +184,12 @@
         }
     }
     
+    if (m_gpuDict) {
+        if ((self.trayType & STATUS_TYPE_GPU) || (self.isTrayPageOpen)) {
+            [[NSNotificationCenter defaultCenter] postNotificationName:kStatGpuInfoNotification object:m_gpuDict];
+        }
+    }
+    
     // 发送到主程序
     //    [[QMPipeServer getInstance] sendCmd:statDict
     //                                command:QMPIPE_CMD_STATINFO];
@@ -201,6 +212,13 @@
     NSDictionary * result = [m_monitorFunction cpuStateInfo];
     if (result && [result isKindOfClass:[NSDictionary class]])
         m_cpuDict = result;
+}
+
+- (void)gpuInfo 
+{
+    NSDictionary * result = [m_monitorFunction gpuStateInfo];
+    if (result && [result isKindOfClass:[NSDictionary class]])
+        m_gpuDict = result;
 }
 
 - (void)fanInfo{

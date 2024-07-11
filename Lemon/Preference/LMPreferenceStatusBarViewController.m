@@ -17,13 +17,14 @@
 #define kLemonShowMonitorCfg            @"kLemonShowMonitorCfg"
 #define STATUS_TYPE_BOOTSHOW (0x40000000)
 // 状态栏显示方式
-#define STATUS_TYPE_LOGO 1
-#define STATUS_TYPE_MEM  2
-#define STATUS_TYPE_DISK 4
-#define STATUS_TYPE_TEP  8
-#define STATUS_TYPE_FAN  16
-#define STATUS_TYPE_NET  32
-#define STATUS_TYPE_CPU  64
+#define STATUS_TYPE_LOGO (1 << 0)
+#define STATUS_TYPE_MEM  (1 << 1)
+#define STATUS_TYPE_DISK (1 << 2)
+#define STATUS_TYPE_TEP  (1 << 3)
+#define STATUS_TYPE_FAN  (1 << 4)
+#define STATUS_TYPE_NET  (1 << 5)
+#define STATUS_TYPE_CPU  (1 << 6)
+#define STATUS_TYPE_GPU  (1 << 7)
 #define STATUS_TYPE_GLOBAL (0x80000000)
 #define STATUS_TYPE_BOOTSHOW (0x40000000)
 #define kLemonStatusOptionsChanged @"kLemonStatusOptionsChanged"
@@ -126,6 +127,8 @@
     
     NSView* optCpuUsed = [self getOptionView:@"stat_cpu_usage":NSLocalizedStringFromTableInBundle(@"PreferenceViewController_setupViews_1553049563_16", nil, [NSBundle bundleForClass:[self class]], @""):STATUS_TYPE_CPU];
     
+    NSView* optGpuUsed = [self getOptionView:@"stat_gpu_usage":NSLocalizedStringFromTableInBundle(@"PreferenceViewController_setupViews_1553049563_17", nil, [NSBundle bundleForClass:[self class]], @""):STATUS_TYPE_GPU];
+    
     // 监听状态栏选中变化
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onStatusOptionsChanged:) name:kLemonStatusOptionsChanged object:nil];
     
@@ -144,6 +147,7 @@
     [self.view addSubview:optCpuFan];
     [self.view addSubview:optNet];
     [self.view addSubview:optCpuUsed];
+    [self.view addSubview:optGpuUsed];
     
     NSView *cView = self.view;
     
@@ -236,6 +240,13 @@
     [optCpuUsed mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(optLogo.mas_bottom).offset(10);
         make.left.equalTo(optLogo.mas_left);
+        make.width.equalTo(@(70));
+        make.height.equalTo(@(itemHeight));
+    }];
+    
+    [optGpuUsed mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(optLogo.mas_bottom).offset(10);
+        make.left.equalTo(optMem.mas_left);
         make.width.equalTo(@(70));
         make.height.equalTo(@(itemHeight));
     }];
@@ -374,6 +385,7 @@
     ((NSButton*)_myStatusControls[[NSNumber numberWithInteger:STATUS_TYPE_FAN]]).state = type & STATUS_TYPE_FAN ? NSControlStateValueOn : NSControlStateValueOff;
     ((NSButton*)_myStatusControls[[NSNumber numberWithInteger:STATUS_TYPE_NET]]).state = type & STATUS_TYPE_NET ? NSControlStateValueOn : NSControlStateValueOff;
     ((NSButton*)_myStatusControls[[NSNumber numberWithInteger:STATUS_TYPE_CPU]]).state = type & STATUS_TYPE_CPU ? NSControlStateValueOn : NSControlStateValueOff;
+    ((NSButton*)_myStatusControls[[NSNumber numberWithInteger:STATUS_TYPE_GPU]]).state = type & STATUS_TYPE_GPU ? NSControlStateValueOn : NSControlStateValueOff;
 
     
     // save config

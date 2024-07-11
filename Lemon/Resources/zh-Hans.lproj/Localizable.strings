@@ -26,6 +26,7 @@
 "PreferenceViewController_setupViews_1553049563_14" = "风扇转速";
 "PreferenceViewController_setupViews_1553049563_15" = "网速";
 "PreferenceViewController_setupViews_1553049563_16" = "CPU占用";
+"PreferenceViewController_setupViews_1553049563_17" = "GPU占用";
 "PreferenceViewController_setupViews_bootMonitorTitle _16" = "开机时显示状态栏图标";
 "About_windowAboutTitle_lemon" = "关于腾讯柠檬清理";
 "Appdelegate_about_windowAboutTitle_lemonlite" = "关于Lemon Cleaner Lite";

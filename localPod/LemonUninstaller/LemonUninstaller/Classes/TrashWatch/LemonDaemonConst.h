@@ -111,12 +111,14 @@
 #define AudioAssistantPath        @"/usr/sbin/coreaudiod"
 
 // 状态栏显示方式
-#define STATUS_TYPE_LOGO 1
-#define STATUS_TYPE_MEM  2
-#define STATUS_TYPE_DISK 4
-#define STATUS_TYPE_TEP  8
-#define STATUS_TYPE_FAN  16
-#define STATUS_TYPE_NET  32
+#define STATUS_TYPE_LOGO (1 << 0)
+#define STATUS_TYPE_MEM  (1 << 1)
+#define STATUS_TYPE_DISK (1 << 2)
+#define STATUS_TYPE_TEP  (1 << 3)
+#define STATUS_TYPE_FAN  (1 << 4)
+#define STATUS_TYPE_NET  (1 << 5)
+#define STATUS_TYPE_CPU  (1 << 6)
+#define STATUS_TYPE_GPU  (1 << 7)
 #define STATUS_TYPE_GLOBAL (0x80000000)
 #define STATUS_TYPE_BOOTSHOW (0x40000000)
 #define STATUS_TYPE_EXIST_SHOW_BELOW_7 64

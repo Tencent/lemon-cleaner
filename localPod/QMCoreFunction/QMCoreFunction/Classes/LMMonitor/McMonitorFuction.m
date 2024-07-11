@@ -11,6 +11,7 @@
 #import "McMonitorDefines.h"
 #import <LemonStat/McBatteryInfo.h>
 #import <LemonStat/McCpuInfo.h>
+#import <LemonStat/McGpuInfo.h>
 #import <LemonStat/McDiskInfo.h>
 #import <LemonStat/McMemoryInfo.h>
 #import <LemonStat/McNetInfo.h>
@@ -118,6 +119,23 @@
                          cpuInfo.cpuBrandStr,@"BrandStr",
                          [NSNumber numberWithFloat:cpuValue],@"CpuUsage",
                          nil];
+    return dic;
+}
+
+- (NSDictionary *)gpuStateInfo {
+    if (gpuInfo == nil)
+    {
+        gpuInfo = [[McGpuInfo alloc] init];
+    }
+    [gpuInfo updateInfoType:McGpuInfoTypeUsage];
+    
+    CGFloat usage = 0;
+    for (McGpuCore *core in gpuInfo.cores) {
+        usage = MAX(usage, core.usage);
+    }
+    
+    NSDictionary *dic = [NSDictionary dictionaryWithObjectsAndKeys:@(usage), @"usage", nil];
+    
     return dic;
 }
 

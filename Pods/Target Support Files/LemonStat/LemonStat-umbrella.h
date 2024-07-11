@@ -13,6 +13,7 @@
 #import "McBatteryInfo.h"
 #import "McCpuInfo.h"
 #import "McDiskInfo.h"
+#import "McGpuInfo.h"
 #import "McLogUtil.h"
 #import "McMemoryInfo.h"
 #import "McNetInfo.h"

@@ -326,6 +326,33 @@
     return containerView;
 }
 
+- (NSView *)getGpuUsageContainerView:(NSSize *)size {
+    NSView *containerView = [[NSView alloc] init];
+    NSTextField *gpuValueText = [NSTextField labelWithStringCompat:@"%"];
+    gpuValueText.font = [NSFont systemFontOfSize:11];
+    [containerView addSubview:gpuValueText];
+    [gpuValueText mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.equalTo(containerView);
+        make.top.equalTo(containerView).offset(1);
+    }];
+    NSTextField *gpuLabel = [NSTextField labelWithStringCompat:@"GPU"];
+    gpuLabel.font = [NSFont systemFontOfSize:7];
+    [containerView addSubview:gpuLabel];
+    [gpuLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerX.equalTo(containerView);
+        make.bottom.equalTo(containerView);
+    }];
+    gpuLabel.textColor = [self getTextColor];
+    gpuValueText.textColor = [self getTextColor];
+    (*size).height = 22;
+    (*size).width = 30;
+    mGpuUsageField = gpuValueText;
+    [self setGpuUsed:self.cpuUsed];
+    [mArrayForDarkModeAdaptiveViews addObject:gpuValueText];
+    [mArrayForDarkModeAdaptiveViews addObject:gpuLabel];
+    return containerView;
+}
+
 - (NSColor *)getTextColor {
     return [NSColor controlTextColor];
 }
@@ -369,6 +396,12 @@
 //    [super setCpuUsed:cpuUsed];
     dispatch_async(dispatch_get_main_queue(), ^{
         self->mCpuUsageField.stringValue = [NSString stringWithFormat:@"%d%%",(int)round(cpuUsed*100)];
+    });
+}
+
+- (void)setGpuUsed:(double)gpuUsed {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self->mGpuUsageField.stringValue = [NSString stringWithFormat:@"%d%%",(int)round(gpuUsed*100)];
     });
 }
 
@@ -476,6 +509,13 @@
     {
         NSView* containerCpu = [self getCpuUsageContainerView:&size];
         [containerArray addObject:containerCpu];
+        [containerSize addObject:[NSValue valueWithSize:size]];
+        showOne = YES;
+    }
+    
+    if (type & STATUS_TYPE_GPU) {
+        NSView* containerGpu = [self getGpuUsageContainerView:&size];
+        [containerArray addObject:containerGpu];
         [containerSize addObject:[NSValue valueWithSize:size]];
         showOne = YES;
     }
