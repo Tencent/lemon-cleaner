@@ -38,20 +38,24 @@
         }
         
         NSNumber *utilization = stats[@"Device Utilization %"];
-        if (!utilization) {
+        if (![utilization isKindOfClass:NSNumber.class]) {
             utilization = stats[@"GPU Activity(%)"];
         }
-        if (!utilization) {
+        if (![utilization isKindOfClass:NSNumber.class]) {
             continue;
         }
         
         // IOKit 框架定义的标识符属性
-        NSInteger IOVARendererID = [dict[@"IOVARendererID"] longValue];
+        NSNumber *IOVARendererID = dict[@"IOVARendererID"];
+        NSInteger ID = 0;
+        if ([IOVARendererID isKindOfClass:NSNumber.class]) {
+            ID = [IOVARendererID longValue];
+        }
         CGFloat usage = [utilization longValue] / 100.0;
         usage = fmaxf(0.0, fminf(usage, 1.0));
         
         McGpuCore *gpuCore = [[McGpuCore alloc] init];
-        gpuCore.ID = IOVARendererID;
+        gpuCore.ID = ID;
         gpuCore.usage = usage;
         
         [mutableCores addObject:gpuCore];
