@@ -342,6 +342,16 @@
         m_curActionItem.type = QMActionWechatAudio;
     else if ([type isEqualToString:kXMLKeyUnityProject])
         m_curActionItem.type = QMActionUnityProject;
+    else if ([type isEqualToString:kXMLKeyUnityStevedor])
+        m_curActionItem.type = QMActionUnityStevedore;
+    else if ([type isEqualToString:kXMLKeyUnityRepoArtifact])
+        m_curActionItem.type = QMActionUnityRepoArtifact;
+    else if ([type isEqualToString:kXMLKeyUnityRepoBuild])
+        m_curActionItem.type = QMActionUnityRepoBuilds;
+    else if ([type isEqualToString:kXMLKeyUnityTestFramework])
+        m_curActionItem.type = QMActionUnityTestFramework;
+    else if ([type isEqualToString:kXMLKeyPython])
+        m_curActionItem.type = QMActionPython;
     
     if ([allKeys containsObject:kXMLKeyCleanEmptyFolder])
     m_curActionItem.cleanemptyfolder = [[attributeDict objectForKey:kXMLKeyCleanEmptyFolder] boolValue];

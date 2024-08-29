@@ -21,4 +21,8 @@
 
 -(void)scanProj:(QMActionItem *)actionItem;
 
+-(void)scanTestFramework:(QMActionItem*)actionItem;
+
+-(void)scanPython:(QMActionItem*)actionItem;
+
 @end

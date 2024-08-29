@@ -44,6 +44,16 @@
 #define kXMLKeyWechatVideo          @"wechatVideo"
 #define kXMLKeyWechatAudio          @"wechatAudio"
 #define kXMLKeyUnityProject         @"unityProject"
+#define kXMLKeyUnityRepoArtifact    @"unityRepoArtifact"
+#define kXMLKeyUnityRepoBuild       @"unityRepoBuild"
+#define kXMLKeyUnityStevedor        @"unityStevedore"
+#define kXMLKeyUnityRepoBuild       @"unityRepoBuild"
+#define kXMLKeyUnityTestFramework   @"unityTestFramework"
+#define kXMLKeyPython               @"python"
+
+
+//QMActionUnityStevedore,
+//QMActionUnityProject,
 
 #define kXMLKeyAppPath              @"apppath"
 #define kXMLKeyBundle               @"bundle"
@@ -139,6 +149,8 @@ typedef enum
     QMActionUnityRepoBuilds,
     QMActionUnityStevedore,
     QMActionUnityProject,
+    QMActionUnityTestFramework,
+    QMActionPython,
 }QMActionType;
 
 // 删除类型

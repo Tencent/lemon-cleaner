@@ -384,6 +384,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		AF7DDF752C805A2500A64646 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D46267A221DDED72005BC358 /* LemonDaemon.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 2FA7A53B21C3C65C00B93EF5;
+			remoteInfo = LemonDaemonActivator;
+		};
 		D46267A821DDED73005BC358 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D46267A221DDED72005BC358 /* LemonDaemon.xcodeproj */;
@@ -1657,6 +1664,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				AF7DDF762C805A2500A64646 /* PBXTargetDependency */,
 				D462687D21DE092C005BC358 /* PBXTargetDependency */,
 				D46267C321DDEE1C005BC358 /* PBXTargetDependency */,
 				D4F3ED902134EB86000E29B4 /* PBXTargetDependency */,
@@ -2174,6 +2182,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		AF7DDF762C805A2500A64646 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = LemonDaemonActivator;
+			targetProxy = AF7DDF752C805A2500A64646 /* PBXContainerItemProxy */;
+		};
 		D46267C321DDEE1C005BC358 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = LemonDaemon;
@@ -2398,6 +2411,7 @@
 				HEADER_SEARCH_PATHS = (
 					"$(PROJECT_DIR)/Tools/LemonUninstaller/**",
 					"$(inherited)",
+					"/opt/homebrew/opt/python@3.12/Frameworks/Python.framework/Versions/3.12/include/python3.12",
 				);
 				INFOPLIST_FILE = Lemon/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -2460,6 +2474,7 @@
 				HEADER_SEARCH_PATHS = (
 					"$(PROJECT_DIR)/Tools/LemonUninstaller/**",
 					"$(inherited)",
+					"/opt/homebrew/opt/python@3.12/Frameworks/Python.framework/Versions/3.12/include/python3.12",
 				);
 				INFOPLIST_FILE = Lemon/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (

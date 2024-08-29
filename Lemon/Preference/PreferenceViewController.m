@@ -42,6 +42,7 @@
 @property(weak) NSView* themeLineView;
 @property(weak) NSView* uninstallLineView;
 @property(weak) NSView* trashSizeCheckLineView;
+@property(weak) NSView* pythonRuntimeLineView;
 @property(weak) NSButton *lightThemeRadioBtn;
 @property(weak) NSButton *darkThemeRadioBtn;
 @property(weak) NSButton *followSystemThemeRadioBtn;
@@ -117,9 +118,11 @@
 
 - (void)loadView {
     //doesn't work
-    NSRect rect = NSMakeRect(0, 0, 530, 100);
+//    NSRect rect = NSMakeRect(0, 0, 530, 100);
+    NSRect rect = NSMakeRect(0, 0, 530, 800);
     if ([LanguageHelper getCurrentSystemLanguageType] != SystemLanguageTypeChinese) {
-        rect = NSMakeRect(0, 0, 530, 556);
+//        rect = NSMakeRect(0, 0, 530, 556);
+        rect = NSMakeRect(0, 0, 530, 756);
     }
     NSView *view = [[NSView alloc] initWithFrame:rect];
     self.view = view;
@@ -466,6 +469,15 @@
     NSView* themeLineView = [[NSView alloc] init];
     self.themeLineView = themeLineView;
     
+    // python 运行时
+    //卸载残留下方的分割线
+    NSView* pythonRuntimeLineView = [[NSView alloc] init];
+    self.pythonRuntimeLineView = pythonRuntimeLineView;
+    [self.view addSubview:pythonRuntimeLineView];
+    
+    NSTextField* pythonTitle = [self createLabel:NSLocalizedStringFromTableInBundle(@"PreferenceViewController_setupViews_pythonTitle", nil, [NSBundle bundleForClass:[self class]], @"") font:[NSFont systemFontOfSize:14] color:[LMAppThemeHelper getTitleColor]];
+    [self.view addSubview:pythonTitle];
+    
     [self.view addSubview:autoUnintallresidualTitle];
     [self.view addSubview:autoUnintallresidualDesc];
     [self.view addSubview:autoUninstallSwitch];
@@ -499,6 +511,7 @@
     [self.view addSubview:followSystemThemeRadioBtnDesc];
     [self.view addSubview:themeLineView];
     
+    // 手动布局?
     NSView *cView = self.view;
     ///setViewConstraints
     ///语言设置
@@ -714,6 +727,21 @@
             make.right.equalTo(cView).offset(-340);
         }];
     }
+    
+    // python 运行时
+//    [dockTitle mas_makeConstraints:^(MASConstraintMaker *make) {
+//        make.top.equalTo(trashSizeCheckLineView.mas_bottom).offset(20);
+//        make.leading.equalTo(cView).offset(29);
+//    }];
+    [pythonRuntimeLineView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(systemSettingBtn).offset(20);
+        make.left.right.equalTo(cView);
+        make.height.mas_equalTo(1);
+    }];
+    [pythonTitle mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(pythonRuntimeLineView.mas_bottom).offset(20);
+        make.leading.equalTo(cView).offset(29);
+    }];
     
 }
 

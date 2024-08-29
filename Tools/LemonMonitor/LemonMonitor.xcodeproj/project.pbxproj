@@ -919,6 +919,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2FAE179F5D5E36229D7AE5D8 /* Pods-LemonMonitor.debug.xcconfig */;
 			buildSettings = {
+				ARCHS = arm64;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				CODE_SIGN_ENTITLEMENTS = LemonMonitor/LemonMonitor.entitlements;
@@ -1001,6 +1002,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 47D7AC3330517E6E138F5D82 /* Pods-LemonMonitor.release.xcconfig */;
 			buildSettings = {
+				ARCHS = arm64;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				CODE_SIGN_ENTITLEMENTS = LemonMonitor/LemonMonitor.entitlements;

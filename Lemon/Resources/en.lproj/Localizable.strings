@@ -50,6 +50,9 @@
 "PreferenceViewController_setupViews_languageTitle_1" = "Language";
 "PreferenceViewController_setupViews_languageRadioBtnChDesc_1" = "简体中文";
 "PreferenceViewController_setupViews_languageRadioBtnEnDesc_1" = "English";
+"PreferenceViewController_setupViews_pythonTitle" = "Python";
+"PreferenceViewController_setupViews_pythonPath" = "Python Path";
+"PreferenceViewController_setupViews_scriptEntry" = "Script Entry";
 "LemonAsMonitorGuideViewController_setupViews_titleLabel_1" = "Do you want to show real time \nnetwork speed on your menu bar?";
 "LemonAsMonitorGuideViewController_setupViews_showString _2" = "Yes";
 "LemonAsMonitorGuideViewController_setupViews_cancelString _3" = "No";

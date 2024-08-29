@@ -51,6 +51,9 @@
 "PreferenceViewController_setupViews_languageTitle_1" = "语言设置";
 "PreferenceViewController_setupViews_languageRadioBtnChDesc_1" = "简体中文";
 "PreferenceViewController_setupViews_languageRadioBtnEnDesc_1" = "English";
+"PreferenceViewController_setupViews_pythonTitle" = "Python";
+"PreferenceViewController_setupViews_pythonPath" = "Python 路径";
+"PreferenceViewController_setupViews_scriptEntry" = "脚本入口";
 "LemonAsMonitorGuideViewController_setupViews_titleLabel_1" = "需要在状态栏显示实时网速吗？";
 "LemonAsMonitorGuideViewController_setupViews_showString _2" = "显示";
 "LemonAsMonitorGuideViewController_setupViews_cancelString _3" = "不需要";

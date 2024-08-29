@@ -137,6 +137,12 @@
         case QMActionUnityProject:
             [m_unityScan scanProj:actionItem];
             break;
+        case QMActionUnityTestFramework:
+            [m_unityScan scanTestFramework:actionItem];
+            break;
+        case QMActionPython:
+            [m_unityScan scanPython:actionItem];
+            break;
         case QMActionWechatAvatar:
             [m_wechatScan scanWechatAvatar:actionItem];
             break;
