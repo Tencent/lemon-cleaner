@@ -212,10 +212,6 @@
 		D47D64BB215D203700E411AE /* AFNetworking.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = AFNetworking.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D47D64C0215D22BF00E411AE /* AFNetworking.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AFNetworking.framework; path = "../../../../../Library/Developer/Xcode/DerivedData/Lemon-gmfqyfrusrvxopduwpphgyjaxeqx/Build/Products/Debug/AFNetworking/AFNetworking.framework"; sourceTree = "<group>"; };
 		D49FA4C221DDA2A3004A416E /* PrivacyProtect.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = PrivacyProtect.xcodeproj; path = ../PrivacyProtect/PrivacyProtect.xcodeproj; sourceTree = "<group>"; };
-		DE1A9470274B9DDE00411011 /* LemonShark.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = LemonShark.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		DE27948B26A03000007B4443 /* LMMonitorUpdateVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LMMonitorUpdateVC.h; sourceTree = "<group>"; };
-		DE27948C26A03000007B4443 /* LMMonitorUpdateVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LMMonitorUpdateVC.m; sourceTree = "<group>"; };
-		DE27948D26A03000007B4443 /* LMMonitorUpdateVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LMMonitorUpdateVC.xib; sourceTree = "<group>"; };
 		DE27949826A038BE007B4443 /* LMUpdatePopoverBackgroundView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMUpdatePopoverBackgroundView.h; sourceTree = "<group>"; };
 		DE27949926A038BE007B4443 /* LMUpdatePopoverRootView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMUpdatePopoverRootView.h; sourceTree = "<group>"; };
 		DE27949A26A038BE007B4443 /* LMUpdatePopoverBackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMUpdatePopoverBackgroundView.m; sourceTree = "<group>"; };
@@ -614,7 +610,8 @@
 				ORGANIZATIONNAME = Tencent;
 				TargetAttributes = {
 					B8F110401962572100D29FFC = {
-						ProvisioningStyle = Manual;
+						DevelopmentTeam = U9K7Y3B558;
+						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.HardenedRuntime = {
 								enabled = 1;
@@ -925,11 +922,11 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				CODE_SIGN_ENTITLEMENTS = LemonMonitor/LemonMonitor.entitlements;
-				CODE_SIGN_IDENTITY = "Developer ID Application: Tencent Technology (Shenzhen) Company Limited (88L2Q4487U)";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = U9K7Y3B558;
 				ENABLE_HARDENED_RUNTIME = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1007,11 +1004,11 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				CODE_SIGN_ENTITLEMENTS = LemonMonitor/LemonMonitor.entitlements;
-				CODE_SIGN_IDENTITY = "Developer ID Application: Tencent Technology (Shenzhen) Company Limited (88L2Q4487U)";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = U9K7Y3B558;
 				ENABLE_HARDENED_RUNTIME = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",

@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		C056A793D8556494C303D17F /* Pods_PrivacyProtect.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 46CB59997A70409F5BCA15ED /* Pods_PrivacyProtect.framework */; };
 		B7FCD2412C2AB88D00351D31 /* QMUserNotificationCenter.h in Headers */ = {isa = PBXBuildFile; fileRef = D49FA51B21DDA626004A416E /* QMUserNotificationCenter.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		C056A793D8556494C303D17F /* Pods_PrivacyProtect.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 46CB59997A70409F5BCA15ED /* Pods_PrivacyProtect.framework */; };
 		C4B3172B26458232006FC154 /* AVMonitor.h in Headers */ = {isa = PBXBuildFile; fileRef = C4B3172226458232006FC154 /* AVMonitor.h */; };
 		C4B3172C26458232006FC154 /* Client.h in Headers */ = {isa = PBXBuildFile; fileRef = C4B3172326458232006FC154 /* Client.h */; };
 		C4B3172D26458232006FC154 /* utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = C4B3172426458232006FC154 /* utilities.h */; };
@@ -548,10 +548,11 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 84ABFFA76FCAA860B1D880C4 /* Pods-PrivacyProtect.debug.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "Developer ID Application: Tencent Technology (Shenzhen) Company Limited (88L2Q4487U)";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -567,6 +568,7 @@
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tencent.PrivacyProtect;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
 			};
 			name = Debug;
@@ -575,10 +577,11 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = B3B01B25E9CCD907438AA8D3 /* Pods-PrivacyProtect.release.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "Developer ID Application: Tencent Technology (Shenzhen) Company Limited (88L2Q4487U)";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = "";
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -593,6 +596,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tencent.PrivacyProtect;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
 			};
 			name = Release;

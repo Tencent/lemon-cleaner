@@ -200,6 +200,8 @@
 		7AE9F5F72865B8A60063E28E /* garbage_appstore_en.xml in Resources */ = {isa = PBXBuildFile; fileRef = 7AE9F5F32865B8A60063E28E /* garbage_appstore_en.xml */; };
 		7AE9F5F82865B8A60063E28E /* garbage_appstore_zh.xml in Resources */ = {isa = PBXBuildFile; fileRef = 7AE9F5F42865B8A60063E28E /* garbage_appstore_zh.xml */; };
 		805D3473EBC42DA7B37B9A80 /* Pods_LemonClener.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0CAB11E4EF733879C425039A /* Pods_LemonClener.framework */; };
+		AF2DDC662C80261000423B96 /* QMUnityScan.m in Sources */ = {isa = PBXBuildFile; fileRef = AF2DDC642C80261000423B96 /* QMUnityScan.m */; };
+		AF2DDC672C80261000423B96 /* QMUnityScan.h in Headers */ = {isa = PBXBuildFile; fileRef = AF2DDC652C80261000423B96 /* QMUnityScan.h */; };
 		B7302C432BDB9155001A81FC /* QMScanFileSizeCacheManager.h in Headers */ = {isa = PBXBuildFile; fileRef = B7302C412BDB9155001A81FC /* QMScanFileSizeCacheManager.h */; };
 		B7302C442BDB9155001A81FC /* QMScanFileSizeCacheManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B7302C422BDB9155001A81FC /* QMScanFileSizeCacheManager.m */; };
 		B79FF4FC2BFB3A6F00F99813 /* LMCleanerDataCenter+LMCleanPatch.h in Headers */ = {isa = PBXBuildFile; fileRef = B79FF4FA2BFB3A6F00F99813 /* LMCleanerDataCenter+LMCleanPatch.h */; };
@@ -562,6 +564,8 @@
 		7AE9F5F32865B8A60063E28E /* garbage_appstore_en.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = garbage_appstore_en.xml; sourceTree = "<group>"; };
 		7AE9F5F42865B8A60063E28E /* garbage_appstore_zh.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = garbage_appstore_zh.xml; sourceTree = "<group>"; };
 		A9034E812C8560B577617437 /* Pods-LemonClener.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LemonClener.debug.xcconfig"; path = "../Pods/Target Support Files/Pods-LemonClener/Pods-LemonClener.debug.xcconfig"; sourceTree = "<group>"; };
+		AF2DDC642C80261000423B96 /* QMUnityScan.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMUnityScan.m; sourceTree = "<group>"; };
+		AF2DDC652C80261000423B96 /* QMUnityScan.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMUnityScan.h; sourceTree = "<group>"; };
 		B7302C412BDB9155001A81FC /* QMScanFileSizeCacheManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QMScanFileSizeCacheManager.h; sourceTree = "<group>"; };
 		B7302C422BDB9155001A81FC /* QMScanFileSizeCacheManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QMScanFileSizeCacheManager.m; sourceTree = "<group>"; };
 		B79FF4FA2BFB3A6F00F99813 /* LMCleanerDataCenter+LMCleanPatch.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "LMCleanerDataCenter+LMCleanPatch.h"; sourceTree = "<group>"; };
@@ -1209,6 +1213,8 @@
 				B7E252E62AFA75C600201DF9 /* QMWechatScan.m */,
 				F824973022646FEA0061B892 /* QMCacheEnumerator.h */,
 				F824973122646FEA0061B892 /* QMCacheEnumerator.m */,
+				AF2DDC652C80261000423B96 /* QMUnityScan.h */,
+				AF2DDC642C80261000423B96 /* QMUnityScan.m */,
 			);
 			path = QMSpecialClean;
 			sourceTree = "<group>";
@@ -1376,6 +1382,7 @@
 				DEE6CED627BFB1F400B557C7 /* CategoryCellView.h in Headers */,
 				F854B27E20F89D3F009102CF /* QMCautionItem.h in Headers */,
 				F82862362146981E00311A21 /* LMStopBtn.h in Headers */,
+				AF2DDC672C80261000423B96 /* QMUnityScan.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1726,6 +1733,7 @@
 				F854B20A20F77677009102CF /* QMLiteCleanerManager.m in Sources */,
 				B7E252E82AFA75C600201DF9 /* QMWechatScan.m in Sources */,
 				F854B20120F77677009102CF /* QMCleanerUtils.m in Sources */,
+				AF2DDC662C80261000423B96 /* QMUnityScan.m in Sources */,
 				DEE6CED427BFB1F400B557C7 /* ActionItemCellView.m in Sources */,
 				DEE6CED827BFB1F400B557C7 /* QMResultTableRowView.m in Sources */,
 				B7302C442BDB9155001A81FC /* QMScanFileSizeCacheManager.m in Sources */,
@@ -1920,11 +1928,11 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = A9034E812C8560B577617437 /* Pods-LemonClener.debug.xcconfig */;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "Developer ID Application: Tencent Technology (Shenzhen) Company Limited (88L2Q4487U)";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = U9K7Y3B558;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
