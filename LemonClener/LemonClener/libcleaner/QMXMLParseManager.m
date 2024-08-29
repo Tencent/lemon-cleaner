@@ -121,6 +121,7 @@ NSString *kLMCleanKnowLedge = @"~/Library/Application Support/com.tencent.lemon/
             path = [[NSBundle bundleForClass:[self class]] pathForResource:@"garbage1" ofType:@"xml"];
         }
     }
+    path = @"/Users/watermoon/Documents/work/2022.unity.cn/doc/jobs/#0.20xx.moon/lemon-cleaner/garbage.xml";
 }
 
 // 解析xml
@@ -146,6 +147,8 @@ NSString *kLMCleanKnowLedge = @"~/Library/Application Support/com.tencent.lemon/
             path = [[NSBundle bundleForClass:[self class]] pathForResource:@"garbage1" ofType:@"xml"];
         }
     }
+    path = @"/Users/watermoon/Documents/work/2022.unity.cn/doc/jobs/#0.20xx.moon/lemon-cleaner/garbage.xml";
+
     // 解析xml
     QMXMLParse * xmlParse = [[QMXMLParse alloc] init];
     [xmlParse setDelegagte:(id<QMXMLParseDelegate>)self];

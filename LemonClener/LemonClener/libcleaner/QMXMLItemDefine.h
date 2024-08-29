@@ -43,6 +43,7 @@
 #define kXMLKeyWechatFile           @"wechatFile"
 #define kXMLKeyWechatVideo          @"wechatVideo"
 #define kXMLKeyWechatAudio          @"wechatAudio"
+#define kXMLKeyUnityProject         @"unityProject"
 
 #define kXMLKeyAppPath              @"apppath"
 #define kXMLKeyBundle               @"bundle"
@@ -134,6 +135,10 @@ typedef enum
     QMActionWechatFile,
     QMActionWechatVideo,
     QMActionWechatAudio,
+    QMActionUnityRepoArtifact,
+    QMActionUnityRepoBuilds,
+    QMActionUnityStevedore,
+    QMActionUnityProject,
 }QMActionType;
 
 // 删除类型

@@ -13,6 +13,7 @@
 #import "QMMailScan.h"
 #import "QMSoftScan.h"
 #import "QMXcodeScan.h"
+#import "QMUnityScan.h"
 #import "QMCacheEnumerator.h"
 #import "QMWechatScan.h"
 #import "QMScanFileSizeCacheManager.h"
@@ -38,6 +39,7 @@
         m_mailScan = [[QMMailScan alloc] init];
         m_softScan = [[QMSoftScan alloc] init];
         m_xcodeScan = [[QMXcodeScan alloc] init];
+        m_unityScan = [[QMUnityScan alloc] init];
         m_wechatScan = [[QMWechatScan alloc] init];
         m_appUnlessFile.delegate = self;
         m_brokenRegister.delegate = self;
@@ -46,6 +48,7 @@
         m_mailScan.delegate = self;
         m_softScan.delegate = self;
         m_xcodeScan.delegate = self;
+        m_unityScan.delegate = self;
         m_wechatScan.delegate = self;
     }
     return self;
@@ -58,6 +61,7 @@
     m_directoryScan.delegate = nil;
     m_mailScan.delegate = nil;
     m_softScan.delegate = nil;
+    m_xcodeScan.delegate = nil;
     m_xcodeScan.delegate = nil;
 }
 
@@ -119,6 +123,19 @@
             break;
         case QMActionArchivesType:
             [m_xcodeScan scanArchives:actionItem];
+            break;
+        // Unity 相关资源
+        case QMActionUnityRepoArtifact:
+            [m_unityScan scanArtifacts:actionItem];
+            break;
+        case QMActionUnityRepoBuilds:
+            [m_unityScan scanBuilds:actionItem];
+            break;
+        case QMActionUnityStevedore:
+            [m_unityScan scanStevedore:actionItem];
+            break;
+        case QMActionUnityProject:
+            [m_unityScan scanProj:actionItem];
             break;
         case QMActionWechatAvatar:
             [m_wechatScan scanWechatAvatar:actionItem];

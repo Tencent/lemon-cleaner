@@ -33,6 +33,7 @@
 @class QMSoftScan;
 @class QMXcodeScan;
 @class QMWechatScan;
+@class QMUnityScan;
 
 @interface QMScanCategory : NSObject
 {    
@@ -43,6 +44,7 @@
     QMMailScan *m_mailScan;
     QMSoftScan *m_softScan;
     QMXcodeScan *m_xcodeScan;
+    QMUnityScan *m_unityScan;
     QMWechatScan *m_wechatScan;
     
     QMActionItem * m_curScanActionItem;

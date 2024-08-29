@@ -79,7 +79,8 @@
     }
     else{
         NSLog(@"lm cleaner use current");
-        xmlData = currentXMLData;
+//        xmlData = currentXMLData;
+        xmlData = updateXmlData;
     }
     
     
@@ -292,6 +293,7 @@
     }
     
     NSString * type = [attributeDict objectForKey:kXMLKeyType];
+    NSLog(@"type=%@\n", type);
     if ([type isEqualToString:kXMLKeyFile])
         m_curActionItem.type = QMActionFileType;
     else if ([type isEqualToString:kXMLKeyDir])
@@ -338,6 +340,8 @@
         m_curActionItem.type = QMActionWechatVideo;
     else if ([type isEqualToString:kXMLKeyWechatAudio])
         m_curActionItem.type = QMActionWechatAudio;
+    else if ([type isEqualToString:kXMLKeyUnityProject])
+        m_curActionItem.type = QMActionUnityProject;
     
     if ([allKeys containsObject:kXMLKeyCleanEmptyFolder])
     m_curActionItem.cleanemptyfolder = [[attributeDict objectForKey:kXMLKeyCleanEmptyFolder] boolValue];

@@ -355,7 +355,53 @@
             </action>
         </item>
     </category>
-    
+
+    <category id="8">
+        <title><![CDATA[GK 自定义清理]]></title>
+        <tips><![CDATA[Unity 引擎和工程产生的临时文件]]></tips>
+        <item id="8100" fastmode="YES" showaction="YES" defaultstate="-1">
+            <title><![CDATA[引擎编译缓存]]></title>
+            <tips><![CDATA[引擎编译缓存]]></tips>
+            <action id="8101" type="file" recommend="NO" fastmode="NO">
+                <title><![CDATA[unity-tuanjie build 目录]]></title>
+                <path type="abs" filters="(801)" level="1" value="/Users/watermoon/Documents/work/2022.unity.cn/code/unity-tuanjie/build/"/>
+            </action>
+            <action id="8102" type="file" recommend="NO">
+                <title><![CDATA[unity-tuanjie artifacts 目录]]></title>
+                <path type="abs" level="1" value="/Users/watermoon/Documents/work/2022.unity.cn/code/unity-tuanjie/artifacts/"/>
+            </action>
+            <action id="8103" type="file" recommend="NO">
+                <title><![CDATA[tuanjie-pre-trunk build 目录]]></title>
+                <path type="abs" filters="(801)" level="1" value="/Users/watermoon/Documents/work/2022.unity.cn/code/tuanjie-pre-trunk/build/"/>
+            </action>
+            <action id="8104" type="file" recommend="NO">
+                <title><![CDATA[tuanjie-pre-trunk artifacts 目录]]></title>
+                <path type="abs" level="1" value="/Users/watermoon/Documents/work/2022.unity.cn/code/tuanjie-pre-trunk/artifacts/"/>
+            </action>
+            <action id="8105" type="file" recommend="NO">
+                <title><![CDATA[unity-resell build 目录]]></title>
+                <path type="abs" level="1" value="/Users/watermoon/Documents/work/2022.unity.cn/code/unity-resell/build/"/>
+            </action>
+            <action id="8106" type="file" recommend="NO">
+                <title><![CDATA[unity-resell artifacts 目录]]></title>
+                <path type="abs" level="1" value="/Users/watermoon/Documents/work/2022.unity.cn/code/unity-resell/artifacts/"/>
+            </action>
+        </item>
+        <item id="8200" fastmode="YES" showaction="YES" defaultstate="1">
+            <title><![CDATA[Unity project]]></title>
+            <tips><![CDATA[Unity project]]></tips>
+            <action id="8201" type="unityProject" recommend="YES" cleanemptyfolder="YES" cleanhiddenfile="YES">
+                <title><![CDATA[工程临时文件]]></title>
+                <path type="abs" level="1" value="/Users/watermoon/Documents/work/2022.unity.cn/proj/" />
+            </action>
+        </item>
+        <item id="8300" fastmode="YES" showaction="YES">
+            <title><![CDATA[Stevedore缓存]]></title>
+            <tips><![CDATA[Stevedore 缓存]]></tips>
+            <action id="8301" type="file" recommend="NO">
+                <title><![CDATA[Stevedore 本地缓存]]></title>
+                <path type="abs" level="1" value="/Users/watermoon/Library/Caches/Stevedore/"/>
+            </action>
+        </item>
+    </category>
 </garbage>
-
-
