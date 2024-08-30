@@ -202,7 +202,7 @@
 		805D3473EBC42DA7B37B9A80 /* Pods_LemonClener.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0CAB11E4EF733879C425039A /* Pods_LemonClener.framework */; };
 		AF2DDC662C80261000423B96 /* QMUnityScan.m in Sources */ = {isa = PBXBuildFile; fileRef = AF2DDC642C80261000423B96 /* QMUnityScan.m */; };
 		AF2DDC672C80261000423B96 /* QMUnityScan.h in Headers */ = {isa = PBXBuildFile; fileRef = AF2DDC652C80261000423B96 /* QMUnityScan.h */; };
-		AF7DDF972C80894700A64646 /* libpython3.12.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AF7DDF962C80894600A64646 /* libpython3.12.a */; };
+		AF7DDFCE2C8199E300A64646 /* libpython3.12.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AF7DDFCD2C8199E300A64646 /* libpython3.12.a */; };
 		B7302C432BDB9155001A81FC /* QMScanFileSizeCacheManager.h in Headers */ = {isa = PBXBuildFile; fileRef = B7302C412BDB9155001A81FC /* QMScanFileSizeCacheManager.h */; };
 		B7302C442BDB9155001A81FC /* QMScanFileSizeCacheManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B7302C422BDB9155001A81FC /* QMScanFileSizeCacheManager.m */; };
 		B79FF4FC2BFB3A6F00F99813 /* LMCleanerDataCenter+LMCleanPatch.h in Headers */ = {isa = PBXBuildFile; fileRef = B79FF4FA2BFB3A6F00F99813 /* LMCleanerDataCenter+LMCleanPatch.h */; };
@@ -579,11 +579,8 @@
 		A9034E812C8560B577617437 /* Pods-LemonClener.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LemonClener.debug.xcconfig"; path = "../Pods/Target Support Files/Pods-LemonClener/Pods-LemonClener.debug.xcconfig"; sourceTree = "<group>"; };
 		AF2DDC642C80261000423B96 /* QMUnityScan.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMUnityScan.m; sourceTree = "<group>"; };
 		AF2DDC652C80261000423B96 /* QMUnityScan.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMUnityScan.h; sourceTree = "<group>"; };
-		AF46E60C2C804F4100560911 /* Python.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Python.framework; path = "../../../../../../opt/homebrew/Cellar/python@3.12/3.12.5/Frameworks/Python.framework"; sourceTree = "<group>"; };
-		AF7DDF7E2C8078E900A64646 /* Python */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = Python; path = "../../../../../../opt/homebrew/Cellar/python@3.12/3.12.5/Frameworks/Python.framework/Versions/3.12/Python"; sourceTree = "<group>"; };
-		AF7DDF812C8080DF00A64646 /* Python3.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Python3.framework; path = Library/Frameworks/Python3.framework; sourceTree = DEVELOPER_DIR; };
 		AF7DDF832C8082B000A64646 /* Xcode.app */ = {isa = PBXFileReference; lastKnownFileType = wrapper.application; name = Xcode.app; path = ../../../../../../Applications/Xcode.app; sourceTree = "<group>"; };
-		AF7DDF962C80894600A64646 /* libpython3.12.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libpython3.12.a; path = "../../../../Desktop/Python-3.12.5/libpython3.12.a"; sourceTree = "<group>"; };
+		AF7DDFCD2C8199E300A64646 /* libpython3.12.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libpython3.12.a; path = "../Python-3.12.5/libpython3.12.a"; sourceTree = "<group>"; };
 		B7302C412BDB9155001A81FC /* QMScanFileSizeCacheManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QMScanFileSizeCacheManager.h; sourceTree = "<group>"; };
 		B7302C422BDB9155001A81FC /* QMScanFileSizeCacheManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QMScanFileSizeCacheManager.m; sourceTree = "<group>"; };
 		B79FF4FA2BFB3A6F00F99813 /* LMCleanerDataCenter+LMCleanPatch.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "LMCleanerDataCenter+LMCleanPatch.h"; sourceTree = "<group>"; };
@@ -755,7 +752,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AF7DDF972C80894700A64646 /* libpython3.12.a in Frameworks */,
+				AF7DDFCE2C8199E300A64646 /* libpython3.12.a in Frameworks */,
 				F854B1F020F77334009102CF /* Cocoa.framework in Frameworks */,
 				F854B1EE20F7732D009102CF /* Security.framework in Frameworks */,
 				F854B1EC20F77328009102CF /* Quartz.framework in Frameworks */,
@@ -1042,11 +1039,8 @@
 		E7EE941804BCF555C75167F9 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				AF7DDF962C80894600A64646 /* libpython3.12.a */,
+				AF7DDFCD2C8199E300A64646 /* libpython3.12.a */,
 				AF7DDF832C8082B000A64646 /* Xcode.app */,
-				AF7DDF812C8080DF00A64646 /* Python3.framework */,
-				AF7DDF7E2C8078E900A64646 /* Python */,
-				AF46E60C2C804F4100560911 /* Python.framework */,
 				F854B1F120F77376009102CF /* AppKit.framework */,
 				F854B1EF20F77334009102CF /* Cocoa.framework */,
 				F854B1ED20F7732D009102CF /* Security.framework */,
@@ -1977,7 +1971,7 @@
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/Masonry/Masonry.framework/Headers\"",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/QMCoreFunction/QMCoreFunction.framework/Headers\"",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/QMUICommon/QMUICommon.framework/Headers\"",
-					"/Users/watermoon/Desktop/Python-3.12.5/Include",
+					"/Users/watermoon/Documents/work/lemon-cleaner/Python-3.12.5/Include",
 				);
 				INFOPLIST_FILE = LemonClener/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -1988,7 +1982,7 @@
 					"@loader_path/../Frameworks",
 					"@loader_path",
 				);
-				LIBRARY_SEARCH_PATHS = "/Users/watermoon/Desktop/Python-3.12.5/";
+				LIBRARY_SEARCH_PATHS = "/Users/watermoon/Documents/work/lemon-cleaner/Python-3.12.5";
 				MACH_O_TYPE = mh_dylib;
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				ONLY_ACTIVE_ARCH = NO;
@@ -2028,7 +2022,7 @@
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/Masonry/Masonry.framework/Headers\"",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/QMCoreFunction/QMCoreFunction.framework/Headers\"",
 					"\"${PODS_CONFIGURATION_BUILD_DIR}/QMUICommon/QMUICommon.framework/Headers\"",
-					"/Users/watermoon/Desktop/Python-3.12.5/Include",
+					"/Users/watermoon/Documents/work/lemon-cleaner/Python-3.12.5/Include",
 				);
 				INFOPLIST_FILE = LemonClener/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -2039,7 +2033,7 @@
 					"@loader_path/../Frameworks",
 					"@loader_path",
 				);
-				LIBRARY_SEARCH_PATHS = "/Users/watermoon/Desktop/Python-3.12.5/";
+				LIBRARY_SEARCH_PATHS = "/Users/watermoon/Documents/work/lemon-cleaner/Python-3.12.5";
 				MACH_O_TYPE = mh_dylib;
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				ONLY_ACTIVE_ARCH = NO;

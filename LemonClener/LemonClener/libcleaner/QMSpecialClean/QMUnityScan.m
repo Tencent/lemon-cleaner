@@ -12,7 +12,7 @@
 #import "QMFilterParse.h"
 #import "QMResultItem.h"
 #import <Foundation/Foundation.h>
-#import <Python.h>
+#import "Python.h"
 #import <QMCoreFunction/QMShellExcuteHelper.h>
 #import <QMCoreFunction/McCoreFunction.h>
 #import <QMCoreFunction/NSScreen+Extension.h>
