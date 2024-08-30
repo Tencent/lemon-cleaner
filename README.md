@@ -2,7 +2,11 @@
 
 ## RoadMap
 - [x] 20240828 添加扫描 unity 工程的功能
-- [ ] xxxxXXXX 添加 python 运行时环境, 实现动态添加扫描逻辑
+- [x] 20240830 添加 python 运行时环境, 实现动态添加扫描逻辑
+    * 扫描类型添加 python, 即可用 python 来进行扫描
+    * python 运行时是自行编译放进来的
+    * python 脚本目前是 hard-code 在代码中的
+- [ ] xxxxxxxx 添加配置 UI
 
 
 ##
