@@ -7,6 +7,7 @@
     * python 运行时是自行编译放进来的
     * python 脚本目前是 hard-code 在代码中的
 - [ ] xxxxxxxx 添加配置 UI
+- [ ] xxxxxxxx 支持往 python 脚本传递参数
 
 
 ##
