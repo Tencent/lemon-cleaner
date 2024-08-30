@@ -21,9 +21,12 @@
 @synthesize delegate;
 
 -(NSString*)runPyCode:(NSString*) pyCodeString {
-    if ([pyCodeString length] == 0)
+    NSLog(@"python code=%@", pyCodeString);
+    uint64_t size = [pyCodeString length];
+    if (pyCodeString == nil || size == 0) {
         NSLog(@"Empty python code");
         return NULL;
+    }
     
     PyObject* pGlobals = PyDict_New();
     PyObject* pLocals = PyDict_New();
@@ -54,26 +57,28 @@
         return NULL;
     }
 
-    PyObject* pGlobals = PyDict_New();
-    PyObject* pLocals = PyDict_New();
-
+    PyObject *pGlobals = PyDict_New();
+    PyObject *pLocals = PyDict_New();
     PyObject* pResult = PyRun_File(file, [pyScript UTF8String], Py_file_input, pGlobals, pLocals);
     fclose(file);
 
     if (pResult == NULL) { // 检查执行是否成功
         PyErr_Print();
         NSLog(@"Python script=[%@] execution failed", pyScript);
+        Py_XDECREF(pGlobals);
+        Py_XDECREF(pLocals);
         return NULL;
     }
 
-    PyObject *pStr = PyObject_Str(pResult);
-    const char* cStr = PyUnicode_AsUTF8(pStr);
+//    PyObject *pScanResult = PyDict_GetItemString(pGlobals, "SCAN_RESULT");
+    PyObject *pScanResult = PyDict_GetItemString(pLocals, "SCAN_RESULT");
+    const char* cStr = PyUnicode_AsUTF8(pScanResult);
     
     // 释放资源
     Py_XDECREF(pGlobals);
     Py_XDECREF(pLocals);
     Py_XDECREF(pResult);
-    Py_XDECREF(pStr);
+    Py_XDECREF(pScanResult);
     
     return [NSString stringWithUTF8String:cStr];
 }
@@ -148,21 +153,27 @@
 }
 
 -(void)scanPython:(QMActionItem*)actionItem {
+    setenv("PYTHONHOME", "/Users/watermoon/Desktop/Python-3.12.5", 1);
+    setenv("PYTHONPATH", "/Users/watermoon/Desktop/Python-3.12.5/LIB", 1); // Python 运行时的系统 lib 脚本路径
+
     Py_Initialize();
-    
-    NSString *pyCode = @"print(\"Hello from Python\")\nreturn 'test'";
-    NSString* result = [self runPyCode: pyCode];
-    if (result != NULL)
-        NSLog(@"python code=%@", result);
+    PyGILState_STATE gState = PyGILState_Ensure();
+
+//    NSString *pyCode = @"print(\"Hello from Python\")";
+//    NSString* result = [self runPyCode: pyCode];
+//    if (result != NULL)
+//        NSLog(@"python code=%@", result);
     
     NSString *entry = @"/Users/watermoon/Documents/work/2022.unity.cn/doc/jobs/#0.20xx.moon/lemon-cleaner/py_entry.py";
-    result = [self runPyScript: entry];
+    NSString *result = [self runPyScript: entry];
     if (result != NULL) {
         // 返回结果格式:
         // 1. 以 \n 分割
         // 2. 每个记录格式为 key:value 格式, key 表示 title， value 则是 path
         NSArray *resultArray = [result componentsSeparatedByString:@"\n"];
         if ((resultArray == nil) || ([resultArray count] == 0)) {
+            PyGILState_Release(gState);
+            Py_Finalize();
             return;
         }
         
@@ -171,9 +182,9 @@
             if ([entry length] == 0)
                 continue;
             
-            NSArray *kv = [result componentsSeparatedByString:@":"];
+            NSArray *kv = [entry componentsSeparatedByString:@":"];
             if ((kv == nil) || ([kv count] != 2)) { // 无效记录
-                return;
+                continue;
             }
 
             NSString *path = [kv objectAtIndex:1];
@@ -193,6 +204,7 @@
         }
     }
     
+    PyGILState_Release(gState);
     Py_Finalize();
 }
 
