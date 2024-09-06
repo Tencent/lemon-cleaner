@@ -9,6 +9,7 @@
 // 扫描 Unity 仓库的临时目录
 
 #import "QMUnityScan.h"
+#import "QMCleanUtils.h"
 #import "QMFilterParse.h"
 #import "QMResultItem.h"
 #import <Foundation/Foundation.h>
@@ -153,8 +154,15 @@
 }
 
 -(void)scanPython:(QMActionItem*)actionItem {
-    setenv("PYTHONHOME", "/Users/watermoon/Desktop/Python-3.12.5", 1);
-    setenv("PYTHONPATH", "/Users/watermoon/Desktop/Python-3.12.5/LIB", 1); // Python 运行时的系统 lib 脚本路径
+    NSString* pythonHome = [QMCleanUtils getPythonHome];
+
+    if (pythonHome == nil || [pythonHome length] == 0) {
+        NSLog(@"Python home NOT configured or empty.");
+        return;
+    }
+    NSString* pythonLib = [NSString stringWithFormat:@"%@/LIB", pythonHome];
+    setenv("PYTHONHOME", [pythonHome UTF8String], 1);
+    setenv("PYTHONPATH", [pythonLib UTF8String], 1); // Python 运行时的系统 lib 脚本路径
 
     Py_Initialize();
     PyGILState_STATE gState = PyGILState_Ensure();
@@ -164,7 +172,12 @@
 //    if (result != NULL)
 //        NSLog(@"python code=%@", result);
     
-    NSString *entry = @"/Users/watermoon/Documents/work/2022.unity.cn/doc/jobs/#0.20xx.moon/lemon-cleaner/py_entry.py";
+    NSString *entry = [QMCleanUtils getPythonScriptEntry];
+    if (entry == nil || [entry length] == 0) {
+        NSLog(@"Python entry NOT configured or empty.");
+        return;
+    }
+
     NSString *result = [self runPyScript: entry];
     if (result != NULL) {
         // 返回结果格式:

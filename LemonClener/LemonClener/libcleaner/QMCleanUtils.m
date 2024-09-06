@@ -16,6 +16,12 @@
 
 #pragma mark - for performance
 
+static BOOL sConfigLoaded = false;
+static NSString* sGarbageCfg = nil;
+static NSString* sPythonHome = nil;
+static NSString* sPythonEntry = nil;
+
+
 time_t getFileCreationTime(const char *path) {
     struct stat attrib;
     
@@ -324,6 +330,60 @@ static NSMutableDictionary * m_cachePathDict = nil;
     {
         return nil;
     }
+}
+
++ (BOOL) loadConfig
+{
+    if (sConfigLoaded)
+        return true;
+
+    NSString* homeDir = NSHomeDirectory();
+    NSString *cfgFile = [NSString stringWithFormat:@"%@/.lemon/config.json", homeDir];
+
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    if (![fileManager fileExistsAtPath: cfgFile]) {
+        NSLog(@"Config file=%@ NOT exists.", cfgFile);
+        return false;
+    }
+    NSLog(@"Loading config file=%@...", cfgFile);
+
+    NSData *data = [NSData dataWithContentsOfFile:cfgFile];
+    if (data) {
+        NSError *error;
+        NSDictionary *config = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+        if (config) {
+            sGarbageCfg = [config objectForKey:@"garbage"];
+            sPythonHome = [config objectForKey:@"pythonHome"];
+            sPythonEntry = [config objectForKey:@"pythonEntry"];
+
+            NSLog(@"Garbage file=%@", sGarbageCfg);
+            NSLog(@"Python home=%@", sPythonHome);
+            NSLog(@"Python entry=%@", sPythonEntry);
+        }
+        sConfigLoaded = true;
+    } else {
+        NSLog(@"Load config file=%@ failure.", cfgFile);
+    }
+
+    return sConfigLoaded;
+}
+
++ (NSString*)getGarbageConfig
+{
+    [QMCleanUtils loadConfig];
+    return sGarbageCfg;
+}
+
++ (NSString*)getPythonScriptEntry
+{
+    [QMCleanUtils loadConfig];
+    return sPythonEntry;
+}
+
++ (NSString*)getPythonHome
+{
+    [QMCleanUtils loadConfig];
+    return sPythonHome;
 }
 
 @end

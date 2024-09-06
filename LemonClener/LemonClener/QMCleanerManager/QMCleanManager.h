@@ -71,5 +71,6 @@
 - (BOOL)isStopScan;
 //如果文件夹文件数量特别巨大 每计算一千个文件回调一次主界面路径 其他全部不做回调
 - (void)caculateSizeScanPath:(NSString *)path;
+- (void)redirctNSlog;
 
 @end

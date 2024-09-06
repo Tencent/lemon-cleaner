@@ -6,7 +6,14 @@
     * 扫描类型添加 python, 即可用 python 来进行扫描
     * python 运行时是自行编译放进来的
     * python 脚本目前是 hard-code 在代码中的
-- [ ] xxxxxxxx 添加配置 UI
+- [x] 20240806 添加配置文件 `$HOME/.lemon/config.json`
+    ```json
+    {
+        "garbage": "garbage config file(e.g. garbage.xml)",
+        "pythonHome": "Python lib path(e.g. ~/Python-3.12.5)",
+        "pythonEntry": "Python scan entry script(e.g. py_entry.py)"
+    }
+    ```
 - [ ] xxxxxxxx 支持往 python 脚本传递参数
 
 

@@ -293,7 +293,6 @@
     }
     
     NSString * type = [attributeDict objectForKey:kXMLKeyType];
-    NSLog(@"type=%@\n", type);
     if ([type isEqualToString:kXMLKeyFile])
         m_curActionItem.type = QMActionFileType;
     else if ([type isEqualToString:kXMLKeyDir])

@@ -58,6 +58,7 @@
                              ,@"200034",@"200035",@"200036",@"200037"];
         self.fileMoveTotalNum = 0;
     }
+    [self redirctNSlog];
     return self;
 }
 
@@ -453,6 +454,61 @@
 {
     QMXMLParseManager * xmlParseManager = [QMXMLParseManager sharedManager];
     return [xmlParseManager checkWarnItemAtPath:resultItem bundleID:bundle appName:name];
+}
+
+-(void)redirctNSlog{
+    NSLog(@"QMCleanManager -> redirctNSlog ...");
+    NSString *logPath;
+//    NSString *logName = [[[NSBundle mainBundle] executablePath] lastPathComponent];
+    NSString *logName = @"LemonCleaner";
+
+    // do not redirect in test mode
+    if ([[[NSBundle mainBundle] executablePath] containsString:@"/Library"])
+        return;
+
+    NSString *rootLogPath = [NSString stringWithFormat:@"/Library/Logs/%@", logName];
+    rootLogPath = [rootLogPath stringByAppendingPathExtension:@"log"];
+
+    if (getuid() == 0)
+    {
+        // root
+        logPath = rootLogPath;
+    }
+    else
+    {
+        // user
+        logPath = [NSHomeDirectory() stringByAppendingPathComponent:rootLogPath];
+    }
+    // clean log file
+    NSFileManager *fileMgr = [NSFileManager defaultManager];
+    if (![fileMgr fileExistsAtPath:logPath]) {
+        [fileMgr createFileAtPath:logPath contents:[NSData data] attributes:nil];
+    }
+
+    id handle = [NSFileHandle fileHandleForWritingAtPath:logPath];
+
+    NSDictionary *fileAttributes = [fileMgr attributesOfItemAtPath:logPath error:nil];
+    BOOL isLeastSevenDays = NO;
+    if (fileAttributes) {
+        NSDate *date = [fileAttributes objectForKey:NSFileCreationDate];
+        NSTimeInterval createTimeInterval = [date timeIntervalSince1970];
+        NSTimeInterval todayTimeInterval = [[NSDate date] timeIntervalSince1970];
+        if ((todayTimeInterval - createTimeInterval) <= 7 * 24 * 3600) {
+            isLeastSevenDays = YES;
+        }else{
+            [fileMgr createFileAtPath:logPath contents:[NSData data] attributes:nil];
+            handle = [NSFileHandle fileHandleForWritingAtPath:logPath];
+        }
+    }
+    if (isLeastSevenDays) {
+        [handle seekToEndOfFile];
+    }
+
+    NSLog(@"QMCleanManager| logPath=%@ ...", logPath);
+    if (handle != nil)
+    {
+        dup2([handle fileDescriptor], STDERR_FILENO);
+    }
 }
 
 @end

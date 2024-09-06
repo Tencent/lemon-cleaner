@@ -43,4 +43,12 @@ typedef BOOL (^FinderResultBlock)(NSURL * pathURL);
 
 + (NSArray *)processDirTruncatePath:(NSString *)path;
 
++ (BOOL) loadConfig;
+
++ (NSString*)getGarbageConfig;
+
++ (NSString*)getPythonScriptEntry;
+
++ (NSString*)getPythonHome;
+
 @end
