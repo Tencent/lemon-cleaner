@@ -142,12 +142,20 @@ static BOOL isSettingSuccess = NO;
             break;
         case GetFullDiskPopVCStylePreScan:
             title = @"GetFullDiskPopViewController_setupViews_preScan_titleLabel_1";
+#ifndef APPSTORE_VERSION
             des = @"GetFullDiskPopViewController_setupViews_preScan_descLabel_2";
+#else
+            des = @"GetFullDiskPopViewController_setupViews_preScan_descLabel_2_lite";
+#endif
             break;
         case GetFullDiskPopVCStyleDefault:
         default:
             title = @"GetFullDiskPopViewController_setupViews_titleLabel_1";
+#ifndef APPSTORE_VERSION
             des = @"GetFullDiskPopViewController_setupViews_descLabel_2";
+#else
+            des = @"GetFullDiskPopViewController_setupViews_descLabel_2_lite";
+#endif
             break;
     }
     [titleLabel setStringValue:NSLocalizedStringFromTableInBundle(title, nil, [NSBundle bundleForClass:[self class]], @"")];

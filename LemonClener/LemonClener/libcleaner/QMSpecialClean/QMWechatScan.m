@@ -19,11 +19,16 @@ static NSString * const kCommonPartsOfPath = @"/Message/MessageTemp";
 
 //扫描头像图片
 - (void)scanWechatAvatar:(QMActionItem *)actionItem {
+    [self __scanWechatAvatar:actionItem];
+    [self scanActionCompleted];
+}
+
+- (void)__scanWechatAvatar:(QMActionItem *)actionItem {
     // 第一步：找出文件夹
     NSArray *folders = [self findFoldersWithAction:actionItem keyword:@"Avatar"];
     // 分部处理结果
     // 该命令递归找出所有路径下的图片文件需要20s
-//     NSString *shellString = @"mdfind -onlyin \"%@\" 'kMDItemContentTypeTree == \"public.image\"'";
+    // NSString *shellString = @"mdfind -onlyin \"%@\" 'kMDItemContentTypeTree == \"public.image\"'";
     
     //该命令找出所有路径下第一层文件需要0.45s
     //NSString *shellString = @"find \"%@\" -maxdepth 1 -type f -not -name \".*\"";
@@ -39,6 +44,11 @@ static NSString * const kCommonPartsOfPath = @"/Message/MessageTemp";
 
 //扫描聊天图片 90天内
 - (void)scanWechatImage:(QMActionItem *)actionItem {
+    [self __scanWechatImage:actionItem];
+    [self scanActionCompleted];
+}
+
+- (void)__scanWechatImage:(QMActionItem *)actionItem {
     // 第一步：找出文件夹
     NSArray *folders = [self findFoldersWithAction:actionItem keyword:@"Image"];
     // 原始代码是找出目录下所有文件。
@@ -54,6 +64,11 @@ static NSString * const kCommonPartsOfPath = @"/Message/MessageTemp";
 
 //扫描聊天图片 90天前
 - (void)scanWechatImage90DayAgo:(QMActionItem *)actionItem {
+    [self __scanWechatImage90DayAgo:actionItem];
+    [self scanActionCompleted];
+}
+
+- (void)__scanWechatImage90DayAgo:(QMActionItem *)actionItem {
     NSArray *folders = [self findFoldersWithAction:actionItem keyword:@"Image"];
     // 原始代码是找出目录下所有文件。
     // 此处为了优化后续处理结果的代码，因此只按需查找图片文件
@@ -68,6 +83,11 @@ static NSString * const kCommonPartsOfPath = @"/Message/MessageTemp";
 
 //扫描接收的文件
 - (void)scanWechatFile:(QMActionItem *)actionItem {
+    [self __scanWechatFile:actionItem];
+    [self scanActionCompleted];
+}
+
+- (void)__scanWechatFile:(QMActionItem *)actionItem {
     NSArray *folders = [self findFoldersWithAction:actionItem keyword:@"File"];
     [self scanFileWithFolders:folders shell:nil continueExec:^BOOL(NSString *path){
         return [path containsString:kCommonPartsOfPath];
@@ -78,6 +98,11 @@ static NSString * const kCommonPartsOfPath = @"/Message/MessageTemp";
 
 //扫描接收到的视频
 - (void)scanWechatVideo:(QMActionItem *)actionItem {
+    [self __scanWechatVideo:actionItem];
+    [self scanActionCompleted];
+}
+
+- (void)__scanWechatVideo:(QMActionItem *)actionItem {
     NSArray *folders = [self findFoldersWithAction:actionItem keyword:@"Video"];
     [self scanFileWithFolders:folders shell:nil continueExec:^BOOL(NSString *path){
         return [path containsString:kCommonPartsOfPath];
@@ -88,6 +113,11 @@ static NSString * const kCommonPartsOfPath = @"/Message/MessageTemp";
 
 //扫描接收到的音频
 - (void)scanWechatAudio:(QMActionItem *)actionItem {
+    [self __scanWechatAudio:actionItem];
+    [self scanActionCompleted];
+}
+
+- (void)__scanWechatAudio:(QMActionItem *)actionItem {
     NSArray *folders = [self findFoldersWithAction:actionItem keyword:@"Audio"];
     [self scanFileWithFolders:folders shell:nil continueExec:^BOOL(NSString *path){
         return [path containsString:kCommonPartsOfPath];

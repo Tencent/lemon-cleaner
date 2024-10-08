@@ -7,19 +7,28 @@
 //
 
 #import "MachineModel.h"
+#import "BatteryModel.h"
 #include <sys/sysctl.h>
+
+#ifndef APPSTORE_VERSION
+
 #import "HardwareHeader.h"
 #import <QMUICommon/SharedPrefrenceManager.h>
-#import "BatteryModel.h"
+#endif
 
+#ifndef APPSTORE_VERSION
 #define kSIMachineAttributesPath    @"/System/Library/PrivateFrameworks/ServerInformation.framework/Versions/A/Resources/English.lproj/SIMachineAttributes.plist"
 #define HARDWARE_PLIST @"hardware.plist"
+#endif
 
 @interface MachineModel()
+
+#ifndef APPSTORE_VERSION
 {
     NSDictionary * _machineAttributesDict;
 }
 
+#endif
 @end
 
 @implementation MachineModel
@@ -40,6 +49,7 @@
     return self;
 }
 
+#ifndef APPSTORE_VERSION
 -(BOOL)getHardWareInfo{
     //    NSOperationQueue *machineInfoQueue = [[NSOperationQueue alloc] init];
     //    machineInfoQueue.maxConcurrentOperationCount = 2;
@@ -444,6 +454,8 @@ NSDate * manufacureDate(NSString *serial)
 -(NSString *)description{
     return [NSString stringWithFormat:@"machineName = %@, yearString = %@, thunderbolts = %ld, ports = %ld, cpuName = %@, cpuSpeed = %@, cpuCores = %@, L2Cache = %@, L3Cache = %@", self.machineName, self.yearString, self.thunderbolts, self.ports, self.cpuName, self.cpuSpeed, self.cpuCores, self.L2Cache, self.L3Cache];
 }
+
+#endif
 
 @end
 

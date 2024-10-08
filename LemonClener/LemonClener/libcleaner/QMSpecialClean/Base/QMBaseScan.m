@@ -6,7 +6,14 @@
 //
 
 #import "QMBaseScan.h"
+#import "QMXMLItemDefine.h"
 
 @implementation QMBaseScan
+
+- (void)scanActionCompleted {
+    if ([self.delegate respondsToSelector:@selector(scanActionCompleted)]) {
+        [self.delegate scanActionCompleted];
+    }
+}
 
 @end

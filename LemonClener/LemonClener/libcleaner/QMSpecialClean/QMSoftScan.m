@@ -16,6 +16,11 @@
 @synthesize delegate;
 
 -(void)scanSketchFileCache:(QMActionItem *)actionItem{
+    [self __scanSketchFileCache:actionItem];
+    [self scanActionCompleted];
+}
+
+-(void)__scanSketchFileCache:(QMActionItem *)actionItem{
     NSArray *pathItemArray = actionItem.pathItemArray;
     for (int i = 0; i < [pathItemArray count]; i++)
     {
@@ -47,6 +52,11 @@
 
 //扫描自适配软件缓存
 -(void)scanAdaptSoftCache:(QMActionItem *)actionItem{
+    [self __scanAdaptSoftCache:actionItem];
+    [self scanActionCompleted];
+}
+
+-(void)__scanAdaptSoftCache:(QMActionItem *)actionItem{
     NSArray *pathArray = [[QMCacheEnumerator shareInstance] getCacheWithActionItem:actionItem];
     if ([pathArray count] == 0) {
         return;
@@ -80,6 +90,11 @@
 
 //扫描剩余的缓存的大小
 -(void)scanLeftAppCache:(QMActionItem *)actionItem{
+    [self __scanLeftAppCache:actionItem];
+    [self scanActionCompleted];
+}
+
+-(void)__scanLeftAppCache:(QMActionItem *)actionItem{
     NSArray *pathArray = [[QMCacheEnumerator shareInstance] getLeftAppCache];
     if ([pathArray count] == 0) {
         return;
@@ -118,6 +133,11 @@
 
 //扫描剩余的日志大小
 -(void)scanLeftAppLog:(QMActionItem *)actionItem{
+    [self __scanLeftAppLog:actionItem];
+    [self scanActionCompleted];
+}
+
+-(void)__scanLeftAppLog:(QMActionItem *)actionItem{
     QMFilterParse * filterParse = [[QMFilterParse alloc] initFilterDict:[delegate xmlFilterDict]];
     NSArray * pathArray = [filterParse enumeratorAtFilePath:actionItem];//通过扫描规则和过滤规则，返回所有路径
     for (int i = 0; i < [pathArray count]; i++)

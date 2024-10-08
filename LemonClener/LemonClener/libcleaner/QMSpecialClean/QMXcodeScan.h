@@ -6,12 +6,10 @@
 //  Copyright © 2019 Tencent. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import "QMBaseScan.h"
 #import "QMActionItem.h"
 
-@interface QMXcodeScan : NSObject
-
-@property (weak) id<QMScanDelegate> delegate;
+@interface QMXcodeScan : QMBaseScan
 
 -(void)scanDerivedDataApp:(QMActionItem *)actionItem;
 

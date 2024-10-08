@@ -108,6 +108,7 @@
         recommend = YES;
         showResult = NO;
         pathItemArray = [[NSMutableArray alloc] init];
+        self.m_resultItemSet = [[NSMutableSet alloc] init];
         self.m_resultItemArray = [[NSMutableArray alloc] init];
         self.m_stateValue = NSOnState;
     }
@@ -127,6 +128,7 @@
         copy.title = [self.title mutableCopy];
         copy.atomItem = [self.atomItem mutableCopy];
         copy->pathItemArray = [[NSMutableArray alloc] initWithArray:self->pathItemArray copyItems:YES];
+        copy.m_resultItemSet = [[NSMutableSet alloc] init];
         copy.m_resultItemArray = [[NSMutableArray alloc] init];
         copy.cautionID = [self.cautionID mutableCopy];
         copy.cleanType = self.cleanType;
@@ -156,6 +158,7 @@
         copy.title = [self.title mutableCopy];
         copy.atomItem = [self.atomItem mutableCopy];
         copy->pathItemArray = [[NSMutableArray alloc] initWithArray:self->pathItemArray copyItems:YES];
+        copy.m_resultItemSet = [[NSMutableSet alloc] init];
         copy.m_resultItemArray = [[NSMutableArray alloc] init];
         copy.cautionID = [self.cautionID mutableCopy];
         copy.cleanType = self.cleanType;
@@ -184,9 +187,9 @@
     @synchronized (self) {
         /// array 中元素较多时 containsObject：耗时较高
         /// set的containsObject 的时间复杂度为O(1)
-        if (![self.m_resultItemArray containsObject:item])
+        if (![self.m_resultItemSet containsObject:item])
         {
-            [self.m_resultItemArray addObject:item];
+            [self.m_resultItemSet addObject:item];
             m_totalSize += [item resultFileSize];
         }
     }
@@ -196,7 +199,13 @@
     }
 }
 
-
+- (void)addResultCompleted {
+    NSArray *resultItems = self.m_resultItemSet.allObjects;
+    if (resultItems.count > 0) {
+        [self.m_resultItemArray addObjectsFromArray:resultItems];
+    }
+    [self.m_resultItemSet removeAllObjects];
+}
 
 - (NSMutableArray *)subItemArray
 {

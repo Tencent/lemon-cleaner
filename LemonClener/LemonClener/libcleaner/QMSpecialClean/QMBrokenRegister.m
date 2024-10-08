@@ -3,7 +3,7 @@
 //  TestXMLParase
 //
 
-//  Copyright (c) 2013年 zero. All rights reserved.
+//  Copyright (c) 2013年 tencent. All rights reserved.
 //
 
 #import "QMBrokenRegister.h"
@@ -147,6 +147,12 @@
 }
 
 - (void)scanBrokenRegister:(QMActionItem *)actionItem
+{
+    [self __scanBrokenRegister:actionItem];
+    [self scanActionCompleted];
+}
+
+- (void)__scanBrokenRegister:(QMActionItem *)actionItem
 {
     QMFilterParse * filterParse = [[QMFilterParse alloc] initFilterDict:[delegate xmlFilterDict]];
     NSArray * pathArray = [filterParse enumeratorAtFilePath:actionItem];

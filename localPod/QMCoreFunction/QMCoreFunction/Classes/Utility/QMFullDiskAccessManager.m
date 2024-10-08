@@ -10,6 +10,7 @@
 #import "NSString+Extension.h"
 
 @implementation QMFullDiskAccessManager
+#ifndef APPSTORE_VERSION
 +(QMFullDiskAuthorationStatus)getFullDiskAuthorationStatus{
     // 完全磁盘修改生效必须重启
     static QMFullDiskAuthorationStatus status = 0;
@@ -19,6 +20,13 @@
     });
     return status;
 }
+#else
+// app store 模式下一次探测，【完全磁盘访问权限】应用列表无lemon lite
++(QMFullDiskAuthorationStatus)getFullDiskAuthorationStatus{
+    return [self __getFullDiskAuthorationStatus];
+}
+#endif
+
 
 +(QMFullDiskAuthorationStatus)__getFullDiskAuthorationStatus{
     if (@available(macOS 10.14, *)) {

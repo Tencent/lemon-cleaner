@@ -20,6 +20,11 @@
 
 //
 -(void)scanDerivedDataApp:(QMActionItem *)actionItem{
+    [self __scanDerivedDataApp:actionItem];
+    [self scanActionCompleted];
+}
+
+-(void)__scanDerivedDataApp:(QMActionItem *)actionItem{
     NSString *shellString = @"mdfind -onlyin ~/Library/ \"kMDItemContentType=='com.apple.application-bundle'\"";
     NSString *retString = [QMShellExcuteHelper excuteCmd:shellString];
     if (retString == nil || [retString isEqualToString:@""]) {
@@ -60,6 +65,11 @@
 }
 
 -(void)scanArchives:(QMActionItem *)actionItem{
+    [self __scanArchives:actionItem];
+    [self scanActionCompleted];
+}
+
+-(void)__scanArchives:(QMActionItem *)actionItem{
     NSString *shellString = @"mdfind -onlyin ~/Library/ \"kMDItemContentType=='com.apple.xcode.archive'\"";
     NSString *retString = [QMShellExcuteHelper excuteCmd:shellString];
     if (retString == nil || [retString isEqualToString:@""]) {

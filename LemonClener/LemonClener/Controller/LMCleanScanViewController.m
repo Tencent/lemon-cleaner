@@ -55,6 +55,10 @@
 #define kGuideArrowCount    30              //引导箭头动画帧数
 #define kGuideBubbleString  @"bubble_%05d"  //引导气泡动画文件名
 #define kGuideArrowString   @"arrow_%05d"   //引导箭头动画文件名
+#define kGuideArrowUnloadLessIndex  1       //引导箭头动画，在MacOS 15上不加载比该值小的图片，显示错误，为黑色
+#define kGuideArrowUnloadMoreIndex  19      //引导箭头动画，在MacOS 15上不加载比该值大的图片，显示错误，为黑色
+#define kGuideBubbleUnloadLessIndex 18      //引导气泡动画，在MacOS 15上不加载比该值小的图片，显示错误，为黑色
+#define kGuideBubbleUnloadMoreIndex 43      //引导气泡动画，在MacOS 15上不加载比该值大的图片，显示错误，为黑色
 
 #define kUpAnimatePointX        59          //动画上面部分的最终位置，跟BigView中Icon保持一致
 #define kUpAnimatePointY        473         //动画上面部分的最终位置，跟BigView中Icon保持一致
@@ -1187,14 +1191,32 @@
 - (void)_refreshGuide {
     int arrowIdx = _guideCount % kGuideArrowCount;
     NSString* arrowName = [NSString stringWithFormat:kGuideArrowString,arrowIdx];
-    [self.arrowImageView setImage:[bundle imageForResource:arrowName]];
+    if (@available(macOS 15.0, *)) {
+        if ( arrowIdx < kGuideArrowUnloadLessIndex || arrowIdx > kGuideArrowUnloadMoreIndex ) {
+            [self.arrowImageView setImage:nil];
+        } else {
+            [self.arrowImageView setImage:[bundle imageForResource:arrowName]];
+        }
+    } else {
+        [self.arrowImageView setImage:[bundle imageForResource:arrowName]];
+    }
     
     if(!_isBubbleShown) {
         int bubbleIdx = _guideCount % kGuideBubbleCount;
         NSString* bubbleName = [NSString stringWithFormat:kGuideBubbleString,bubbleIdx];
-        [self.bubbleImageView setImage:[bundle imageForResource:bubbleName]];
+        if (@available(macOS 15.0, *)) {
+            if ( bubbleIdx < kGuideBubbleUnloadLessIndex || bubbleIdx > kGuideBubbleUnloadMoreIndex ) {
+                [self.bubbleImageView setImage:nil];
+            } else {
+                [self.bubbleImageView setImage:[bundle imageForResource:bubbleName]];
+            }
+        } else {
+            [self.bubbleImageView setImage:[bundle imageForResource:bubbleName]];
+        }
         if(bubbleIdx == kGuideBubbleCount - 1)
             _isBubbleShown = YES;
+    } else {
+        self.bubbleImageView.hidden = YES;
     }
     
     _guideCount++;

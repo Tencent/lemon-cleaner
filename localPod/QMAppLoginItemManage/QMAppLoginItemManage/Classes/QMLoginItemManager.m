@@ -16,6 +16,9 @@
 #import "QMLocalAppHelper.h"
 #import <AppKit/NSWorkspace.h>
 
+// FinalShell.app 的bundle id
+static NSString * const kFinalShellAppBundleId = @"st";
+
 @interface QMLoginItemManager ()
 
 /**
@@ -67,12 +70,13 @@ typedef char (*SMLoginItemSetEnabledWithURL_ptr) ( void* ptr, char enabled);
 方法：遍历应用列表，筛选出包含LoginItem目录的应用
 */
 -(NSMutableArray *)getAppLoginItems{
-    /// macOS 13之后LoginItem不能被非应用本身来注册，仅支持应用自身使用SMAppService注册。
+    NSMutableArray *loginItemArray = [[NSMutableArray alloc]init];
+    
+    // macOS 13之后LoginItem不能被非应用本身来注册，仅支持应用自身使用SMAppService注册。
     if (@available(macOS 13.0, *)) {
-        return [NSMutableArray array];
+        return loginItemArray;
     }
     
-    NSMutableArray *loginItemArray = [[NSMutableArray alloc]init];
     NSArray<QMLocalApp *> *appArray = [[QMLocalAppHelper shareInstance] getLocalAppData];
     NSFileManager *fileManager = [NSFileManager defaultManager];
     
@@ -367,13 +371,37 @@ typedef char (*SMLoginItemSetEnabledWithURL_ptr) ( void* ptr, char enabled);
         }
         fileName = [fileName lowercaseString];
         NSString *tempString = [localApp.bundleId lowercaseString];
-        if ([fileName containsString:tempString]) {
-            return localApp;
+       
+        if ([self isSpecialApp:localApp]) {
+            if ([self isSpecialThatFileName:fileName belongsToApp:localApp]) {
+                return localApp;
+            }
+        } else {
+            // 去掉后缀
+            NSString *fileNameWithoutExtension = [fileName stringByDeletingPathExtension];
+            if ([fileNameWithoutExtension containsString:tempString]) {
+                return localApp;
+            }
         }
     }
     return nil;
 }
 
+- (BOOL)isSpecialApp:(QMLocalApp *)app {
+    // 特例app， bundle id 是 “st”
+    return [app.bundleId isEqualToString:kFinalShellAppBundleId];
+}
+
+- (BOOL)isSpecialThatFileName:(NSString *)fileName belongsToApp:(QMLocalApp *)app {
+    // 特例app用更严格的判断
+    if ([app.bundleId isEqualToString:kFinalShellAppBundleId]) {
+        NSString *customBundleId = [kFinalShellAppBundleId stringByAppendingString:@"."];
+        if ([fileName hasPrefix:customBundleId]) {
+            return YES;
+        }
+    }
+    return NO;
+}
 
 //判断后台服务是否启用
 -(BOOL)serviceIsEnabledWithItem: (QMAppLaunchItem *)item{

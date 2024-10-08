@@ -188,8 +188,9 @@
             }else{
                 self.scanProgressDotTextField.stringValue = @"";
             }
-            self.scanProgressTextField.stringValue = tempPath;
-
+            if ([tempPath isKindOfClass:NSString.class] && tempPath.length > 0) {
+                self.scanProgressTextField.stringValue = tempPath;
+            }
         }
     
         //防止进度条更新频率过高

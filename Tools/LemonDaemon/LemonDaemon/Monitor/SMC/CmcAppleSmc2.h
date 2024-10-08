@@ -1,3 +1,5 @@
+#ifndef APPSTORE_VERSION
+
 #define VERSION               "0.01"
 
 #define OP_NONE               0
@@ -116,4 +118,4 @@ kern_return_t SMCClose(io_connect_t conn);
 kern_return_t SMCReadKey2(UInt32Char_t key, SMCVal_t *val,io_connect_t conn);
 float parseSMCVal(SMCVal_t val);
 
-
+#endif

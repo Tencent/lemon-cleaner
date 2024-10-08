@@ -284,6 +284,10 @@
     });
 }
 
+- (void)stopMoveFile {
+    self.isMoving = NO;
+}
+
 - (void)moveAllFilesFromFilePath:(NSString *)fromFilePath
                       toFilePath:(NSString *)toFilePath
                  appCategoryItem:(LMAppCategoryItem *)appCategoryItem
@@ -409,6 +413,9 @@
     
     NSArray *paths = [fileManager contentsOfDirectoryAtPath:filePath error:nil];
     for (NSString *path in paths) {
+        if (!self.isMoving) {
+            return;
+        }
         NSString *resultPath = [filePath stringByAppendingPathComponent:path];
         [fileManager fileExistsAtPath:resultPath isDirectory:&isDirectory];
         if (!isDirectory) {

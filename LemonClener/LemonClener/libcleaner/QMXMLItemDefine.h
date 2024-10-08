@@ -158,6 +158,7 @@ typedef enum
 - (NSDictionary *)xmlFilterDict;
 - (BOOL)needStopScan;
 - (BOOL)scanProgressInfo:(float)value scanPath:(NSString *)path resultItem:(QMResultItem *)item;
+- (void)scanActionCompleted;
 - (NSString *)currentScanCategoryKey;
 
 @end

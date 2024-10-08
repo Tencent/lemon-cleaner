@@ -4,6 +4,8 @@
  *
  */
 
+#ifndef APPSTORE_VERSION
+
 #include <stdint.h>
 #include "CmcAppleSmc.h"
 #include "CmcAppleSmc2.h"
@@ -242,3 +244,4 @@ int CmcGetNBridgeTemperature(double *value)
     }
 }
 
+#endif

@@ -360,7 +360,11 @@ typedef NSInteger LMPortSortType;
             for (NSTextCheckingResult *res in reArr) {
                 [pis addObject:[portItem substringWithRange:res.range]];
             }
-            if (pis.count < 9) {
+            NSInteger minLength = 9;
+            if (@available(macOS 15.0, *)) {
+                minLength = 11;
+            }
+            if (pis.count < minLength) {
                 continue;
             }
             if ([[pis objectAtIndex:3] isEqualToString:@"*.*"] &&
@@ -381,12 +385,12 @@ typedef NSInteger LMPortSortType;
             for (McProcessInfoData* info in processInfo) {
                 pid_t pid = info.pid;
                 if (isTcp) {
-                    if (pis.count > 9 && [[pis objectAtIndex:8] integerValue] == pid) {
+                    if (pis.count > minLength && [[pis objectAtIndex:(minLength - 1)] integerValue] == pid) {
                         findInfo = info;
                         break;
                     }
                 } else {
-                    if (pis.count > 8 && [[pis objectAtIndex:7] integerValue] == pid) {
+                    if (pis.count > (minLength - 1) && [[pis objectAtIndex:(minLength - 2)] integerValue] == pid) {
                         findInfo = info;
                         break;
                     }

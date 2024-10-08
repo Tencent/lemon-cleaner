@@ -6,6 +6,8 @@
 //  Copyright 2011 Magican Software Ltd. All rights reserved.
 //
 
+#ifndef APPSTORE_VERSION
+
 #import "CmcTemperature.h"
 #import "CmcSmartQuery.h"
 #import "McTemperatureInfo.h"
@@ -101,3 +103,5 @@
 }
 
 @end
+
+#endif

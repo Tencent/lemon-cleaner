@@ -46,14 +46,16 @@
             NSLog(@"delSelectedPhotos for index:%d, %@", i, [NSThread currentThread]);
             if (item.isSelected&&!([item.path containsString:photoPath]&&[item.path containsString:photoslibraryPath])) {
                 NSLog(@"delSelectedPhotos at index:%d", i);
-                if ([McCoreFunction isAppStoreVersion]){
-                    NSFileManager *fileManager = [NSFileManager defaultManager];
-                    NSError *error;
-                    [fileManager removeItemAtPath:item.path error:&error];
-                    NSLog(@"delete file error = %@", error);
-                } else {
-                    [[McCoreFunction shareCoreFuction] cleanItemAtPath:item.path array:nil removeType:McCleanMoveTrashRoot];
-                }
+#ifndef APPSTORE_VERSION
+                
+                [[McCoreFunction shareCoreFuction] cleanItemAtPath:item.path array:nil removeType:McCleanMoveTrashRoot];
+#else
+                [[NSWorkspace sharedWorkspace] performFileOperation:NSWorkspaceRecycleOperation
+                                                                            source:[item.path stringByDeletingLastPathComponent]
+                                                                       destination:@""
+                                                                             files:@[[item.path lastPathComponent]]
+                                                                               tag:nil];
+#endif
                 [self itemDeletedAtIndex:i];
             } else if (item.isSelected){
                 [photoPathsNeedToDeleteArray addObject:[item.path componentsSeparatedByString:@"/"].lastObject];

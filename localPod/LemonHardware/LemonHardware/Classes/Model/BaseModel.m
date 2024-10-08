@@ -2,15 +2,18 @@
 //  BaseModel.m
 //  LemonHardware
 //
-//  
+//  Created by tencent on 2019/5/9.
 //  Copyright © 2019 Tencent. All rights reserved.
 //
 
 #import "BaseModel.h"
+#ifndef APPSTORE_VERSION
 #import <QMCoreFunction/McCoreFunction.h>
+#endif
 
 @implementation BaseModel
 
+#ifndef APPSTORE_VERSION
 -(BOOL)getHardWareInfo{
     return NO;
 }
@@ -49,5 +52,6 @@
     
     return nil;
 }
+#endif
 
 @end

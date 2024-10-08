@@ -14,6 +14,8 @@
 @interface MachineModel : BaseModel
 
 @property (nonatomic, strong) NSString *machineName;
+
+#ifndef APPSTORE_VERSION
 @property (nonatomic, strong) NSString *yearString;
 @property (nonatomic, strong) NSString *systemVersion;
 @property (nonatomic, assign) NSInteger thunderbolts;
@@ -23,7 +25,7 @@
 @property (nonatomic, strong) NSString *cpuCores;//cpu核心数
 @property (nonatomic, strong) NSString *L2Cache;//二级缓存
 @property (nonatomic, strong) NSString *L3Cache;//三级缓存
-
+#endif
 
 @end
 
