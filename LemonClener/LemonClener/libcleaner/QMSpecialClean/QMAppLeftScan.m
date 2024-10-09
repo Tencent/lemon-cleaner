@@ -82,6 +82,12 @@
 
 - (void)scanAppLeftWithItem:(QMActionItem *)actionItem
 {
+    [self __scanAppLeftWithItem:actionItem];
+    [self scanActionCompleted];
+}
+
+- (void)__scanAppLeftWithItem:(QMActionItem *)actionItem
+{
     // 获取路径
     QMFilterParse * filterParse = [[QMFilterParse alloc] initFilterDict:[delegate xmlFilterDict]];
     NSArray * pathArray = [filterParse enumeratorAtFilePath:actionItem];

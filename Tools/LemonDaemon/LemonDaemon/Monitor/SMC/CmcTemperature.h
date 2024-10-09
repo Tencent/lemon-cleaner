@@ -7,6 +7,8 @@
  *
  */
 
+#ifndef APPSTORE_VERSION
+
 // get cpu temperature
 int CmcGetCpuTemperature(double *value);
 
@@ -15,3 +17,5 @@ int CmcGetBatteryTemperature(double *value);
 
 // get northbridge temperature
 int CmcGetNBridgeTemperature(double *value);
+
+#endif

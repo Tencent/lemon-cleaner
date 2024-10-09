@@ -6,16 +6,15 @@
 //  Copyright (c) 2013年 yuanwen. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import "QMBaseScan.h"
 #import "QMXMLItemDefine.h"
 
 @class QMActionItem;
-@interface QMAppLeftScan : NSObject
+@interface QMAppLeftScan : QMBaseScan
 {
     NSLock * addSoftLock;
     NSArray * m_localSoftArray;
 }
-@property (weak) id<QMScanDelegate> delegate;
 
 - (void)scanAppLeftWithItem:(QMActionItem *)actionItem;
 

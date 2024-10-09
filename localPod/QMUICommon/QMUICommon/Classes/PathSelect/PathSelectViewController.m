@@ -537,7 +537,7 @@
     
     // 起始帧和结束帧的设定
     animation.fromValue = [NSValue valueWithPoint:_continueAddContainer.layer.position];
-    CGPoint point = CGPointMake(-120, 0);
+    CGPoint point = CGPointMake(-200, 0);
     animation.toValue = [NSValue valueWithPoint:point]; // 终了帧
     animation.removedOnCompletion = NO;
     animation.fillMode = kCAFillModeForwards;

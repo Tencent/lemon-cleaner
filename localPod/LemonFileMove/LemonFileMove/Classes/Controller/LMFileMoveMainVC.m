@@ -88,6 +88,13 @@
 
 @property (nonatomic, assign) long long lastUpdateCellTime; // 毫秒。避免刷新过于频繁
 
+#ifndef APPSTORE_VERSION
+
+#else
+#pragma mark - NSOpenPanel 代理区别
+@property (nonatomic, copy) NSString *openPanelDir;
+#endif
+
 @end
 
 @implementation LMFileMoveMainVC
@@ -174,7 +181,8 @@
         } else {
             [self.nextButton setEnabled:YES];
         }
-    });
+        
+     });
 }
 
 - (void)showDiskView {
@@ -320,6 +328,14 @@
 }
 
 - (void)addDisksObject:(Disk *)object {
+    NSString *DAVolumeKind = object.diskDescription[@"DAVolumeKind"];
+    if ([DAVolumeKind isKindOfClass:NSString.class]) {
+        DAVolumeKind = [DAVolumeKind lowercaseString];
+        if ([DAVolumeKind isEqualToString:@"ntfs"]) {
+            return;
+        }
+    }
+
     for (Disk *disk in self.diskModelArr) {
         if ([disk.BSDName isEqualToString:object.BSDName]) {
             return;
@@ -332,7 +348,14 @@
 
 - (BOOL)panel:(id)sender shouldEnableURL:(NSURL *)url NS_AVAILABLE_MAC(10_6){
     NSLog(@"user select shouldEnableURL = %@", [url path]);
+#ifndef APPSTORE_VERSION
     NSString *userPath = [NSString getUserHomePath];
+#else
+    NSString *userPath = self.openPanelDir;
+#endif
+    if (!userPath) {
+        return NO;
+    }
     BOOL isDir = NO;
     BOOL existed = [[NSFileManager defaultManager] fileExistsAtPath:[url path] isDirectory:&isDir];
     if(([[url path] isEqualToString:userPath] || [[url path] hasPrefix:userPath]) && isDir && existed)
@@ -342,7 +365,14 @@
 
 - (BOOL)panel:(id)sender validateURL:(NSURL *)url error:(NSError **)outError NS_AVAILABLE_MAC(10_6){
     NSLog(@"user select validateURL = %@", [url path]);
+#ifndef APPSTORE_VERSION
     NSString *userPath = [NSString getUserHomePath];
+#else
+    NSString *userPath = self.openPanelDir;
+#endif
+    if (!userPath) {
+        return NO;
+    }
     BOOL isDir = NO;
     BOOL existed = [[NSFileManager defaultManager] fileExistsAtPath:[url path] isDirectory:&isDir];
     if(([[url path] isEqualToString:userPath] || [[url path] hasPrefix:userPath]) && isDir && existed)
@@ -356,32 +386,47 @@
     
     NSString *userPath = [NSString stringWithFormat:@"%@/Desktop",[NSString getUserHomePath]];
     NSOpenPanel *openDlg = [NSOpenPanel openPanel];
-    openDlg.allowsMultipleSelection = YES;
+    openDlg.allowsMultipleSelection = NO;
     openDlg.canChooseDirectories = YES;
-    openDlg.canChooseFiles = YES;
+    openDlg.canCreateDirectories = YES;
+    openDlg.canChooseFiles = NO;
     [openDlg setPrompt:NSLocalizedStringFromTableInBundle(@"Ok", nil, [NSBundle bundleForClass:[self class]], @"")];
     openDlg.delegate = self;
     openDlg.message = @"";
     openDlg.directoryURL = [NSURL URLWithString:userPath];
+#ifndef APPSTORE_VERSION
+    
+#else
+    self.openPanelDir = userPath;
+#endif
+    __weak typeof(self) weakSelf = self;
     [openDlg beginSheetModalForWindow:self.view.window completionHandler:^(NSModalResponse result) {
+        __strong typeof(weakSelf) strongSelf = weakSelf;
         if(result == NSModalResponseOK){
             NSLog(@"click ok");
             NSArray *urls = [openDlg URLs];
             NSURL *url = [urls objectAtIndex:0];
             NSString *path = [url path];
             path = [NSString stringWithFormat:@"%@/柠檬清理_文件搬家/",path];
-            self.diskLocationTextField.stringValue = path;
+            strongSelf.diskLocationTextField.stringValue = path;
             [[LMFileMoveManger shareInstance] didSelectedTargetPath:path pathType:LMFileMoveTargetPathTypeLocalPath];
-            self.diskNextButton.enabled = YES;
-            [self.customFilePathView changeMaskLightColor:YES];
-            [self.collectionView reloadData];
+            strongSelf.diskNextButton.enabled = YES;
+            [strongSelf.customFilePathView changeMaskLightColor:YES];
+            [strongSelf.collectionView reloadData];
         }else{
             NSLog(@"click cancel");
         }
+#ifndef APPSTORE_VERSION
+    
+#else
+        strongSelf.openPanelDir = nil;
+#endif
+      
     }];
 }
 
 - (void)collectionViewItemBeSelect:(Disk *)model {
+#ifndef APPSTORE_VERSION
     NSURL *pathUrl = [model.diskDescription objectForKey:@"DAVolumePath"];
     NSString *path = [[pathUrl absoluteString] stringByRemovingPercentEncoding];
     path = [path stringByReplacingOccurrencesOfString:@"file://" withString:@""];
@@ -392,6 +437,38 @@
         self.diskNextButton.enabled = YES;
     }
     [self.customFilePathView changeMaskLightColor:NO];
+#else
+    NSURL *pathUrl = [model.diskDescription objectForKey:@"DAVolumePath"];
+    NSOpenPanel *openDlg = [NSOpenPanel openPanel];
+    openDlg.allowsMultipleSelection = NO;
+    openDlg.canChooseDirectories = YES;
+    openDlg.canCreateDirectories = YES;
+    openDlg.canChooseFiles = NO;
+    [openDlg setPrompt:NSLocalizedStringFromTableInBundle(@"Ok", nil, [NSBundle bundleForClass:[self class]], @"")];
+    openDlg.delegate = self;
+    openDlg.message = @"";
+    openDlg.directoryURL = pathUrl;
+    self.openPanelDir = pathUrl.path;
+    [self.customFilePathView changeMaskLightColor:NO];
+    __weak typeof(self) weakSelf = self;
+    [openDlg beginSheetModalForWindow:self.view.window completionHandler:^(NSModalResponse result) {
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        if(result == NSModalResponseOK){
+            NSLog(@"click ok");
+            NSArray *urls = [openDlg URLs];
+            NSURL *url = [urls objectAtIndex:0];
+            NSString *path = [url path];
+            path = [NSString stringWithFormat:@"%@/柠檬清理_文件搬家/",path];
+            strongSelf.diskLocationTextField.stringValue = path;
+            [[LMFileMoveManger shareInstance] didSelectedTargetPath:path pathType:LMFileMoveTargetPathTypeDisk];
+            strongSelf.diskNextButton.enabled = YES;
+        }else{
+            NSLog(@"click cancel");
+        }
+        
+        strongSelf.openPanelDir = nil;
+    }];
+#endif
 }
 
 #pragma mark - NSCollectionViewDelegate

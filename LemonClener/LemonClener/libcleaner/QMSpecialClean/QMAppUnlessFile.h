@@ -3,23 +3,22 @@
 //  QMCleanDemo
 //
 
-//  Copyright (c) 2013年 yuanwen. All rights reserved.
+//  Copyright (c) 2013年 tencent. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import "QMBaseScan.h"
 #import "QMActionItem.h"
 #import "QMXMLItemDefine.h"
 
 @class QMFilterParse;
-@interface QMAppUnlessFile : NSObject
-{    
+@interface QMAppUnlessFile : QMBaseScan
+{
     QMFilterParse * m_languageFilter;
     QMFilterParse * m_developerFilter;
     NSMutableArray * m_unlessNibArray;
     
     NSString * _normIdentifier;
 }
-@property (weak) id<QMScanDelegate> delegate;
 
 - (void)scanAppUnlessLanguage:(QMActionItem *)actionItem;
 

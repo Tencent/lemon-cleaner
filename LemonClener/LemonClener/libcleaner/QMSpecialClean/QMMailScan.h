@@ -6,15 +6,13 @@
 //  Copyright © 2018 Tencent. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import "QMBaseScan.h"
 #import "QMXMLItemDefine.h"
 #import "QMActionItem.h"
 #import "QMMailUtil.h"
 
 
-@interface QMMailScan : NSObject<QMMailDelegate>
-
-@property (weak) id<QMScanDelegate> delegate;
+@interface QMMailScan : QMBaseScan <QMMailDelegate>
 
 - (void)scanMailAttachments:(QMActionItem *)actionItem;
 

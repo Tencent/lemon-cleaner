@@ -370,6 +370,10 @@
     return isStopScan;
 }
 
+- (void)scanActionCompleted {
+    [self->m_curScanActionItem addResultCompleted];
+}
+
 - (NSString *)currentScanCategoryKey
 {
     return m_curScanCategoryItem.categoryID;

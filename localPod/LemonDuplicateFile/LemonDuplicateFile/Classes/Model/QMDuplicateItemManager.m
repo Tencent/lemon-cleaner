@@ -169,11 +169,12 @@
     }
     // 移除item(避免遍历时移除,遍历结束后再移除)
     [_resultItemArray removeObjectsInArray:tempRemoveItemArrayForRefresh];
+    
     dispatch_queue_t removeQueue =  dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     removeQueue = dispatch_queue_create("remove.duplicate.item", DISPATCH_QUEUE_SERIAL);
     dispatch_group_t removeGroup =  dispatch_group_create();
     LMAppleScriptTool *removeTool = [[LMAppleScriptTool alloc] init];
-    
+
     for (QMDuplicateFile *needRemoveItem in needRemovePathArray) {
         dispatch_group_async(removeGroup, removeQueue, ^{
             if (self.isCleaningCanceled) {
@@ -184,7 +185,11 @@
             if (![fm fileExistsAtPath:path]) {
                 return;
             }
-            [removeTool removeFileToTrashInSerialQueue:path];
+            if (!toTrash) {
+                [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
+            } else {
+                [removeTool removeFileToTrashInSerialQueue:path];
+            }
             removeSize += needRemoveItem.fileSize;
             
             if ([self.delegate respondsToSelector:@selector(cleanDuplicateItem:currentIndex:totalItemCounts:)]) {

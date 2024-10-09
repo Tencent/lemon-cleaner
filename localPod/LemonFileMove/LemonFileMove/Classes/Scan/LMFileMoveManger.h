@@ -99,5 +99,6 @@ typedef NS_ENUM(NSUInteger, LMFileMoveTargetPathType) {
 
 - (void)didSelectedTargetPath:(NSString *)path pathType:(LMFileMoveTargetPathType)pathType;
 - (void)startMoveFile;
+- (void)stopMoveFile;
 
 @end

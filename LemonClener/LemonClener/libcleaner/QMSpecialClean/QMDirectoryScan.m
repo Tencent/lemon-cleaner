@@ -3,7 +3,6 @@
 //  QMCleanDemo
 //
 
-//  Copyright (c) 2013年 yuanwen. All rights reserved.
 //
 
 #import "QMDirectoryScan.h"
@@ -26,7 +25,12 @@
 }
 
 // 扫描目录内的文件
-- (void)scanActionWithItem:(QMActionItem *)actionItem
+- (void)scanActionWithItem:(QMActionItem *)actionItem {
+    [self __scanActionWithItem:actionItem];
+    [self scanActionCompleted];
+}
+
+- (void)__scanActionWithItem:(QMActionItem *)actionItem
 {
     QMFilterParse * filterParse = [[QMFilterParse alloc] initFilterDict:[delegate xmlFilterDict]];
     NSArray * pathArray = [filterParse enumeratorAtFilePath:actionItem];//通过扫描规则和过滤规则，返回所有路径

@@ -314,6 +314,7 @@
     LMFileMoveAlertViewController *viewController = [[LMFileMoveAlertViewController alloc] initWithImage:LM_IMAGE_NAMED(@"file_move_warning_icon") title:LM_LOCALIZED_STRING(@"Stop the Transfering?") continueButtonTitle:LM_LOCALIZED_STRING(@"Continue") stopButtonTitle:LM_LOCALIZED_STRING(@"Abort") continueHandler:^{
         // 继续导出
     } stopHandler:^{
+        [[LMFileMoveManger shareInstance] stopMoveFile];
         [weakSelf.view.window.windowController close];
     }];
     [self presentViewControllerAsModalWindowInCenter:viewController windowSize:LM_FILE_MOVE_ALERT_WINDOW_SIZE];

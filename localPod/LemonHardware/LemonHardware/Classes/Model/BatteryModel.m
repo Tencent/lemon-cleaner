@@ -28,6 +28,7 @@ io_service_t g_smartBattery = 0;
     }
 }
 
+#ifndef APPSTORE_VERSION
 -(instancetype)init{
     self = [super init];
     if(self){
@@ -181,6 +182,8 @@ io_service_t g_smartBattery = 0;
     return YES;
 }
 
+#endif
+
 // get battery serial, UTF8 encoding
 // serial_buf       output buffer
 // buf_size         size in bytes
@@ -225,6 +228,8 @@ int CmcGetBatterySerial(char *serial_buf, int buf_size)
     return 0;
 }
 
+#ifndef APPSTORE_VERSION
+
 // get battery externel charge
 // return 0 for false, 1 for true, -1 for error
 int CmcGetBatteryChargeCapable()
@@ -258,5 +263,7 @@ int CmcGetBatteryChargeCapable()
 -(NSString *)description{
     return [NSString stringWithFormat:@"maxCapacity = %@, currentCapacity = %@, loopCount = %@, status = %@, percentage = %@, ischarge = %hhd, isFullyCharged = %@", self.maxCapacity, self.currentCapacity, self.loopCount, self.status, self.percentage, self.ischarge, self.isFullyCharged];
 }
+
+#endif
 
 @end

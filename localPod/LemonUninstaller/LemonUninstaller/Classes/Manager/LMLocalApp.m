@@ -1526,17 +1526,28 @@ enum {
 //        nameRegex = [NSString stringWithFormat:@"\\b(%@)%@(\\..*){0,}\\b", regexEscape(bundleName), suffixRegex ? suffixRegex : @""];
 //    } else
 
+    NSString *footerRegex = @"";
+    if ([suffixRegex isKindOfClass:NSString.class] && suffixRegex.length > 0) {
+        footerRegex = suffixRegex;
+    } else {
+        footerRegex = @"(\\..*){0,}\\b";
+    }
     {
-        nameRegex = [NSString stringWithFormat:@"\\b((%@)|(%@)|(%@)|(%@))%@(\\..*){0,}\\b",matchedNameFromXML, regexEscape(bundleName), regexEscape(executableName),regexEscape(showName), suffixRegex ? suffixRegex : @""];
+        if ([matchedNameFromXML isKindOfClass:NSString.class] && matchedNameFromXML.length > 0) {
+            nameRegex = [NSString stringWithFormat:@"\\b((%@)|(%@)|(%@)|(%@))%@",regexEscape(matchedNameFromXML), regexEscape(bundleName), regexEscape(executableName),regexEscape(showName), footerRegex];
+        } else {
+            nameRegex = [NSString stringWithFormat:@"\\b((%@)|(%@)|(%@))%@", regexEscape(bundleName), regexEscape(executableName),regexEscape(showName), footerRegex];
+        }
+        
     }
     NSPredicate *namePred = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", nameRegex];
 
     //匹配bundleID的正则表达式
     NSString *bundleIDRegex = @"";
-    if(options & kMcSearchByBundleID){
-        bundleIDRegex = [NSString stringWithFormat:@"\\b((%@)|(%@))%@(\\..*){0,}\\b", regexEscape(matchBundle),regexEscape(matchedNameFromXML), suffixRegex ? suffixRegex : @""];
+    if((options & kMcSearchByBundleID) && ([matchedNameFromXML isKindOfClass:NSString.class] && matchedNameFromXML.length > 0)){
+        bundleIDRegex = [NSString stringWithFormat:@"\\b(\\w+\\.)?((%@)|(%@))%@", regexEscape(matchBundle),regexEscape(matchedNameFromXML), footerRegex];
     }else{
-        bundleIDRegex = [NSString stringWithFormat:@"\\b(%@)%@(\\..*){0,}\\b", regexEscape(matchBundle), suffixRegex ? suffixRegex : @""];
+        bundleIDRegex = [NSString stringWithFormat:@"\\b(\\w+\\.)?(%@)%@", regexEscape(matchBundle), footerRegex];
     }
     NSPredicate *bundleIDPred = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", bundleIDRegex];
 
@@ -1590,10 +1601,15 @@ enum {
 //                NSLog(@"%s, self.appName : %@", __FUNCTION__, self.appName);
 //            }
 //            NSLog(@"%s, self.bundleID : %@", __FUNCTION__, self.bundleID);
-            if(self.bundleID && (options & kMcSearchByBundleID) && [subName containsString:self.bundleID]){
-                [resultArray addObject:subPath];
-                continue;
-            }
+            
+            
+            // --bug=129758439 【lemon 官网】【线上历史问题】FinalShell 通过lemon卸载会删除本机所有后台服务
+            // containsString: bundle id 过于粗暴。FinalShell 的bundle id = st。导致所有的plist文件被匹配。
+            // 影响精确匹配
+//            if(self.bundleID && (options & kMcSearchByBundleID) && [subName containsString:self.bundleID]){
+//                [resultArray addObject:subPath];
+//                continue;
+//            }
 
             //匹配公司名目录下面与产品名字或BunldeID相同的文件
             if ((options & kMcSearchByCompany) && companyName && [matchSubName isEqualToString:companyName]) {

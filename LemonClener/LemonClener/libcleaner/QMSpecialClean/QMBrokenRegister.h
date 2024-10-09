@@ -3,16 +3,14 @@
 //  TestXMLParase
 //
 
-//  Copyright (c) 2013年 zero. All rights reserved.
+//  Copyright (c) 2013年 tencent. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import "QMBaseScan.h"
 #import "QMActionItem.h"
 #import "QMXMLItemDefine.h"
 
-@interface QMBrokenRegister : NSObject
-
-@property (weak) id<QMScanDelegate> delegate;
+@interface QMBrokenRegister : QMBaseScan
 
 - (void)scanBrokenRegister:(QMActionItem *)actionItem;
 

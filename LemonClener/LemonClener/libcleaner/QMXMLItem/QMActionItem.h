@@ -44,6 +44,7 @@ typedef NS_ENUM(NSUInteger, SandboxType) {
 {
     NSMutableArray * pathItemArray;
 }
+@property (atomic, strong) NSMutableSet * m_resultItemSet;
 @property (atomic, strong) NSMutableArray * m_resultItemArray;
 @property (nonatomic, strong) NSString * actionID;
 // 清理种类
@@ -84,6 +85,6 @@ typedef NS_ENUM(NSUInteger, SandboxType) {
 
 - (void)resetItemState;
 - (void)addResultItem:(QMResultItem *)item;
-
+- (void)addResultCompleted;
 
 @end

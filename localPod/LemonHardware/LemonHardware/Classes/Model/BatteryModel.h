@@ -13,6 +13,7 @@
 
 @interface BatteryModel : BaseModel
 
+#ifndef APPSTORE_VERSION
 @property (nonatomic, strong) NSString *maxCapacity;
 @property (nonatomic, strong) NSString *currentCapacity;
 @property (nonatomic, strong) NSString *loopCount;
@@ -24,6 +25,7 @@
 @property (nonatomic, assign) BOOL haveBattery;//是否有电池
 //苹果M1机器，不显示最大容量和剩余容量信息，显示电池健康状态栏（最大容量比例，如：100%）
 @property (nonatomic) NSString *healthMaxCapacity;
+#endif
 
 //电池是否存在
 -(BOOL)isExistBattery;

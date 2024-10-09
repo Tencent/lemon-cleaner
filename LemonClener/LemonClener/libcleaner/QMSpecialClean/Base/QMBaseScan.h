@@ -14,6 +14,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (weak) id<QMScanDelegate> delegate;
 
+- (void)scanActionCompleted;
+
 @end
 
 NS_ASSUME_NONNULL_END

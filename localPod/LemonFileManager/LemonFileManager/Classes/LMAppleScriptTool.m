@@ -35,6 +35,7 @@
 }
 
 - (void)_removeFileToTrash:(NSString *)filePath {
+#ifndef APPSTORE_VERSION
     NSString *appleScriptSource = [NSString stringWithFormat:
                                    @"tell application \"Finder\"\n"
                                    @"set theFile to POSIX file \"%@\"\n"
@@ -53,6 +54,13 @@
             NSLog(@"QMLargeOldManager: moveFileToTrashError: unknownError");
         }
     }
+#else
+    [[NSWorkspace sharedWorkspace] performFileOperation:NSWorkspaceRecycleOperation
+                                                                 source:[filePath stringByDeletingLastPathComponent]
+                                                            destination:@""
+                                                                  files:@[[filePath lastPathComponent]]
+                                                                    tag:nil];
+#endif
 }
 
 @end

@@ -12,6 +12,7 @@
 
 #import "McCoreFunction.h"
 #import "McCoreFunctionCommon.h"
+#import "NSSavePanel+QMTemporaryRepair.h"
 #import "McFileEvent.h"
 #import "McProcessInfo.h"
 #import "McProcessInfoData.h"
@@ -97,6 +98,7 @@
 #import "NSView+Extension.h"
 #import "QMExtension.h"
 #import "QMProcessWatcher.h"
+#import "QMMethodSwapper.h"
 #import "QMSigFileHandler.h"
 #import "QMConditionLock.h"
 #import "QMDistributedLock.h"

@@ -6,6 +6,8 @@
 //  Copyright 2011 Magican Software Ltd. All rights reserved.
 //
 
+#ifndef APPSTORE_VERSION
+
 #import <Cocoa/Cocoa.h>
 
 
@@ -41,3 +43,5 @@
 @property (copy) NSNumber   *hddTemp;
 
 @end
+
+#endif

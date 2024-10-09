@@ -304,8 +304,11 @@
 }
 
 - (void)launchLemonApp {
-//    [[[[NSApplication sharedApplication] mainWindow] windowController] showWindow:weakSelf];
+#ifndef APPSTORE_VERSION
     [[NSWorkspace sharedWorkspace] launchApplication:@"/Applications/Tencent Lemon.app"];
+#else
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"notify_open_lemon_main_page" object:nil];
+#endif
     QMBaseWindowController *windowController = self.view.window.windowController;
     [windowController close];
 }

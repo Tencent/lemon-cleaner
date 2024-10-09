@@ -1,3 +1,5 @@
+#ifndef APPSTORE_VERSION
+
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -713,6 +715,5 @@ kern_return_t SMCWriteSimple(UInt32Char_t key, char *wvalue, io_connect_t conn)
 }
 #endif //#ifdef CMD_TOOL
 
-
-
+#endif
 

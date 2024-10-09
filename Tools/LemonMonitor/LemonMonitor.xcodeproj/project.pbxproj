@@ -17,6 +17,7 @@
 		84ADF214212EADE500B8C9C6 /* LemonClener.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84ADF209212EAC7500B8C9C6 /* LemonClener.framework */; };
 		84ADF218212EB18E00B8C9C6 /* LemonClener.framework in Copy Files */ = {isa = PBXBuildFile; fileRef = 84ADF209212EAC7500B8C9C6 /* LemonClener.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		84BA8E7A21758EA70066B794 /* uiresources.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 84BA8E7921758EA70066B794 /* uiresources.xcassets */; };
+		85433828167A400ADBC4F9A9 /* Pods_LemonMonitor.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5867102A50C1CF6F106E2FB8 /* Pods_LemonMonitor.framework */; };
 		8B5499D728A3562A00B55BB8 /* LMHoverButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B5499D328A3562A00B55BB8 /* LMHoverButton.m */; };
 		8B5499D828A3562A00B55BB8 /* LMAboutWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B5499D628A3562A00B55BB8 /* LMAboutWindow.m */; };
 		B88029CF196BE562007CFE8D /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B88029CE196BE562007CFE8D /* SystemConfiguration.framework */; };
@@ -138,7 +139,7 @@
 		2F6E0B7721CA3763009B4875 /* SocketCommunicationKeyWord.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SocketCommunicationKeyWord.h; path = ../../LemonDaemon/LemonDaemonActivator/SocketCommunicationKeyWord.h; sourceTree = "<group>"; };
 		2FAE179F5D5E36229D7AE5D8 /* Pods-LemonMonitor.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LemonMonitor.debug.xcconfig"; path = "../../Pods/Target Support Files/Pods-LemonMonitor/Pods-LemonMonitor.debug.xcconfig"; sourceTree = "<group>"; };
 		47D7AC3330517E6E138F5D82 /* Pods-LemonMonitor.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LemonMonitor.release.xcconfig"; path = "../../Pods/Target Support Files/Pods-LemonMonitor/Pods-LemonMonitor.release.xcconfig"; sourceTree = "<group>"; };
-		62B5DA708EB7D85717DD6753 /* Pods_LemonMonitorToday.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_LemonMonitorToday.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		5867102A50C1CF6F106E2FB8 /* Pods_LemonMonitor.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_LemonMonitor.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7952E49B23FD12D20058C48C /* LMTrashSizeCheckWindowController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LMTrashSizeCheckWindowController.h; sourceTree = "<group>"; };
 		7952E49C23FD12D20058C48C /* LMTrashSizeCheckWindowController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LMTrashSizeCheckWindowController.m; sourceTree = "<group>"; };
 		7952E49D23FD12D20058C48C /* LMTrashSizeCheckWindowController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LMTrashSizeCheckWindowController.xib; sourceTree = "<group>"; };
@@ -212,10 +213,6 @@
 		D47D64BB215D203700E411AE /* AFNetworking.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = AFNetworking.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D47D64C0215D22BF00E411AE /* AFNetworking.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AFNetworking.framework; path = "../../../../../Library/Developer/Xcode/DerivedData/Lemon-gmfqyfrusrvxopduwpphgyjaxeqx/Build/Products/Debug/AFNetworking/AFNetworking.framework"; sourceTree = "<group>"; };
 		D49FA4C221DDA2A3004A416E /* PrivacyProtect.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = PrivacyProtect.xcodeproj; path = ../PrivacyProtect/PrivacyProtect.xcodeproj; sourceTree = "<group>"; };
-		DE1A9470274B9DDE00411011 /* LemonShark.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = LemonShark.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		DE27948B26A03000007B4443 /* LMMonitorUpdateVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LMMonitorUpdateVC.h; sourceTree = "<group>"; };
-		DE27948C26A03000007B4443 /* LMMonitorUpdateVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LMMonitorUpdateVC.m; sourceTree = "<group>"; };
-		DE27948D26A03000007B4443 /* LMMonitorUpdateVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LMMonitorUpdateVC.xib; sourceTree = "<group>"; };
 		DE27949826A038BE007B4443 /* LMUpdatePopoverBackgroundView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMUpdatePopoverBackgroundView.h; sourceTree = "<group>"; };
 		DE27949926A038BE007B4443 /* LMUpdatePopoverRootView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMUpdatePopoverRootView.h; sourceTree = "<group>"; };
 		DE27949A26A038BE007B4443 /* LMUpdatePopoverBackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMUpdatePopoverBackgroundView.m; sourceTree = "<group>"; };
@@ -251,6 +248,7 @@
 				B88029CF196BE562007CFE8D /* SystemConfiguration.framework in Frameworks */,
 				B8F110451962572100D29FFC /* Cocoa.framework in Frameworks */,
 				02448250C136D1BA83A700A8 /* Pods_LemonMonitor.framework in Frameworks */,
+				85433828167A400ADBC4F9A9 /* Pods_LemonMonitor.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -401,8 +399,7 @@
 				B8F110631962572100D29FFC /* XCTest.framework */,
 				B8FA922A1A3ED6C600CFAA3C /* NotificationCenter.framework */,
 				B8F110461962572100D29FFC /* Other Frameworks */,
-				62B5DA708EB7D85717DD6753 /* Pods_LemonMonitorToday.framework */,
-				F2A84A8EFAA857D1C173D896 /* Pods_LemonMonitor.framework */,
+				5867102A50C1CF6F106E2FB8 /* Pods_LemonMonitor.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";

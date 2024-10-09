@@ -6,12 +6,10 @@
 //  Copyright © 2019年 Tencent. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import "QMBaseScan.h"
 #import "QMActionItem.h"
 
-@interface QMSoftScan : NSObject
-
-@property (weak) id<QMScanDelegate> delegate;
+@interface QMSoftScan : QMBaseScan
 
 //扫描sketch的缓存大小
 -(void)scanSketchFileCache:(QMActionItem *)actionItem;
