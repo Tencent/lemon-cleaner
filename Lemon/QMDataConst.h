@@ -70,6 +70,6 @@ typedef enum {
 
 #define kQMOfficialWebsite          @"https://lemon.qq.com"
 #define kQMPrivacyLicenseLink       @"https://docs.qq.com/doc/p/14c9c888a06a856dd3945a4ed50a1f22be92020f?dver=2.1.27135941&pub=1&u=213b091f14ba4c878602e45174f03ad9"
-#define kQMServiceLicenseLink       @"https://docs.qq.com/doc/DT2lzbHRoR2lpT0FF?pub=1&dver=2.1.27135941"
+#define kQMServiceLicenseLink       @"https://docs.qq.com/doc/p/2f38b736932904b5dc268ec3e1400dc750511da0"
 
 #endif
