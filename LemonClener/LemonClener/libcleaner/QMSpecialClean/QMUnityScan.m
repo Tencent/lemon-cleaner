@@ -21,6 +21,68 @@
 @implementation QMUnityScan
 @synthesize delegate;
 
+-(bool)initPythonEnv:(NSString*) scanResultFile {
+    NSString* pythonHome = [QMCleanUtils getPythonHome];
+
+    if (pythonHome == nil || [pythonHome length] == 0) {
+        NSLog(@"Python home NOT configured or empty.");
+        return false;
+    }
+    NSString* pythonLib = [NSString stringWithFormat:@"%@/LIB", pythonHome];
+
+    PyStatus status;
+    PyConfig config;
+
+    PyConfig_InitPythonConfig(&config);
+    config.isolated = 1;
+    config.module_search_paths_set = 1;
+    do {
+        // 设置 Python home & module search path
+        status = PyConfig_SetBytesString(&config, &config.home, [pythonHome UTF8String]);
+        if (PyStatus_Exception(status)) {
+            break;
+        }
+        status = PyConfig_SetBytesString(&config, &config.pythonpath_env, [pythonLib UTF8String]); // 这一行不是必须的, 只是为了将 NSString 转成 wchar_t*
+        if (PyStatus_Exception(status)) {
+            break;
+        }
+        status = PyWideStringList_Append(&config.module_search_paths, config.pythonpath_env);
+        if (PyStatus_Exception(status)) {
+            break;
+        }
+
+        // 设置 argc 和 argv
+        // 注意: python 脚本中 argv[0] 是在 __name__ 获取
+        char *resultFilePath = (char*)[scanResultFile UTF8String];
+        char* argv[] = {
+            "",
+            resultFilePath,
+        };
+
+        status = PyConfig_SetBytesArgv(&config, 2, argv); // 2: argv 数组的长度, 对应 main(int argc, char** argv)
+        if (PyStatus_Exception(status)) {
+            break;
+        }
+
+        status = Py_InitializeFromConfig(&config);
+        if (PyStatus_Exception(status)) {
+            break;
+        }
+    } while (0);
+
+    PyConfig_Clear(&config);
+    if (PyStatus_Exception(status)) {
+        if (PyStatus_IsExit(status)) {
+            NSLog(@"Python exits. err=%s", status.err_msg);
+            return false;
+        }
+        // Display the error message and exit the process with non-zero exit code
+        NSLog(@"Python exits with code=%d err_msg=%s", status.exitcode, status.err_msg);
+        Py_ExitStatusException(status);
+    }
+    return true;
+}
+
 -(NSString*)runPyCode:(NSString*) pyCodeString {
     NSLog(@"python code=%@", pyCodeString);
     uint64_t size = [pyCodeString length];
@@ -51,37 +113,27 @@
     return [NSString stringWithUTF8String:cStr];
 }
 
--(NSString*)runPyScript:(NSString*) pyScript {
+-(bool)runPyScript:(NSString*) pyScript {
     FILE* file = fopen([pyScript UTF8String], "r");
     if (file == NULL) {
         NSLog(@"Failed to open python script=%@", pyScript);
-        return NULL;
+        return false;
     }
 
-    PyObject *pGlobals = PyDict_New();
-    PyObject *pLocals = PyDict_New();
-    PyObject* pResult = PyRun_File(file, [pyScript UTF8String], Py_file_input, pGlobals, pLocals);
+    int ret = PyRun_SimpleFile(file, [pyScript UTF8String]);
+    if (0 == ret) {
+        NSLog(@"python 扫描完成...");
+    } else {
+        NSLog(@"python 扫描失败, 具体原因请查看日志");
+    }
     fclose(file);
-
-    if (pResult == NULL) { // 检查执行是否成功
-        PyErr_Print();
-        NSLog(@"Python script=[%@] execution failed", pyScript);
-        Py_XDECREF(pGlobals);
-        Py_XDECREF(pLocals);
-        return NULL;
+    
+    file = fopen([pyScript UTF8String], "r");
+    if (file == NULL) {
+        NSLog(@"Failed to open python script=%@", pyScript);
+        return false;
     }
-
-//    PyObject *pScanResult = PyDict_GetItemString(pGlobals, "SCAN_RESULT");
-    PyObject *pScanResult = PyDict_GetItemString(pLocals, "SCAN_RESULT");
-    const char* cStr = PyUnicode_AsUTF8(pScanResult);
-    
-    // 释放资源
-    Py_XDECREF(pGlobals);
-    Py_XDECREF(pLocals);
-    Py_XDECREF(pResult);
-    Py_XDECREF(pScanResult);
-    
-    return [NSString stringWithUTF8String:cStr];
+    return true;
 }
 
 -(void)scanArtifacts:(QMActionItem *)actionItem {
@@ -154,38 +206,36 @@
 }
 
 -(void)scanPython:(QMActionItem*)actionItem {
-    NSString* pythonHome = [QMCleanUtils getPythonHome];
-
-    if (pythonHome == nil || [pythonHome length] == 0) {
-        NSLog(@"Python home NOT configured or empty.");
+    NSString* scanResultFile = [QMCleanUtils getScanResultFile];
+    if (![self initPythonEnv: scanResultFile]) {
+        NSLog(@"Python entry NOT configured or empty.");
         return;
     }
-    NSString* pythonLib = [NSString stringWithFormat:@"%@/LIB", pythonHome];
-    setenv("PYTHONHOME", [pythonHome UTF8String], 1);
-    setenv("PYTHONPATH", [pythonLib UTF8String], 1); // Python 运行时的系统 lib 脚本路径
-
-    Py_Initialize();
-    PyGILState_STATE gState = PyGILState_Ensure();
-
-//    NSString *pyCode = @"print(\"Hello from Python\")";
-//    NSString* result = [self runPyCode: pyCode];
-//    if (result != NULL)
-//        NSLog(@"python code=%@", result);
     
     NSString *entry = [QMCleanUtils getPythonScriptEntry];
     if (entry == nil || [entry length] == 0) {
         NSLog(@"Python entry NOT configured or empty.");
+        Py_Finalize();
         return;
     }
 
-    NSString *result = [self runPyScript: entry];
-    if (result != NULL) {
+    bool succ = [self runPyScript: entry];
+    if (succ) {
+        NSError *error = nil;
+        NSString *fileContents = [NSString stringWithContentsOfFile:scanResultFile
+                                                           encoding:NSUTF8StringEncoding
+                                                              error:&error];
+        if (error) {
+            NSLog(@"Error reading file at %@: %@", scanResultFile, error.localizedDescription);
+            Py_Finalize();
+            return;
+        }
+
         // 返回结果格式:
         // 1. 以 \n 分割
         // 2. 每个记录格式为 key:value 格式, key 表示 title， value 则是 path
-        NSArray *resultArray = [result componentsSeparatedByString:@"\n"];
+        NSArray *resultArray = [fileContents componentsSeparatedByString:@"\n"];
         if ((resultArray == nil) || ([resultArray count] == 0)) {
-            PyGILState_Release(gState);
             Py_Finalize();
             return;
         }
@@ -217,7 +267,6 @@
         }
     }
     
-    PyGILState_Release(gState);
     Py_Finalize();
 }
 

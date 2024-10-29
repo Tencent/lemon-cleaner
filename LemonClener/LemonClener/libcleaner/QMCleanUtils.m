@@ -20,6 +20,7 @@ static BOOL sConfigLoaded = false;
 static NSString* sGarbageCfg = nil;
 static NSString* sPythonHome = nil;
 static NSString* sPythonEntry = nil;
+static NSString* sScanResultFile = nil;
 
 
 time_t getFileCreationTime(const char *path) {
@@ -355,10 +356,12 @@ static NSMutableDictionary * m_cachePathDict = nil;
             sGarbageCfg = [config objectForKey:@"garbage"];
             sPythonHome = [config objectForKey:@"pythonHome"];
             sPythonEntry = [config objectForKey:@"pythonEntry"];
+            sScanResultFile = [config objectForKey:@"scanResultFile"];
 
             NSLog(@"Garbage file=%@", sGarbageCfg);
             NSLog(@"Python home=%@", sPythonHome);
             NSLog(@"Python entry=%@", sPythonEntry);
+            NSLog(@"Python scan result file=%@", sScanResultFile);
         }
         sConfigLoaded = true;
     } else {
@@ -384,6 +387,12 @@ static NSMutableDictionary * m_cachePathDict = nil;
 {
     [QMCleanUtils loadConfig];
     return sPythonHome;
+}
+
++ (NSString*)getScanResultFile
+{
+    [QMCleanUtils loadConfig];
+    return sScanResultFile;
 }
 
 @end

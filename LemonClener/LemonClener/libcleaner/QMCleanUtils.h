@@ -51,4 +51,6 @@ typedef BOOL (^FinderResultBlock)(NSURL * pathURL);
 
 + (NSString*)getPythonHome;
 
++ (NSString*)getScanResultFile;
+
 @end

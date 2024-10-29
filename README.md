@@ -14,7 +14,11 @@
         "pythonEntry": "Python scan entry script(e.g. py_entry.py)"
     }
     ```
-- [ ] xxxxxxxx 支持往 python 脚本传递参数
+- [x] 20241029
+    - [x] bugfix: 修复 python 脚本扫描 import 需要在函数一级进行 import 的问题
+    - [x] bugfix: 修复 python 脚本扫描可能会导致中途失败的问题
+    - [x] 支持往 python 脚本传递参数, 扫描结果回传通过文件进行(文件路径通过参数传递给 python 脚本)
+        * 增加配置项 `scanResultFile`, 表示扫描保存结果
 
 
 ##
