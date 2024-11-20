@@ -19,6 +19,8 @@
 #import "LMThemeManager.h"
 #import <QMCoreFunction/LMBookMark.h>
 #import <QMCoreFunction/NSImage+Extension.h>
+#import <QMCoreFunction/NSString+Extension.h>
+#import <QMCoreFunction/QMFullDiskAccessManager.h>
 
 #define kSpaceStartPath @"/"///Users/lemon/Downloads
 
@@ -290,7 +292,8 @@
     
     NSString *userPath = @"/";
     BOOL isUserGiveFullPathPermission = [[LMBookMark defaultShareBookmark] accessingSecurityScopedResourceWithFilePath:userPath];
-    if (isUserGiveFullPathPermission == NO) {
+    BOOL fullDiskAccess = [QMFullDiskAccessManager getFullDiskAuthorationStatus] == QMFullDiskAuthorationStatusAuthorized;
+    if (isUserGiveFullPathPermission == NO && fullDiskAccess == NO) {
         [self showOpenPanelGetPermission];
         return;
     }

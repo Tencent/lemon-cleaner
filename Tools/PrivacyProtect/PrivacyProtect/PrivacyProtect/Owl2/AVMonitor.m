@@ -35,8 +35,8 @@ extern os_log_t logHandle;
         self.videoLogMonitor = [[LogMonitor alloc] init];
         self.audioLogMonitor = [[LogMonitor alloc] init];
         
-        self.videoClients = [NSMutableArray array];
-        self.audioClients = [NSMutableArray array];
+        self.videoClients = [QMSafeMutableArray array];
+        self.audioClients = [QMSafeMutableArray array];
         
         self.isM1 = AppleSilicon();
         // any active cameras

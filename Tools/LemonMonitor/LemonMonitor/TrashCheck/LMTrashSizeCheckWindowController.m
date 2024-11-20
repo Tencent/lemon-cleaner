@@ -150,11 +150,22 @@
     return @"500 MB";
 }
 
+
+NSErrorDomain kNSFontValueNilDomain  = @"kNSFontValueNilDomain";
+NSErrorDomain kNSFontKeyNilDomain    = @"kNSFontKeyNilDomain";
+NSErrorDomain kNSColorValueNilDomain = @"kNSColorValueNilDomain";
+NSErrorDomain kNSColorKeyNilDomain   = @"kNSColorKeyNilDomain";
+
+NSInteger kNSFontValueNilCode        =  -1001;
+NSInteger kNSFontKeyNilCode          =  -1002;
+NSInteger kNSColorValueNilCode       =  -1003;
+NSInteger kNSColorKeyNilCode         =  -1004;
+
 - (NSAttributedString *)attributedWithString:(NSString *)string keywordsRange:(NSRange)range
 {
+    NSDictionary *attributes = [NSDictionary dictionaryWithObjectsAndKeys:[NSFont systemFontOfSize:12.0], NSFontAttributeName?:@"NSFont", [LMAppThemeHelper getTitleColor], NSForegroundColorAttributeName?:@"NSColor", nil];
     NSMutableAttributedString *attributedStr = [[NSMutableAttributedString alloc] initWithString:string
-                                                                                      attributes:@{NSForegroundColorAttributeName: [LMAppThemeHelper getTitleColor],
-                                                                                                   NSFontAttributeName: [NSFont systemFontOfSize:12.0]}];
+                                                                                      attributes:attributes];
     [attributedStr addAttribute:NSForegroundColorAttributeName value:[NSColor colorWithHex:0x64DFA7] range:range];
     return attributedStr;
 }

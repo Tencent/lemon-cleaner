@@ -38,6 +38,19 @@
         
         NSString *userTrashPath = [@"~/.Trash" stringByExpandingTildeInPath];
         [trashMonitorConfig setObject:@[userTrashPath] forKey:@"WatchPaths"];
+        
+        // 检查~/Library/LaunchAgents文件夹是否存在
+        NSString *userLaunchAgentsPath = [@"~/Library/LaunchAgents" stringByExpandingTildeInPath];
+        if (![fileMgr fileExistsAtPath:userLaunchAgentsPath]) {
+            // 创建文件夹
+            NSError *error = nil;
+            [fileMgr createDirectoryAtPath:userLaunchAgentsPath withIntermediateDirectories:NO attributes:nil error:&error];
+            
+            if (error) {
+                NSLog(@"create userLaunchAgentsPath: %@", error.localizedDescription);
+            }
+        }
+        
         if (![trashMonitorConfig writeToFile:plistDstPath atomically:NO]) {
             NSLog(@"trash plist write to ~/Library/LaunchAgents/com.tencent.Lemon.trash.plist failed: dstPath:%@, src path is %@", plistDstPath, srcPath);
             NSLog(@"print  trashMonitorConfig ....");

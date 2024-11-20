@@ -18,6 +18,7 @@
 #import "Client.h"
 #import "Event.h"
 #import "LogMonitor.h"
+#import <QMCoreFunction/QMSafeMutableArray.h>
 
 typedef void (^AVMonitorCompleteBlock)(AVDevice device, NSControlStateValue state, Client* client);
 
@@ -30,10 +31,10 @@ typedef void (^AVMonitorCompleteBlock)(AVDevice device, NSControlStateValue stat
 @property(nonatomic, retain) LogMonitor *audioLogMonitor;
 
 //video clients
-@property(nonatomic, retain) NSMutableArray *videoClients;
+@property(nonatomic, retain) QMSafeMutableArray *videoClients;
 
 //audio clients
-@property(nonatomic, retain) NSMutableArray *audioClients;
+@property(nonatomic, retain) QMSafeMutableArray *audioClients;
 
 //audio (mic) callback
 @property(nonatomic, copy) AudioObjectPropertyListenerBlock listenerBlock;
