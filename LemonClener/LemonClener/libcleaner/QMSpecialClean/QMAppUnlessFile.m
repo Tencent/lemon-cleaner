@@ -72,6 +72,13 @@ options:flags errorHandler:nil]
         if (appBundle == nil)
             continue;
         
+        NSString *plugInsPath = [appPath stringByAppendingPathComponent:@"Contents/PlugIns"];
+        if ([[NSFileManager defaultManager] fileExistsAtPath:plugInsPath]) {
+            // 该应用包含插件，则不清理。
+            // 如果清理了无用语言，则safari插件会有bug
+            continue;
+        }
+        
         // 枚举路径
         NSFileManager * fm = [NSFileManager defaultManager];
         NSDirectoryEnumerationOptions optionFlags = (actionItem.cleanhiddenfile ? NSDirectoryEnumerationSkipsHiddenFiles : 0);

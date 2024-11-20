@@ -28,6 +28,9 @@ static LMBookMark *instance = nil;
                              includingResourceValuesForKeys:nil
                                               relativeToURL:nil
                                                       error:&error];
+    if (error) {
+        NSLog(@"(%s %s)bookmarkData is %@, error is %@", __FILE__, __PRETTY_FUNCTION__, bookmarkData, error);
+    }
     if (bookmarkData != nil) {
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         //保存文件路径

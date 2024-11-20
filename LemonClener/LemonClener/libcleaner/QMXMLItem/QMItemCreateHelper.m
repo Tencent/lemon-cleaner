@@ -100,6 +100,10 @@ typedef NS_ENUM(NSUInteger, CreateActionItemType) {
     
     //缓存
     QMActionItem *cacheActionItem = [QMItemCreateHelper createActionItemWithId:[NSString stringWithFormat:@"%@1", subCateId] appDisplayName:appDisplayName appSearchName:appSearchName createActionItemType:CreateActionItemTypeCache bundleId:bundleId appPath:appPath];
+    // 自适配软件，不清理sketch的缓存
+    if ([bundleId containsString:@"com.bohemiancoding.sketch"]) {
+        cacheActionItem.recommend = NO;
+    }
     [subItem addActionItem:cacheActionItem];
     
     //日志

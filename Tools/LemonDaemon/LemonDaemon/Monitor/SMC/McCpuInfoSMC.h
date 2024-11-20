@@ -29,6 +29,11 @@ typedef NS_ENUM(NSUInteger, McCpuType) {
     McCpuTypeM3Max,
     McCpuTypeM3Ultra,
     
+    McCpuTypeM4,
+    McCpuTypeM4Pro,
+    McCpuTypeM4Max,
+    McCpuTypeM4Ultra, // 截止2024-11-12还未发行
+    
 };
 
 @interface McCpuInfoSMC : NSObject

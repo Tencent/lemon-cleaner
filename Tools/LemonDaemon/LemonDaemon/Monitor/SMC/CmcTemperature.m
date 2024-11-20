@@ -13,6 +13,7 @@
 #import "McCpuInfoSMC.h"
 
 #define MAX_TEMP_V      110.0f
+#define MIN_CPU_TEMP_V  20.0f // 过滤异常数据
 
 // H - heatsink D - diode
 
@@ -36,6 +37,7 @@ UInt32Char_t cpuTempKeyM1_Early[] = {"Tc0a","Tc0b","Tc0x","Tc0z","Tc7a","Tc7b","
 UInt32Char_t cpuTempKeyM1[] = {"Tp09", "Tp0T", "Tp01", "Tp05", "Tp0D", "Tp0H", "Tp0L", "Tp0P", "Tp0X", "Tp0b", "Tg05", "Tg0D", "Tg0L", "Tg0T"}; // 后4个为GPU
 UInt32Char_t cpuTempKeyM2[] = {"Tp1h", "Tp1t", "Tp1p", "Tp1l", "Tp01", "Tp05", "Tp09", "Tp0D", "Tp0X", "Tp0b", "Tp0f", "Tp0j", "Tg0f", "Tg0j"}; // 后2个为GPU
 UInt32Char_t cpuTempKeyM3[] = {"Te05", "Te0L", "Te0P", "Te0S", "Tf04", "Tf09", "Tf0A", "Tf0B", "Tf0D", "Tf0E", "Tf44", "Tf49", "Tf4A", "Tf4B", "Tf4D", "Tf4E", "Tf14", "Tf18", "Tf19", "Tf1A", "Tf24", "Tf28", "Tf29", "Tf2A"}; // 后8个为GPU
+UInt32Char_t cpuTempKeyM4[] = {"Tp09", "Tp0T", "Tp01", "Tp05", "Tp0D", "Tp0H", "Tp0L", "Tp0X", "Tp0b", "Tp0f", "Tp1t", "Te05", "Te0S", "Te0A", "Te06", "Te0I", "Te0T"}; // 本次未包含GPU传感器
 int g_cpuKeyIndex = 0;
 
 // battery
@@ -73,6 +75,12 @@ float GetCPUTemperature(void) {
         case McCpuTypeM3Ultra:
             key_size = ARRAY_SIZE(cpuTempKeyM3);
             break;
+        case McCpuTypeM4:
+        case McCpuTypeM4Pro:
+        case McCpuTypeM4Max:
+        case McCpuTypeM4Ultra:
+            key_size = ARRAY_SIZE(cpuTempKeyM4);
+            break;
         default:
             return -1;
     }
@@ -99,6 +107,12 @@ float GetCPUTemperature(void) {
         case McCpuTypeM3Ultra:
             memcpy(cpuTempKey, cpuTempKeyM3, sizeof(cpuTempKeyM3));
             break;
+        case McCpuTypeM4:
+        case McCpuTypeM4Pro:
+        case McCpuTypeM4Max:
+        case McCpuTypeM4Ultra:
+            memcpy(cpuTempKey, cpuTempKeyM4, sizeof(cpuTempKeyM4));
+            break;
         default:
             return -1;
     }
@@ -114,7 +128,7 @@ float GetCPUTemperature(void) {
         int ret = SMCReadKey2(key, &val, conn);
         if (ret == kIOReturnSuccess) {
             float result = parseSMCVal(val);
-            if (result > 0 && result < MAX_TEMP_V) {
+            if (result > MIN_CPU_TEMP_V && result < MAX_TEMP_V) {
                 temp += result;
                 valid_count++;
             }

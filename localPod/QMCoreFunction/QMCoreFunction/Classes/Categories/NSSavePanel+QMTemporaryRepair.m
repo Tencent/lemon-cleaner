@@ -23,7 +23,8 @@
 
 - (void)qm_setDirectoryURL:(NSURL *)directoryURL {
     [self qm_setDirectoryURL:directoryURL];
-    
+    NSLog(@"(%s %s) directoryURL is %@", __FILE__, __PRETTY_FUNCTION__, directoryURL);
+    NSLog(@"(%s %s) self.directoryURL is %@", __FILE__, __PRETTY_FUNCTION__, self.directoryURL);
     if (!self.directoryURL) {
         self.directory = directoryURL.absoluteString;
     }
