@@ -65,14 +65,42 @@
     }
     [LMAppThemeHelper setDivideLineColorFor:_bootMonitorLineView];
 }
--(void)initView{
-    NSTextField *showStatusBarIconText = [self buildLabel:NSLocalizedStringFromTableInBundle(@"PreferenceViewController_setupViews_bootMonitorTitle _16", nil, [NSBundle bundleForClass:[self class]], @"") font:[NSFont systemFontOfSize:14] color:[LMAppThemeHelper getTitleColor]];
+-(void)initView {
+    NSTextField *showStatusBarIconText = [self buildLabel:NSLocalizedStringFromTableInBundle(@"PreferenceViewController_toggleStatusBarVisibility", nil, [NSBundle bundleForClass:[self class]], @"Toggle status bar visibility") font:[NSFont systemFontOfSize:14] color:[LMAppThemeHelper getTitleColor]];
+    
+    __weak typeof(self) weakSelf = self;
+    // 状态栏显示设置
+    COSwitch *statusBarVisibilitySwitch = [[COSwitch alloc] init];
+    statusBarVisibilitySwitch.on = (_myStatusType & STATUS_TYPE_GLOBAL) > 0 ? YES : NO;
+    [statusBarVisibilitySwitch setOnValueChanged:^(COSwitch *button) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            button.isEnable = NO;
+            NSLog(@"statusBarVisibilitySwitch setOnValueChanged: %d", button.on);
+            
+            if (button.on) {
+                NSLog(@"preference:global=%d", button.on);
+                
+                weakSelf.myStatusType |= STATUS_TYPE_GLOBAL;
+                [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithInteger:weakSelf.myStatusType] forKey:kLemonShowMonitorCfg];
+            } else {
+                NSLog(@"preference:global=%d", button.on);
+
+                weakSelf.myStatusType &= ~STATUS_TYPE_GLOBAL;
+                [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithInteger:weakSelf.myStatusType] forKey:kLemonShowMonitorCfg];
+            }
+            
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                button.isEnable = YES;
+            });
+        });
+    }];
+    
+    NSTextField *showStatusBarIconOnBootText = [self buildLabel:NSLocalizedStringFromTableInBundle(@"PreferenceViewController_setupViews_bootMonitorTitle _16", nil, [NSBundle bundleForClass:[self class]], @"") font:[NSFont systemFontOfSize:14] color:[LMAppThemeHelper getTitleColor]];
     
     // 状态栏开机启动项设置
     _myStatusType = [[[NSUserDefaults standardUserDefaults] objectForKey:kLemonShowMonitorCfg] integerValue];
     COSwitch *bootMonitorSwitch = [[COSwitch alloc] init];
     bootMonitorSwitch.on = (_myStatusType & STATUS_TYPE_BOOTSHOW) > 0 ? YES : NO;
-    __weak typeof(self) weakSelf = self;
     [bootMonitorSwitch setOnValueChanged:^(COSwitch *button) {
         dispatch_async(dispatch_get_main_queue(), ^{
             button.isEnable = NO;
@@ -134,6 +162,8 @@
     
     
     [self.view addSubview:showStatusBarIconText];
+    [self.view addSubview:statusBarVisibilitySwitch];
+    [self.view addSubview:showStatusBarIconOnBootText];
     [self.view addSubview:bootMonitorSwitch];
     [self.view addSubview:bootMonitorLineView];
     
@@ -151,21 +181,33 @@
     
     NSView *cView = self.view;
     
-       // 状态栏自启设置
     [showStatusBarIconText mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(cView).offset(20);
         make.leading.equalTo(cView).offset(29);
     }];
 
-    [bootMonitorSwitch mas_makeConstraints:^(MASConstraintMaker *make) {
+    [statusBarVisibilitySwitch mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.equalTo(showStatusBarIconText.mas_centerY);
+        make.right.equalTo(cView).offset(-30);
+        make.width.equalTo(@(40));
+        make.height.equalTo(@(19));
+    }];
+    
+       // 状态栏自启设置
+    [showStatusBarIconOnBootText mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(showStatusBarIconText.mas_bottom).offset(20);
+        make.leading.equalTo(cView).offset(29);
+    }];
+
+    [bootMonitorSwitch mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.equalTo(showStatusBarIconOnBootText.mas_centerY);
         make.right.equalTo(cView).offset(-30);
         make.width.equalTo(@(40));
         make.height.equalTo(@(19));
     }];
 
     [bootMonitorLineView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(showStatusBarIconText.mas_bottom).offset(20);
+        make.top.equalTo(showStatusBarIconOnBootText.mas_bottom).offset(20);
         make.centerX.equalTo(cView);
         make.width.equalTo(cView);
         make.height.equalTo(@(1));
