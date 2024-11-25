@@ -618,6 +618,11 @@ enum
         NSInteger type = 0;
         NSDictionary* dict = notification.userInfo;
         type = ((NSNumber*)dict[@"type"]).integerValue;
+        if ((type & STATUS_TYPE_GLOBAL) == 0)
+        {
+            [[NSApplication sharedApplication] terminate:nil];
+            return;
+        }
         [statusView setStatusType:type];
         [[McStatMonitor shareMonitor] setTrayType:type];
 //        NSLog(@"receivedStatusChanged type=%lu", type);

@@ -238,6 +238,9 @@
 
 - (void)mouseEntered:(NSEvent *)theEvent
 {
+    if (!self.isEnable) {
+        return;
+    }
     if (self.isAnimator) {
         [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
             context.duration = 0.1;
