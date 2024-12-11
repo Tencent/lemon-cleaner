@@ -21,7 +21,7 @@
 @implementation QMUnityScan
 @synthesize delegate;
 
--(bool)initPythonEnv:(NSString*) scanResultFile {
+-(bool)initPythonEnv:(NSString*) scanResultFile paths:(NSString*) paths{
     NSString* pythonHome = [QMCleanUtils getPythonHome];
 
     if (pythonHome == nil || [pythonHome length] == 0) {
@@ -31,8 +31,8 @@
     NSString* pythonLib = [NSString stringWithFormat:@"%@/LIB", pythonHome];
 
     PyStatus status;
+    
     PyConfig config;
-
     PyConfig_InitPythonConfig(&config);
     config.isolated = 1;
     config.module_search_paths_set = 1;
@@ -54,12 +54,14 @@
         // 设置 argc 和 argv
         // 注意: python 脚本中 argv[0] 是在 __name__ 获取
         char *resultFilePath = (char*)[scanResultFile UTF8String];
+        char *pathsStr = (char*)[paths UTF8String];
         char* argv[] = {
             "",
             resultFilePath,
+            pathsStr,
         };
 
-        status = PyConfig_SetBytesArgv(&config, 2, argv); // 2: argv 数组的长度, 对应 main(int argc, char** argv)
+        status = PyConfig_SetBytesArgv(&config, 3, argv); // 3: argv 数组的长度, 对应 main(int argc, char** argv)
         if (PyStatus_Exception(status)) {
             break;
         }
@@ -80,6 +82,7 @@
         NSLog(@"Python exits with code=%d err_msg=%s", status.exitcode, status.err_msg);
         Py_ExitStatusException(status);
     }
+
     return true;
 }
 
@@ -113,6 +116,34 @@
     return [NSString stringWithUTF8String:cStr];
 }
 
+-(wchar_t**)ConvertNSArrayToWchart:(NSArray*) strArray {
+    wchar_t** wcharArray = malloc(strArray.count * sizeof(wchar_t*));
+    
+    for (NSUInteger i = 0; i < strArray.count; i++)
+    {
+        NSString *string = strArray[i];
+        const wchar_t* wcharStr = (const wchar_t*)[string cStringUsingEncoding:NSUTF32StringEncoding];
+        size_t len = wcslen(wcharStr);
+        wcharArray[i] = malloc(len * sizeof(wchar_t));
+        wcscpy(wcharArray[i], wcharStr);
+    }
+    
+    return wcharArray;
+}
+
+-(void)freeWcharTArray:(wchar_t**) argv argc:(int) argc {
+    if (argv != NULL && argc > 0)
+    {
+        for (NSUInteger i = 0; i < argc; i++)
+        {
+            free(argv[i]);
+        }
+        free(argv);
+        argv = NULL;
+        argc = 0;
+    }
+}
+
 -(bool)runPyScript:(NSString*) pyScript {
     FILE* file = fopen([pyScript UTF8String], "r");
     if (file == NULL) {
@@ -120,19 +151,15 @@
         return false;
     }
 
+//    PySys_SetArgv(argc, argv);
     int ret = PyRun_SimpleFile(file, [pyScript UTF8String]);
     if (0 == ret) {
         NSLog(@"python 扫描完成...");
     } else {
         NSLog(@"python 扫描失败, 具体原因请查看日志");
     }
-    fclose(file);
     
-    file = fopen([pyScript UTF8String], "r");
-    if (file == NULL) {
-        NSLog(@"Failed to open python script=%@", pyScript);
-        return false;
-    }
+    fclose(file);
     return true;
 }
 
@@ -144,7 +171,6 @@
 }
 
 -(void)scanStevedore:(QMActionItem *)actionItem {
-    
 }
 
 -(void)scanPath:(NSString *) path actionItem:(QMActionItem *)actionItem {
@@ -171,7 +197,7 @@
         if (range.location != size)
             continue;
 
-        NSLog(@"fileName=%@", result);
+//        NSLog(@"fileName=%@", result);
         QMResultItem *resultItem = [[QMResultItem alloc] initWithPath: result];
         NSString *foler = [result lastPathComponent];
         resultItem.title = [NSString stringWithFormat:@"%@/%@", projFolder, foler];
@@ -197,6 +223,7 @@
     for (int i = 0; i < [pathArray count]; i++) {
         NSString *path = [pathArray objectAtIndex:i];
 
+        //NSLog(@"scanning index=%d path=%@\n", i, path);
         [self scanPath: path actionItem: actionItem];
     }
 }
@@ -205,9 +232,56 @@
     
 }
 
+-(NSString*)PathItem2NSString:(QMActionPathItem*)pathItem {
+    if (pathItem == NULL)
+        return NULL;
+    NSMutableArray<NSString *> *result = [NSMutableArray array];
+    if (pathItem.filename != NULL)
+        [result addObject:pathItem.filename];
+    else
+        [result addObject:@""];
+    [result addObject: [NSString stringWithFormat:@"%d", pathItem.level]];
+    if (pathItem.type != NULL)
+        [result addObject:pathItem.type];
+    else
+        [result addObject:@""];
+    if (pathItem.value != NULL)
+        [result addObject:pathItem.value];
+    else
+        [result addObject:@""];
+    if (pathItem.value1 != NULL)
+        [result addObject:pathItem.value1];
+    else
+        [result addObject:@""];
+    if (pathItem.scanFilters != NULL)
+        [result addObject:pathItem.scanFilters];
+    else
+        [result addObject:@""];
+    
+    return [result componentsJoinedByString:@"|"];
+}
+
+-(NSMutableArray<NSString *> *)getPathArray:(QMActionItem*)actionItem {
+    NSMutableArray<NSString *> *stringArray = [NSMutableArray array];
+    
+    NSArray* pathArray = actionItem.pathItemArray;
+    if (pathArray == NULL)
+        return stringArray;
+
+    for (int i = 0; i < [pathArray count]; i++) {
+        QMActionPathItem *pathItem = [pathArray objectAtIndex:i];
+        NSString* path = [self PathItem2NSString: pathItem];
+        if (path != NULL)
+            [stringArray addObject:path];
+    }
+    
+    return stringArray;
+}
+
 -(void)scanPython:(QMActionItem*)actionItem {
     NSString* scanResultFile = [QMCleanUtils getScanResultFile];
-    if (![self initPythonEnv: scanResultFile]) {
+    NSMutableArray<NSString*>* pathArray = [self getPathArray: actionItem];
+    if (![self initPythonEnv: scanResultFile paths:[pathArray componentsJoinedByString:@","]]) {
         NSLog(@"Python entry NOT configured or empty.");
         return;
     }
@@ -219,7 +293,10 @@
         return;
     }
 
+
     bool succ = [self runPyScript: entry];
+    Py_Finalize();
+
     if (succ) {
         NSError *error = nil;
         NSString *fileContents = [NSString stringWithContentsOfFile:scanResultFile
@@ -227,7 +304,6 @@
                                                               error:&error];
         if (error) {
             NSLog(@"Error reading file at %@: %@", scanResultFile, error.localizedDescription);
-            Py_Finalize();
             return;
         }
 
@@ -236,7 +312,6 @@
         // 2. 每个记录格式为 key:value 格式, key 表示 title， value 则是 path
         NSArray *resultArray = [fileContents componentsSeparatedByString:@"\n"];
         if ((resultArray == nil) || ([resultArray count] == 0)) {
-            Py_Finalize();
             return;
         }
         
@@ -266,8 +341,6 @@
                 break;
         }
     }
-    
-    Py_Finalize();
 }
 
 @end
