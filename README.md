@@ -6,7 +6,7 @@
 
 ## 🔥 Lemon AI内测邀请！
 - Lemon上新了AI搜索功能，输入你想了解的问题或内容，即可获得智能搜索结果。除此之外，更有AI写作、阅读、AI修图等功能。  
-- 点击下载 [Lemon AI内测体验包](https://pc2.gtimg.com/lemon/Lemon.dmg)，邀请你体验并随时向我们反馈任何建议!🧑‍💻
+- 点击下载 [Lemon AI内测体验包](https://pc2.gtimg.com/lemon/Lemon.dmg)，邀请你体验并随时向我们反馈任何建议！🧑‍💻
 ![Lemon_AI](https://github.com/user-attachments/assets/4fb200b9-d2ae-4335-a32d-7b6548e42c75)
 
 
