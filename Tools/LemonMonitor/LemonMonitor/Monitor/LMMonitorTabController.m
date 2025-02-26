@@ -7,7 +7,7 @@
 //
 
 #import "LMMonitorTabController.h"
-#import "MCBaselineSegmentedControl.h"
+#import "LMBaseLineSegmentedControl.h"
 #import <QMUICommon/LMViewHelper.h>
 #import <Masonry/Masonry.h>
 #import <QMUICommon/LMOpenButton.h>
@@ -123,7 +123,7 @@ static const CGFloat kTopPadding = 10;
     self.divisionLineView = divisionLineView;
     [self.view addSubview:self.divisionLineView];
     
-    _segmentedControl = [[MCBaselineSegmentedControl alloc] init]; // 22px height
+    _segmentedControl = [[LMBaseLineSegmentedControl alloc] init]; // 22px height
     [self.view addSubview:_segmentedControl];
 
     _segmentedControl.focusRingType = NSFocusRingBelow;

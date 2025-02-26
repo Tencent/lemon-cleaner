@@ -20,6 +20,8 @@
 		85433828167A400ADBC4F9A9 /* Pods_LemonMonitor.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5867102A50C1CF6F106E2FB8 /* Pods_LemonMonitor.framework */; };
 		8B5499D728A3562A00B55BB8 /* LMHoverButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B5499D328A3562A00B55BB8 /* LMHoverButton.m */; };
 		8B5499D828A3562A00B55BB8 /* LMAboutWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B5499D628A3562A00B55BB8 /* LMAboutWindow.m */; };
+		B7A82D2A2D6DBB8600036DEE /* LMBaseLineSegmentedControl.m in Sources */ = {isa = PBXBuildFile; fileRef = B7A82D292D6DBB8600036DEE /* LMBaseLineSegmentedControl.m */; };
+		B7A82D2B2D6DBB8600036DEE /* LMBaseLineSegmentedCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B7A82D272D6DBB8600036DEE /* LMBaseLineSegmentedCell.m */; };
 		B88029CF196BE562007CFE8D /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B88029CE196BE562007CFE8D /* SystemConfiguration.framework */; };
 		B88029D1196BE573007CFE8D /* libpcap.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = B88029D0196BE573007CFE8D /* libpcap.dylib */; };
 		B8B6CAF8198B8EA000946160 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B8B6CAF7198B8EA000946160 /* QuartzCore.framework */; };
@@ -42,8 +44,6 @@
 		BC89F8AA22759B7200983314 /* QMMonitorView2.m in Sources */ = {isa = PBXBuildFile; fileRef = BC89F8A322759B7200983314 /* QMMonitorView2.m */; };
 		BCC2838F21F02D070026CC09 /* LMMonitorPoppverController.m in Sources */ = {isa = PBXBuildFile; fileRef = BCC2838E21F02D070026CC09 /* LMMonitorPoppverController.m */; };
 		BCC2839221F06D1D0026CC09 /* LMMonitorController.m in Sources */ = {isa = PBXBuildFile; fileRef = BCC2839121F06D1D0026CC09 /* LMMonitorController.m */; };
-		BCDC61E421EE06D800C9004B /* MCBaselineSegmentedControl.m in Sources */ = {isa = PBXBuildFile; fileRef = BCDC61E321EE06D800C9004B /* MCBaselineSegmentedControl.m */; };
-		BCDC61E721EE070600C9004B /* BaselineSegmentedCell.m in Sources */ = {isa = PBXBuildFile; fileRef = BCDC61E621EE070600C9004B /* BaselineSegmentedCell.m */; };
 		BCDC61EB21EE11DB00C9004B /* LMMonitorTabController.m in Sources */ = {isa = PBXBuildFile; fileRef = BCDC61EA21EE11DB00C9004B /* LMMonitorTabController.m */; };
 		BCF3874D21EEED880031A2FD /* LMCleanViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BCF3874C21EEED880031A2FD /* LMCleanViewController.m */; };
 		BCF3875221EEEDD90031A2FD /* LMSystemFeatureViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BCF3875121EEEDD90031A2FD /* LMSystemFeatureViewController.m */; };
@@ -155,6 +155,11 @@
 		8B5499D428A3562A00B55BB8 /* LMAboutWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMAboutWindow.h; sourceTree = "<group>"; };
 		8B5499D528A3562A00B55BB8 /* LMHoverButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMHoverButton.h; sourceTree = "<group>"; };
 		8B5499D628A3562A00B55BB8 /* LMAboutWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMAboutWindow.m; sourceTree = "<group>"; };
+		8DC815ACEF43BB4681E209AE /* Pods_LemonMonitor.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_LemonMonitor.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B7A82D262D6DBB8600036DEE /* LMBaseLineSegmentedCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = LMBaseLineSegmentedCell.h; path = ../../Lemon/View/LMSegment/LMBaseLineSegmentedCell.h; sourceTree = SOURCE_ROOT; };
+		B7A82D272D6DBB8600036DEE /* LMBaseLineSegmentedCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = LMBaseLineSegmentedCell.m; path = ../../Lemon/View/LMSegment/LMBaseLineSegmentedCell.m; sourceTree = SOURCE_ROOT; };
+		B7A82D282D6DBB8600036DEE /* LMBaseLineSegmentedControl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = LMBaseLineSegmentedControl.h; path = ../../Lemon/View/LMSegment/LMBaseLineSegmentedControl.h; sourceTree = SOURCE_ROOT; };
+		B7A82D292D6DBB8600036DEE /* LMBaseLineSegmentedControl.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = LMBaseLineSegmentedControl.m; path = ../../Lemon/View/LMSegment/LMBaseLineSegmentedControl.m; sourceTree = SOURCE_ROOT; };
 		B88029CE196BE562007CFE8D /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		B88029D0196BE573007CFE8D /* libpcap.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpcap.dylib; path = usr/lib/libpcap.dylib; sourceTree = SDKROOT; };
 		B8B6CAF7198B8EA000946160 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
@@ -196,10 +201,6 @@
 		BCC2839021F06D1D0026CC09 /* LMMonitorController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LMMonitorController.h; sourceTree = "<group>"; };
 		BCC2839121F06D1D0026CC09 /* LMMonitorController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LMMonitorController.m; sourceTree = "<group>"; };
 		BCC7B1522264BE9700D33922 /* LemonDaemonConst.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LemonDaemonConst.h; path = ../../LemonDaemon/LemonDaemon/LemonDaemonConst.h; sourceTree = "<group>"; };
-		BCDC61E221EE06D800C9004B /* MCBaselineSegmentedControl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MCBaselineSegmentedControl.h; sourceTree = "<group>"; };
-		BCDC61E321EE06D800C9004B /* MCBaselineSegmentedControl.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MCBaselineSegmentedControl.m; sourceTree = "<group>"; };
-		BCDC61E521EE070600C9004B /* BaselineSegmentedCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BaselineSegmentedCell.h; sourceTree = "<group>"; };
-		BCDC61E621EE070600C9004B /* BaselineSegmentedCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BaselineSegmentedCell.m; sourceTree = "<group>"; };
 		BCDC61E921EE11DB00C9004B /* LMMonitorTabController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LMMonitorTabController.h; sourceTree = "<group>"; };
 		BCDC61EA21EE11DB00C9004B /* LMMonitorTabController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LMMonitorTabController.m; sourceTree = "<group>"; };
 		BCF3874B21EEED880031A2FD /* LMCleanViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LMCleanViewController.h; sourceTree = "<group>"; };
@@ -497,10 +498,10 @@
 		BCDC61E121EDFB0800C9004B /* LemonSegment */ = {
 			isa = PBXGroup;
 			children = (
-				BCDC61E221EE06D800C9004B /* MCBaselineSegmentedControl.h */,
-				BCDC61E321EE06D800C9004B /* MCBaselineSegmentedControl.m */,
-				BCDC61E521EE070600C9004B /* BaselineSegmentedCell.h */,
-				BCDC61E621EE070600C9004B /* BaselineSegmentedCell.m */,
+				B7A82D262D6DBB8600036DEE /* LMBaseLineSegmentedCell.h */,
+				B7A82D272D6DBB8600036DEE /* LMBaseLineSegmentedCell.m */,
+				B7A82D282D6DBB8600036DEE /* LMBaseLineSegmentedControl.h */,
+				B7A82D292D6DBB8600036DEE /* LMBaseLineSegmentedControl.m */,
 			);
 			name = LemonSegment;
 			sourceTree = "<group>";
@@ -757,7 +758,6 @@
 				8B5499D828A3562A00B55BB8 /* LMAboutWindow.m in Sources */,
 				8B5499D728A3562A00B55BB8 /* LMHoverButton.m in Sources */,
 				B8FF54481A1B3A7E00A5E1D7 /* QMEarlyWarning.m in Sources */,
-				BCDC61E721EE070600C9004B /* BaselineSegmentedCell.m in Sources */,
 				BC89F8A922759B7200983314 /* QMStatusCircleView.m in Sources */,
 				18FD67BA2248825C00036012 /* LMMonitorTrashManager.m in Sources */,
 				797D5CCF2364774D000DC4BE /* LMHardWareDataUtil.m in Sources */,
@@ -765,13 +765,14 @@
 				BCF3875221EEEDD90031A2FD /* LMSystemFeatureViewController.m in Sources */,
 				B8F110581962572100D29FFC /* AppDelegate.mm in Sources */,
 				BC89F8A522759B7200983314 /* QMStatusMonitorView.m in Sources */,
-				BCDC61E421EE06D800C9004B /* MCBaselineSegmentedControl.m in Sources */,
 				BCF3875621EF27B20031A2FD /* LMMemoryCellView.m in Sources */,
 				847E2D4B21C74AE400F49D5D /* LemonMonitroHelpParams.m in Sources */,
 				BC89F8AA22759B7200983314 /* QMMonitorView2.m in Sources */,
 				BCC2839221F06D1D0026CC09 /* LMMonitorController.m in Sources */,
 				DE4EF2D927352D46005649F4 /* LMVisibleViewController.m in Sources */,
 				DE27949C26A038BE007B4443 /* LMUpdatePopoverBackgroundView.m in Sources */,
+				B7A82D2A2D6DBB8600036DEE /* LMBaseLineSegmentedControl.m in Sources */,
+				B7A82D2B2D6DBB8600036DEE /* LMBaseLineSegmentedCell.m in Sources */,
 				BCDC61EB21EE11DB00C9004B /* LMMonitorTabController.m in Sources */,
 				BCF3874D21EEED880031A2FD /* LMCleanViewController.m in Sources */,
 				BC89F8A722759B7200983314 /* JLNDragEffectManager.m in Sources */,

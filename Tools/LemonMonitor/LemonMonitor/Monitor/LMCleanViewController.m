@@ -409,7 +409,7 @@
     [containerView addSubview:cleanProgressView];
     [cleanProgressView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.mas_equalTo(186);
-        make.height.mas_equalTo(2);
+        make.height.mas_equalTo(4);
         make.left.equalTo(trashTipsText);
         make.top.equalTo(trashTipsText.mas_bottom).offset(6);
         

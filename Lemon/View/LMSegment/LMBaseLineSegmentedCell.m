@@ -12,6 +12,10 @@
 #import <QMUICommon/LMAppThemeHelper.h>
 #import <QMCoreFunction/NSColor+Extension.h>
 
+
+static CGFloat const kSelectedLineWidth = 1.5; // 选中线条宽度
+static CGFloat const kDivisionLineWidth = 1; // 底部分割线
+
 @implementation LMBaseLineSegmentedCell
 
 
@@ -59,16 +63,16 @@
         CGFloat lineOriginY = 0;
         CGFloat lineOriginX = frame.origin.x + (frame.size.width - labelRect.size.width)/2;
         if ([[NSGraphicsContext currentContext] isFlipped]) {
-            lineOriginY = frame.size.height ;
+            lineOriginY = frame.size.height - kDivisionLineWidth; // 分割线若是放在segment底部，则会被segemnt的子view遮挡
         }else{
             lineOriginY = 0;
         }
         
         [highlightedBaselineColor set];
         NSBezierPath *line = [NSBezierPath bezierPath];
-        [line moveToPoint:NSMakePoint(lineOriginX, lineOriginY)];
-        [line lineToPoint:NSMakePoint(lineOriginX + labelRect.size.width, lineOriginY)];
-        line.lineWidth = 1.5;
+        [line moveToPoint:NSMakePoint(lineOriginX, lineOriginY - kSelectedLineWidth)];
+        [line lineToPoint:NSMakePoint(lineOriginX + labelRect.size.width, lineOriginY - kSelectedLineWidth)];
+        line.lineWidth = kSelectedLineWidth;
         [line stroke];
     }
     
