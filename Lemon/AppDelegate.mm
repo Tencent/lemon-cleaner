@@ -110,7 +110,7 @@ extern "C" int CmcGetCurrentAppVersion(char *version, int version_size, char *bu
 #ifndef APPSTORE_VERSION
         self.runningType = (LemonAppRunningType)[[LemonStartUpParams sharedInstance] paramsCmd];
         
-        [McCoreFunction setAppStoreVersion:NO];
+        // [McCoreFunction setAppStoreVersion:NO];
 #else
         NSLog(@"start to connect lemonas");
         [McCoreFunction setAppStoreVersion:YES];
