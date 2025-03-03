@@ -38,6 +38,8 @@
 #import <QMCoreFunction/LanguageHelper.h>
 #import <QMCoreFunction/QMFullDiskAccessManager.h>
 #import "LMTrashSizeCheckWindowController.h"
+#import "NSDate+LMCalendar.h"
+#import "LemonMonitorDNCServer.h"
 
 @interface AppDelegate () <NSUserNotificationCenterDelegate>
 {
@@ -111,6 +113,7 @@
     
     [self aFNetworkStatus];
     [self handerMonitorGlobal];
+    [[LemonMonitorDNCServer sharedInstance] addServer];
 }
 
 -(void)addObserver{
@@ -180,15 +183,17 @@
 }
 
 -(void)trashSizeOverThreshold: (NSNotification *)notify{
-    //垃圾桶；如果用户点击暂不提醒，则30分钟内，不给予提示。
+    //垃圾桶；如果用户点击暂不提醒，则当天不提醒。5.1.12
     double lastNextRemindTime = [[NSUserDefaults standardUserDefaults] doubleForKey:@"kTrashSizeNextRemindTime"];
     if (lastNextRemindTime != 0) {
-        NSTimeInterval dateNow = [[NSDate date] timeIntervalSince1970];
-        double timeGap = dateNow - lastNextRemindTime;
-        if (timeGap > 60*30) {
+        NSDate *lastNextRemindDate = [NSDate dateWithTimeIntervalSince1970:lastNextRemindTime];
+        NSDate *currentDate = [NSDate date];
+        if (![currentDate lm_isSameDayAsDate:lastNextRemindDate]) {
+            // 不是同一天清空，继续弹出
             [[NSUserDefaults standardUserDefaults] setDouble:0.0 forKey:@"kTrashSizeNextRemindTime"];
             [[NSUserDefaults standardUserDefaults] synchronize];
-        }else{
+        } else {
+            // 当天不不在弹出
             return;
         }
     }

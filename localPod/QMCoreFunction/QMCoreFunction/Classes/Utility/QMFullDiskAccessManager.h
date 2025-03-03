@@ -18,6 +18,8 @@ typedef NS_ENUM(NSUInteger, QMFullDiskAuthorationStatus) {
 
 +(QMFullDiskAuthorationStatus)getFullDiskAuthorationStatus;
 
++(QMFullDiskAuthorationStatus)getFullDiskAuthorationStatusWithoutLog; // 无日志版本
+
 +(void)openFullDiskAuthPrefreence;
 
 @end

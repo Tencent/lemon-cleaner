@@ -223,6 +223,8 @@
 		8450B55521AFD47C00523D9F /* LemonStartUpParams.m in Sources */ = {isa = PBXBuildFile; fileRef = 8450B55421AFD47C00523D9F /* LemonStartUpParams.m */; };
 		8B54998928A20A1400B55BB8 /* LMHoverButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B54998728A20A1400B55BB8 /* LMHoverButton.m */; };
 		8B5499B428A261D400B55BB8 /* LMAboutWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B5499B328A261D400B55BB8 /* LMAboutWindow.m */; };
+		B7A82D812D70826600036DEE /* LemonDNCClient.m in Sources */ = {isa = PBXBuildFile; fileRef = B7A82D802D70826600036DEE /* LemonDNCClient.m */; };
+		B7A82D9E2D71921B00036DEE /* LemonDNCServier.m in Sources */ = {isa = PBXBuildFile; fileRef = B7A82D9D2D71921B00036DEE /* LemonDNCServier.m */; };
 		BC08ED082277F0CA00CEE24B /* LemonAsMonitorGuideViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BC08ED012277F0CA00CEE24B /* LemonAsMonitorGuideViewController.m */; };
 		BC5D8A242177210D005D2220 /* RegisterWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = BC5D8A1B2177210D005D2220 /* RegisterWindowController.m */; };
 		BC5D8A252177210D005D2220 /* regiser_unable.png in Resources */ = {isa = PBXBuildFile; fileRef = BC5D8A1C2177210D005D2220 /* regiser_unable.png */; };
@@ -736,6 +738,11 @@
 		8B5499B328A261D400B55BB8 /* LMAboutWindow.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LMAboutWindow.m; sourceTree = "<group>"; };
 		90072B757471067B640ECCE6 /* Pods-Lemon.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Lemon.release.xcconfig"; path = "Pods/Target Support Files/Pods-Lemon/Pods-Lemon.release.xcconfig"; sourceTree = "<group>"; };
 		AABB39B505F3F27400C594F3 /* Pods-Lemon.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Lemon.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Lemon/Pods-Lemon.debug.xcconfig"; sourceTree = "<group>"; };
+		B7A82D7E2D70824600036DEE /* LemonDNCDefine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = LemonDNCDefine.h; path = Tools/LemonMonitor/LemonMonitor/DNC/LemonDNCDefine.h; sourceTree = SOURCE_ROOT; };
+		B7A82D7F2D70826600036DEE /* LemonDNCClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LemonDNCClient.h; sourceTree = "<group>"; };
+		B7A82D802D70826600036DEE /* LemonDNCClient.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LemonDNCClient.m; sourceTree = "<group>"; };
+		B7A82D9C2D71921B00036DEE /* LemonDNCServier.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LemonDNCServier.h; sourceTree = "<group>"; };
+		B7A82D9D2D71921B00036DEE /* LemonDNCServier.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LemonDNCServier.m; sourceTree = "<group>"; };
 		BC08ED002277F0CA00CEE24B /* LemonAsMonitorGuideViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LemonAsMonitorGuideViewController.h; sourceTree = "<group>"; };
 		BC08ED012277F0CA00CEE24B /* LemonAsMonitorGuideViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LemonAsMonitorGuideViewController.m; sourceTree = "<group>"; };
 		BC5D8A1B2177210D005D2220 /* RegisterWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegisterWindowController.m; sourceTree = "<group>"; };
@@ -1250,6 +1257,18 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		B7A82D7A2D70821D00036DEE /* DNC */ = {
+			isa = PBXGroup;
+			children = (
+				B7A82D7E2D70824600036DEE /* LemonDNCDefine.h */,
+				B7A82D7F2D70826600036DEE /* LemonDNCClient.h */,
+				B7A82D802D70826600036DEE /* LemonDNCClient.m */,
+				B7A82D9C2D71921B00036DEE /* LemonDNCServier.h */,
+				B7A82D9D2D71921B00036DEE /* LemonDNCServier.m */,
+			);
+			path = DNC;
+			sourceTree = "<group>";
+		};
 		BC08ECFF2277F0CA00CEE24B /* MASMonitor */ = {
 			isa = PBXGroup;
 			children = (
@@ -1353,6 +1372,7 @@
 			isa = PBXGroup;
 			children = (
 				F8E301ED22CB3B62007C9E11 /* Tencent Lemon.entitlements */,
+				B7A82D7A2D70821D00036DEE /* DNC */,
 				BC08ECFF2277F0CA00CEE24B /* MASMonitor */,
 				BC7FBE17226728E200D025CF /* Splash */,
 				D4F1DF70219C42F9000CDA07 /* Preference */,
@@ -2152,10 +2172,12 @@
 				792CFB20233366FD00B364D6 /* LMBaseLineSegmentedCell.m in Sources */,
 				BC7FBE3D2268193300D025CF /* LMSplashMenuBarViewController.m in Sources */,
 				D4F1DF80219C4344000CDA07 /* PreferenceViewController.m in Sources */,
+				B7A82D9E2D71921B00036DEE /* LemonDNCServier.m in Sources */,
 				BC76D79222783AEE001AE456 /* MasLoginItemManager.m in Sources */,
 				792CFB132333624E00B364D6 /* LMPreferenceTabViewController.m in Sources */,
 				BC5D8A292177210D005D2220 /* ParagraphTextFieldCell.m in Sources */,
 				BC7FBE3A2268191300D025CF /* BFPageControl.m in Sources */,
+				B7A82D812D70826600036DEE /* LemonDNCClient.m in Sources */,
 				F8190EF721244FCB00454795 /* LemonMainWndController.m in Sources */,
 				D4D4F5E220F5C3BB0048F108 /* AppDelegate.mm in Sources */,
 				8B5499B428A261D400B55BB8 /* LMAboutWindow.m in Sources */,

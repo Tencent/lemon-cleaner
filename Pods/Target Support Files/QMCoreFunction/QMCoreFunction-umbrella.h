@@ -33,6 +33,7 @@
 #import "QMNetworkSpeedFormatter.h"
 #import "QMSampleStorage.h"
 #import "QMValueHistory.h"
+#import "LMReferenceDefines.h"
 #import "CCMBase64.h"
 #import "CCMCryptor.h"
 #import "CCMKeyLoader.h"

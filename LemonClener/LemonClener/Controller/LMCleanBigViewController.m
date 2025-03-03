@@ -882,7 +882,7 @@ static NSString * const kLemonFileMoveIntroduceVCDidAppear = @"kLemonFileMoveInt
 
         if ([item isKindOfClass:[QMCategorySubItem class]] && [item isScaned]) {
             //写入数据库，记住用户选择
-            if (checkBtn.state == NSOnState) {
+            if (checkBtn.state == NSOnState && ![[item subCategoryID] isEqualToString:kItemIdDownloadSubItemID]) {
                 [[LMCleanerDataCenter shareInstance] addSubcateStatusToDatabaseWithId:[item subCategoryID] selectStatus:CleanSubcateSelectStatusSelect];
             } else {
                 if ([item state] == NSMixedState) {
@@ -1012,13 +1012,13 @@ static NSString * const kLemonFileMoveIntroduceVCDidAppear = @"kLemonFileMoveInt
         // Category - item
         QMCategorySubItem *currentItem = (QMCategorySubItem *)item;
         if (totalSubCount == 0) {
-            if (item.m_stateValue != NSOffState) {
+            if (item.m_stateValue != NSOffState && ![[currentItem subCategoryID] isEqualToString:kItemIdDownloadSubItemID]) {
                 [[LMCleanerDataCenter shareInstance] addSubcateStatusToDatabaseWithId:[currentItem subCategoryID] selectStatus:CleanSubcateSelectStatusSelect];
             } else {
                 [[LMCleanerDataCenter shareInstance] addSubcateStatusToDatabaseWithId:[currentItem subCategoryID] selectStatus:CleanSubcateSelectStatusDeselect];
             }
         } else {
-            if (checkOnFlags == totalSubCount) {
+            if (checkOnFlags == totalSubCount && ![[currentItem subCategoryID] isEqualToString:kItemIdDownloadSubItemID]) {
                 [[LMCleanerDataCenter shareInstance] addSubcateStatusToDatabaseWithId:[currentItem subCategoryID] selectStatus:CleanSubcateSelectStatusSelect];
             } else if (checkOnFlags == 0 && checkMixFlags ==0) {
                 [[LMCleanerDataCenter shareInstance] addSubcateStatusToDatabaseWithId:[currentItem subCategoryID] selectStatus:CleanSubcateSelectStatusDeselect];
@@ -1055,10 +1055,6 @@ static NSString * const kLemonFileMoveIntroduceVCDidAppear = @"kLemonFileMoveInt
         return;
     }
     if (![item.subCategoryID isEqualToString:kItemIdDownloadSubItemID]) {
-        return;
-    }
-    BOOL isShowed = [[NSUserDefaults standardUserDefaults] boolForKey:LMCLEAN_DOWNLOAD_SELECT_ALL_ALERT_SHOWED];
-    if (isShowed) {
         return;
     }
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:LMCLEAN_DOWNLOAD_SELECT_ALL_ALERT_SHOWED];

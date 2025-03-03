@@ -14,7 +14,6 @@
 #import "LMXpcClient.h"
 #import "NSString+Extension.h"
 
-BOOL gIsAppStoreVersion = NO;
 @implementation McCoreFunction
 
 + (void)initialize
@@ -48,12 +47,12 @@ BOOL gIsAppStoreVersion = NO;
     return instance;
 }
 
-+ (void)setAppStoreVersion:(BOOL)isAppstore{
-    gIsAppStoreVersion = isAppstore;
-}
-
 + (BOOL)isAppStoreVersion{
-    return gIsAppStoreVersion;
+#ifndef APPSTORE_VERSION
+    return NO;
+#else
+    return YES;
+#endif
 }
 
 #pragma -
