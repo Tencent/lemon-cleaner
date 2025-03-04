@@ -367,7 +367,11 @@
 - (void)openFullDiskAccessSettingGuidePage {
     if (!self.getFullAccessWndController) {
         self.getFullAccessWndController = [GetFullAccessWndController shareInstance];
-        self.getFullAccessWndController.style = GetFullDiskPopVCStyleMonitor;
+        if (@available(macOS 13.0, *)) {
+            self.getFullAccessWndController.style = GetFullDiskPopVCStyleDefault;
+        } else {
+            self.getFullAccessWndController.style = GetFullDiskPopVCStyleMonitor;
+        }
         [self.getFullAccessWndController setParaentCenterPos:[self getCenterPoint] suceessSeting:nil];
     }
     

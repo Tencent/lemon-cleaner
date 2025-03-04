@@ -82,7 +82,7 @@
 }
 
 - (BOOL)shouldShowPrivacyAlertWithItem:(id)item {
-    if ([QMFullDiskAccessManager getFullDiskAuthorationStatus] == QMFullDiskAuthorationStatusAuthorized) {
+    if ([QMFullDiskAccessManager getFullDiskAuthorationStatusWithoutLog] == QMFullDiskAuthorationStatusAuthorized) {
         return NO;
     }
     

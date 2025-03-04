@@ -128,7 +128,7 @@
     [self.view addSubview:dividLineView];
     self.dividLineView = dividLineView;
     [self.dividLineView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.segmentedControl.mas_bottom);
+        make.top.equalTo(self.segmentedControl.mas_bottom).offset(1);
         make.left.equalTo(self.view);
         make.width.equalTo(self.view);
         make.height.mas_equalTo(1);

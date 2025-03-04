@@ -46,6 +46,8 @@
 #import "MasLoginItemManager.h"
 #import <LemonClener/LMWebWindowController.h>
 #import "LMAboutWindow.h"
+#import "LemonDNCClient.h"
+#import "LemonDNCServier.h"
 
 #define IS_INIT_PREFRENCE_CONFIGURERATION @"is_init_prefrence_configureration"
 #define DOCK_ON_OFF_STATE @"dock_on_off_state"
@@ -108,7 +110,7 @@ extern "C" int CmcGetCurrentAppVersion(char *version, int version_size, char *bu
 #ifndef APPSTORE_VERSION
         self.runningType = (LemonAppRunningType)[[LemonStartUpParams sharedInstance] paramsCmd];
         
-        [McCoreFunction setAppStoreVersion:NO];
+        // [McCoreFunction setAppStoreVersion:NO];
 #else
         NSLog(@"start to connect lemonas");
         [McCoreFunction setAppStoreVersion:YES];
@@ -231,7 +233,23 @@ extern "C" int CmcGetCurrentAppVersion(char *version, int version_size, char *bu
         }
         
         [self aFNetworkStatus];
+        
+        [[LemonDNCServier sharedInstance] addServer];
+        if (@available(macOS 13.0, *)) {
+            [self checkFullDiskAccessAndRestartMonitorIfNeeded];
+        }
     }
+    
+    /// 检测完全磁盘访问权限是否变化
+    - (void)checkFullDiskAccessAndRestartMonitorIfNeeded {
+        BOOL lastValue = [[NSUserDefaults standardUserDefaults] boolForKey:@"kLemonFullDiskAccessFlag"];
+        BOOL currentValue = [QMFullDiskAccessManager getFullDiskAuthorationStatus] == QMFullDiskAuthorationStatusAuthorized;
+        [[NSUserDefaults standardUserDefaults] setBool:currentValue forKey:@"kLemonFullDiskAccessFlag"];
+        if (lastValue != currentValue) {
+            [[LemonDNCClient sharedInstance] restart:LemonDNCRestartTypeMonitor reason:LemonDNCRestartReasonFullDiskAccess];
+        }
+    }
+    
     - (void)aFNetworkStatus {
         AFNetworkReachabilityManager *manager = [AFNetworkReachabilityManager sharedManager];
         [manager setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {

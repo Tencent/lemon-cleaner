@@ -34,8 +34,6 @@ typedef enum: NSUInteger {
 
 + (id)shareCoreFuction;
 
-// app store version
-+ (void)setAppStoreVersion:(BOOL)isAppstore;
 + (BOOL)isAppStoreVersion;
 
 // get process info
