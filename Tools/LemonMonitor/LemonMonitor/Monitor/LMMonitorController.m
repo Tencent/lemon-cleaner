@@ -106,6 +106,13 @@ enum
 
 -(void)setupData
 {
+    NSNumber *type = [[NSUserDefaults standardUserDefaults] objectForKey:kLemonShowMonitorCfg];
+    if (([type integerValue] & STATUS_TYPE_GLOBAL) == 0) {
+        // 直接关闭进程（如果用户关闭了显示状态栏的开关）
+        [[NSApplication sharedApplication] terminate:nil];
+        return;
+    }
+    
     _upSpeedHistory = [[QMValueHistory alloc] initWithCapacity:32];
     _downSpeedHistory = [[QMValueHistory alloc] initWithCapacity:32];
     dataCenter = [QMDataCenter defaultCenter];
@@ -618,6 +625,11 @@ enum
         NSInteger type = 0;
         NSDictionary* dict = notification.userInfo;
         type = ((NSNumber*)dict[@"type"]).integerValue;
+        if ((type & STATUS_TYPE_GLOBAL) == 0)
+        {
+            [[NSApplication sharedApplication] terminate:nil];
+            return;
+        }
         [statusView setStatusType:type];
         [[McStatMonitor shareMonitor] setTrayType:type];
 //        NSLog(@"receivedStatusChanged type=%lu", type);

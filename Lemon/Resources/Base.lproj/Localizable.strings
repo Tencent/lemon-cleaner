@@ -25,7 +25,8 @@
 "PreferenceViewController_setupViews_1553049563_13" = "CPU\n temperature";
 "PreferenceViewController_setupViews_1553049563_14" = "Fan\n speed";
 "PreferenceViewController_setupViews_1553049563_15" = "Network\n speed";
-"PreferenceViewController_setupViews_bootMonitorTitle _16" = "Show icons on menu bar on startup";
+"PreferenceViewController_setupViews_bootMonitorTitle _16" = "Show on startup";
+"PreferenceViewController_toggleStatusBarVisibility" = "Show status bar icons";
 "About_windowAboutTitle_lemon" = "About Lemon Cleaner";
 "Appdelegate_about_windowAboutTitle_lemonlite" = "About Lemon Cleaner";
 "AppDelegate_fetchResearchChannel_notification_1" = "Close";
