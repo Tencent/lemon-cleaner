@@ -22,6 +22,10 @@
 - [x] 20241211
     - [x] feature: pass action config fileds to python entry script
 
+- [x] 20250407
+    - [x] bugfix: fix `os.popen` error with python scripts by submit related *.so
+        * notice: need to append its path to sys.path to take effect and resign *.so with codesign tool
+
 ##
 
 # 以下是原仓库 README.md
