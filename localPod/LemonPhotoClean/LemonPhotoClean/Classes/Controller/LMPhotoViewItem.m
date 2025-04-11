@@ -64,6 +64,9 @@
         self.imgThumbnail.image = item.previewImage;
     }
     __weak typeof(self) weakSelf = self;
+    item.isSelectedDidChangeBlock = ^(LMPhotoItem *item) {
+        weakSelf.checkBtnIsSelected.state = item.isSelected;
+    };
     item.previewImageDidChangeBlock = ^(LMPhotoItem *item) {
         if (item.previewImage) {
             weakSelf.imgThumbnail.image = item.previewImage;
