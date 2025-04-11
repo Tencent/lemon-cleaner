@@ -105,10 +105,6 @@ const float kDuplicateFolderCalculateProgress = 0.1f;
 
     _scanFileCount++;
 
-    // 过滤不能删除的文件
-    if (![self checkCanRemove:item.filePath])
-        return _stopped;
-
     // 计算package 大小 // 如果文件比较大,可能会花不少时间, package 类型的手动计算大小
     if (item.isDir) {
         NSNumber *package = nil;
@@ -184,17 +180,6 @@ const float kDuplicateFolderCalculateProgress = 0.1f;
         }
     }
     return YES;
-}
-
-- (BOOL)checkCanRemove:(NSString *)path {
-    NSFileManager *fm = [NSFileManager defaultManager];
-    BOOL isDir = NO;
-    if (![fm fileExistsAtPath:path isDirectory:&isDir])
-        return NO;
-    // 过滤只读目录
-    if (isDir && ![fm isWritableFileAtPath:path])
-        return NO;
-    return [fm isDeletableFileAtPath:path];
 }
 
 - (void)sendResultToDelegate:(NSDictionary *)resultDic fileSize:(UInt64)fileSize {
@@ -442,8 +427,7 @@ const float kDuplicateFolderCalculateProgress = 0.1f;
 - (NSArray *)convertFileItemToPath:(NSArray *)fileItemArray {
     NSMutableArray *retArray = [NSMutableArray array];
     for (QMFileItem *item in fileItemArray) {
-        if ([self checkCanRemove:item.filePath])
-            [retArray addObject:item.filePath];
+        [retArray addObject:item.filePath];
     }
     return retArray;
 }

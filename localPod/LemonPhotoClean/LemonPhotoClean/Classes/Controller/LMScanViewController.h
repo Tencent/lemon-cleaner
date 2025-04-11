@@ -10,5 +10,6 @@
 #import <QMUICommon/QMBaseViewController.h>
 
 @interface LMScanViewController : QMBaseViewController
+
 - (void)scan:(NSArray<NSString *> *)scanPaths;
 @end

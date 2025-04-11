@@ -16,7 +16,6 @@
 #import <QMUICommon/LMCheckboxButton.h>
 
 #define kLemonShowMonitorCfg            @"kLemonShowMonitorCfg"
-#define STATUS_TYPE_BOOTSHOW (0x40000000)
 // 状态栏显示方式
 #define STATUS_TYPE_LOGO (1 << 0)
 #define STATUS_TYPE_MEM  (1 << 1)
@@ -26,19 +25,65 @@
 #define STATUS_TYPE_NET  (1 << 5)
 #define STATUS_TYPE_CPU  (1 << 6)
 #define STATUS_TYPE_GPU  (1 << 7)
-#define STATUS_TYPE_GLOBAL (0x80000000)
-#define STATUS_TYPE_BOOTSHOW (0x40000000)
-#define kLemonStatusOptionsChanged @"kLemonStatusOptionsChanged"
+#define STATUS_TYPE_GLOBAL (0x80000000)     // 对应设置“打开Lemon时显示”
+#define STATUS_TYPE_BOOTSHOW (0x40000000)   // 对应设置“开机时显示”
+#define STATUS_TYPE_USE (0x20000000)        // 对应设置“启用状态栏”
 #define kStatusChangedNotification @"StatusChangedNotification"
 
+
+@implementation LMPreferenceMaskView
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        self.wantsLayer = YES;
+        [self __updateBackgroundColor];
+    }
+    return self;
+}
+- (void)viewDidChangeEffectiveAppearance {
+    [super viewDidChangeEffectiveAppearance];
+    [self __updateBackgroundColor];
+}
+- (void)__updateBackgroundColor {
+    if (@available(macOS 10.14, *)) {
+        if([LMAppThemeHelper isDarkMode]){
+            self.layer.backgroundColor = [NSColor colorWithHex:0x242633].CGColor;
+        }else{
+            self.layer.backgroundColor = [NSColor whiteColor].CGColor;
+        }
+    } else {
+        self.layer.backgroundColor = [NSColor whiteColor].CGColor;
+    }
+}
+
+- (void)mouseDown:(NSEvent *)event {
+    
+}
+- (void)mouseUp:(NSEvent *)event {
+    
+}
+- (void)rightMouseDown:(NSEvent *)event {
+    
+}
+- (void)rightMouseUp:(NSEvent *)event {
+    
+}
+@end
 
 @interface LMPreferenceStatusBarViewController ()
 
 @property(nonatomic) NSInteger myStatusType;
-@property(weak) NSView* bootMonitorLineView;
 @property(weak) NSTextField *tfMonitorWarningTips;
 @property(nonatomic) NSMutableDictionary* myStatusControls;
 @property(strong) NSMutableArray *iconContainerViews;
+
+@property(strong) COSwitch *useStatusBarSwitch;
+@property(strong) COSwitch *statusBarVisibilitySwitch;
+@property(strong) COSwitch *bootMonitorSwitch;
+
+// 当“启用状态栏” 开关 是否遮盖在控件上，隐藏 / 显示的效果
+@property (strong) LMPreferenceMaskView * maskView;
+
 @end
 
 @implementation LMPreferenceStatusBarViewController
@@ -64,48 +109,19 @@
         containerView.wantsLayer = YES;
         containerView.layer.backgroundColor = [self getIconContainerBgColor].CGColor;
     }
-    [LMAppThemeHelper setDivideLineColorFor:_bootMonitorLineView];
 }
+
 -(void)initView {
-    
-    NSTextField *showStatusBarIconOnBootText = [self buildLabel:NSLocalizedStringFromTableInBundle(@"PreferenceViewController_setupViews_bootMonitorTitle _16", nil, [NSBundle bundleForClass:[self class]], @"") font:[NSFont systemFontOfSize:14] color:[LMAppThemeHelper getTitleColor]];
-    
-    // 状态栏开机启动项设置
     _myStatusType = [[[NSUserDefaults standardUserDefaults] objectForKey:kLemonShowMonitorCfg] integerValue];
     __weak typeof(self) weakSelf = self;
-    COSwitch *bootMonitorSwitch = [[COSwitch alloc] init];
-    bootMonitorSwitch.on = (_myStatusType & STATUS_TYPE_BOOTSHOW) > 0 ? YES : NO;
-    bootMonitorSwitch.wantsLayer = YES;
-    bootMonitorSwitch.isEnable = (_myStatusType & STATUS_TYPE_GLOBAL) > 0 ? YES : NO;
-    bootMonitorSwitch.layer.opacity = (_myStatusType & STATUS_TYPE_GLOBAL) > 0 ? 1 : 0.5;
-    [bootMonitorSwitch setOnValueChanged:^(COSwitch *button) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            button.isEnable = NO;
-            NSLog(@"monitorSwitch setOnValueChanged: %d", button.on);
-            
-            if (button.on) {
-                NSLog(@"preference:global=%d", button.on);
-                
-                weakSelf.myStatusType |= STATUS_TYPE_BOOTSHOW;
-                [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithInteger:weakSelf.myStatusType] forKey:kLemonShowMonitorCfg];
-            } else {
-                NSLog(@"preference:global=%d", button.on);
-                
-                weakSelf.myStatusType &= ~STATUS_TYPE_BOOTSHOW;
-                [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithInteger:weakSelf.myStatusType] forKey:kLemonShowMonitorCfg];
-            }
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                button.isEnable = YES;
-            });
-        });
-    }];
+
+    // 打开lemon时显示
+
+    NSTextField *showStatusBarIconText = [self buildLabel:NSLocalizedStringFromTableInBundle(@"PreferenceViewController_setupViews_showMonitorWhenOpenLemon", nil, [NSBundle bundleForClass:[self class]], @"Show status bar on open Lemon") font:[NSFont systemFontOfSize:14] color:[LMAppThemeHelper getTitleColor]];
     
-    
-    NSTextField *showStatusBarIconText = [self buildLabel:NSLocalizedStringFromTableInBundle(@"PreferenceViewController_toggleStatusBarVisibility", nil, [NSBundle bundleForClass:[self class]], @"Toggle status bar visibility") font:[NSFont systemFontOfSize:14] color:[LMAppThemeHelper getTitleColor]];
-    
-    // 状态栏显示设置
     COSwitch *statusBarVisibilitySwitch = [[COSwitch alloc] init];
-    statusBarVisibilitySwitch.on = (_myStatusType & STATUS_TYPE_GLOBAL) > 0 ? YES : NO;
+    self.statusBarVisibilitySwitch = statusBarVisibilitySwitch;
+    [statusBarVisibilitySwitch updateSwitchState:(_myStatusType & STATUS_TYPE_GLOBAL) > 0 ? YES : NO];
     [statusBarVisibilitySwitch setOnValueChanged:^(COSwitch *button) {
         dispatch_async(dispatch_get_main_queue(), ^{
             button.isEnable = NO;
@@ -114,37 +130,119 @@
             if (button.on) {
                 NSLog(@"preference:global=%d", button.on);
                 
+                if (weakSelf.useStatusBarSwitch.isOn == NO) {
+                    [weakSelf.useStatusBarSwitch updateSwitchState:YES];
+                    weakSelf.myStatusType |= STATUS_TYPE_USE;
+                }
                 weakSelf.myStatusType |= STATUS_TYPE_GLOBAL;
                 [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithInteger:weakSelf.myStatusType] forKey:kLemonShowMonitorCfg];
-                
-                [self openMonitor];
-                
-                bootMonitorSwitch.isEnable = YES;
-                bootMonitorSwitch.layer.opacity = 1.0;
+                if (weakSelf.useStatusBarSwitch.isOn) {
+                    [weakSelf openMonitor];
+                }
             } else {
                 NSLog(@"preference:global=%d", button.on);
-                
+                if (weakSelf.bootMonitorSwitch.isOn == NO && weakSelf.useStatusBarSwitch.isOn == YES) {
+                    weakSelf.useStatusBarSwitch.on = NO;
+                    weakSelf.myStatusType &= ~STATUS_TYPE_USE;
+                }
                 weakSelf.myStatusType &= ~STATUS_TYPE_GLOBAL;
                 [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithInteger:weakSelf.myStatusType] forKey:kLemonShowMonitorCfg];
-                
-                // 去掉开机启动，并且设置为不可修改
-                bootMonitorSwitch.on = NO;
-                bootMonitorSwitch.isEnable = NO;
-                bootMonitorSwitch.layer.opacity = 0.5;
             }
             
-            // send to monitor process
-            NSDictionary* dict = @{@"type":[NSNumber numberWithInteger: [weakSelf myStatusType]]};
-            [[NSDistributedNotificationCenter defaultCenter] postNotificationName:kStatusChangedNotification object:nil userInfo:dict deliverImmediately:YES];
+            [weakSelf __onMonitorConfigStatesHasChanged];
             
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 button.isEnable = YES;
             });
         });
     }];
     
-    NSView* bootMonitorLineView = [[NSView alloc] init];
-    self.bootMonitorLineView = bootMonitorLineView;
+    // 状态栏开机时启动
+
+    NSTextField *showStatusBarIconOnBootText = [self buildLabel:NSLocalizedStringFromTableInBundle(@"PreferenceViewController_setupViews_bootMonitorTitle _16", nil, [NSBundle bundleForClass:[self class]], @"") font:[NSFont systemFontOfSize:14] color:[LMAppThemeHelper getTitleColor]];
+    
+
+    COSwitch *bootMonitorSwitch = [[COSwitch alloc] init];
+    self.bootMonitorSwitch = bootMonitorSwitch;
+    [bootMonitorSwitch updateSwitchState:(_myStatusType & STATUS_TYPE_BOOTSHOW) > 0 ? YES : NO];
+    [bootMonitorSwitch setOnValueChanged:^(COSwitch *button) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            button.isEnable = NO;
+            NSLog(@"monitorSwitch setOnValueChanged: %d", button.on);
+            
+            if (button.on) {
+                NSLog(@"preference:global=%d", button.on);
+                if (weakSelf.useStatusBarSwitch.isOn == NO) {
+                    [weakSelf.useStatusBarSwitch updateSwitchState:YES];
+                    weakSelf.myStatusType |= STATUS_TYPE_USE;
+                }
+                weakSelf.myStatusType |= STATUS_TYPE_BOOTSHOW;
+                [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithInteger:weakSelf.myStatusType] forKey:kLemonShowMonitorCfg];
+                if (weakSelf.useStatusBarSwitch.isOn) {
+                    [weakSelf openMonitor];
+                }
+            } else {
+                NSLog(@"preference:global=%d", button.on);
+                if (weakSelf.statusBarVisibilitySwitch.isOn == NO && weakSelf.useStatusBarSwitch.isOn == YES) {
+                    weakSelf.useStatusBarSwitch.on = NO;
+                    weakSelf.myStatusType &= ~STATUS_TYPE_USE;
+                }
+                weakSelf.myStatusType &= ~STATUS_TYPE_BOOTSHOW;
+                [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithInteger:weakSelf.myStatusType] forKey:kLemonShowMonitorCfg];
+            }
+            
+            [weakSelf __onMonitorConfigStatesHasChanged];
+            
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                button.isEnable = YES;
+            });
+        });
+    }];
+    
+    // 启用状态栏 总开关
+    NSTextField *useStatusBarText = [self buildLabel:NSLocalizedStringFromTableInBundle(@"PreferenceViewController_setupViews_useMonitor", nil, [NSBundle bundleForClass:[self class]], @"Use status bar") font:[NSFont boldSystemFontOfSize:14] color:[LMAppThemeHelper getTitleColor]];
+    
+    COSwitch *useStatusBarSwitch = [[COSwitch alloc] init];
+    self.useStatusBarSwitch = useStatusBarSwitch;
+    [useStatusBarSwitch updateSwitchState:(_myStatusType & STATUS_TYPE_USE) > 0 ? YES : NO];
+    [useStatusBarSwitch setOnValueChanged:^(COSwitch *button) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            button.isEnable = NO;
+            NSLog(@"Use status bar setOnValueChanged: %d", button.on);
+            
+            if (button.on) {
+                NSLog(@"preference:useMonitor=%d", button.on);
+                
+                weakSelf.myStatusType |= STATUS_TYPE_USE;
+                weakSelf.myStatusType |= STATUS_TYPE_GLOBAL;
+                weakSelf.myStatusType |= STATUS_TYPE_BOOTSHOW;
+                
+                [weakSelf.statusBarVisibilitySwitch updateSwitchState:YES];
+                [weakSelf.bootMonitorSwitch updateSwitchState:YES];
+                [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithInteger:weakSelf.myStatusType] forKey:kLemonShowMonitorCfg];
+                
+                // 打开monitor
+                [weakSelf openMonitor];
+
+            } else {
+                NSLog(@"preference:useMonitor=%d", button.on);
+                weakSelf.myStatusType &= ~STATUS_TYPE_USE;
+                weakSelf.myStatusType &= ~STATUS_TYPE_GLOBAL;
+                weakSelf.myStatusType &= ~STATUS_TYPE_BOOTSHOW;
+                
+                [weakSelf.statusBarVisibilitySwitch updateSwitchState:NO];
+                [weakSelf.bootMonitorSwitch updateSwitchState:NO];
+                [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithInteger:weakSelf.myStatusType] forKey:kLemonShowMonitorCfg];
+            }
+            
+            // send to monitor process
+            [self __onMonitorConfigStatesHasChanged];
+            
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                button.isEnable = YES;
+            });
+        });
+    }];
     
     // 状态栏图标显示
     NSTextField *tfMonitorTitle = [self buildLabel:NSLocalizedStringFromTableInBundle(@"PreferenceViewController_setupViews_tfMonitorTitle _9", nil, [NSBundle bundleForClass:[self class]], @"") font:[NSFont systemFontOfSize:14] color:[LMAppThemeHelper getTitleColor]];
@@ -176,16 +274,16 @@
     
     NSView* optGpuUsed = [self getOptionView:@"stat_gpu_usage":NSLocalizedStringFromTableInBundle(@"PreferenceViewController_setupViews_1553049563_17", nil, [NSBundle bundleForClass:[self class]], @""):STATUS_TYPE_GPU];
     
-    // 监听状态栏选中变化
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(onStatusOptionsChanged:) name:kLemonStatusOptionsChanged object:nil];
-    
+    LMPreferenceMaskView * mask = [[LMPreferenceMaskView alloc] init];
+    self.maskView = mask;
     
     [self.view addSubview:showStatusBarIconText];
     [self.view addSubview:statusBarVisibilitySwitch];
     [self.view addSubview:showStatusBarIconOnBootText];
     [self.view addSubview:bootMonitorSwitch];
-    [self.view addSubview:bootMonitorLineView];
-    
+    [self.view addSubview:useStatusBarText];
+    [self.view addSubview:useStatusBarSwitch];
+        
     [self.view addSubview:tfMonitorTitle];
     [self.view addSubview:monitorImageView];
     [self.view addSubview:tfMonitorWarningTips];
@@ -198,11 +296,24 @@
     [self.view addSubview:optCpuUsed];
     [self.view addSubview:optGpuUsed];
     
-    NSView *cView = self.view;
+    [self.view addSubview:mask];
     
-    [showStatusBarIconText mas_makeConstraints:^(MASConstraintMaker *make) {
+    NSView *cView = self.view;
+    // 启用状态栏
+    [useStatusBarText mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(cView).offset(20);
         make.leading.equalTo(cView).offset(29);
+    }];
+    [useStatusBarSwitch mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.equalTo(useStatusBarText.mas_centerY);
+        make.right.equalTo(cView).offset(-30);
+        make.width.equalTo(@(40));
+        make.height.equalTo(@(19));
+    }];
+    
+    [showStatusBarIconText mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(useStatusBarText.mas_bottom).offset(20);
+        make.leading.equalTo(cView).offset(40);
     }];
 
     [statusBarVisibilitySwitch mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -215,7 +326,7 @@
        // 状态栏自启设置
     [showStatusBarIconOnBootText mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(showStatusBarIconText.mas_bottom).offset(20);
-        make.leading.equalTo(cView).offset(29);
+        make.leading.equalTo(cView).offset(40);
     }];
 
     [bootMonitorSwitch mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -225,17 +336,10 @@
         make.height.equalTo(@(19));
     }];
 
-    [bootMonitorLineView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(showStatusBarIconOnBootText.mas_bottom).offset(20);
-        make.centerX.equalTo(cView);
-        make.width.equalTo(cView);
-        make.height.equalTo(@(1));
-    }];
-
     // 状态栏图标显示
     [tfMonitorTitle mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(bootMonitorLineView.mas_bottom).offset(16);
-        make.leading.equalTo(cView).offset(29);
+        make.top.equalTo(showStatusBarIconOnBootText.mas_bottom).offset(20);
+        make.leading.equalTo(cView).offset(40);
     }];
 
     [tfMonitorWarningTips mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -312,9 +416,33 @@
         make.height.equalTo(@(itemHeight));
     }];
     
-    // 第一次，统一改变状态
-    [[NSNotificationCenter defaultCenter] postNotificationName:kLemonStatusOptionsChanged object:[[NSNumber alloc] initWithInteger:_myStatusType]];
+    [mask mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(useStatusBarText.mas_bottom).offset(10);
+        make.left.right.bottom.equalTo(cView);
+    }];
     
+    // 第一次，统一改变状态
+    [self __updateCheckboxStatusWithNotificationFlag:NO];
+    
+    [self __updateMaskViewVisibilityBasedOnStatus];
+}
+
+- (void)__onMonitorConfigStatesHasChanged {
+    // 判断是否要隐藏
+    [self __updateMaskViewVisibilityBasedOnStatus];
+
+    // 发通知给monitor进程
+    [self __sendCurrentStatusTypeToMonitor];
+}
+
+- (void)__sendCurrentStatusTypeToMonitor {
+    NSDictionary* dict = @{@"type":[NSNumber numberWithInteger:self.myStatusType]};
+    [[NSDistributedNotificationCenter defaultCenter] postNotificationName:kStatusChangedNotification object:nil userInfo:dict deliverImmediately:YES];
+}
+
+- (void)__updateMaskViewVisibilityBasedOnStatus {
+    BOOL useMonitor = (self.myStatusType & STATUS_TYPE_USE) > 0;
+    [self.maskView setHidden:useMonitor];
 }
 
 -(void)openMonitor{
@@ -440,14 +568,16 @@
         }
     }
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:kLemonStatusOptionsChanged object:[[NSNumber alloc] initWithInteger:_myStatusType]];
+    // 需要保存一下， __updateCheckboxStatusWithNotificationFlag 不再处理保存逻辑
+    [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithInteger:_myStatusType] forKey:kLemonShowMonitorCfg];
+    
+    [self __updateCheckboxStatusWithNotificationFlag:YES];
 }
 
--(void) onStatusOptionsChanged:(NSNotification*)notification
+/// 更新checkbox状态
+- (void)__updateCheckboxStatusWithNotificationFlag:(BOOL)needSendNotifcationToMonitor
 {
-    //
-    NSInteger type = ((NSNumber*)notification.object).integerValue;
-    
+    NSInteger type = self.myStatusType;
     //
     ((NSButton*)_myStatusControls[[NSNumber numberWithInteger:STATUS_TYPE_LOGO]]).state = type & STATUS_TYPE_LOGO ? NSControlStateValueOn : NSControlStateValueOff;
     ((NSButton*)_myStatusControls[[NSNumber numberWithInteger:STATUS_TYPE_MEM]]).state = type & STATUS_TYPE_MEM ? NSControlStateValueOn : NSControlStateValueOff;
@@ -457,16 +587,11 @@
     ((NSButton*)_myStatusControls[[NSNumber numberWithInteger:STATUS_TYPE_NET]]).state = type & STATUS_TYPE_NET ? NSControlStateValueOn : NSControlStateValueOff;
     ((NSButton*)_myStatusControls[[NSNumber numberWithInteger:STATUS_TYPE_CPU]]).state = type & STATUS_TYPE_CPU ? NSControlStateValueOn : NSControlStateValueOff;
     ((NSButton*)_myStatusControls[[NSNumber numberWithInteger:STATUS_TYPE_GPU]]).state = type & STATUS_TYPE_GPU ? NSControlStateValueOn : NSControlStateValueOff;
-
-    
-    // save config
-    [[NSUserDefaults standardUserDefaults] setObject:(NSNumber*)notification.object forKey:kLemonShowMonitorCfg];
     
     // send to monitor process
-    NSDictionary* dict = @{@"type":[NSNumber numberWithInteger:type]};
-    [[NSDistributedNotificationCenter defaultCenter] postNotificationName:kStatusChangedNotification object:nil userInfo:dict deliverImmediately:YES];
-    
-    
+    if (needSendNotifcationToMonitor) {
+        [self __sendCurrentStatusTypeToMonitor];
+    }
 }
 
 

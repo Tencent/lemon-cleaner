@@ -29,6 +29,7 @@
 #import <LemonStat/McDiskInfo.h>
 #import <QMUICommon/LMAppThemeHelper.h>
 #import "LMHardWareDataUtil.h"
+#import <PrivacyProtect/Owl2Manager.h>
 
 
 static const NSUInteger kMaxCount = 5;
@@ -118,7 +119,7 @@ static NSString * const kPidKey = @"pid";
 -(void)updateVedioState
 {
 #ifndef APPSTORE_VERSION
-    BOOL isWatchVedio = [[OwlManager shareInstance] isWatchVedio];
+    BOOL isWatchVedio = [[Owl2Manager sharedManager] isWatchVideo];
     NSLog(@"receivedVedioStateChanged isWatchVedio=%d\n", isWatchVedio);
     //LMSystemFeatureViewController_updateAudioState__privacyMicrophoneLabel__not_work
     if (isWatchVedio)
@@ -151,7 +152,7 @@ static NSString * const kPidKey = @"pid";
 -(void)updateAudioState
 {
 #ifndef APPSTORE_VERSION
-    BOOL isWatchAudio = [[OwlManager shareInstance] isWatchAudio];
+    BOOL isWatchAudio = [[Owl2Manager sharedManager] isWatchAudio];
     NSLog(@"receivedAudioStateChanged isWatchAudio=%d\n", isWatchAudio);
     if (isWatchAudio)
     {

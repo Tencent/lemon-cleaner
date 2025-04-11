@@ -1012,7 +1012,9 @@
             NSArray *afterSizeArray = [[McMonitorFuction sharedFuction] memoryStateInfo][@"SizeArray"];
             uint64_t totalSize = [afterSizeArray[4] unsignedLongLongValue];
             uint64_t endUsedSize = totalSize - [afterSizeArray[5] unsignedLongLongValue];//[afterSizeArray[4] unsignedLongLongValue] - [afterSizeArray[0] unsignedLongLongValue];
-            NSLog(@"%s, %llu,  %llu", __FUNCTION__, startUsedSize, endUsedSize);
+            
+            NSLog(@"%s, total:%.2fGB before used:%.2fGB end used:%.2fGB,  %llu,  %llu", __FUNCTION__, totalSize/1024.0/1024/1024, startUsedSize/1024.0/1024/1024, endUsedSize/1024.0/1024/1024, startUsedSize, endUsedSize);
+            
             uint64_t purgeSize = (startUsedSize>endUsedSize) ? (startUsedSize-endUsedSize) : 0;
             [self showMemCleanedView:YES :purgeSize :totalSize];
             dispatch_async(kQMDEFAULT_GLOBAL_QUEUE, ^{

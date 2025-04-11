@@ -17,6 +17,7 @@
 #import <QMUICommon/LMViewHelper.h>
 #import <QMUICommon/FullDiskAccessPermissionViewController.h>
 #import <QMCoreFunction/QMFullDiskAccessManager.h>
+#import <QMCoreFunction/QMDisk.h>
 //#import "NSBe"
 //#import <QMUICommon/PathSelectViewController.h>
 
@@ -31,8 +32,6 @@
 
 @property(weak) NSView* dragShadowView;
 @property  FullDiskAccessPermissionViewController *requestFullDiskAccessViewController;
-
-
 @end
 
 @implementation LMDuplicateSelectFoldersViewController
@@ -40,10 +39,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self initView];
-
 }
-
-
 
 // viewController
 // window.contentViewController -> [NSWindow _contentViewControllerChanged] ->[NSViewController _loadViewIfRequired]  -> [NSViewController loadView] loadView 会自动调用.

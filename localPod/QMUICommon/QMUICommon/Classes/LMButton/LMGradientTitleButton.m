@@ -193,7 +193,7 @@
         CGContextSetFillColorWithColor(context, _fillColor.CGColor);
         CGContextSetLineWidth(context, self.lineWidth);
         CGContextSetStrokeColorWithColor(context, strokeColor.CGColor);
-        CGPathRef clippath = [[NSBezierPath bezierPathWithRoundedRect:NSMakeRect(self.lineWidth/2, self.lineWidth/2, dirtyRect.size.width-self.lineWidth, dirtyRect.size.height-self.lineWidth) xRadius:self.radius yRadius:self.radius] quartzPath];
+        CGPathRef clippath = [[NSBezierPath bezierPathWithRoundedRect:NSMakeRect(self.lineWidth/2, self.lineWidth/2, self.bounds.size.width-self.lineWidth, self.bounds.size.height-self.lineWidth) xRadius:self.radius yRadius:self.radius] quartzPath];
         CGContextAddPath(context, clippath);
         CGContextDrawPath(context, kCGPathFillStroke);
         

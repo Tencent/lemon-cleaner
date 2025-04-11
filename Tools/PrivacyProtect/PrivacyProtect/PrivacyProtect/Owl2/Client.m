@@ -14,7 +14,7 @@
 -(NSString*)description
 {
     //description
-    return [NSString stringWithFormat:@"CLIENT: pid: %@, path: %@, clientID: %@", self.pid, self.path, self.clientID];
+    return [NSString stringWithFormat:@"CLIENT: pid: %@, path: %@", self.pid, self.path];
 }
 
 @end

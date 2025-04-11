@@ -125,7 +125,6 @@
 #define kLemonShowMonitor               @"kLemonShowMonitor"
 #define kLemonShowMonitorType           @"kLemonShowMonitorType"
 #define kLemonShowMonitorCfg            @"kLemonShowMonitorCfg"
-#define kLemonQuitMonitorManual         @"kLemonQuitMonitorManual"
 //notification
 #define kShowOwlWindowFromMonitor       @"kShowOwlWindowFromMonitor"
 #define kShowPreferenceWindow           @"kShowPreferenceWindow"

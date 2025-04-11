@@ -20,7 +20,7 @@
 #import "QMEarlyWarning.h"
 #import <QMCoreFunction/NSTimer+Extension.h>
 #ifndef APPSTORE_VERSION
-#import <PrivacyProtect/OwlManager.h>
+#import <PrivacyProtect/Owl2Manager.h>
 #endif
 #import <AFNetworking/AFNetworking.h>
 #import <PrivacyProtect/QMUserNotificationCenter.h>
@@ -233,8 +233,7 @@
     }
     else if (startParamsCmd == LemonMonitorRunningMenu)
     {
-        // 手动从菜单栏打开，要启动
-        [self clearQuitMonitorManaualState];
+
     }
     else if (startParamsCmd == LemonMonitorRunningOSBoot)
     {
@@ -242,21 +241,57 @@
         if (([cfg integerValue] & STATUS_TYPE_BOOTSHOW) == 0)
         {
             [self teminateSelf];
-        } else {
-             [self clearQuitMonitorManaualState];
         }
     }
-}
-
-- (void) clearQuitMonitorManaualState{
-    [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:FALSE] forKey:kLemonQuitMonitorManual];
+    else if (startParamsCmd == LemonAppRunningReInstallAndMonitorExist)
+    {
+        // 覆盖安装、更新，之前在现在在
+    }
+    else if (startParamsCmd == LemonAppRunningReInstallAndMonitorNotExist || startParamsCmd == LemonAppRunningNormal)
+    {
+        //产品要求每次打开主程都拉起状态栏
+        // 如果是 Lemon 主界面进程没有退出,开机重启后系统会自动拉起主界面. 这时候也会启动 Lemon Monitor
+//        CFTimeInterval uptime = [TimeUitl getSystemUptime];
+//        NSLog(@"%s, system uptime is %f ", __FUNCTION__, uptime);
+//        // 只要用户有表明过不想要 Monitor, (关闭开机启动, 主动退出过)
+//        // 如果开机启动时间小于 1min 或者 "有过不想使用 Monitor 的行为", 不主动拉起 Lemon Monitor
+//        if(uptime < 1 * 60 ||
+//           ([cfg integerValue] & STATUS_TYPE_BOOTSHOW) == 0){
+//            NSLog(@"%s, teminate self because system uptime in 2 min or not really want to have monitor", __FUNCTION__);
+//            [self teminateSelf];
+//        }
+        
+    }
+//    else
+//    {
+//        NSLog(@"%s, unknown startParamsCmd: %ld", __FUNCTION__, (long)startParamsCmd);
+//        [self teminateSelf];
+//    }
 }
 
 - (void)loadMonitorNotification{
     [[QMUserNotificationCenter defaultUserNotificationCenter] addDelegate:(id<NSUserNotificationCenterDelegate>)self
                                                                    forKey:@"LemonResearchNotification"];
 #ifndef APPSTORE_VERSION
-    [[OwlManager shareInstance] startOwlProtect];
+    //设备保护
+//    [[NSDistributedNotificationCenter defaultCenter] addObserver:self selector:@selector(tellMonitorStopOwlProtect) name:kTellMonitorStopOwlProtect object:nil];
+//    [[NSDistributedNotificationCenter defaultCenter] addObserver:self selector:@selector(tellMonitorStartOwlProtect) name:kTellMonitorStartOwlProtect object:nil];
+//    if ([[OwlManager shareInstance] isLemonRunning]) {
+//        //先读取一次数据
+//        [[OwlManager shareInstance] loadDB];
+//    } else {
+    [[Owl2Manager sharedManager] startOwlProtect];
+//    }
+    
+    // 监控隐私
+//    [[NSDistributedNotificationCenter defaultCenter] addObserver:self
+//                                                        selector:@selector(receivedVedioStateChanged:)
+//                                                            name:OwlWatchVedioStateChange
+//                                                          object:nil];
+//    [[NSDistributedNotificationCenter defaultCenter] addObserver:self
+//                                                        selector:@selector(receivedAudioStateChanged:)
+//                                                            name:OwlWatchAudioStateChange
+//                                                          object:nil];
 #endif
 }
 
@@ -265,22 +300,22 @@
 #ifndef APPSTORE_VERSION
 -(void)tellMonitorStopOwlProtect{
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [[OwlManager shareInstance] stopOwlProtect];
+        [[Owl2Manager sharedManager] stopOwlProtect];
     });
 }
 -(void)tellMonitorStartOwlProtect{
-    [[OwlManager shareInstance] startOwlProtect];
+    [[Owl2Manager sharedManager] startOwlProtect];
 }
 
 -(void)receivedVedioStateChanged:(NSNotification *)notification
 {
     BOOL state = [[notification.userInfo objectForKey:@"state"] boolValue];
-    [[OwlManager shareInstance] setWatchVedio:state toDb:NO];
+    [[Owl2Manager sharedManager] setWatchVedio:state toDb:NO];
 }
 -(void)receivedAudioStateChanged:(NSNotification *)notification
 {
     BOOL state = [[notification.userInfo objectForKey:@"state"] boolValue];
-    [[OwlManager shareInstance] setWatchAudio:state toDb:NO];
+    [[Owl2Manager sharedManager] setWatchAudio:state toDb:NO];
 }
 #endif
 
@@ -289,7 +324,7 @@
 }
 - (void)applicationWillTerminate:(NSNotification *)notification
 {
-    NSLog(@"applicationWillTerminate enter");
+    NSLog(@"applicationWillTerminate enter pid: %d, stack : %@", NSProcessInfo.processInfo.processIdentifier, [NSThread callStackSymbols]);
     
     // 记录退出时间
     [[QMDataCenter defaultCenter] setDouble:[[NSDate date] timeIntervalSinceReferenceDate] forKey:kQMMonitorExitTime];

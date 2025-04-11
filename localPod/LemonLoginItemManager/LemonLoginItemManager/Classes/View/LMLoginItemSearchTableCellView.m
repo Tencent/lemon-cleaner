@@ -9,6 +9,7 @@
 #import "LMLoginItemSearchTableCellView.h"
 #import <QMUICommon/LMAppThemeHelper.h>
 #import <QMCoreFunction/NSColor+Extension.h>
+#import <QMCoreFunction/LMReferenceDefines.h>
 
 @interface LMLoginItemSearchTableCellView()
 
@@ -53,7 +54,9 @@
     self.openFileButton.hidden = YES;
     self.pathBarView.hidden = YES;
     [LMAppThemeHelper setTitleColorForTextField:self.nameLabel];
+    @weakify(self);
     [self.switchButton setOnValueChanged:^(COSwitch *button) {
+        @strongify(self);
         [super updateLoginItem:self.loginItem switchLabel:self.switchBtnLabel withSwtichBtn:self.switchButton];
         [self.delegate clickSwitchButton:button onCellView:self];
     }];

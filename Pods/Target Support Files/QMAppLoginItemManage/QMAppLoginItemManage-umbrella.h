@@ -13,6 +13,7 @@
 #import "QMAppLaunchItem.h"
 #import "QMAppLoginItem.h"
 #import "QMBaseLoginItem.h"
+#import "QMLoginItemCacheHelper.h"
 #import "QMSystemLoginItem.h"
 #import "QMAppLoginItemManage.h"
 #import "QMLocalApp.h"

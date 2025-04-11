@@ -26,6 +26,8 @@
     goto label; \
 }
 
+static NSInteger kIfTypeLogFlag = 100;
+
 // get network packets information
 int CmcGetNetPacketsInfo(uint64_t *packets_recv,
                          uint64_t *packets_send,
@@ -83,15 +85,21 @@ int CmcGetNetPacketsInfo(uint64_t *packets_recv,
         ifm = (struct if_msghdr *)next;
 		next += ifm->ifm_msglen;
         
-        //NSLog(@"ifm_type - %x", ifm->ifm_type);
-        if (ifm->ifm_type == RTM_IFINFO2) 
+        if (kIfTypeLogFlag != 0) NSLog(@"ifm_type - %x", ifm->ifm_type);
+        if (ifm->ifm_type == RTM_IFINFO2)
         {
 			if2m = (struct if_msghdr2 *)ifm;
             
-            //NSLog(@"ifm_data.ifi_type - %x", if2m->ifm_data.ifi_type);
-            // Ethernet data only !!!
-            // add PPP for 3G
-			if (if2m->ifm_data.ifi_type == IFT_ETHER || if2m->ifm_data.ifi_type == IFT_PPP)
+            if (kIfTypeLogFlag != 0) NSLog(@"ifm_data.ifi_type - %x", if2m->ifm_data.ifi_type);
+            // 常见的物理网络硬件接口
+            // IFT_ETHER 以太网 （包含默认的wifi和有线网卡）
+            // IFT_PPP 拨号，基本淘汰
+            // IFT_MODEM 调制解调器
+            // IFT_CELLULAR 蜂窝网络
+			if (if2m->ifm_data.ifi_type == IFT_ETHER
+                || if2m->ifm_data.ifi_type == IFT_PPP
+                || if2m->ifm_data.ifi_type == IFT_MODEM
+                || if2m->ifm_data.ifi_type == IFT_CELLULAR)
             {
                 *packets_send += if2m->ifm_data.ifi_opackets;
                 *packets_recv += if2m->ifm_data.ifi_ipackets;
@@ -100,6 +108,50 @@ int CmcGetNetPacketsInfo(uint64_t *packets_recv,
             }
 		} 
 	}
+    
+    kIfTypeLogFlag = 0;
+    
+    // 兜底物理网卡流量被重定向
+    if (*bytes_recv == 0) {
+        
+        // 重置指针
+        next = buf;
+        
+        // 重置流量数据
+        *packets_send = 0;
+        *packets_recv = 0;
+        *bytes_send = 0;
+        *bytes_recv = 0;
+        
+        while (next < limit) {
+            ifm = (struct if_msghdr *)next;
+            next += ifm->ifm_msglen;
+            if (ifm->ifm_type == RTM_IFINFO2)
+            {
+                if2m = (struct if_msghdr2 *)ifm;
+                
+                // 排除一些本地或者重复的接口
+                // IFT_OTHER 其他 ，未知
+                // IFT_LOOP 回环接口， 本地
+                // IFT_GIF IPv4 隧道， 本地
+                // IFT_STF IPv6 隧道， 本地
+                // IFT_BRIDGE 桥接接口，重复
+                // IFT_PKTAP 抓包调试， 本地
+                if (if2m->ifm_data.ifi_type != IFT_OTHER
+                    && if2m->ifm_data.ifi_type != IFT_LOOP
+                    && if2m->ifm_data.ifi_type != IFT_GIF
+                    && if2m->ifm_data.ifi_type != IFT_STF
+                    && if2m->ifm_data.ifi_type != IFT_BRIDGE
+                    && if2m->ifm_data.ifi_type != IFT_PKTAP)
+                {
+                    *packets_send += if2m->ifm_data.ifi_opackets;
+                    *packets_recv += if2m->ifm_data.ifi_ipackets;
+                    *bytes_send += if2m->ifm_data.ifi_obytes;
+                    *bytes_recv += if2m->ifm_data.ifi_ibytes;
+                }
+            }
+        }
+    }
     
     free(buf);
     return 0;

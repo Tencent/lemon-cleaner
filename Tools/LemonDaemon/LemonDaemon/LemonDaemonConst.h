@@ -128,8 +128,8 @@
 #define STATUS_TYPE_GPU  (1 << 7)
 #define STATUS_TYPE_GLOBAL (0x80000000)
 #define STATUS_TYPE_BOOTSHOW (0x40000000)
+#define STATUS_TYPE_USE (0x20000000)
 #define kLemonShowMonitorCfg            @"kLemonShowMonitorCfg"
-#define kLemonQuitMonitorManual         @"kLemonQuitMonitorManual"  //如果用户主动退出, 则此次开机直到下次重启,主界面启动/重装都不会重新拉起 Monitor.保存 Monitor 的退出状态.
 //notification
 #define kShowOwlWindowFromMonitor       @"kShowOwlWindowFromMonitor"
 #define kShowPreferenceWindow           @"kShowPreferenceWindow"

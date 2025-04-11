@@ -8,7 +8,7 @@
 
 #import "OwlLogViewController.h"
 #import "OwlTableRowView.h"
-#import "OwlManager.h"
+#import "Owl2Manager.h"
 #import "OwlConstant.h"
 #import <QMCoreFunction/NSColor+Extension.h>
 #import <QMUICommon/NSFontHelper.h>
@@ -247,10 +247,10 @@
     NSString *idenifier = @"";
     NSString *strValue = @"";
     NSMutableAttributedString *attributed = [[NSMutableAttributedString alloc] init];
-    strValue = [[[OwlManager shareInstance].logArray objectAtIndex:row] objectForKey:@"time"];
-    NSString *appName = [[[OwlManager shareInstance].logArray objectAtIndex:row] objectForKey:OwlAppName];
+    strValue = [[[Owl2Manager sharedManager].logArray objectAtIndex:row] objectForKey:@"time"];
+    NSString *appName = [[[Owl2Manager sharedManager].logArray objectAtIndex:row] objectForKey:OwlAppName];
     appName = [appName stringByAppendingString:@"  "];
-    NSString *event = [[[OwlManager shareInstance].logArray objectAtIndex:row] objectForKey:@"event"];
+    NSString *event = [[[Owl2Manager sharedManager].logArray objectAtIndex:row] objectForKey:@"event"];
     NSString *strLanguageKey = nil;
     if ([event isEqualToString:@"OwlManager_analyseDeviceInfoForNotificationWithArray_NSString_1"]) {
         strLanguageKey = @"OwlManager_analyseDeviceInfoForNotificationWithArray_NSString_1";
@@ -292,7 +292,7 @@
 
 #pragma mark NSTableViewDataSource
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView{
-    return [OwlManager shareInstance].logArray.count;
+    return [Owl2Manager sharedManager].logArray.count;
 }
 
 @end

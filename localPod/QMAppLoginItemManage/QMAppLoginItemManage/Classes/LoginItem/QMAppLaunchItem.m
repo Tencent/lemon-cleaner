@@ -7,6 +7,7 @@
 //
 
 #import "QMAppLaunchItem.h"
+#import "QMLoginItemCacheHelper.h"
 
 ///launch service item
 @implementation QMAppLaunchItem
@@ -34,6 +35,19 @@
     }else{
         self.domainType = LaunchServiceDomainTypeUser;
     }
+}
+
+- (NSString *)uid {
+    if (!_uid) {
+        if ([self.filePath isKindOfClass:NSString.class] && self.filePath.length > 0) {
+            _uid = self.filePath;
+        }
+    }
+    return _uid;
+}
+
+- (NSString *)cacheKey {
+    return @"QMAppLaunchItemCacheKey";
 }
 
 @end

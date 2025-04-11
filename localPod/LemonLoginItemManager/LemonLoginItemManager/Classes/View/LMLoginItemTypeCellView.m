@@ -38,12 +38,12 @@
 }
 
 - (void)updateUI {
-    NSString *localString = LMLocalizedString(@"LemonLoginItemManagerViewController_item_count", self.class);
+    NSString *localString = LMLocalizedString(@"%ld 项", self.class);
     self.countLabel.stringValue = [NSString stringWithFormat:localString,(long)self.loginItemTypeInfo.itemCount];
     if (self.loginItemTypeInfo.itemType == LoginItemTypeAppItem) {
-        self.typeLabel.stringValue = LMLocalizedString(@"LemonLoginItemManagerViewController_item_type_app", self.class);
+        self.typeLabel.stringValue = LMLocalizedString(@"应用启动项", self.class);
     } else {
-        self.typeLabel.stringValue = LMLocalizedString(@"LemonLoginItemManagerViewController_item_type_service", self.class);
+        self.typeLabel.stringValue = LMLocalizedString(@"后台服务项", self.class);
     }
 }
 

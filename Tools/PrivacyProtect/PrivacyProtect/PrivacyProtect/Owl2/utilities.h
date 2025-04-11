@@ -34,7 +34,6 @@ NSString* getAppVersion(void);
 //get (true) parent
 NSDictionary* getRealParent(pid_t pid);
 
-
 //extract value from plist
 // takes optional wait time...
 id getValueFromPlist(NSString* plistFile, NSString* key, BOOL insensitive, float maxWait);
@@ -48,8 +47,8 @@ NSString* topLevelApp(NSString* binaryPath);
 // b) signed with signing auth
 OSStatus verifyApp(NSString* path, NSString* signingAuth);
 
-//get name of logged in user
-NSString* getConsoleUser(void);
+//get user id of logged in user
+uid_t getConsoleUserID(void);
 
 //check if process is alive
 BOOL isProcessAlive(pid_t processID);
@@ -125,12 +124,13 @@ NSString* valueForStringItem(NSString* item);
 // thanks: http://lapcatsoftware.com/articles/detect-app-translocation.html
 BOOL isTranslocated(NSString* path);
 
-//running on M1?
-BOOL AppleSilicon(void);
-
 //show an alert
-NSModalResponse showAlert(NSString* messageText, NSString* informativeText);
+NSModalResponse showAlert(NSString* messageText, NSString* informativeText, NSString* buttonTitle);
 
+//does console user have admin privs?
 BOOL hasAdminPrivileges(void);
+
+//get Do Not Distrub state
+BOOL DNDState(void);
 
 #endif

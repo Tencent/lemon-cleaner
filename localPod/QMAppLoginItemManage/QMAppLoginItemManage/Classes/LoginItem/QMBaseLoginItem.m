@@ -8,6 +8,7 @@
 
 #import "QMBaseLoginItem.h"
 #import <QMAppLoginItemManage/QMAppLoginItemManage.h>
+#import "QMLoginItemCacheHelper.h"
 
 ///base login item
 @implementation QMBaseLoginItem
@@ -63,6 +64,48 @@
         default:
             break;
     }
+}
+
+
+#pragma mark -
+
+- (NSString *)uid {
+    if (!_uid) {
+        if ([self.appPath isKindOfClass:NSString.class] && self.appPath.length > 0) {
+            _uid = self.appPath;
+        }
+    }
+    return _uid;
+}
+
+- (BOOL)isDisabledByUser {
+    if (!self.uid) return NO;
+    return [self.cacheDict[self.uid] boolValue];
+}
+
+- (void)setIsDisabledByUser:(BOOL)isDisabledByUser {
+    if (!self.uid) return;
+    
+    BOOL lastValue = [self.cacheDict[self.uid] boolValue];
+    
+    if (isDisabledByUser) {
+        self.cacheDict[self.uid] = @(YES);
+    } else {
+        [self.cacheDict removeObjectForKey:self.uid];
+    }
+    
+    if (lastValue != isDisabledByUser) {
+        [[QMLoginItemCacheHelper sharedInstance] updateUserDefaultsWithCacheKey:self.cacheKey];
+    }
+}
+
+- (NSString *)cacheKey {
+    return @"QMBaseLoginItemCacheKey";
+}
+
+- (NSMutableDictionary *)cacheDict {
+    QMLoginItemCacheHelper *helper = [QMLoginItemCacheHelper sharedInstance];
+    return [helper dictForCacheKey:self.cacheKey];
 }
 
 @end

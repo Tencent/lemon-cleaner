@@ -101,12 +101,12 @@
     } else {
         switchBtn.on = NO;
     }
-    [self updateSwitchLabel:label withSwitchBtn:switchBtn];
+    [self updateSwitchLabel:label withDisableByUser:loginItem.isDisabledByUser];
 }
 
 - (void)updateLoginItem:(QMBaseLoginItem *)loginItem switchLabel:(NSTextField *)label withSwtichBtn:(COSwitch *)button {
     loginItem.isEnable = button.on;
-    [self updateSwitchLabel:label withSwitchBtn:button];
+    [self updateSwitchLabel:label withDisableByUser:loginItem.isDisabledByUser];
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         if (button.on) {
             [loginItem enableLoginItem];
@@ -116,11 +116,11 @@
     });
 }
 
-- (void)updateSwitchLabel:(NSTextField *)label withSwitchBtn:(COSwitch *)button {
-    if (button.on) {
-        label.stringValue = LMLocalizedString(@"LemonLoginItemManagerViewController_setting_status_enabled",self.class);
+- (void)updateSwitchLabel:(NSTextField *)label withDisableByUser:(BOOL)isDisabledByUser {
+    if (isDisabledByUser) {
+        label.stringValue = LMLocalizedString(@"已禁止",self.class);
     } else {
-        label.stringValue = LMLocalizedString(@"LemonLoginItemManagerViewController_setting_status_disabled",self.class);
+        label.stringValue = @"";
     }
 }
 

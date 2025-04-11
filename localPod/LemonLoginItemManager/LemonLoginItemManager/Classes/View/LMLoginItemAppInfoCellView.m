@@ -12,6 +12,7 @@
 #import <QMCoreFunction/NSColor+Extension.h>
 #import <QMUICommon/LMAppThemeHelper.h>
 #import <QMCoreFunction/LanguageHelper.h>
+#import <QMCoreFunction/LMReferenceDefines.h>
 
 #define LMLocalizedString(key,className)  NSLocalizedStringFromTableInBundle(key, nil, [NSBundle bundleForClass:className], @"");
 
@@ -66,7 +67,7 @@
 
 
 - (void)updateUI {
-    NSString *localString = LMLocalizedString(@"LemonLoginItemManagerViewController_item_count", self.class);
+    NSString *localString = LMLocalizedString(@"%ld 项", self.class);
     if ((self.loginItemInfo.totalItemCount <= 1) && ([LanguageHelper getCurrentSystemLanguageType] == SystemLanguageTypeEnglish) ) {
         localString = [localString substringToIndex:localString.length - 1];
     }
@@ -85,15 +86,15 @@
 - (void)updateStatusLabelStyle {
     NSColor *textColor = [NSColor colorWithHex:0x1A83F7];
     NSColor *bgColor = [NSColor colorWithHex:0x1A83F7 alpha:0.15];
-    NSString *statusText = LMLocalizedString(@"LemonLoginItemManagerViewController_status_partial_enable", self.class);
+    NSString *statusText = LMLocalizedString(@"部分开启", self.class);
     if (self.loginItemInfo.enableStatus == LMAppLoginItemEnableStatusAllEnabled) {
         textColor = [NSColor colorWithHex:0x04D999];
-        statusText = LMLocalizedString(@"LemonLoginItemManagerViewController_status_all_enabled",self.class);
+        statusText = LMLocalizedString(@"全部开启",self.class);
         bgColor = [NSColor colorWithHex:0x04D999 alpha:0.15];
 
     } else if (self.loginItemInfo.enableStatus == LMAppLoginItemEnableStatusAllDisabled) {
         textColor = [NSColor colorWithHex:0x94979B];
-        statusText = LMLocalizedString(@"LemonLoginItemManagerViewController_status_all_disabled",self.class);
+        statusText = LMLocalizedString(@"全部关闭",self.class);
         bgColor = [NSColor colorWithHex:0x94979B alpha:0.15];
     }
     self.statusLabel.stringValue = statusText;
@@ -102,12 +103,14 @@
     self.switchButton.onValueChanged = nil;
     if (self.loginItemInfo.enableStatus != LMAppLoginItemEnableStatusAllDisabled) {
         self.switchButton.on = YES;
-        self.switchLabel.stringValue = LMLocalizedString(@"LemonLoginItemManagerViewController_setting_status_enabled",self.class);
     } else {
         self.switchButton.on = NO;
-        self.switchLabel.stringValue = LMLocalizedString(@"LemonLoginItemManagerViewController_setting_status_disabled",self.class);
     }
+    self.switchLabel.stringValue = @"";
+    @weakify(self);
     [self.switchButton setOnValueChanged:^(COSwitch *button) {
+        @strongify(self);
+        // app级别的被点击
         [self.delegate clickSwitchButton:button onCellView:self];
         self.loginItemInfo.enableStatus = button.on ? LMAppLoginItemEnableStatusAllEnabled : LMAppLoginItemEnableStatusAllDisabled;
     }];

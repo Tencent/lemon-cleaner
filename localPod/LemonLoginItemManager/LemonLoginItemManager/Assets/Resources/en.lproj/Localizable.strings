@@ -6,26 +6,26 @@
   Copyright © 2020 Tencent. All rights reserved.
 */
 
-"LemonLoginItemManagerViewController_window_title" = "Startup items";
+"开机启动项管理" = "Startup items";
 
-"LemonLoginItemManagerViewController_loading" = "Loading... Please wait a moment";
-"LemonLoginItemManagerViewController_search_tips" = "Search";
-"LemonLoginItemManagerViewController_search_result_tips_begin_label_complex" = "%d results match:";
-"LemonLoginItemManagerViewController_search_result_tips_begin_label_singular" = "%d result matchs:";
-"LemonLoginItemManagerViewController_no_result" = "No matching results";
-"LemonLoginItemManagerViewController_empty" = "No startup items on your Mac.";
+"加载中，请耐心等待..." = "Loading... Please wait a moment";
+"搜索" = "Search";
+"搜索到以下 %d 个开机自启项:" = "%d result match:";
+"搜索到以下多个开机自启项:" = "%d result matches:";
 
-"LemonLoginItemManagerViewController_column_name_app" = "Applications";
-"LemonLoginItemManagerViewController_column_name_status" = "Status";
-"LemonLoginItemManagerViewController_column_name_setting" = "Option";
-"LemonLoginItemManagerViewController_column_name_count" = "Items";
-"LemonLoginItemManagerViewController_status_all_enabled" = "All enabled";
-"LemonLoginItemManagerViewController_status_partial_enable" = "Partially enabled";
-"LemonLoginItemManagerViewController_status_all_disabled" = "All disabled";
-"LemonLoginItemManagerViewController_setting_status_enabled" = "Enabled";
-"LemonLoginItemManagerViewController_setting_status_disabled" = "Disabled";
-"LemonLoginItemManagerViewController_item_count" = "%d items";
+"暂未搜索到相关结果" = "No matching results";
+"未找到开机启动项" = "No startup items on your Mac.";
 
-"LemonLoginItemManagerViewController_item_type_app" = "Login items";
-"LemonLoginItemManagerViewController_item_type_service" = "Launch agents";
-"LemonLoginItemManagerViewController_unknown_app" = "Unknown applicaions";
+"应用程序" = "Applications";
+"启用状态" = "Status";
+"设置启动项" = "Option";
+"开机自启项" = "Items";
+"全部开启" = "All open";
+"部分开启" = "Partially open";
+"全部关闭" = "All closed";
+"已禁止" = "Disabled";
+"%ld 项" = "%ld items";
+
+"应用启动项" = "Login items";
+"后台服务项" = "Launch agents";
+"未知应用" = "Unknown applicaions";

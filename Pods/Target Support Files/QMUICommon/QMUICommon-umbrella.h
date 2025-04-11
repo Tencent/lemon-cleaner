@@ -38,6 +38,9 @@
 #import "QMUICommon.h"
 #import "SharedPrefrenceManager.h"
 #import "YRKSpinningProgressIndicator.h"
+#import "LMBubbleProtocol.h"
+#import "LMBubbleView.h"
+#import "LMBubbleWindow.h"
 #import "AcceptsFirstMouseView.h"
 #import "AcceptSubViewClickOutlineView.h"
 #import "ClickableImageView.h"
@@ -97,6 +100,9 @@
 #import "RatingViewController.h"
 #import "QMColorBackgroundView.h"
 #import "QMTransparentWindow.h"
+#import "LMToastContentView.h"
+#import "LMToastView.h"
+#import "LMToastWindow.h"
 
 FOUNDATION_EXPORT double QMUICommonVersionNumber;
 FOUNDATION_EXPORT const unsigned char QMUICommonVersionString[];

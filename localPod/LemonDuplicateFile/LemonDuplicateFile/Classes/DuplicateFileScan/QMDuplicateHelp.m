@@ -163,3 +163,13 @@ CFStringRef FileMD5HashWithData(NSData *fileData, int dataSize)
     return result;
 }
 
+BOOL FileCheckCanRemove(NSString *path) {
+    NSFileManager *fm = [NSFileManager defaultManager];
+    BOOL isDir = NO;
+    if (![fm fileExistsAtPath:path isDirectory:&isDir])
+        return NO;
+    // 过滤只读目录
+    if (isDir && ![fm isWritableFileAtPath:path])
+        return NO;
+    return [fm isDeletableFileAtPath:path];
+}

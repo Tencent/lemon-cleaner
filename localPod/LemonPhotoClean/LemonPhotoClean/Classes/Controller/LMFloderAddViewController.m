@@ -33,6 +33,7 @@
 #import <QMUICommon/QMUICommon-umbrella.h>
 #import <QMUICommon/NSFontHelper.h>
 #import <QMUICommon/FullDiskAccessPermissionViewController.h>
+#import <QMCoreFunction/QMDisk.h>
 
 @interface LMFloderAddViewController ()<LMFolderSelectorDelegate, NSDraggingDestination>{
     NSBundle *myBundle;

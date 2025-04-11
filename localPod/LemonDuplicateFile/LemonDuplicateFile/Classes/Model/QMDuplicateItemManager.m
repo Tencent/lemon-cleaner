@@ -8,6 +8,10 @@
 
 #import "QMDuplicateItemManager.h"
 #import <LemonFileManager/LMAppleScriptTool.h>
+#import "QMDuplicateHelp.h"
+
+// 外接硬盘的起始路径
+static NSString * const kExternalStoragePathPrefix = @"/volumes";
 
 @interface QMDuplicateItemManager () {
     NSMutableArray *_resultItemArray;
@@ -59,6 +63,7 @@
     item.fileType = [QMFileClassification fileExtensionType:filePath];
     item.iconImage = [[NSWorkspace sharedWorkspace] iconForFile:pathArray[0]];
     [item.iconImage setSize:NSMakeSize(32, 32)];
+    item.canRemove = NO;
     // 创建子项
     for (NSUInteger i = 0; i < [pathArray count]; i++) {
         QMDuplicateFile *subItem = [[QMDuplicateFile alloc] init];
@@ -67,6 +72,9 @@
         //subItem.lastAccessTime = [self _lastAccessTime:subItem.filePath];
         subItem.modifyTime = [self _lastModificationTime:subItem.filePath];
         subItem.createTime = [self _createTime:subItem.filePath];
+        subItem.canRemove = FileCheckCanRemove(subItem.filePath);
+        if (subItem.canRemove) item.canRemove = YES;
+        subItem.externalStorage = [[subItem.filePath lowercaseString] hasPrefix:kExternalStoragePathPrefix];
         [item addSubItem:subItem];
     }
     [_resultItemArray addObject:item];

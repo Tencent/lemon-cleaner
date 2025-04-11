@@ -301,8 +301,9 @@
 //        [self.collectionView registerNib:itemNib forItemWithIdentifier:@"LMPhotoPreviewItem"];
         
         
-        NSNib *itemNib = [[NSNib alloc]initWithNibNamed:@"LMPhotoViewItem" bundle:[NSBundle bundleForClass:self.class]];
-        [self.collectionView registerNib:itemNib forItemWithIdentifier:@"LMPhotoPreviewItem"];
+//        NSNib *itemNib = [[NSNib alloc]initWithNibNamed:@"LMPhotoViewItem" bundle:[NSBundle bundleForClass:self.class]];
+//        [self.collectionView registerNib:itemNib forItemWithIdentifier:@"LMPhotoPreviewItem"];
+        [self.collectionView registerClass:LMPhotoViewItem.class forItemWithIdentifier:@"LMPhotoPreviewItem"];
         
 
     } else {
@@ -373,7 +374,7 @@
             viewItem.view.layer.borderWidth = 0;
             //            viewItem.view.layer.borderColor = [NSColor colorWithHex:0x000000].CGColor;
         }
-        
+        viewItem.type = LMPhotoViewItemTypePreview;
         viewItem.representedObject = [self getUnDeleteSimilarPhotoItem: self.localSimilarPhotoGroup].items[sectionIndex];
     } else {
         // Fallback on earlier versions

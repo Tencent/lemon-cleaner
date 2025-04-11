@@ -87,18 +87,18 @@ typedef void (^OwlCompleteBlock)(void);
         _allApps = [self getAllAppInfoWithIndexArray:nil];
         _avMonitor = [[AVMonitor alloc] init];
         
-        __weak typeof(self) weakSelf = self;
-        _avMonitor.completeBlock = ^(AVDevice device, NSControlStateValue state, Client *client) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                @try {
-                    [weakSelf processedWatch:device state:state client:client];
-                } @catch (NSException *exception) {
-                    NSLog(@"%@", exception);
-                } @finally {
-                    
-                }
-            });
-        };
+//        __weak typeof(self) weakSelf = self;
+//        _avMonitor.eventCallback() = ^(AVDevice device, NSControlStateValue state, Client *client) {
+//            dispatch_async(dispatch_get_main_queue(), ^{
+//                @try {
+//                    [weakSelf processedWatch:device state:state client:client];
+//                } @catch (NSException *exception) {
+//                    NSLog(@"%@", exception);
+//                } @finally {
+//                    
+//                }
+//            });
+//        };
         
         [[QMUserNotificationCenter defaultUserNotificationCenter] addDelegate:(id<NSUserNotificationCenterDelegate>)self
                                                                        forKey:kOwlVedioNotification];
@@ -873,7 +873,7 @@ typedef void (^OwlCompleteBlock)(void);
             if ([self.audioObserver isAudioDeviceActive]) {
                 return;
             }
-            [self.avMonitor.audioClients removeAllObjects];
+//            [self.avMonitor.audioClients removeAllObjects];
             
             for (NSString *key in self.owlAudioItemDic) {
                 NSMutableDictionary *dicItem = self.owlAudioItemDic[key];

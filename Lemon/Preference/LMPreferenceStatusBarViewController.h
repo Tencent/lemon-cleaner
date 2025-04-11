@@ -11,6 +11,10 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@interface LMPreferenceMaskView : NSView
+
+@end
+
 @interface LMPreferenceStatusBarViewController : QMBaseViewController
 
 @end

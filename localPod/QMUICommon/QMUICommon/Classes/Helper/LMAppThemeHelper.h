@@ -10,6 +10,31 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+typedef NS_ENUM(NSUInteger, LMColor) {
+    LMColor_Theme = 0,
+    LMColor_Yellow,
+    LMColor_Gray_Hover,
+    LMColor_Green_Normal,
+    LMColor_Green_Hover,
+    LMColor_Green_Disable,
+    LMColor_Green_Text,
+    LMColor_Blue_Normal,
+    LMColor_Red_Normal,
+    LMColor_Title_Black,
+    LMColor_MainText_Black,
+    LMColor_SubText_Dark,
+    LMColor_SubText_Light,
+    LMColor_Text_Gray,
+    LMColor_Border1,
+    LMColor_Border2,
+    
+    LMColor_DefaultBackground,
+    LMColor_White,
+    LMColor_ButtonBackground_Hover,
+    LMColor_ButtonBackground_Press,
+    LMColor_NavigationBackground,
+};
+
 @interface LMAppThemeHelper : NSObject
 /**
  设置NSTextFields的文字颜色
@@ -61,6 +86,9 @@ NS_ASSUME_NONNULL_BEGIN
  @param view view
  */
 +(void)setLayerBackgroundWithMainBgColorFor:(NSView *) view;
+
+// 获取分割线颜色
++(NSColor *)getDivideLineColor;
 
 /**
  colorName : main_bg_color
@@ -180,6 +208,23 @@ NS_ASSUME_NONNULL_BEGIN
 @return colorName : scrollbar_color
 */
 +(NSColor *)getScrollbarColor;
+
+#pragma mark - 5.2.0
+
+/// 获取适配了暗黑模式的色值
+/// - Parameter color: see LMColor
++ (NSColor *)getColor:(LMColor)color;
+
+/// 获取色值，可不适配暗黑模式
+/// - Parameters:
+///   - color: see LMColor
+///   - lightModeOnly: 是否仅返回浅色模式
++ (NSColor *)getColor:(LMColor)color lightModeOnly:(BOOL)lightModeOnly;
+
+/// 获取CGColorRef的非动态色值
+/// 因 layer.backgroundColor 不支持动态色值，故提供此方法。适配暗黑模式时需同时在 -[NSView viewDidChangeEffectiveAppearance] 方法中更新CGColor
+/// - Parameter color: see LMColor
++ (CGColorRef)getCGColorRef:(LMColor)color;
 
 @end
 

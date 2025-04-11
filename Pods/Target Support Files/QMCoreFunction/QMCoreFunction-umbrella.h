@@ -16,6 +16,7 @@
 #import "McFileEvent.h"
 #import "McProcessInfo.h"
 #import "McProcessInfoData.h"
+#import "QMDisk.h"
 #import "CutBinary.h"
 #import "McFunCleanFile.h"
 #import "LMKeychain.h"

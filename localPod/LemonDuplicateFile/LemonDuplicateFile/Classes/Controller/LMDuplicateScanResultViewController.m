@@ -28,6 +28,7 @@
 #import <QMUICommon/LMViewHelper.h>
 #import <QMUICommon/LMBorderButton.h>
 #import <QMUICommon/LMAppThemeHelper.h>
+#import <QMUICommon/LMCheckboxButton.h>
 
 #define FILTER_BTN_COLOR_SEL    0x515151
 #define FILTER_BTN_COLOR_NO_SEL 0x94979b
@@ -1000,7 +1001,6 @@
     [_previewTableView reloadData];
     [self updateTitleSelectInfo];
 }
-
 
 - (NSString *)calculateTotalDuplicateFilesSize {
     if (!_resultArray) {

@@ -15,6 +15,12 @@
 #import <QMUICommon/LMPathBarView.h>
 #import <QMUICommon/LMAppThemeHelper.h>
 #import <QMUICommon/NSFontHelper.h>
+#import <QMCoreFunction/LMReferenceDefines.h>
+#import <QMUICommon/LMBubbleView.h>
+#import <QMCoreFunction/LanguageHelper.h>
+
+static CGFloat kArrowOffset_ch = 30.0;
+static CGFloat kArrowOffset_en = 90.0;
 
 @interface DuplicateSubItemCellView () {
 
@@ -25,7 +31,7 @@
 //@property(nonatomic, strong) NSTextField *pathLabel;
 @property(nonatomic, strong) NSImageView *iconImageView;
 @property (nonatomic)  LMPathBarView *pathBarView;
-
+@property (nonatomic, strong) LMBubbleView *bubbleView;
 @end
 
 @implementation DuplicateSubItemCellView {
@@ -57,6 +63,25 @@
         make.width.height.equalTo(@14);
         make.centerY.equalTo(self);
     }];
+    @weakify(self);
+    _checkBox.hoverBubbleHandler = ^(BOOL value) {
+        @strongify(self);
+        if (self.item.canRemove) return;
+        if (value) {
+            if (self.item.externalStorage) {
+                [self.bubbleView setBubbleTitle:NSLocalizedStringFromTableInBundle(@"该文件所在磁盘为只读模式，不支持清理", nil, [NSBundle bundleForClass:[self class]], @"")];
+            } else {
+                [self.bubbleView setBubbleTitle:NSLocalizedStringFromTableInBundle(@"该文件为只读模式，不支持清理", nil, [NSBundle bundleForClass:[self class]], @"")];
+            }
+            CGFloat arrowOffset = [LanguageHelper getCurrentSystemLanguageType] == SystemLanguageTypeChinese ? kArrowOffset_ch: kArrowOffset_en;
+            NSPoint point = [self.checkBox convertPoint:NSMakePoint(7 + arrowOffset, -2) toView:nil];
+            CGSize size = [self.bubbleView calculateViewSize];
+            point = NSMakePoint(point.x - size.width, self.window.contentView.frame.size.height - point.y - size.height);
+            [self.bubbleView showInView:self.window.contentView atPosition:point];
+        } else {
+            [self.bubbleView removeFromSuperview];
+        }
+    };
 
 
     _iconImageView = [[NSImageView alloc] init];
@@ -242,6 +267,7 @@
     NSImage *image = [workspace iconForFile:item.filePath];
     _iconImageView.image = image;
     _checkBox.state = _item.selected ? NSControlStateValueOn : NSControlStateValueOff;
+    _checkBox.enabled = _item.canRemove;
 }
 
 - (void)setBackgroundStyle:(NSBackgroundStyle)backgroundStyle{
@@ -258,4 +284,17 @@
     
     return nowTimeString;
 }
+
+- (LMBubbleView *)bubbleView {
+    if (!_bubbleView) {
+        _bubbleView = [LMBubbleView bubbleWithStyle:LMBubbleStyleText arrowDirection:LMBubbleArrowDirectionBottomRight];
+        if ([LanguageHelper getCurrentSystemLanguageType] == SystemLanguageTypeChinese) {
+            _bubbleView.arrowOffset = kArrowOffset_ch;
+        } else {
+            _bubbleView.arrowOffset = kArrowOffset_en;
+        }
+    }
+    return _bubbleView;
+}
+
 @end

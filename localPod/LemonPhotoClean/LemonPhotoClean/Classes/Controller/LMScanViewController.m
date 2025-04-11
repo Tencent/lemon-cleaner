@@ -20,6 +20,19 @@
 #import <QMUICommon/LMAppThemeHelper.h>
 
 static NSTimeInterval kCollectionPathsProgressTimeInterval = 0.3;
+// 外接硬盘的起始路径
+static NSString * const kExternalStoragePathPrefix = @"/volumes";
+
+BOOL FileCheckCanRemove(NSString *path) {
+    NSFileManager *fm = [NSFileManager defaultManager];
+    BOOL isDir = NO;
+    if (![fm fileExistsAtPath:path isDirectory:&isDir])
+        return NO;
+    // 过滤只读目录
+    if (isDir && ![fm isWritableFileAtPath:path])
+        return NO;
+    return [fm isDeletableFileAtPath:path];
+}
 
 @interface LMScanViewController ()
 
@@ -215,12 +228,22 @@ static NSTimeInterval kCollectionPathsProgressTimeInterval = 0.3;
             BOOL isExist = [fileManager fileExistsAtPath:item.path isDirectory:&isDirectory];
             if(!isExist) continue;
             item.imageSize = [self fileSizeAtPath:path];
-            if ([path isEqualToString:preferPath]) {
-                item.isPrefer = YES;
-                item.isSelected = NO;
-            } else {
+            
+            if (!FileCheckCanRemove(item.path)) {
+                // 只读
                 item.isPrefer = NO;
-                item.isSelected = YES;
+                item.isSelected = NO;
+                item.canRemove = NO;
+                item.externalStorage = [[item.path lowercaseString] hasPrefix:kExternalStoragePathPrefix];
+            } else {
+                if ([path isEqualToString:preferPath]) {
+                    item.isPrefer = YES;
+                    item.isSelected = NO;
+                } else {
+                    item.isPrefer = NO;
+                    item.isSelected = YES;
+                }
+                item.canRemove = YES;
             }
             [group.items addObject:item];
         }

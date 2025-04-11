@@ -151,10 +151,24 @@ static NSOperationQueue* loadingOperationQueue = nil;
     item.isSelected = self.isSelected;
     item.isDeleted = self.isDeleted;
     item.isPrefer = self.isPrefer;
+    item.canRemove = self.canRemove;
+    item.externalStorage = self.externalStorage;
     item.previewImage = self.previewImage;
     item.imageSize = self.imageSize;
 
     return item;
+}
+
+#pragma mark - setter
+
+- (void)setIsSelected:(BOOL)isSelected {
+    _isSelected = isSelected;
+    if (self.isSelectedDidChangeBlock) self.isSelectedDidChangeBlock(self);
+}
+
+- (void)setPreviewImage:(NSImage *)previewImage {
+    _previewImage = previewImage;
+    if (self.previewImageDidChangeBlock) self.previewImageDidChangeBlock(self);
 }
 
 @end

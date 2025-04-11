@@ -27,8 +27,9 @@
 "PreferenceViewController_setupViews_1553049563_15" = "网速";
 "PreferenceViewController_setupViews_1553049563_16" = "CPU占用";
 "PreferenceViewController_setupViews_1553049563_17" = "GPU占用";
-"PreferenceViewController_setupViews_bootMonitorTitle _16" = "开机时显示";
-"PreferenceViewController_toggleStatusBarVisibility" = "显示状态栏图标";
+"PreferenceViewController_setupViews_bootMonitorTitle _16" = "开机时显示状态栏";
+"PreferenceViewController_setupViews_showMonitorWhenOpenLemon" = "打开主界面时显示状态栏";
+"PreferenceViewController_setupViews_useMonitor" = "启用状态栏";
 "About_windowAboutTitle_lemon" = "关于腾讯柠檬清理";
 "Appdelegate_about_windowAboutTitle_lemonlite" = "关于Lemon Cleaner Lite";
 "AppDelegate_fetchResearchChannel_notification_1" = "关闭";

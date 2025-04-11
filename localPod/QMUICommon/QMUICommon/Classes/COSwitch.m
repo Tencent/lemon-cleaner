@@ -194,6 +194,20 @@
     }
 }
 
+- (void)updateSwitchState:(BOOL)on {
+    if (_on == on) return;
+    _on = on;
+    if (self.isAnimator) {
+        [NSAnimationContext runAnimationGroup:^(NSAnimationContext *context) {
+            context.duration = 0.1;
+            [[self animator] setProgress: on ? 1 : 0];
+        } completionHandler:^{
+        }];
+    } else {
+        [self setProgress: on ? 1 : 0];
+    }
+}
+
 - (void)setProgress:(CGFloat)progress
 {
     _progress = progress;
@@ -226,6 +240,10 @@
     }
     self.on = !self.on;
     [self.animator setMouseDownProgress:0];
+    
+    if (self.onDidClicked) {
+        self.onDidClicked(self);
+    }
 }
 
 - (void)mouseDown:(NSEvent *)theEvent
@@ -253,6 +271,9 @@
 
 - (void)mouseExited:(NSEvent *)theEvent
 {
+    if (!self.isEnable) {
+        return;
+    }
     [[self animator] setHover:NO];
 }
 
@@ -263,4 +284,5 @@
         return self;
     }
 }
+
 @end

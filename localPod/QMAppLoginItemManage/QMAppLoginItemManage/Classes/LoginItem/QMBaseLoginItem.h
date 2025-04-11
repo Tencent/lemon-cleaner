@@ -18,7 +18,10 @@ typedef enum{
 /*
  base login item
  */
-@interface QMBaseLoginItem : NSObject
+@interface QMBaseLoginItem : NSObject {
+@protected
+    NSString *_uid;
+}
 
 ///app path
 @property NSString *appPath;
@@ -39,6 +42,13 @@ typedef enum{
 - (void)disableLoginItem;
 
 - (void)enableLoginItem;
+
+/// 被用户禁用
+@property (nonatomic) BOOL isDisabledByUser;
+/// 唯一标识
+@property (nonatomic, copy, readonly) NSString *uid;
+@property (nonatomic, copy, readonly) NSString *cacheKey;
+@property (nonatomic, strong, readonly) NSMutableDictionary *cacheDict;
 
 @end
 

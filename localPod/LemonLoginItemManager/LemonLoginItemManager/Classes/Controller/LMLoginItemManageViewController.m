@@ -114,17 +114,16 @@ typedef enum {
 }
 
 - (void)initLocalizeString {
-    self.windowTitle.stringValue = LMLocalizedString(@"LemonLoginItemManagerViewController_window_title", self.class);
-    self.nameSortableBtn.stringValue = LMLocalizedString(@"LemonLoginItemManagerViewController_column_name_app", self.class);
-    self.statusSortableButton.stringValue = LMLocalizedString(@"LemonLoginItemManagerViewController_column_name_status", self.class);
-    self.columnSettingLabel.stringValue = LMLocalizedString(@"LemonLoginItemManagerViewController_column_name_setting", self.class);
-    self.columnCountLabel.stringValue = LMLocalizedString(@"LemonLoginItemManagerViewController_column_name_count", self.class);
-    self.searchResultTipsBeginLabel.stringValue = LMLocalizedString(@"LemonLoginItemManagerViewController_search_result_tips_begin_label", self.class);
-    self.searchEmptyLabel.stringValue = LMLocalizedString(@"LemonLoginItemManagerViewController_no_result", self.class);
-    self.loadingLabel.stringValue = LMLocalizedString(@"LemonLoginItemManagerViewController_loading", self.class);
-    self.searchTextField.placeholderString = LMLocalizedString(@"LemonLoginItemManagerViewController_search_tips", self.class);
-    self.nameSortableBtn.title = LMLocalizedString(@"LemonLoginItemManagerViewController_column_name_app", self.class);
-    self.statusSortableButton.title = LMLocalizedString(@"LemonLoginItemManagerViewController_column_name_status", self.class);
+    self.windowTitle.stringValue = LMLocalizedString(@"开机启动项管理", self.class);
+    self.nameSortableBtn.stringValue = LMLocalizedString(@"应用程序", self.class);
+    self.statusSortableButton.stringValue = LMLocalizedString(@"启用状态", self.class);
+    self.columnSettingLabel.stringValue = LMLocalizedString(@"设置启动项", self.class);
+    self.columnCountLabel.stringValue = LMLocalizedString(@"开机自启项", self.class);
+    self.searchEmptyLabel.stringValue = LMLocalizedString(@"暂未搜索到相关结果", self.class);
+    self.loadingLabel.stringValue = LMLocalizedString(@"加载中，请耐心等待...", self.class);
+    self.searchTextField.placeholderString = LMLocalizedString(@"搜索", self.class);
+    self.nameSortableBtn.title = LMLocalizedString(@"应用程序", self.class);
+    self.statusSortableButton.title = LMLocalizedString(@"启用状态", self.class);
 }
 
 - (void)initTableView {
@@ -220,7 +219,7 @@ typedef enum {
         } else {
             //如果没有匹配到App，则归纳为未知应用
             if (!self.otherLoginItemInfo) {
-                NSString *localString = LMLocalizedString(@"LemonLoginItemManagerViewController_unknown_app", self.class);
+                NSString *localString = LMLocalizedString(@"未知应用", self.class);
                 self.otherLoginItemInfo = [[LMAppLoginItemInfo alloc] initWithAppName:localString];
             }
             [self.otherLoginItemInfo addLaunchItem:loginItem];
@@ -452,11 +451,13 @@ typedef enum {
         NSArray *launchItemData = [appInfoCellView.loginItemInfo getLaunchItemData];
         for (QMBaseLoginItem *loginItem in launchItemData) {
             loginItem.isEnable = switchBtn.on;
+            loginItem.isDisabledByUser = !switchBtn.on;
             [self udpateLoginItem:loginItem WithSwitchBtn:switchBtn];
         }
         NSArray *loginItemData = [appInfoCellView.loginItemInfo getLoginItemData];
         for (QMBaseLoginItem *loginItem in loginItemData) {
             loginItem.isEnable = switchBtn.on;
+            loginItem.isDisabledByUser = !switchBtn.on;
             [self udpateLoginItem:loginItem WithSwitchBtn:switchBtn];
         }
         [self.outlineView reloadItem:appInfoCellView.loginItemInfo reloadChildren:YES];
@@ -518,9 +519,9 @@ typedef enum {
 }
 
 - (void)updateSearchResultTipsViewWithCount: (NSInteger)count {
-    NSString *localString =  LMLocalizedString(@"LemonLoginItemManagerViewController_search_result_tips_begin_label_complex", self.class);
+    NSString *localString =  LMLocalizedString(@"搜索到以下多个开机自启项:", self.class);
     if (count <= 1) {
-        localString =  LMLocalizedString(@"LemonLoginItemManagerViewController_search_result_tips_begin_label_singular", self.class);
+        localString =  LMLocalizedString(@"搜索到以下 %d 个开机自启项:", self.class);
     }
     localString = [NSString stringWithFormat:localString,count];
     NSRange range = [localString rangeOfString:[NSString stringWithFormat:@"%ld",(long)count]];
@@ -581,7 +582,7 @@ typedef enum {
     self.searchTextField.hidden = YES;
     self.loadingContentView.hidden = YES;
     self.emptyView.hidden = NO;
-    self.searchEmptyLabel.stringValue = LMLocalizedString(@"LemonLoginItemManagerViewController_empty", self.class);
+    self.searchEmptyLabel.stringValue = LMLocalizedString(@"暂未搜索到相关结果", self.class);
     [self showFeedBackLabel];
 }
 

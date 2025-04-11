@@ -975,10 +975,7 @@
 				INFOPLIST_FILE = "LemonMonitor/LemonMonitor-Info.plist";
 				INSTALL_PATH = "@rpath";
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks @loader_path/../../../ @executable_path/../Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/LemonMonitor/Bugly",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MARKETING_VERSION = 4.7.0;
 				ONLY_ACTIVE_ARCH = NO;
@@ -1057,10 +1054,7 @@
 				INFOPLIST_FILE = "LemonMonitor/LemonMonitor-Info.plist";
 				INSTALL_PATH = "@rpath";
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks @loader_path/../../../ @executable_path/../Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/LemonMonitor/Bugly",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MARKETING_VERSION = 4.7.0;
 				OTHER_CODE_SIGN_FLAGS = "--timestamp -o library";

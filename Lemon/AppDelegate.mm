@@ -725,8 +725,8 @@ extern "C" int CmcGetCurrentAppVersion(char *version, int version_size, char *bu
         {
             NSLog(@"%s, %@", __FUNCTION__, @"has no kLemonShowMonitorCfg");
             
-            // 不存在旧的配置
-            newType = STATUS_TYPE_BOOTSHOW | STATUS_TYPE_LOGO ;
+            // 不存在旧的配置, 默认logo + 打开Lemon时显示 + 开机时显示 + 启动状态栏
+            newType = STATUS_TYPE_BOOTSHOW | STATUS_TYPE_GLOBAL | STATUS_TYPE_USE | STATUS_TYPE_LOGO ;
             self.runningType = LemonAppRunningFirstInstall;
             // 保存到新配置中
             [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithInteger:newType] forKey:kLemonShowMonitorCfg];
@@ -736,6 +736,20 @@ extern "C" int CmcGetCurrentAppVersion(char *version, int version_size, char *bu
             NSLog(@"%s, %@", __FUNCTION__, @"has kLemonShowMonitorCfg");
             // 已经存在，以存在的为准
             newType = [[[NSUserDefaults standardUserDefaults] objectForKey:kLemonShowMonitorCfg] integerValue];
+        }
+        
+        // 现在变成有总开关，打开Lemon时显示 + 开机时显示 任一种开则总开关开启状态
+        if ((newType & STATUS_TYPE_GLOBAL) > 0 ||
+            (newType & STATUS_TYPE_BOOTSHOW) > 0 ) {
+            newType |= STATUS_TYPE_USE;
+            [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithInteger:newType] forKey:kLemonShowMonitorCfg];
+        }
+        
+        // 现在变成有总开关，打开Lemon时显示 + 开机时显示 都关则总开关为关闭状态
+        if ((newType & STATUS_TYPE_GLOBAL) == 0 &&
+            (newType & STATUS_TYPE_BOOTSHOW) == 0 ) {
+            newType &= ~STATUS_TYPE_USE;
+            [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithInteger:newType] forKey:kLemonShowMonitorCfg];
         }
         
         if (newType == STATUS_TYPE_BOOTSHOW ||
@@ -760,6 +774,12 @@ extern "C" int CmcGetCurrentAppVersion(char *version, int version_size, char *bu
     {
         //
         [self getMonitorCoinfig];
+        
+        NSInteger newType = [[[NSUserDefaults standardUserDefaults] objectForKey:kLemonShowMonitorCfg] integerValue];
+        if ( (newType & STATUS_TYPE_GLOBAL) == 0) {
+            NSLog(@"type global : 0, can not show monitor on opening Lemon");
+            return;
+        }
         
         dispatch_async(dispatch_get_global_queue(0, 0), ^{
             NSArray *runningApps = [NSRunningApplication runningApplicationsWithBundleIdentifier:MONITOR_APP_BUNDLEID];

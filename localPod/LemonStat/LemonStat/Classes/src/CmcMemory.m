@@ -111,6 +111,70 @@ uint64_t CmcGetStolenMemorySize()
 uint64_t g_totalmem = 0;
 
 // get physical memory information
+// index from 0 - 5: free / inactive / active / wired / 系统物理内存 / 可使用的
+// index from 0 - 1: pagein / pageout
+// CmcGetPhysMemoryInfo升级版，使用 vm_statistics64_data_t
+int CmcGetPhysMemoryInfo2(uint64_t mem_info[6], uint64_t mem_inout[2])
+{
+    kern_return_t kr;
+    vm_size_t pagesize;
+    vm_statistics64_data_t vm_stat;
+    mach_msg_type_number_t count = sizeof(vm_stat) / sizeof(natural_t);
+    
+    if (mem_info == NULL || mem_inout == NULL)
+        return -1;
+    
+    // get total memory
+    if (g_totalmem == 0)
+    {
+        uint64_t totalmem = 0;
+        size_t size = sizeof(totalmem);
+        int mib[] = {CTL_HW, HW_MEMSIZE};
+        kr = sysctl(mib, 2, &totalmem, &size, NULL, 0);
+        if (kr == 0)
+        {
+            g_totalmem = totalmem;
+        } else {
+            McLog(MCLOG_ERR, @"[%s] sysctl get total mem fail: %d", __FUNCTION__, kr);
+            return -1;
+        }
+    }
+    
+    // get page size
+    kr = host_page_size(mach_host_self(), &pagesize);
+    if (kr != KERN_SUCCESS)
+    {
+        McLog(MCLOG_ERR, @"[%s] get page size fail: %d", __FUNCTION__, kr);
+        return -1;
+    }
+    
+    // get vm info
+    kr = host_statistics64(mach_host_self(), HOST_VM_INFO64, (host_info_t)&vm_stat, &count);
+    if (kr != KERN_SUCCESS)
+    {
+        McLog(MCLOG_ERR, @"[%s] get host statics fail: %d", __FUNCTION__, kr);
+        return -1;
+    }
+    
+    mem_info[0] = vm_stat.free_count * pagesize;
+    mem_info[1] = vm_stat.inactive_count * pagesize;
+    mem_info[2] = vm_stat.active_count * pagesize;
+    mem_info[3] = vm_stat.wire_count * pagesize;
+    mem_info[4] = g_totalmem;
+    //mem_info[5]为可使用的内存
+    mem_info[5] = g_totalmem - (vm_stat.active_count + vm_stat.wire_count + vm_stat.compressor_page_count) * pagesize;
+
+    uint64_t pagein = vm_stat.pageins * pagesize;
+    uint64_t pageout = vm_stat.pageouts * pagesize;
+    mem_inout[0] = pagein;
+    mem_inout[1] = pageout;
+    //McLog(MCLOG_INFO, @"[%s] pagein %3.2f GB pageout %3.2f GB", __FUNCTION__,
+    //      (double)pagein / (1024*1024*1024), (double)pageout / (1024*1024*1024));
+    
+    return 0;
+}
+
+// get physical memory information
 // index from 0 - 3: free / inactive / active / wired
 // index from 0 - 1: pagein / pageout
 int CmcGetPhysMemoryInfo(uint64_t mem_info[5], uint64_t mem_inout[2])

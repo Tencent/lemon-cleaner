@@ -11,7 +11,7 @@
 #import "OwlWindowController.h"
 #import "OwlLogViewController.h"
 #import "OwlWhiteListViewController.h"
-#import "OwlManager.h"
+#import "Owl2Manager.h"
 #import "OwlConstant.h"
 #import <QMCoreFunction/NSColor+Extension.h>
 #import <QMUICommon/NSFontHelper.h>
@@ -91,7 +91,7 @@
         layer.backgroundColor = [NSColor whiteColor].CGColor;
         _ccView.layer = layer;
         self.view = containView;
-        if ([OwlManager shareInstance].isFetchDataFinish) {
+        if ([Owl2Manager sharedManager].isFetchDataFinish) {
             [self setFinishUI:frame];
         } else {
             [self setLoadingUI:frame];
@@ -130,7 +130,7 @@
     [[QMUserNotificationCenter defaultUserNotificationCenter] removeScheduledNotificationWithKey:@"OwlAudioCheckOnceNotification" flagsBlock:nil];
 }
 - (void)whiteListChange:(NSNotification*)no{
-    _wlistBtn.title = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"OwlViewController_whiteListChange_NSString_1", nil, [NSBundle bundleForClass:[self class]], @""), (unsigned long)[OwlManager shareInstance].wlArray.count];
+    _wlistBtn.title = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"OwlViewController_whiteListChange_NSString_1", nil, [NSBundle bundleForClass:[self class]], @""), (unsigned long)[Owl2Manager sharedManager].wlArray.count];
 }
 
 - (void)setLoadingUI:(NSRect)frame{
@@ -156,10 +156,10 @@
     [indicator startAnimation:nil];
     __weak typeof(self) weakSelf = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        while (![OwlManager shareInstance].isFetchDataFinish)
+        while (![Owl2Manager sharedManager].isFetchDataFinish)
         {
             sleep(1);
-            [[OwlManager shareInstance] loadOwlDataFromMonitor];
+            [[Owl2Manager sharedManager] loadOwlDataFromMonitor];
         }
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -221,7 +221,7 @@
     __weak typeof(self) weakSelf = self;
     NSBundle *bundle = [NSBundle bundleForClass:[self class]];
     [vedioSwitch setOnValueChanged:^(COSwitch *button) {
-        [[OwlManager shareInstance] setWatchVedio:button.on toDb:YES];
+        [[Owl2Manager sharedManager] setWatchVedio:button.on toDb:YES];
         if (button.on) {
             vedioImageView.image = [bundle imageForResource:@"owl_vedio_nomal"];
             [weakSelf showToastForFirst:YES];
@@ -234,7 +234,7 @@
                                                            deliverImmediately:YES];
         [[NSUserDefaults standardUserDefaults] setBool:button.on forKey:K_IS_WATCHING_VEDIO];
     }];
-    vedioSwitch.on = [[OwlManager shareInstance] isWatchVedio];
+    vedioSwitch.on = [[Owl2Manager sharedManager] isWatchVideo];
     if (vedioSwitch.on) {
         vedioImageView.image = [bundle imageForResource:@"owl_vedio_nomal"];
     } else {
@@ -244,7 +244,7 @@
     COSwitch *audioSwitch = [[COSwitch alloc] init];
     self.audioSwitch = audioSwitch;
     [audioSwitch setOnValueChanged:^(COSwitch *button) {
-        [[OwlManager shareInstance] setWatchAudio:button.on toDb:YES];
+        [[Owl2Manager sharedManager] setWatchAudio:button.on toDb:YES];
         if (button.on) {
             audioImageView.image = [bundle imageForResource:@"owl_audio_nomal"];
             [weakSelf showToastForFirst:NO];
@@ -257,7 +257,7 @@
                                                            deliverImmediately:YES];
         [[NSUserDefaults standardUserDefaults] setBool:button.on forKey:K_IS_WATCHING_AUDIO];
     }];
-    audioSwitch.on = [[OwlManager shareInstance] isWatchAudio];
+    audioSwitch.on = [[Owl2Manager sharedManager] isWatchAudio];
     if (audioSwitch.on) {
         audioImageView.image = [bundle imageForResource:@"owl_audio_nomal"];
     } else {
@@ -288,7 +288,7 @@
     [self.bottomBgView addSubview:logBtn];
     
     _wlistBtn = [[NSButton alloc] init];
-    _wlistBtn.title = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"OwlViewController_setFinishUI_NSString_7", nil, [NSBundle bundleForClass:[self class]], @""), (unsigned long)[OwlManager shareInstance].wlArray.count];
+    _wlistBtn.title = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"OwlViewController_setFinishUI_NSString_7", nil, [NSBundle bundleForClass:[self class]], @""), (unsigned long)[Owl2Manager sharedManager].wlArray.count];
     [_wlistBtn setButtonType:NSButtonTypeMomentaryChange];
     _wlistBtn.target = self;
     _wlistBtn.action = @selector(clickWlistBtn:);
