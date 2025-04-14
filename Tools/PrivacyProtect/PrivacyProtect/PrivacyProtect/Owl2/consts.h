@@ -37,9 +37,6 @@
 //patreon url
 #define PATREON_URL @"https://www.patreon.com/join/objective_see"
 
-//sentry crash reporting URL
-#define SENTRY_DSN @"https://729ac84fd0014ea1aa48ca46386546b6@o130950.ingest.sentry.io/5745525"
-
 //app name
 #define PRODUCT_NAME @"OverSight"
 
@@ -62,13 +59,22 @@
 #define SIGNING_AUTH @"Developer ID Application: Objective-See, LLC (VBG97UB4TA)"
 
 //product version url
-#define PRODUCT_VERSIONS_URL @"https://objective-see.com/products.json"
+#define PRODUCT_VERSIONS_URL @"https://objective-see.org/products.json"
 
 //product url
-#define PRODUCT_URL @"https://objective-see.com/products/oversight.html"
+#define PRODUCT_URL @"https://objective-see.org/products/oversight.html"
 
 //error(s) url
-#define ERRORS_URL @"https://objective-see.com/errors.html"
+#define ERRORS_URL @"https://objective-see.org/errors.html"
+
+//os major
+#define SUPPORTED_OS_MAJOR @"OSMajor"
+
+//os minor
+#define SUPPORTED_OS_MINOR @"OSMinor"
+
+//latest version
+#define LATEST_VERSION @"version"
 
 //close category
 #define CATEGORY_CLOSE @"close"
@@ -110,17 +116,20 @@
 //add rule, allow
 #define BUTTON_ALLOW 1
 
+//preferences file
+#define PREFERENCES @"/Library/Preferences/com.objective-see.oversight.plist"
+
 //prefs
 // disabled status
 #define PREF_IS_DISABLED @"disabled"
 
 //prefs
-// passive mode
-#define PREF_PASSIVE_MODE @"passiveMode"
-
-//prefs
 // icon mode
 #define PREF_NO_ICON_MODE @"noIconMode"
+
+//prefs
+// no external devices mode
+#define PREF_NO_EXTERNAL_DEVICES_MODE @"noExternalDevicesMode"
 
 //prefs
 // update mode
@@ -130,7 +139,7 @@
 #define PREFS_ALLOWED_ITEMS @"allowedItems"
 
 //general error URL
-#define FATAL_ERROR_URL @"https://objective-see.com/errors.html"
+#define FATAL_ERROR_URL @"https://objective-see.org/errors.html"
 
 //key for exit code
 #define EXIT_CODE @"exitCode"
@@ -165,6 +174,9 @@
 //cmdline flag to uninstall
 #define ACTION_UNINSTALL @"-uninstall"
 
+//uninstall via UI
+#define CMD_UNINSTALL_VIA_UI @"-uninstallViaUI"
+
 //flag to uninstall
 #define ACTION_UNINSTALL_FLAG 0
 
@@ -174,20 +186,20 @@
 //flag to install
 #define ACTION_INSTALL_FLAG 1
 
-//button title: upgrade
-#define ACTION_UPGRADE @"Upgrade"
+//show info about notifications
+#define ACTION_SHOW_NOTIFICATION_VIEW 2
 
-//button title: close
-#define ACTION_CLOSE @"Close"
-
-//button title: next
-#define ACTION_NEXT @"Next »"
+//show info about do not disturb
+#define ACTION_SHOW_DND_VIEW 3
 
 //show friends
-#define ACTION_SHOW_SUPPORT 4
+#define ACTION_SHOW_SUPPORT_VIEW 4
 
 //support us
 #define ACTION_SUPPORT 5
+
+//path to chmod
+#define CHMOD @"/bin/chmod"
 
 //path to xattr
 #define XATTR @"/usr/bin/xattr"
@@ -198,24 +210,14 @@
 //path to launchctl
 #define LAUNCHCTL @"/bin/launchctl"
 
-//path to defaults
-#define DEFAULTS @"/usr/bin/defaults"
-
 //path to kill all
 #define KILL_ALL @"/usr/bin/killall"
 
+//path to shell
+#define SHELL @"/bin/bash"
+
 //path to facetime
 #define FACE_TIME @"/System/Applications/FaceTime.app/Contents/MacOS/FaceTime"
-
-//path to avconferenced
-#define AV_CONFERENCED @"/usr/libexec/avconferenced"
-
-//path to Siri
-#define SIRI_APP @"/System/Applications/Siri.app/Contents/MacOS/Siri"
-#define SIRI_SYS @"/System/Library/CoreServices/Siri.app/Contents/MacOS/Siri"
-
-//path to corespeechd
-#define CORE_SPEECHD @"/System/Library/PrivateFrameworks/CoreSpeech.framework/corespeechd"
 
 //rules window
 #define WINDOW_RULES 0
@@ -246,6 +248,9 @@
 
 //av devices
 typedef enum {Device_Camera, Device_Microphone} AVDevice;
+
+//updates
+typedef enum {Update_Error, Update_None, Update_NotSupported, Update_Available} UpdateStatus;
 
 //log levels
 typedef enum {Log_Level_Default, Log_Level_Info, Log_Level_Debug} LogLevels;

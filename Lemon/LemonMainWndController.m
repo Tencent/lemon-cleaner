@@ -114,10 +114,12 @@
     [[self.window standardWindowButton:NSWindowZoomButton] setHidden:YES];
     
     CGSize windowSize = self.window.frame.size;
+    CGFloat screenOriginX = [MacDeviceHelper getScreenOriginX];
+    CGFloat screenOriginY = [MacDeviceHelper getScreenOriginY];
     CGFloat screenWidth = [MacDeviceHelper getScreenWidth];
     CGFloat screenHeight = [MacDeviceHelper getScreenHeight];
     CGFloat menuBarHeight = [[[NSApplication sharedApplication] mainMenu] menuBarHeight];
-    CGPoint newPoint = CGPointMake((screenWidth - windowSize.width) / 2, (screenHeight - windowSize.height - menuBarHeight) / 2);
+    CGPoint newPoint = CGPointMake(screenOriginX + (screenWidth - windowSize.width) / 2, screenOriginY + (screenHeight - windowSize.height - menuBarHeight) / 2);
     [self.window setFrame:NSMakeRect(newPoint.x, newPoint.y, 383, 618) display:YES];
     
     [self.bigCleanView addSubview:self.bigCleanViewController.view];
@@ -213,10 +215,13 @@
 //    CGSize windowSize = self.window.frame.size;
     CGFloat windowWidth = 1000;
     CGFloat windowHeight = 618;
+    
+    CGFloat screenOriginX = [MacDeviceHelper getScreenOriginX];
+    CGFloat screenHeightY = [MacDeviceHelper getScreenOriginY];
     CGFloat screenWidth = [MacDeviceHelper getScreenWidth];
     CGFloat screenHeight = [MacDeviceHelper getScreenHeight];
     CGFloat menuBarHeight = [[[NSApplication sharedApplication] mainMenu] menuBarHeight];
-    CGPoint newPoint = CGPointMake((screenWidth - windowWidth) / 2, (screenHeight - windowHeight - menuBarHeight) / 2);
+    CGPoint newPoint = CGPointMake(screenOriginX + (screenWidth - windowWidth) / 2, screenHeightY + (screenHeight - windowHeight - menuBarHeight) / 2);
     return newPoint;
 }
 

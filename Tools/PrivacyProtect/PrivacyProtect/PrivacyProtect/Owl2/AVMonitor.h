@@ -8,54 +8,88 @@
 
 @import Cocoa;
 @import Foundation;
+@import UserNotifications;
 
 #import <CoreAudio/CoreAudio.h>
 #import <CoreMedia/CoreMedia.h>
 #import <Foundation/Foundation.h>
 #import <CoreMediaIO/CMIOHardware.h>
+#import <AVFoundation/AVCaptureDevice.h>
 
-#import "consts.h"
-#import "Client.h"
 #import "Event.h"
 #import "LogMonitor.h"
-#import <QMCoreFunction/QMSafeMutableArray.h>
 
-typedef void (^AVMonitorCompleteBlock)(AVDevice device, NSControlStateValue state, Client* client);
+typedef void (^AVMonitorEventBlock)(Event* event);
 
-@interface AVMonitor : NSObject
+@interface AVMonitor : NSObject <UNUserNotificationCenterDelegate>
 
-//video log monitor
-@property(nonatomic, retain) LogMonitor *videoLogMonitor;
+//log monitor
+@property(nonatomic, retain)LogMonitor* logMonitor;
 
-//audio log monitor
-@property(nonatomic, retain) LogMonitor *audioLogMonitor;
+// 原 logMonitor 没有监听macOS13系统上音频日志，补充监听
+@property(nonatomic, retain) LogMonitor* audio13logMonitor;
 
-//video clients
-@property(nonatomic, retain) QMSafeMutableArray *videoClients;
+//event callback
+@property(nonatomic, copy) AVMonitorEventBlock eventCallback;
 
-//audio clients
-@property(nonatomic, retain) QMSafeMutableArray *audioClients;
+//camera attributions
+@property(nonatomic, retain)NSMutableArray* cameraAttributions;
 
-//audio (mic) callback
-@property(nonatomic, copy) AudioObjectPropertyListenerBlock listenerBlock;
+//audio attributions
+@property(nonatomic, retain)NSMutableArray* audioAttributions;
 
-//camera state
-@property NSControlStateValue cameraState;
+//built in mic
+@property(nonatomic, retain)AVCaptureDevice* builtInMic;
 
-//microphone state
-@property NSControlStateValue microphoneState;
+//built in camera
+@property(nonatomic, retain)AVCaptureDevice* builtInCamera;
 
-//last microphone state
-@property(nonatomic, retain) Event* lastMicEvent;
+//inital mic state
+@property NSControlStateValue initialMicState;
 
-//monitor callback
-@property(nonatomic, copy) AVMonitorCompleteBlock completeBlock;
+//initial camera state
+@property NSControlStateValue initialCameraState;
 
-@end
+//last camera client
+@property NSInteger lastCameraClient;
 
-@interface AVMonitor (API)
+//last camera off
+@property(nonatomic, retain)AVCaptureDevice* lastCameraOff;
+
+//last mic client
+@property NSInteger lastMicClient;
+
+//last mic off
+@property(nonatomic, retain)AVCaptureDevice* lastMicOff;
+
+//audio listeners
+@property(nonatomic, retain)NSMutableDictionary* audioListeners;
+
+//camera listeners
+@property(nonatomic, retain)NSMutableDictionary* cameraListeners;
+
+//per device events
+@property(nonatomic, retain)NSMutableDictionary* deviceEvents;
+
+//last alert (default) interaction
+@property(nonatomic, retain)NSDate* lastNotificationDefaultAction;
+
+//listener queue
+@property(nonatomic, retain)dispatch_queue_t eventQueue;
+
+
+
+/* METHODS */
+
 //start
 -(void)start;
+- (void)watchAllAudioDevice;
+- (void)watchAllVideoDevice;
+- (void)unwatchAllAudioDevice;
+- (void)unwatchAllVideoDevice;
+
+//enumerate active devices
+-(NSMutableArray*)enumerateActiveDevices;
 
 //stop
 -(void)stop;

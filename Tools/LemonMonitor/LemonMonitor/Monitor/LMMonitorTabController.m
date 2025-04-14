@@ -735,7 +735,6 @@ static const CGFloat kTopPadding = 10;
     }
 
     if (ttype == NSTerminateNow) {
-        [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:YES] forKey:kLemonQuitMonitorManual];
         NSLog(@"use select terminate monitor by click quit button ");
         [[NSApplication sharedApplication] terminate:nil];
     }

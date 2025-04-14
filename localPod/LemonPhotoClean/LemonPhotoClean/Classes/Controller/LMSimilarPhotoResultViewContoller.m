@@ -87,8 +87,10 @@
         self.collectionView.collectionViewLayout = [[LMPhotoCollectionViewLayout alloc] init];
         self.collectionView.backgroundColors  = @[[LMAppThemeHelper getMainBgColor]];
         
-        NSNib *itemNib = [[NSNib alloc]initWithNibNamed:@"LMPhotoViewItem" bundle:[NSBundle bundleForClass:self.class]];
-        [self.collectionView registerNib:itemNib forItemWithIdentifier:@"LMPhotoViewItem"];
+//        NSNib *itemNib = [[NSNib alloc]initWithNibNamed:@"LMPhotoViewItem" bundle:[NSBundle bundleForClass:self.class]];
+//        [self.collectionView registerNib:itemNib forItemWithIdentifier:@"LMPhotoViewItem"];
+        
+        [self.collectionView registerClass:LMPhotoViewItem.class forItemWithIdentifier:@"LMPhotoViewItem"];
         
         NSNib *headerNib = [[NSNib alloc] initWithNibNamed:@"PhotoCollectionViewHeader" bundle:[NSBundle bundleForClass:[self class]]];
         [self.collectionView registerNib:headerNib forSupplementaryViewOfKind:NSCollectionElementKindSectionHeader withIdentifier:@"PhotoCollectionViewHeader"];
@@ -171,7 +173,7 @@
     
     for (LMSimilarPhotoGroup *group in self.similarPhotoGroups) {
         for (LMPhotoItem *item in group.items) {
-            if(!item.isPrefer){
+            if(!item.isPrefer && item.canRemove){
                 item.isSelected = _isIntelligentSelect;
             }else{
                 item.isSelected = NO;
@@ -297,6 +299,7 @@
     }
     
 //    viewItem.representedObject = [self getUnDeleteSimilarPhotoItem: group].items[itemIndex];//不明白为什么y这样操作？
+    viewItem.type = LMPhotoViewItemTypeDefault;
     viewItem.representedObject = group.items[itemIndex];
 //    double t2 = [[NSDate date] timeIntervalSince1970];
 //    NSLog(@"updateCollectionViewByPath collectionView itemForRepresentedObjectAtIndexPath end time:%f",t2);
@@ -363,18 +366,26 @@
       LMSimilarPhotoGroup *group = self.similarPhotoGroups[sectionIndex];
     int selectCount = 0;//用于更新LMPhotoCollectionViewHeader中的全选框状态
 //    for (LMPhotoItem *item in [self getUnDeleteSimilarPhotoItem:group].items) {
+    BOOL canRemove = NO;
      for (LMPhotoItem *item in group.items) {
         if(item.isSelected){
             selectCount++;
         }
+        if (item.canRemove) canRemove = YES;
     }
 //    if(selectCount == [self getUnDeleteSimilarPhotoItem:group].items.count){
-    if(selectCount == group.items.count){
-        supplementaryView.checkBtn.state = NSOnState;
-    }else if(selectCount == 0){
+    if (canRemove) {
+        if(selectCount == group.items.count){
+            supplementaryView.checkBtn.state = NSOnState;
+        }else if(selectCount == 0){
+            supplementaryView.checkBtn.state = NSOffState;
+        }else{
+            supplementaryView.checkBtn.state = NSMixedState;
+        }
+        supplementaryView.checkBtn.enabled = YES;
+    } else {
         supplementaryView.checkBtn.state = NSOffState;
-    }else{
-        supplementaryView.checkBtn.state = NSMixedState;
+        supplementaryView.checkBtn.enabled = NO;
     }
    
     if (supplementaryView) {
@@ -386,7 +397,9 @@
             if(weakSupplementaryView.checkBtn.state == NSOnState){
 //                for(LMPhotoItem *item in [weakSelf getUnDeleteSimilarPhotoItem:group].items){
                 for(LMPhotoItem *item in group.items){
-                    item.isSelected = YES;
+                    if (item.canRemove) {
+                        item.isSelected = YES;
+                    }
                 }
             }else{
                for(LMPhotoItem *item in group.items){

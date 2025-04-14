@@ -10,7 +10,7 @@
 #import "OwlCollectionViewItem.h"
 #import "QMStaticField.h"
 #import "QMButton.h"
-#import "OwlManager.h"
+#import "Owl2Manager.h"
 #import "OwlWhiteListViewController.h"
 #import "OwlConstant.h"
 #import "LMTitleButton.h"
@@ -184,7 +184,7 @@
         _wlModelArray = [[NSMutableArray alloc] init];
         _appArray = [[NSMutableArray alloc] init];
         
-        _appArray = [[OwlManager shareInstance] getAllAppInfoWithIndexArray:_wlModelArray];
+        _appArray = [[Owl2Manager sharedManager] getAllAppInfoWithIndexArray:_wlModelArray];
         NSLog(@"%s _wlModelArray: %lu", __FUNCTION__, (unsigned long)_wlModelArray.count);
         //[collectionViewItem bind:NSContentBinding toObject:self withKeyPath:@"content" options:NULL];
         [self reloadData];
@@ -230,7 +230,7 @@
         [appDic setObject:[NSNumber numberWithBool:YES] forKey:OwlWatchAudio];
         NSString *identifier = [appDic objectForKey:OwlIdentifier];
         BOOL isExist = NO;
-        for (NSDictionary *item in [OwlManager shareInstance].wlArray) {
+        for (NSDictionary *item in [Owl2Manager sharedManager].wlArray) {
             if ([[item objectForKey:OwlIdentifier] isEqualToString:identifier]) {
                 isExist = YES;
                 break;
@@ -272,7 +272,7 @@
 }
 
 - (void)clickOk{
-//    [[OwlManager shareInstance].wlArray removeAllObjects];
+//    [[Owl2Manager sharedManager].wlArray removeAllObjects];
     NSLog(@"%s _wlModelArray: %lu", __FUNCTION__, (unsigned long)_wlModelArray.count);
     NSString *strApps = @"";
     for (int i = 0; i < _wlModelArray.count; i++) {
@@ -280,7 +280,7 @@
         //NSLog(@"clickOk state: %ld", (long)item.selectBtn.state);
         if (item.selectBtn.state) {
             NSMutableDictionary *appDic = [_wlModelArray objectAtIndex:i];
-            [[OwlManager shareInstance] addAppWhiteItem:appDic];
+            [[Owl2Manager sharedManager] addAppWhiteItem:appDic];
             if ([strApps length] > 0) {
                 strApps = [[strApps stringByAppendingString:@"|"] stringByAppendingString:[appDic objectForKey:OwlAppName]];
             } else {

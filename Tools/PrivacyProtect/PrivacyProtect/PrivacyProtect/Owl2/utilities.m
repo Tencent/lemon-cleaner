@@ -24,6 +24,7 @@
 #import <Foundation/Foundation.h>
 #import <CommonCrypto/CommonDigest.h>
 #import <SystemConfiguration/SystemConfiguration.h>
+#import <UniformTypeIdentifiers/UniformTypeIdentifiers.h>
 
 /* GLOBALS */
 
@@ -32,7 +33,7 @@ extern os_log_t logHandle;
 
 //get app's version
 // extracted from Info.plist
-NSString* getAppVersion()
+NSString* getAppVersion(void)
 {
     //read and return 'CFBundleVersion' from bundle
     return [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"];
@@ -113,7 +114,7 @@ NSString* getBinaryName(NSString* path)
 
 //get path to (main) app of a login item
 // login item is in app bundle, so parse up to get main app
-NSString* getMainAppPath()
+NSString* getMainAppPath(void)
 {
     //path components
     NSArray *pathComponents = nil;
@@ -219,81 +220,6 @@ bail:
 }
 
 #pragma GCC diagnostic pop
-
-/*
-
-//build an array of processes ancestry
-// uses `GetProcessForPID` to try get (real) parent
-NSMutableArray* generateProcessHierarchy(pid_t pid, NSString* name)
-{
-    //process hierarchy
-    NSMutableArray* processHierarchy = nil;
-    
-    //current process id
-    pid_t currentPID = -1;
-    
-    //parent pid
-    pid_t parentPID = -1;
-    
-    //process name
-    NSString* parentName = nil;
-    
-    //alloc
-    processHierarchy = [NSMutableArray array];
-
-    //parent
-    NSDictionary* parent = nil;
-    
-    //add current process (leaf)
-    // parent(s) will then be added at front...
-    [processHierarchy addObject:[@{@"pid":[NSNumber numberWithInt:pid], @"name":valueForStringItem(name)} mutableCopy]];
-    
-    //init current to self
-    currentPID = pid;
-    
-    //scan back
-    while(YES)
-    {
-        //get (real) parent
-        parent = getRealParent(currentPID);
-        if(nil == parent)
-        {
-            break;
-        }
-        
-        //get parent pid
-        parentPID = [parent[@"pid"] intValue];
-        
-        //end of heirarchy?
-        if( (0 == parentPID) ||
-            (-1 == parentPID) ||
-            (currentPID == parentPID) )
-        {
-            //bail
-            break;
-        }
-        
-        //get name
-        // first from bundle, then from executable
-        name = parent[@"CFBundleName"];
-        if(0 == name.length)
-        {
-            //via executable
-            name = [parent[@"CFBundleExecutable"] lastPathComponent];
-        }
-        
-        //add parent
-        // always at front
-        [processHierarchy insertObject:[@{@"pid":[NSNumber numberWithInt:parentPID], @"name":valueForStringItem(parentName)} mutableCopy] atIndex:0];
-        
-        //update
-        currentPID = parentPID;
-    }
-    
-    return processHierarchy;
-}
- 
-*/
 
 //check if something is nil
 // if so, return a default ('unknown') value
@@ -407,10 +333,20 @@ bail:
 }
 
 //get name of logged in user
-NSString* getConsoleUser()
+uid_t getConsoleUserID(void)
 {
-    //copy/return user
-    return CFBridgingRelease(SCDynamicStoreCopyConsoleUser(NULL, NULL, NULL));
+    //uid
+    uid_t userID = 0;
+    
+    //copy logged in user
+    if(NULL == CFBridgingRelease(SCDynamicStoreCopyConsoleUser(NULL, &userID, NULL)))
+    {
+        //error?
+        // defer to current user
+        userID = getuid();
+    }
+    
+    return userID;
 }
 
 //get process name
@@ -517,7 +453,7 @@ BOOL setFileOwner(NSString* path, NSNumber* groupID, NSNumber* ownerID, BOOL rec
     }
     
     //dbg msg
-    os_log_debug(logHandle, "set ownership for %@ (%@)", path, fileOwner);
+    os_log_debug(logHandle, "set ownership for %{public}@ (%{public}@)", path, fileOwner);
     
     //do it recursively
     if(YES == recursive)
@@ -541,7 +477,7 @@ BOOL setFileOwner(NSString* path, NSNumber* groupID, NSNumber* ownerID, BOOL rec
             if(YES != [[NSFileManager defaultManager] setAttributes:fileOwner ofItemAtPath:fullPath error:NULL])
             {
                 //err msg
-                os_log_error(logHandle, "ERROR: failed to set ownership for %@ (%@)", fullPath, fileOwner);
+                os_log_error(logHandle, "ERROR: failed to set ownership for %{public}@ (%{public}@)", fullPath, fileOwner);
                 
                 //bail
                 goto bail;
@@ -888,8 +824,8 @@ NSImage* getIconForProcess(NSString* path)
     if(YES != [NSFileManager.defaultManager fileExistsAtPath:path])
     {
         //set icon to system 'application' icon
-        icon = [NSWorkspace.sharedWorkspace iconForFileType: NSFileTypeForHFSTypeCode(kGenericApplicationIcon)];
-        
+        icon = [NSWorkspace.sharedWorkspace iconForContentType:[UTType typeWithFilenameExtension:@"app"]];
+                
         //set size to 64 @2x
         [icon setSize:NSMakeSize(128, 128)];
    
@@ -946,8 +882,8 @@ NSImage* getIconForProcess(NSString* path)
         if(nil == documentIcon)
         {
             //load
-            documentIcon = [[NSWorkspace sharedWorkspace] iconForFileType:
-                            NSFileTypeForHFSTypeCode(kGenericDocumentIcon)];
+            documentIcon = [NSWorkspace.sharedWorkspace iconForContentType:[UTType typeWithFilenameExtension:@"txt"]];
+            
         }
         
         //if 'iconForFile' method doesn't find and icon, it returns the system 'document' icon
@@ -955,8 +891,7 @@ NSImage* getIconForProcess(NSString* path)
         if(YES == [icon isEqual:documentIcon])
         {
             //set icon to system 'application' icon
-            icon = [[NSWorkspace sharedWorkspace]
-                    iconForFileType: NSFileTypeForHFSTypeCode(kGenericApplicationIcon)];
+            icon = [NSWorkspace.sharedWorkspace iconForContentType:[UTType typeWithFilenameExtension:@"app"]];
         }
         
         //'iconForFileType' returns small icons
@@ -969,33 +904,48 @@ bail:
     return icon;
 }
 
-//wait until a window is non nil
-// then make it modal
+//wait till window non-nil
+// then make that window modal
 void makeModal(NSWindowController* windowController)
 {
-    //wait up to 1 second window to be non-nil
-    // then make modal
+    //window
+    __block NSWindow* window = nil;
+    
+    //wait till non-nil
+    // then make window modal
     for(int i=0; i<20; i++)
     {
-        //can make it modal once we have a window
-        if(nil != windowController.window)
-        {
-            //make modal on main thread
-            dispatch_sync(dispatch_get_main_queue(), ^{
-                
-                //modal
-                [[NSApplication sharedApplication] runModalForWindow:windowController.window];
-                
-            });
+        //grab window
+        dispatch_sync(dispatch_get_main_queue(), ^{
+         
+            //grab
+            window = windowController.window;
             
-            //all done
-            break;
+        });
+                      
+        //nil?
+        // nap
+        if(nil == window)
+        {
+            //nap
+            [NSThread sleepForTimeInterval:0.05f];
+            
+            //next
+            continue;
         }
         
-        //nap
-        [NSThread sleepForTimeInterval:0.05f];
+        //have window?
+        // make it modal
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            
+            //modal
+            [[NSApplication sharedApplication] runModalForWindow:windowController.window];
+            
+        });
         
-    }//until 1 second
+        //done
+        break;
+    }
     
     return;
 }
@@ -1370,6 +1320,9 @@ NSMutableDictionary* execTask(NSString* binaryPath, NSArray* arguments, BOOL sho
     // NSTask throws if path isn't found...
     if(YES != [NSFileManager.defaultManager fileExistsAtPath:binaryPath])
     {
+        //err msg
+        os_log_error(logHandle, "ERROR: %{public}@ not found", binaryPath);
+        
         //bail
         goto bail;
     }
@@ -1424,7 +1377,7 @@ NSMutableDictionary* execTask(NSString* binaryPath, NSArray* arguments, BOOL sho
     @catch(NSException *exception)
     {
         //err msg
-        os_log_debug(logHandle, "failed to launch task (%{public}@)", exception);
+        os_log_error(logHandle, "failed to launch task (%{public}@)", exception);
         
         //bail
         goto bail;
@@ -1560,61 +1513,14 @@ BOOL isFileRestricted(NSString* file)
 }
 
 //in dark mode?
-BOOL isDarkMode()
+BOOL isDarkMode(void)
 {
     return [[[NSUserDefaults standardUserDefaults] stringForKey:@"AppleInterfaceStyle"] isEqualToString:@"Dark"];
 }
 
-//running on M1?
-BOOL AppleSilicon(void)
-{
-    //flag
-    BOOL isAppleSilicon = NO;
-    
-    //type
-    cpu_type_t type = -1;
-    
-    //size
-    size_t size = 0;
-    
-    //mib
-    int mib[CTL_MAXNAME] = {0};
-    
-    //length
-    size_t length = CTL_MAXNAME;
-    
-    //get mib for 'proc_cputype'
-    if(noErr != sysctlnametomib("sysctl.proc_cputype", mib, &length))
-    {
-        //bail
-        goto bail;
-    }
-    
-    //add pid
-    mib[length] = getpid();
-    
-    //inc length
-    length++;
-    
-    //init size
-    size = sizeof(cpu_type_t);
-    
-    //get CPU type
-    if(noErr != sysctl(mib, (u_int)length, &type, &size, 0, 0))
-    {
-        //bail
-        goto bail;
-    }
-    
-    isAppleSilicon = (CPU_TYPE_ARM64 == type);
-    
-bail:
-    
-    return isAppleSilicon;
-}
 
 //show an alert
-NSModalResponse showAlert(NSString* messageText, NSString* informativeText)
+NSModalResponse showAlert(NSString* messageText, NSString* informativeText, NSString* buttonTitle)
 {
     //alert
     NSAlert* alert = nil;
@@ -1639,7 +1545,7 @@ NSModalResponse showAlert(NSString* messageText, NSString* informativeText)
     }
     
     //add button
-    [alert addButtonWithTitle:@"OK"];
+    [alert addButtonWithTitle:buttonTitle];
     
     //make app active
     [NSApp activateIgnoringOtherApps:YES];
@@ -1650,10 +1556,9 @@ NSModalResponse showAlert(NSString* messageText, NSString* informativeText)
     return response;
 }
 
-
 //checks if user has admin privs
-// ->based off http://stackoverflow.com/questions/30000443/asking-for-admin-privileges-for-only-standard-accounts
-BOOL hasAdminPrivileges()
+// based off http://stackoverflow.com/questions/30000443/asking-for-admin-privileges-for-only-standard-accounts
+BOOL hasAdminPrivileges(void)
 {
     //flag
     BOOL isAdmin = NO;
@@ -1664,8 +1569,8 @@ BOOL hasAdminPrivileges()
     //admin group
     struct group* adminGroup = NULL;
     
-    //get password entry for current user
-    pwentry = getpwuid(getuid());
+    //get password entry for console user
+    pwentry = getpwuid(getConsoleUserID());
     
     //get admin group
     adminGroup = getgrnam("admin");
@@ -1689,4 +1594,18 @@ BOOL hasAdminPrivileges()
     }
     
     return isAdmin;
+}
+
+//get Do Not Distrub state
+BOOL DNDState(void)
+{
+    //default
+    NSUserDefaults* defaults = nil;
+    
+    //load defaults
+    defaults = [[NSUserDefaults alloc] initWithSuiteName:@"com.apple.notificationcenterui"];
+    
+    //return status of DND
+    return [defaults boolForKey:@"doNotDisturb"];
+    
 }

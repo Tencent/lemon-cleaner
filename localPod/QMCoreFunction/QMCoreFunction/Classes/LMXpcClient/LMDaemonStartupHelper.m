@@ -81,6 +81,9 @@
     //          0:拉活失败 (activator 收不到Daemon的成功返回结果）
     ret = [LMDaemonStartupHelper execCmd:self.cmdPath];
     if (ret >= 253) {
+        if (![NSFileManager.defaultManager fileExistsAtPath:STARTUP_LISTEN_SOCKT]) {
+            NSLog(@"socket file : %@ not exist !", STARTUP_LISTEN_SOCKT);
+        }
         NSLog(@"%s activate Daemmon failed:%d ", __FUNCTION__, ret);
         [self relaunchListenPlist];
         int reTryCount = 0;

@@ -8,11 +8,12 @@
 
 #import <Cocoa/Cocoa.h>
 #import "CheckBoxUpdateDelegate.h"
+@class LMCheckboxButton;
 
 @interface DuplicateSubItemCellView : NSTableCellView
 
 @property(nonatomic) NSString *path;
-@property(nonatomic) NSButton *checkBox;
+@property(nonatomic) LMCheckboxButton *checkBox;
 @property(nonatomic) NSTextField *sizeText;
 @property(nonatomic) NSTextField *modifyTimeText;
 @property(nonatomic, weak) id <CheckBoxUpdateDelegate> checkBoxUpdateDelegate;

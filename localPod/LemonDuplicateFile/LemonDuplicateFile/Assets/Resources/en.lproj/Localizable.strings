@@ -56,3 +56,7 @@
 "LMDuplicateCleanViewController_cancelAlert_informativeText" = "It will discard all current progress.";
 "LMDuplicateCleanViewController_cancelAlert_button_stop" = "Stop";
 "LMDuplicateCleanViewController_cancelAlert_button_continue" = "Continue";
+"该文件所在磁盘为只读模式，不支持清理" = "The disk containing the file is set to read-only and does not support cleaning.";
+"该文件为只读模式，不支持清理" = "The file is in read-only mode and does not support cleaning.";
+"文件为只读模式，不支持清理" = "The files is in read-only mode and does not support cleaning.";
+

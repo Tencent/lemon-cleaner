@@ -11,6 +11,7 @@
 #import <QMUICommon/LMAppThemeHelper.h>
 #import <QMCoreFunction/McCoreFunction.h>
 #import <QMCoreFunction/LanguageHelper.h>
+#import <QMCoreFunction/LMReferenceDefines.h>
 
 @interface LMLoginItemFileCellView ()
 
@@ -46,7 +47,11 @@
     self.switchButton.onValueChanged = nil;
     [super updateFileNameLabel:self.fileNameLabel fileImage:self.fileIcon filePath:self.filePath withLoginItem:self.loginItem];
     [super updateSwitchBtn:self.switchButton switchBtnLabel:self.switchBtnLabel withLoginItem:self.loginItem];
+    @weakify(self);
     [self.switchButton setOnValueChanged:^(COSwitch *button) {
+        @strongify(self);
+        // 子项被点击
+        self.loginItem.isDisabledByUser = !button.isOn;
         [super updateLoginItem:self.loginItem switchLabel:self.switchBtnLabel withSwtichBtn:self.switchButton];
         [self.delegate clickSwitchButton:button onCellView:self];
     }];

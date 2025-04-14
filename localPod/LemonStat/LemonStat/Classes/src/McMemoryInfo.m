@@ -50,13 +50,13 @@
 // update physical memory information
 - (BOOL) UpdatePhysMemInfo
 {
-    uint64_t memInfo[5];
+    uint64_t memInfo[6];
     uint64_t memInout[2];
     double pageinSpeed = 0;
     double pageoutSpeed = 0;
     double curTime = McGetAbsoluteNanosec()/(1000.0*1000*1000);
     
-    if (CmcGetPhysMemoryInfo(memInfo, memInout) == -1)
+    if (CmcGetPhysMemoryInfo2(memInfo, memInout) == -1)
         return NO;
     
     if (lastUpdateTime != 0)
@@ -81,8 +81,8 @@
                    [NSNumber numberWithUnsignedLongLong:memInfo[1]],
                    [NSNumber numberWithUnsignedLongLong:memInfo[2]],
                    [NSNumber numberWithUnsignedLongLong:memInfo[3]],
-                   [NSNumber numberWithUnsignedLongLong:(memInfo[0] + memInfo[1] + memInfo[2] + memInfo[3])],
                    [NSNumber numberWithUnsignedLongLong:memInfo[4]],
+                   [NSNumber numberWithUnsignedLongLong:memInfo[5]],
                    nil];
     return YES;
 }

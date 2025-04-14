@@ -10,7 +10,7 @@
 #import "OwlTableRowView.h"
 #import "OwlSelectViewController.h"
 #import "OwlWindowController.h"
-#import "OwlManager.h"
+#import "Owl2Manager.h"
 #import "OwlConstant.h"
 #import <QMCoreFunction/NSColor+Extension.h>
 #import "LMGradientTitleButton.h"
@@ -499,28 +499,28 @@ typedef void(^checkOwlWhiteListItemAudio)(NSInteger, LMCheckboxButton *btn);
     __weak typeof(self) weakSelf = self;
     view.action = ^(NSInteger indexRow) {
         NSLog(@"action row: %ld", (long)indexRow);
-        [[OwlManager shareInstance] removeAppWhiteItemIndex:indexRow];
+        [[Owl2Manager sharedManager] removeAppWhiteItemIndex:indexRow];
         __strong typeof(weakSelf) strongSelf = weakSelf;
         [strongSelf->tableView reloadData];
     };
     view.cameraCheckAction = ^(NSInteger indexRow, LMCheckboxButton *btn) {
-        if ([OwlManager shareInstance].wlArray.count < indexRow) {
+        if ([Owl2Manager sharedManager].wlArray.count < indexRow) {
             return;
         }
-        NSMutableDictionary *dic = [[OwlManager shareInstance].wlArray objectAtIndex:indexRow];
+        NSMutableDictionary *dic = [[Owl2Manager sharedManager].wlArray objectAtIndex:indexRow];
         [dic setValue:[NSNumber numberWithBool:btn.state] forKey:OwlWatchCamera];
-        [[OwlManager shareInstance] replaceAppWhiteItemIndex:indexRow];
+        [[Owl2Manager sharedManager] replaceAppWhiteItemIndex:indexRow];
     };
     view.audioCheckAction = ^(NSInteger indexRow, LMCheckboxButton *btn) {
-        if ([OwlManager shareInstance].wlArray.count < indexRow) {
+        if ([Owl2Manager sharedManager].wlArray.count < indexRow) {
             return;
         }
-        NSMutableDictionary *dic = [[OwlManager shareInstance].wlArray objectAtIndex:indexRow];
+        NSMutableDictionary *dic = [[Owl2Manager sharedManager].wlArray objectAtIndex:indexRow];
         [dic setValue:[NSNumber numberWithBool:btn.state] forKey:OwlWatchAudio];
-        [[OwlManager shareInstance] replaceAppWhiteItemIndex:indexRow];
+        [[Owl2Manager sharedManager] replaceAppWhiteItemIndex:indexRow];
     };
     view.indexRow = row;
-    [view setWhiteListModel:[[OwlManager shareInstance].wlArray objectAtIndex:row]];
+    [view setWhiteListModel:[[Owl2Manager sharedManager].wlArray objectAtIndex:row]];
     return view;
 }
 
@@ -530,7 +530,7 @@ typedef void(^checkOwlWhiteListItemAudio)(NSInteger, LMCheckboxButton *btn);
 
 #pragma mark NSTableViewDataSource
 - (NSInteger)numberOfRowsInTableView:(NSTableView *)tableView{
-    return [OwlManager shareInstance].wlArray.count;
+    return [Owl2Manager sharedManager].wlArray.count;
 }
 
 @end

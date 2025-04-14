@@ -103,6 +103,9 @@ typedef char (*SMLoginItemSetEnabledWithURL_ptr) ( void* ptr, char enabled);
                         continue;
                     }
                     loginItem.isEnable = [self appLoginItemIsEnabledWithBundleId:loginItem.loginItemBundleId];
+                    if (loginItem.isEnable) {
+                        loginItem.isDisabledByUser = NO; // 上次关闭失败，或者该服务会做对抗，例如ioa
+                    }
                     [loginItemArray addObject:loginItem];
                 }
             }
@@ -200,6 +203,7 @@ typedef char (*SMLoginItemSetEnabledWithURL_ptr) ( void* ptr, char enabled);
             QMBaseLoginItem *loginItem = [[QMBaseLoginItem alloc] initWithAppPath:filePath];
             loginItem.loginItemType = LoginItemTypeSystemItem;
             loginItem.isEnable = YES;
+            loginItem.isDisabledByUser = NO; // 上次关闭失败，或者该服务会做对抗，例如ioa
             [self.loginItemArray addObject:loginItem];
 //            NSLog(@"%s, filePath : %@", __FUNCTION__, filePath);
             CFRelease(thePath);
@@ -299,7 +303,10 @@ typedef char (*SMLoginItemSetEnabledWithURL_ptr) ( void* ptr, char enabled);
             }
             QMAppLaunchItem *launchItem = [[QMAppLaunchItem alloc] initWithLaunchFilePath:filePath itemType:LoginItemTypeService];
             launchItem.label = label;
-            launchItem.isEnable = [self serviceIsEnabledWithItem:launchItem];;
+            launchItem.isEnable = [self serviceIsEnabledWithItem:launchItem];
+            if (launchItem.isEnable) {
+                launchItem.isDisabledByUser = NO; // 上次关闭失败，或者该服务会做对抗，例如ioa
+            }
 //            NSLog(@"%s, launch login itme filePath : %@",__FUNCTION__, filePath);
             //将launch plist文件与App进行匹配；
             //1. 先通过bundleId进行匹配，如果plist文件名包含bundleId,则匹配成功

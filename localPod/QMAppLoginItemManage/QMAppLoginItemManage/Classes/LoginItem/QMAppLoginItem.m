@@ -7,6 +7,7 @@
 //
 
 #import "QMAppLoginItem.h"
+#import "QMLoginItemCacheHelper.h"
 
 @interface QMAppLoginItem(){
     
@@ -62,6 +63,19 @@
         }
     }
     return _loginItemBundleId;
+}
+
+- (NSString *)uid {
+    if (!_uid) {
+        if ([self.loginItemBundleId isKindOfClass:NSString.class] && self.loginItemBundleId.length > 0) {
+            _uid = self.loginItemBundleId;
+        }
+    }
+    return _uid;
+}
+
+- (NSString *)cacheKey {
+    return @"QMAppLoginItemCacheKey";
 }
 
 @end

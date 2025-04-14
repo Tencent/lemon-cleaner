@@ -15,14 +15,17 @@
 #import <QMUICommon/LMCheckboxButton.h>
 #import <QMUICommon/LMAppThemeHelper.h>
 #import <QMCoreFunction/NSImage+Extension.h>
+#import <QMCoreFunction/LMReferenceDefines.h>
+#import <QMUICommon/LMBubbleView.h>
 
 @interface DuplicateRootCellView () {
     NSBundle *bundle;
     NSTrackingArea *trackingArea;
     NSImageView *_iconImageView;
-    LMCheckboxButton *_checkBox;
     BOOL _isPreview;
 }
+@property (nonatomic, strong) LMBubbleView *bubbleView;
+@property (nonatomic, strong) LMCheckboxButton *checkBox;
 @end
 
 @implementation DuplicateRootCellView
@@ -92,7 +95,19 @@
     [_checkBox setButtonType:NSButtonTypeSwitch];
     _checkBox.target = self;
     [_checkBox setAction:@selector(updateSelectedInfo:)];
-
+    @weakify(self);
+    _checkBox.hoverBubbleHandler = ^(BOOL value) {
+        @strongify(self);
+        if (self.item.canRemove) return;
+        if (value) {
+            NSPoint point = [self.checkBox convertPoint:NSMakePoint(-23, -2) toView:nil];
+            CGSize size = [self.bubbleView calculateViewSize];
+            point = NSMakePoint(point.x, self.window.contentView.frame.size.height - point.y - size.height);
+            [self.bubbleView showInView:self.window.contentView atPosition:point];
+        } else {
+            [self.bubbleView removeFromSuperview];
+        }
+    };
 
     [_iconImageView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.height.mas_equalTo(23);
@@ -200,6 +215,7 @@
     }
 
     [_checkBox setState:item.selectState];
+    [_checkBox setEnabled:item.canRemove];
 }
 
 
@@ -248,4 +264,14 @@
 - (void)setBackgroundStyle:(NSBackgroundStyle)backgroundStyle {
     [super setBackgroundStyle:NSBackgroundStyleLight];
 }
+
+- (LMBubbleView *)bubbleView {
+    if (!_bubbleView) {
+        _bubbleView = [LMBubbleView bubbleWithStyle:LMBubbleStyleText arrowDirection:LMBubbleArrowDirectionBottomLeft];
+        [_bubbleView setBubbleTitle:NSLocalizedStringFromTableInBundle(@"文件为只读模式，不支持清理", nil, [NSBundle bundleForClass:[self class]], @"")];
+        _bubbleView.arrowOffset = 30;
+    }
+    return _bubbleView;
+}
+
 @end

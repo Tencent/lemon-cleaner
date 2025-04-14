@@ -8,10 +8,32 @@
 
 #import "LMPhotoCollectionViewHeader.h"
 #import <QMCoreFunction/NSColor+Extension.h>
-
+#import <QMUICommon/LMBubbleView.h>
 #import <QMUICommon/LMGradientTitleButton.h>
+#import <QMCoreFunction/LMReferenceDefines.h>
+
+@interface LMPhotoCollectionViewHeader ()
+@property (nonatomic, strong) LMBubbleView *bubbleView;
+@end
 
 @implementation LMPhotoCollectionViewHeader
+
+- (void)awakeFromNib {
+    [super awakeFromNib];
+    @weakify(self);
+    self.checkBtn.hoverBubbleHandler = ^(BOOL value) {
+        @strongify(self);
+        if (self.checkBtn.isEnabled) return;
+        if (value) {
+            NSPoint point = [self.checkBtn convertPoint:NSMakePoint(-22.5, -2) toView:nil];
+            CGSize size = [self.bubbleView calculateViewSize];
+            point = NSMakePoint(point.x, self.window.contentView.frame.size.height - point.y - size.height);
+            [self.bubbleView showInView:self.window.contentView atPosition:point];
+        } else {
+            [self.bubbleView removeFromSuperview];
+        }
+    };
+}
 
 - (instancetype)initWithCoder:(NSCoder *)coder
 {
@@ -77,6 +99,15 @@
     NSLog(@"actionDel");
     if (_selectActionHandler) _selectActionHandler();
 
+}
+
+- (LMBubbleView *)bubbleView {
+    if (!_bubbleView) {
+        _bubbleView = [LMBubbleView bubbleWithStyle:LMBubbleStyleText arrowDirection:LMBubbleArrowDirectionBottomLeft];
+        [_bubbleView setBubbleTitle:NSLocalizedStringFromTableInBundle(@"图片为只读模式，不支持清理", nil, [NSBundle bundleForClass:[self class]], @"")];
+        _bubbleView.arrowOffset = 30;
+    }
+    return _bubbleView;
 }
 
 @end

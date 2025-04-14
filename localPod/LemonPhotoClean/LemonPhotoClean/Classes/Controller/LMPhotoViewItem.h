@@ -9,7 +9,14 @@
 #import <Cocoa/Cocoa.h>
 #import <QMUICommon/LMCheckboxButton.h>
 
+typedef NS_ENUM(NSUInteger, LMPhotoViewItemType) {
+    LMPhotoViewItemTypeDefault,
+    LMPhotoViewItemTypePreview
+};
+
 @interface LMPhotoViewItem : NSCollectionViewItem
-@property (weak) IBOutlet LMCheckboxButton *checkBtnIsSelected;
-@property (weak) IBOutlet NSImageView *imgThumbnail;
+@property (nonatomic, strong) LMCheckboxButton *checkBtnIsSelected;
+@property (nonatomic, strong) NSImageView *imgThumbnail;
+@property (nonatomic, strong) NSIndexPath *indexPath;
+@property (nonatomic) LMPhotoViewItemType type;
 @end

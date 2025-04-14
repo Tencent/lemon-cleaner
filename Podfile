@@ -36,7 +36,6 @@ target 'Lemon' do
   pod 'LemonUninstaller',:path => './localPod/LemonUninstaller'
   pod 'LemonLoginItemManager',:path => './localPod/LemonLoginItemManager'
   pod 'LemonFileMove',:path => './localPod/LemonFileMove'
-
 end
 
 target 'LemonMonitor' do

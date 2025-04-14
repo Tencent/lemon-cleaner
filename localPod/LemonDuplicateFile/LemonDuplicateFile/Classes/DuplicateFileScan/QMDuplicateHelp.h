@@ -19,5 +19,6 @@ CFStringRef FileMD5HashCreateWithPath(CFStringRef filePath, size_t chunkSize, in
 
 NSString *FileMD5HashWithPath(NSString *filePath, int dataSize);
 
-
 CFStringRef FileMD5HashWithData(NSData *fileData, int dataSize);
+
+BOOL FileCheckCanRemove(NSString *path);

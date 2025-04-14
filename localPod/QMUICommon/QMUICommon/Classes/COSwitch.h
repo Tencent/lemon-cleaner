@@ -19,4 +19,9 @@
 @property (assign, nonatomic) BOOL isEnable;
 @property (assign, nonatomic) BOOL isAnimator;
 @property (copy) void(^onValueChanged)(COSwitch *button);
+// 暴露出点击事件,已经点击状态已经改变
+@property (copy) void(^onDidClicked)(COSwitch *button);
+
+// 仅修改UI开关状态，不传播
+- (void)updateSwitchState:(BOOL)on;
 @end

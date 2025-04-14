@@ -9,42 +9,107 @@
 @import OSLog;
 @import AVFoundation;
 
+#import "consts.h"
+#import "Client.h"
 #import "AVMonitor.h"
 #import "utilities.h"
+#include <sys/sysctl.h>
+
+#define kLemonUseAVMonitorNotification 0
+
+/* GLOBALS */
 
 //log handle
 extern os_log_t logHandle;
 
-@interface AVMonitor ()
-@property(nonatomic, assign) BOOL isM1;
-@end
-
 @implementation AVMonitor
 
-@synthesize videoClients;
-@synthesize audioClients;
-@synthesize lastMicEvent;
-
 //init
-// create XPC connection & set remote obj interface
 -(id)init
 {
+#if kLemonUseAVMonitorNotification
+    //action: ok
+    UNNotificationAction *ok = nil;
+    
+    //action: allow
+    UNNotificationAction *allow = nil;
+    
+    //action: allow
+    UNNotificationAction *allowAlways = nil;
+    
+    //action: block
+    UNNotificationAction *block = nil;
+    
+    //close category
+    UNNotificationCategory* closeCategory = nil;
+    
+    //action category
+    UNNotificationCategory* actionCategory = nil;
+#endif
+    
+    //super
     self = [super init];
-    if (nil != self)
+    if(nil != self)
     {
-        self.videoLogMonitor = [[LogMonitor alloc] init];
-        self.audioLogMonitor = [[LogMonitor alloc] init];
+        //init log monitor
+        self.logMonitor = [[LogMonitor alloc] init];
+        self.audio13logMonitor = [[LogMonitor alloc] init];
         
-        self.videoClients = [QMSafeMutableArray array];
-        self.audioClients = [QMSafeMutableArray array];
+        //init audio attributions
+        self.audioAttributions = [NSMutableArray array];
         
-        self.isM1 = AppleSilicon();
-        // any active cameras
-        // only call on intel, since broken on M1 :/
-        if (YES != self.isM1)
-        {
-            self.cameraState = [self isACameraOn];
-        }
+        //init camera attributions
+        self.cameraAttributions = [NSMutableArray array];
+        
+        //init audio listeners
+        self.audioListeners = [NSMutableDictionary dictionary];
+        
+        //init video listeners
+        self.cameraListeners = [NSMutableDictionary dictionary];
+        
+        //init event queue
+        self.eventQueue = dispatch_queue_create([[NSString stringWithFormat:@"%s.eventQueue", BUNDLE_ID] UTF8String], DISPATCH_QUEUE_CONCURRENT);
+        
+#if kLemonUseAVMonitorNotification
+        //set up delegate
+        UNUserNotificationCenter.currentNotificationCenter.delegate = self;
+        
+        //init ok action
+        ok = [UNNotificationAction actionWithIdentifier:@"Ok" title:@"Ok" options:UNNotificationActionOptionNone];
+        
+        //init close category
+        closeCategory = [UNNotificationCategory categoryWithIdentifier:CATEGORY_CLOSE actions:@[ok] intentIdentifiers:@[] options:0];
+        
+        //init allow action
+        allow = [UNNotificationAction actionWithIdentifier:@"Allow" title:NSLocalizedString(@"Allow (once)", @"Allow (once)") options:UNNotificationActionOptionNone];
+        
+        //init allow action
+        allowAlways = [UNNotificationAction actionWithIdentifier:@"AllowAlways" title:NSLocalizedString(@"Allow (always)", @"Allow (always)") options:UNNotificationActionOptionNone];
+        
+        //init block action
+        block = [UNNotificationAction actionWithIdentifier:@"Block" title:NSLocalizedString(@"Block",@"Block") options:UNNotificationActionOptionNone];
+        
+        //init category
+        actionCategory = [UNNotificationCategory categoryWithIdentifier:CATEGORY_ACTION actions:@[allow, allowAlways, block] intentIdentifiers:@[] options:UNNotificationCategoryOptionCustomDismissAction];
+        
+        //set categories
+        [UNUserNotificationCenter.currentNotificationCenter setNotificationCategories:[NSSet setWithObjects:closeCategory, actionCategory, nil]];
+#endif
+        
+        //per device events
+        self.deviceEvents = [NSMutableDictionary dictionary];
+        
+        //find built-in mic
+        self.builtInMic = [self findBuiltInMic];
+        
+        //dbg msg
+        NSLog(@"built-in mic: %@ (device ID: %d)", self.builtInMic.localizedName, [self getAVObjectID:self.builtInMic]);
+        
+        //find built-in camera
+        self.builtInCamera = [self findBuiltInCamera];
+        
+        //dbg msg
+        NSLog(@"built-in camera: %@ (device ID: %d)", self.builtInCamera.localizedName, [self getAVObjectID:self.builtInCamera]);
     }
     
     return self;
@@ -55,323 +120,286 @@ extern os_log_t logHandle;
 -(void)start
 {
     //dbg msg
-    os_log_debug(logHandle, "starting AV monitoring");
-    // video
-    (YES == self.isM1) ? [self monitorVideoM1] : [self monitorVideoIntel];
-    // audio
-    [self startAudioMonitor];
-}
+    NSLog(@"starting AV monitoring");
 
-// 通过appleh13camerad监控 video events
-- (void)monitorVideoM1
-{
-    os_log_debug(logHandle, "CPU architecuture: M1, will leverage 'appleh13camerad'");
+    //start log monitor
+    [self startLogMonitor];
     
-    [self.videoLogMonitor start:[NSPredicate predicateWithFormat:@"process == 'appleh13camerad'"] level:Log_Level_Default callback:^(OSLogEvent* logEvent) {
+    //dbg msg
+    NSLog(@"registering for device connection/disconnection notifications");
     
-        //new client
-        // add to list
-        if ((YES == [logEvent.composedMessage hasPrefix:@"TCC access already allowed for pid"]) ||
-            (YES == [logEvent.composedMessage hasPrefix:@"TCC preflight access returned allowed for pid"])) {
-            
-            os_log_debug(logHandle, "new client msg: %{public}@", logEvent.composedMessage);
-            
-            NSNumber* pid = nil;
-            pid = @([logEvent.composedMessage componentsSeparatedByString:@" "].lastObject.intValue);
-            if (nil != pid) {
-                Client* client = [[Client alloc] init];
-                client.pid = pid;
-                client.path = getProcessPath(pid.intValue);
-                client.name = getProcessName(client.path);
-                Event *event = [[Event alloc] init:client device:Device_Camera state:self.cameraState];
-                os_log_debug(logHandle, "new client: %{public}@", client);
-                
-                //camera already on?
-                // show notifcation for new client
-                if (NSControlStateValueOn == self.cameraState) {
-                    if (YES == [self generateNotification:event]) {
-//                        [self executeUserAction:event];
-                    }
-                } else {
-                    //will handle when "on" camera msg is delivered
-                    [self.videoClients addObject:client];
-                }
-            }
-        } else if (YES == [logEvent.composedMessage isEqualToString:@"StartStream : StartStream: Powering ON camera"]) {
-            //camera on
-            os_log_debug(logHandle, "camera on msg: %{public}@", logEvent.composedMessage);
-            
-            self.cameraState = NSControlStateValueOn;
-            
-            Client *client = nil;
-            client = self.videoClients.lastObject;
-            
-            // Note: `avconferenced`负责FaceTime右边视图区域，这里增加判断如果最前的应用是FaceTime的话，替换成FaceTime！
-            if (client && !client.clientID && [client.path isEqualToString:AV_CONFERENCED]
-                && [NSWorkspace.sharedWorkspace.frontmostApplication.executableURL.path isEqualToString:FACE_TIME]) {
-                
-                NSRunningApplication *frontmostApplication = NSWorkspace.sharedWorkspace.frontmostApplication;
-                Client* _client = [[Client alloc] init];
-                _client.pid = @(frontmostApplication.processIdentifier);
-                _client.path = getProcessPath(client.pid.intValue);
-                _client.name = getProcessName(FACE_TIME);
-                _client.clientID = @([logEvent.composedMessage componentsSeparatedByString:@" "].lastObject.intValue);
-                
-                client = _client;
-                os_log_debug(logHandle, "did found, the facetime client: %{public}@", client);
-            }
-            
-            //init event
-            Event *event = [[Event alloc] init:client device:Device_Camera state:self.cameraState];
-            if(YES == [self generateNotification:event])
-            {
-//                [self executeUserAction:event];
-            }
-        } else if (YES == [logEvent.composedMessage hasPrefix:@"Removing client: pid"]) {
-            //dead client
-            // remove from list
-            os_log_debug(logHandle, "removed client msg: %{public}@", logEvent.composedMessage);
-            
-            NSNumber* pid = 0;
-            pid = @([logEvent.composedMessage componentsSeparatedByString:@" "].lastObject.intValue);
-            if (nil != pid) {
-                @synchronized (self) {
-                //find and remove client
-                for (NSInteger i = self.videoClients.count - 1; i >= 0; i--) {
-                    if (pid != ((Client*)self.videoClients[i]).pid) {
-                        continue;
-                    }
-                    os_log_debug(logHandle, "removed client at index %ld", (long)i);
-                    [self.videoClients removeObjectAtIndex:i];
-                }
-                }
-            }
-        } else if (YES == [logEvent.composedMessage hasPrefix:@"StopStream : Powering OFF camera"]) {
-            //camera off
-            // show inactive notification
-            os_log_debug(logHandle, "camera off msg: %{public}@", logEvent.composedMessage);
-            
-            self.cameraState = NSControlStateValueOff;
-            Event *event = [[Event alloc] init:nil device:Device_Camera state:self.cameraState];
-            
-            if (YES == [self generateNotification:event]) {
-//                [self executeUserAction:event];
-            }
-            @synchronized (self) {
-                os_log_debug(logHandle, "removed all (video) clients");
-                [self.videoClients removeAllObjects];
-            }
-        }
-    }];
+    //handle new device connections
+    [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(handleConnectedDeviceNotification:) name:AVCaptureDeviceWasConnectedNotification object:nil];
 
-    return;
-}
-
-
-// 通过VDCAssistant监控video events
-- (void)monitorVideoIntel
-{
-    os_log_debug(logHandle, "CPU architecuture: Intel ...will leverage 'VDCAssistant'");
+    //handle device disconnections
+    [NSNotificationCenter.defaultCenter addObserver:self selector:@selector(handleDisconnectedDeviceNotification:) name:AVCaptureDeviceWasDisconnectedNotification object:nil];
     
-    __block unsigned long long msgCount = 0;
-    [self.videoLogMonitor start:[NSPredicate predicateWithFormat:@"process == 'VDCAssistant'"] level:Log_Level_Default callback:^(OSLogEvent *logEvent) {
-        msgCount++;
-        // 新client，加入列表
-        if (YES == [logEvent.composedMessage hasPrefix:@"Client Connect for PID"]) {
-            
-            os_log_debug(logHandle, "new client msg: %{public}@", logEvent.composedMessage);
-            
-            NSNumber *pid = nil;
-            pid = @([logEvent.composedMessage componentsSeparatedByString:@" "].lastObject.intValue);
-            if (nil != pid) {
-                Client *client = [[Client alloc] init];
-                client.msgCount = msgCount;
-                client.pid = pid;
-                client.path = getProcessPath(pid.intValue);
-                client.name = getProcessName(client.path);
-                [self.videoClients addObject:client];
-                os_log_debug(logHandle, "new client: %{public}@", client);
-            }
-        } else if (YES == [logEvent.composedMessage containsString:@"GetDevicesState for client"]) {
-            //client w/ id msg
-            // 刷新 (last) client, with client id
-            os_log_debug(logHandle, "new client id msg : %{public}@", logEvent.composedMessage);
-            
-            NSNumber *clientID = nil;
-            clientID = @([logEvent.composedMessage componentsSeparatedByString:@" "].lastObject.intValue);
-            if (0 != clientID) {
-                //get last client
-                // check that it the one in the *last* msg
-                Client *client = nil;
-                client = self.videoClients.lastObject;
-                if (client.msgCount == msgCount-1) {
-                    client.clientID = clientID;
-                    os_log_debug(logHandle, "refresh client: %{public}@", client);
-                }
-            }
-        } else if (YES == [logEvent.composedMessage containsString:@"StartStream for client"]) {
-            //camera on (for client)
-            // show notification
-            //client
-            os_log_debug(logHandle, "camera on msg: %{public}@", logEvent.composedMessage);
-            
-            self.cameraState = NSControlStateValueOn;
-            Client *client = nil;
-            NSNumber *clientID = nil;
-            clientID = @([logEvent.composedMessage componentsSeparatedByString:@" "].lastObject.intValue);
-            if (0 != clientID) {
-                //find client w/ matching id
-                for (Client *candidateClient in self.videoClients) {
-                    if (candidateClient.clientID == clientID) {
-                        client = candidateClient;
-                        os_log_debug(logHandle, "found client: %{public}@", client);
-                        break;
-                    }
-                }
-                
-                //nil, but last client is FaceTime?
-                // use that, as FaceTime is "special"
-                if (nil == client) {
-                    //facetime check?
-                    if ((YES == [((Client*)self.videoClients.lastObject).path isEqualToString:FACE_TIME]) &&
-                        (YES == [NSWorkspace.sharedWorkspace.frontmostApplication.executableURL.path isEqualToString:FACE_TIME])) {
-                        client = self.videoClients.lastObject;
-                        client.clientID = clientID;
-                        os_log_debug(logHandle, "not found, but facetime client: %{public}@", client);
-                    } else {
-                        // 没监控到启动信息，clientid关联不上pid
-                        os_log_debug(logHandle, "not found, and not facetime client: %{public}@", client);
-                    }
-                }
-            }
-            
-            // Note: `avconferenced`负责FaceTime右边视图区域，这里增加判断如果最前的应用是FaceTime的话，替换成FaceTime！
-            if (client && [client.path isEqualToString:AV_CONFERENCED]
-                && [NSWorkspace.sharedWorkspace.frontmostApplication.executableURL.path isEqualToString:FACE_TIME]) {
-                
-                NSRunningApplication *frontmostApplication = NSWorkspace.sharedWorkspace.frontmostApplication;
-                Client* _client = [[Client alloc] init];
-                _client.pid = @(frontmostApplication.processIdentifier);
-                _client.path = getProcessPath(client.pid.intValue);
-                _client.name = getProcessName(FACE_TIME);
-                _client.clientID = @([logEvent.composedMessage componentsSeparatedByString:@" "].lastObject.intValue);
-                
-                client = _client;
-                os_log_debug(logHandle, "did found, the facetime client: %{public}@", client);
-            }
-            
-            Event *event = [[Event alloc] init:client device:Device_Camera state:self.cameraState];
-            if (YES == [self generateNotification:event]) {
-                //execute action
-//                [self executeUserAction:event];
-            }
-        } else if ((YES == [logEvent.composedMessage hasPrefix:@"ClientDied "]) &&
-                 (YES == [logEvent.composedMessage hasSuffix:@"]"])) {
-            //dead client
-            // remove from list
-            // e.x. "ClientDied 11 [PID: 22]"
-            os_log_debug(logHandle, "dead client msg: %{public}@", logEvent.composedMessage);
-            
-            //init message
-            // trim off last ']'
-            NSString *message = nil;
-            message = [logEvent.composedMessage substringToIndex:logEvent.composedMessage.length - 1];
-
-            NSNumber *pid = 0;
-            pid = @([message componentsSeparatedByString:@" "].lastObject.intValue);
-            if (nil != pid) {
-                @synchronized (self) {
-                
-                for (NSInteger i = self.videoClients.count - 1; i >= 0; i--) {
-                    //no match?
-                    if (pid != ((Client*)self.videoClients[i]).pid)
-                    {
-                        continue;
-                    }
-                    os_log_debug(logHandle, "removed client at index %ld client: %{public}@", (long)i, self.videoClients[i]);
-                    [self.videoClients removeObjectAtIndex:i];
-                }
-                    
-                } //sync
-            }
-        } else if(YES == [logEvent.composedMessage containsString:@"StopStream for client"]) {
-//            else if(YES == [event.composedMessage containsString:@"Post event kCameraStreamStop"])
-            //camera off
-            os_log_debug(logHandle, "camera off msg: %{public}@", logEvent.composedMessage);
-            
-            Client *client = nil;
-            NSNumber *clientid = @([logEvent.composedMessage componentsSeparatedByString:@" "].lastObject.intValue);
-            for (NSInteger i = self.videoClients.count - 1; i >= 0; i--) {
-                if (clientid != ((Client*)self.videoClients[i]).clientID) {
-                    continue;
-                }
-                client = self.videoClients[i];
-                //dbg msg
-                os_log_debug(logHandle, "stop client at index %ld, client: %{public}@", (long)i, self.videoClients[i]);
-            }
-            if (nil != client) {
-                Event *event = [[Event alloc] init:client device:Device_Camera state:NSControlStateValueOff];
-                if (YES == [self generateNotification:event]) {
-                    //execute action
-//                        [self executeUserAction:event];
-                }
-            } else {
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                    //all camera's off?
-                    if (YES != [self isACameraOn]) {
-                        self.cameraState = NSControlStateValueOff;
-                        Event *event = [[Event alloc] init:nil device:Device_Camera state:self.cameraState];
-                        
-                        if (YES == [self generateNotification:event]) {
-                            //execute action
-    //                        [self executeUserAction:event];
-                        }
-                    }
-                });
-            }
-            
-        }
-    }];
     
     return;
 }
 
-//start monitor audio
-- (void)startAudioMonitor
+- (void)watchAllAudioDevice
 {
-    os_log_debug(logHandle, "starting audio monitor");
-   
-    __block unsigned long long msgCount = 0;
+    //watch all input audio (mic) devices
+    for(AVCaptureDevice* audioDevice in [AVCaptureDevice devicesWithMediaType:AVMediaTypeAudio])
+    {
+        //start (device) monitor
+        [self watchAudioDevice:audioDevice];
+    }
+}
+- (void)watchAllVideoDevice
+{
+    //watch all input video (cam) devices
+    for(AVCaptureDevice* videoDevice in [AVCaptureDevice devicesWithMediaType:AVMediaTypeVideo])
+    {
+        //start (device) monitor
+        [self watchVideoDevice:videoDevice];
+    }
+}
+- (void)unwatchAllAudioDevice
+{
+    //watch all input audio (mic) devices
+    for(AVCaptureDevice* audioDevice in [AVCaptureDevice devicesWithMediaType:AVMediaTypeAudio])
+    {
+        //start (device) monitor
+        [self unwatchAudioDevice:audioDevice];
+    }
+}
+- (void)unwatchAllVideoDevice
+{
+    //watch all input video (cam) devices
+    for(AVCaptureDevice* videoDevice in [AVCaptureDevice devicesWithMediaType:AVMediaTypeVideo])
+    {
+        //start (device) monitor
+        [self unwatchVideoDevice:videoDevice];
+    }
+}
+
+//new device is connected
+// get its type, then watch it for events
+-(void)handleConnectedDeviceNotification:(NSNotification *)notification
+{
+    //device
+    AVCaptureDevice* device = NULL;
     
-    // Note: 统一在外部的Manager监听音频插口
-//    AudioObjectID builtInMic = 0;
-//    builtInMic = [self findBuiltInMic];
-//    if (0 != builtInMic) {
-//        [self watchAudio:builtInMic];
-//    } else {
-//        os_log_error(logHandle, "ERROR: failed to find built-in mic");
-//    }
+    //type
+    device = notification.object;
     
-    NSRegularExpression *regex = nil;
-    //macOS 10.16 (11)
-    if (@available(macOS 10.16, *)) {
-        regex = [NSRegularExpression regularExpressionWithPattern:@"pid:(\\d*)," options:0 error:nil];
-    } else {
-        //macOS 10.15
-        regex = [NSRegularExpression regularExpressionWithPattern:@"0x([a-fA-F0-9]){20,}" options:0 error:nil];
+    //dbg msg
+    NSLog(@"new device connected: %@", device.localizedName);
+    
+    //audio devive
+    if(YES == [device hasMediaType:AVMediaTypeAudio])
+    {
+        //watch
+        [self watchAudioDevice:device];
     }
     
-    //start audio-related log monitoring
-    // looking for tccd access msgs from coreaudio
-    [self.audioLogMonitor start:[NSPredicate predicateWithFormat:@"process == 'coreaudiod' && subsystem == 'com.apple.TCC' && category == 'access'"] level:Log_Level_Info callback:^(OSLogEvent *logEvent) {
+    //video device
+    else if(YES == [device hasMediaType:AVMediaTypeVideo])
+    {
+        //watch
+        [self watchVideoDevice:device];
+    }
+
+    return;
+}
+
+//device is disconnected
+-(void)handleDisconnectedDeviceNotification:(NSNotification *)notification
+{
+    //device
+    AVCaptureDevice* device = NULL;
+    
+    //type
+    device = notification.object;
+    
+    //dbg msg
+    NSLog(@"device disconnected: %@", device.localizedName);
+    
+    //audio devive
+    if(YES == [device hasMediaType:AVMediaTypeAudio])
+    {
+        //unwatch
+        [self unwatchAudioDevice:device];
+    }
+    
+    //video device
+    else if(YES == [device hasMediaType:AVMediaTypeVideo])
+    {
+        //unwatch
+        [self unwatchVideoDevice:device];
+    }
+    
+    return;
+}
+
+//log monitor
+-(void)startLogMonitor
+{
+    //dbg msg
+    NSLog(@"starting log monitor for AV events");
+    
+    //macOS 14+
+    if(@available(macOS 14.0, *)) {
         
-        msgCount++;
+        //regex for mic log msg
+        NSRegularExpression* micRegex = nil;
         
-        //macOS 10.16 (11)
-        if(@available(macOS 10.16, *)) {
-            //tcc request
+        //regex for camera log msg
+        NSRegularExpression* cameraRegex = nil;
+        
+        //dbg msg
+        NSLog(@">= macOS 14+: Using log monitor for AV events via w/ (camera): 'added <private> endpoint <private> camera <private>' AND (mic): '-[MXCoreSession beginInterruption]: Session <ID: xx, PID = xyz,...'");
+        
+        //init mic regex
+        micRegex = [NSRegularExpression regularExpressionWithPattern:@"PID = (\\d+)" options:0 error:nil];
+        
+        //init cam regex
+        cameraRegex = [NSRegularExpression regularExpressionWithPattern:@"\\[\\{private\\}(\\d+)\\]" options:0 error:nil];
+        
+        //start log monitoring
+        [self.logMonitor start:[NSPredicate predicateWithFormat:@"subsystem=='com.apple.cmio' OR subsystem=='com.apple.coremedia'"] level:Log_Level_Default callback:^(OSLogEvent* logEvent) {
+            
+            //sync to process
+            @synchronized (self) {
+                
+                //match
+                NSTextCheckingResult* match = nil;
+                
+                //pid
+                NSInteger pid = 0;
+                
+                //camera:
+                // "added <private> endpoint <private> camera <private> = <pid>;"
+                if( (YES == [logEvent.subsystem isEqual:@"com.apple.cmio"]) &&
+                   (YES == [logEvent.composedMessage hasSuffix:@"added <private> endpoint <private> camera <private>"]) )
+                {
+                    //reset
+                    self.lastCameraClient = 0;
+                    
+                    //match on pid
+                    match = [cameraRegex firstMatchInString:logEvent.composedMessage options:0 range:NSMakeRange(0, logEvent.composedMessage.length)];
+                    if( (nil == match) ||
+                       (NSNotFound == match.range.location) )
+                    {
+                        return;
+                    }
+                    
+                    //extract/convert pid
+                    pid = [[logEvent.composedMessage substringWithRange:[match rangeAtIndex:1]] integerValue];
+                    if( (0 == pid) ||
+                       (-1 == pid) )
+                    {
+                        return;
+                    }
+                    
+                    //save
+                    self.lastCameraClient = pid;
+                }
+                
+                //mic:
+                // "-[MXCoreSession beginInterruption]: Session <ID: xx, PID = xyz, ...":
+                else if( (YES == [logEvent.subsystem isEqual:@"com.apple.coremedia"]) &&
+                        (YES == [logEvent.composedMessage hasPrefix:@"-MXCoreSession- -[MXCoreSession beginInterruption]"]) &&
+                        (YES == [logEvent.composedMessage hasSuffix:@"Recording = YES> is going active"]) )
+                {
+                    
+                    //reset
+                    self.lastMicClient = 0;
+                    
+                    //match on pid
+                    match = [micRegex firstMatchInString:logEvent.composedMessage options:0 range:NSMakeRange(0, logEvent.composedMessage.length)];
+                    if( (nil == match) ||
+                       (NSNotFound == match.range.location) )
+                    {
+                        return;
+                    }
+                    
+                    //extract/convert pid
+                    pid = [[logEvent.composedMessage substringWithRange:[match rangeAtIndex:1]] integerValue];
+                    if( (0 == pid) ||
+                       (-1 == pid) )
+                    {
+                        return;
+                    }
+                    
+                    //save
+                    self.lastMicClient = pid;
+                }
+                // mic: 有时候调用麦克风没有上面的日志，但有下面这种日志，补齐日志提高判断范围
+                // "-MXSessionManager- -[MXSessionManager requestForSharedOwnership:... <ID: xx, PID = xyz, ...":
+                else if( (YES == [logEvent.subsystem isEqual:@"com.apple.coremedia"]) &&
+                        (YES == [logEvent.composedMessage hasPrefix:@"-MXSessionManager- -[MXSessionManager requestForSharedOwnership"]) &&
+                        (YES == [logEvent.composedMessage hasSuffix:@"Recording = YES>"]) )
+                {
+                    
+                    //reset
+                    self.lastMicClient = 0;
+                    
+                    //match on pid
+                    match = [micRegex firstMatchInString:logEvent.composedMessage options:0 range:NSMakeRange(0, logEvent.composedMessage.length)];
+                    if( (nil == match) ||
+                        (NSNotFound == match.range.location) )
+                    {
+                        return;
+                    }
+                    
+                    //extract/convert pid
+                    pid = [[logEvent.composedMessage substringWithRange:[match rangeAtIndex:1]] integerValue];
+                    if( (0 == pid) ||
+                       (-1 == pid) )
+                    {
+                        return;
+                    }
+                    
+                    //save
+                    self.lastMicClient = pid;
+                }
+                
+                //msg not of interest
+                else
+                {
+                    return;
+                }
+                
+            }
+            
+        }];
+        
+    }
+    
+    //macOS 13.3+
+    // use predicate: "subsystem=='com.apple.cmio'" looking for 'CMIOExtensionPropertyDeviceControlPID'
+    else if (@available(macOS 13.3, *)) {
+        if ([self isRunOnAppleSilicon]) {
+            [self monitor13VideoM1];
+        } else {
+            [self monitor13VideoIntel];
+        }
+    } else if (@available(macOS 12.0, *)) { // 12系统也能通过 monitor13VideoIntel 方法监控摄像头
+        if ([self isRunOnAppleSilicon]) {
+            [self monitorSystemStatus]; //测试发现intel 12 系统这个方法不生效， 但是有系统日志的，需要现场debug
+        } else {
+            [self monitor13VideoIntel];
+        }
+    }
+    
+    //previous versions of macOS
+    // use predicate: "subsystem=='com.apple.SystemStatus'"
+    else {  //11 系统使用老方法
+        [self monitorSystemStatus];
+    }
+    
+    if (@available(macOS 14.0, *)) {
+        
+    } else if (@available(macOS 12.0, *)) { //12-13系统的音频日志
+        
+        NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"pid:(\\d*)," options:0 error:nil];
+        [self.audio13logMonitor start:[NSPredicate predicateWithFormat:@"process == 'coreaudiod' && subsystem == 'com.apple.TCC' && category == 'access'"] level:Log_Level_Info callback:^(OSLogEvent *logEvent) {
+                //tcc request
             if (YES == [logEvent.composedMessage containsString:@"function=TCCAccessRequest, service=kTCCServiceMicrophone"]) {
-                os_log_debug(logHandle, "new tcc access msg: %{public}@", logEvent.composedMessage);
+                NSLog(@"new tcc access msg: %@", logEvent.composedMessage);
                 NSTextCheckingResult *match = nil;
                 match = [regex firstMatchInString:logEvent.composedMessage options:0 range:NSMakeRange(0, logEvent.composedMessage.length)];
                 if ((nil == match) ||
@@ -381,499 +409,1746 @@ extern os_log_t logHandle;
                     return;
                 }
                 
-                NSNumber *pid = nil;
-                pid = @([[logEvent.composedMessage substringWithRange:[match rangeAtIndex:1]] intValue]);
-                if (nil == pid) {
+                NSInteger pid = [[logEvent.composedMessage substringWithRange:[match rangeAtIndex:1]] intValue];
+                if (pid <= 0) {
                     return;
                 }
-                
-                Client *client = nil;
-                client = [[Client alloc] init];
-                client.msgCount = msgCount;
-                client.pid = pid;
-                client.path = getProcessPath(pid.intValue);
-                client.name = getProcessName(client.path);
-                [self.audioClients addObject:client];
-                
-                os_log_debug(logHandle, "new client: %{public}@", client);
-                return;
+                self.lastMicClient = pid;
+                NSLog(@"new client: %@", @(pid));
             }
-        } else {
-            //macOS 10.15
-            //tcc request
-            if ((YES == [logEvent.composedMessage containsString:@"TCCAccessRequest"]) &&
-                (YES == [logEvent.composedMessage containsString:@"kTCCServiceMicrophone"])) {
-                os_log_debug(logHandle, "new tcc access msg: %{public}@", logEvent.composedMessage);
-                
-                //match/extract pid
-                NSTextCheckingResult *match = nil;
-                match = [regex firstMatchInString:logEvent.composedMessage options:0 range:NSMakeRange(0, logEvent.composedMessage.length)];
-                
-                if ((nil == match) ||
-                    (NSNotFound == match.range.location)) {
-                    //ignore
-                    return;
-                }
-                
-                NSString *token = nil;
-                token = [logEvent.composedMessage substringWithRange:[match rangeAtIndex:0]];
-                if (token.length < 46) {
-                    return;
-                }
-                
-                //extract pid
-                NSString *substring = nil;
-                substring = [token substringWithRange:NSMakeRange(42, 4)];
-                unsigned int pid = 0;
-                sscanf(substring.UTF8String, "%x", &pid);
-                if (0 == pid) {
-                    return;
-                }
-    
-                Client *client = nil;
-                client = [[Client alloc] init];
-                client.msgCount = msgCount;
-                client.pid = @(htons(pid));
-                client.path = getProcessPath(client.pid.intValue);
-                client.name = getProcessName(client.path);
-                [self.audioClients addObject:client];
-                
-                os_log_debug(logHandle, "new (audio) client: %{public}@", client);
-                return;
-            }
-        }
-        //tcc auth response
-        // check that a) auth ok b) msg is right after new request
-        //            c) mic is still on d) process is still alive
-        // then trigger notification
-        if ((YES == [logEvent.composedMessage containsString:@"RECV: synchronous reply"]) ||
-            (YES == [logEvent.composedMessage containsString:@"Received synchronous reply"])) {
-            __block Client *client = nil;
+        }];
+    }
+    return;
+}
 
-            os_log_debug(logHandle, "new client tccd response : %{public}@", logEvent.composedMessage);
+- (BOOL)isRunOnAppleSilicon {
+    BOOL result = NO;
+    if (@available(macOS 11, *)) {
+        char buf[100];
+        size_t buflen = 100;
+        sysctlbyname("machdep.cpu.brand_string", &buf, &buflen, NULL, 0);
+        NSString *cupArch = [[NSString alloc] initWithCString:(char*)buf encoding:NSASCIIStringEncoding];
+        if ([cupArch containsString:@"Apple"]) {
+            result = YES;
+        } else {
+            result = NO;
+        }
+    }
+    return result;
+}
+
+// 监听 intel 芯片 macOS 12/13 系统摄像头调用
+- (void)monitor13VideoIntel
+{
+    NSLog(@"CPU architecuture: Intel ...will leverage 'VDCAssistant'");
+    
+    __block unsigned long long msgCount = 0;
+    [self.logMonitor start:[NSPredicate predicateWithFormat:@"process == 'VDCAssistant'"] level:Log_Level_Default callback:^(OSLogEvent *logEvent) {
+        msgCount++;
+        // 新client，加入列表
+        if (YES == [logEvent.composedMessage hasPrefix:@"Client Connect for PID"]) {
             
-            BOOL isAuthorized = NO;
-            //look for:
-            // "result" => <bool: xxx>: true
-            for (NSString *response in [logEvent.composedMessage componentsSeparatedByString:@"\n"]) {
-                //no match?
-                if( (YES != [response hasSuffix:@"true"]) ||
-                    (YES != [response containsString:@"\"result\""])) {
-                    continue;
-                }
-                isAuthorized = YES;
-                break;
+            NSLog(@"new client msg: %@", logEvent.composedMessage);
+            
+            NSInteger pid = [logEvent.composedMessage componentsSeparatedByString:@" "].lastObject.intValue;
+            if (pid > 0) {
+                self.lastCameraClient = pid;
+                NSLog(@"new client: %@", @(pid));
             }
-            //未授权
-            if (YES != isAuthorized) {
-                return;
-            }
-            //授权，获取last client
-            // check that it the one in the *last* msg
-            client = self.audioClients.lastObject;
-            if (client.msgCount != msgCount-1) {
-                //ignore
-                return;
-            }
-            //is mic (really) on?
-//            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                self.microphoneState = [self isMicOn];
-                
-                if (YES != self.microphoneState) {
-                    os_log_debug(logHandle, "mic is not on...");
-                    //return;
-                }
-                
-                //make sure process is still alive
-                if (YES != isProcessAlive(client.pid.intValue)) {
-                    os_log_debug(logHandle, "%@ is no longer alive, so ignoring", client.name);
-                    return;
-                }
-            
-                //more than one client?
-                // only use candiate client if:
-                // a) it's the foreground and b) the last event was from a different client
-                if (1 != self.audioClients.count) {
-                    os_log_debug(logHandle, "more than one audio client (total: %lu)", (unsigned long)self.audioClients.count);
-                    
-                    //not foreground?
-                    if (YES != [NSWorkspace.sharedWorkspace.frontmostApplication.executableURL.path isEqualToString:client.path]) {
-                        //client = nil;
-                    } else if ((self.lastMicEvent.client.pid == client.pid) &&
-                             (YES == [self.lastMicEvent.client.path isEqualToString:client.path])) {
-                        //last event was same client?
-                        client = nil;
-                    }
-                }
-            
-                // Note: `corespeechd`负责Siri录音，当前path为corespeechd时，替换成Siri！
-                if (client && !client.clientID && [client.path isEqualToString:CORE_SPEECHD]
-                    /*&& [NSWorkspace.sharedWorkspace.frontmostApplication.executableURL.path isEqualToString:SIRI_APP]*/) {
-                    
-                    Client* _client = [[Client alloc] init];
-                    _client.pid = @(findProcess(SIRI_SYS));
-                    _client.path = getProcessPath(client.pid.intValue);
-                    _client.name = getProcessName(SIRI_APP);
-                    _client.msgCount = client.msgCount;
-                    _client.clientID = @([logEvent.composedMessage componentsSeparatedByString:@" "].lastObject.intValue);
-                    
-                    client = _client;
-                    
-                    os_log_debug(logHandle, "did found, the fake client: %{public}@", client);
-                }
-            
-                Event *event = nil;
-                event = [[Event alloc] init:client device:Device_Microphone state:self.microphoneState];
-                    
-                //show notification
-                [self generateNotification:event];
-                    
-//                //execute action
-//                [self executeUserAction:event];
-                
-//            });
         }
     }];
 }
 
-// 有摄像头打开
-- (BOOL)isACameraOn
+- (void)monitor13VideoM1
 {
-    BOOL cameraOn = NO;
-    unsigned int connectionID = 0;
+    //regex
+    NSRegularExpression* regex = nil;
     
-    os_log_debug(logHandle, "checking if any camera is active");
+    //dbg msg
+    NSLog(@">= macOS 13.3+: Using 'CMIOExtensionPropertyDeviceControlPID'");
     
-    for (AVCaptureDevice *currentCamera in [AVCaptureDevice devicesWithMediaType:AVMediaTypeVideo])
-    {
-        os_log_debug(logHandle, "device: %{public}@/%{public}@", currentCamera.manufacturer, currentCamera.localizedName);
+    //init regex
+    regex = [NSRegularExpression regularExpressionWithPattern:@"=\\s*(\\d+)\\s*;" options:0 error:nil];
+    
+    //start logging
+    [self.logMonitor start:[NSPredicate predicateWithFormat:@"subsystem=='com.apple.cmio'"] level:Log_Level_Debug callback:^(OSLogEvent* logEvent) {
         
-        connectionID = [self getAVObjectID:currentCamera];
+        //match
+        NSTextCheckingResult* match = nil;
         
-        // is (any) camera on?
-        if (NSControlStateValueOn == [self getCameraStatus:connectionID])
-        {
-            os_log_debug(logHandle, "device: %{public}@/%{public}@, is on!", currentCamera.manufacturer, currentCamera.localizedName);
+        //pid
+        NSInteger pid = 0;
+        
+        //sync to process
+        @synchronized (self) {
             
-            cameraOn = YES;
-            break;
+            //only interested on "CMIOExtensionPropertyDeviceControlPID = <pid>;" msgs
+            if(YES != [logEvent.composedMessage containsString:@"CMIOExtensionPropertyDeviceControlPID = "])
+            {
+                return;
+            }
+            
+            //reset
+            self.lastCameraClient = 0;
+            
+            //match on pid
+            match = [regex firstMatchInString:logEvent.composedMessage options:0 range:NSMakeRange(0, logEvent.composedMessage.length)];
+            if( (nil == match) ||
+               (NSNotFound == match.range.location) )
+            {
+                return;
+            }
+            
+            //extract/convert pid
+            pid = [[logEvent.composedMessage substringWithRange:[match rangeAtIndex:1]] integerValue];
+            if( (0 == pid) ||
+               (-1 == pid) )
+            {
+                return;
+            }
+            
+            //save
+            self.lastCameraClient = pid;
+        }
+        
+    }];
+}
+
+- (void)monitorSystemStatus
+{
+    //dbg msg
+    NSLog(@"< macOS 13.3+: Using 'com.apple.SystemStatus'");
+    
+    //start logging
+    [self.logMonitor start:[NSPredicate predicateWithFormat:@"subsystem=='com.apple.SystemStatus'"] level:Log_Level_Default callback:^(OSLogEvent* logEvent) {
+        
+        //sync to process
+        @synchronized (self) {
+            
+            //flags
+            BOOL audioAttributionsList = NO;
+            BOOL cameraAttributionsList = NO;
+            
+            //new audio attributions
+            NSMutableArray* newAudioAttributions = nil;
+            
+            //new camera attributions
+            NSMutableArray* newCameraAttributions = nil;
+            
+            //only interested on "Server data changed..." msgs
+            if(YES != [logEvent.composedMessage containsString:@"Server data changed for media domain"])
+            {
+                return;
+            }
+            
+            //split on newlines
+            // ...and then parse out audio/camera attributions
+            for(NSString* __strong line in [logEvent.composedMessage componentsSeparatedByString:@"\n"])
+            {
+                //pid
+                NSNumber* pid = 0;
+                
+                //trim
+                line = [line stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+                
+                //'audioAttributions' list?
+                if( (YES == [line hasPrefix:@"audioAttributions = "]) ||
+                   (YES == [line hasPrefix:@"audioRecordingAttributions = "]) )
+                {
+                    //dbg msg
+                    NSLog(@"found 'audio attributions'");
+                    
+                    //set flag
+                    audioAttributionsList = YES;
+                    
+                    //init
+                    newAudioAttributions = [NSMutableArray array];
+                    
+                    //unset (other) list
+                    cameraAttributionsList = NO;
+                    
+                    //next
+                    continue;
+                }
+                
+                //'cameraAttributions' list?
+                if( (YES == [line hasPrefix:@"cameraAttributions = "]) ||
+                   (YES == [line hasPrefix:@"cameraCaptureAttributions = "]) )
+                {
+                    //dbg msg
+                    NSLog(@"found 'camera attributions'");
+                    
+                    //set flag
+                    cameraAttributionsList = YES;
+                    
+                    //init
+                    newCameraAttributions = [NSMutableArray array];
+                    
+                    //unset (other) list
+                    audioAttributionsList = NO;
+                    
+                    //next
+                    continue;
+                }
+                
+                //audit token of item?
+                if(YES == [line containsString:@"<BSAuditToken:"])
+                {
+                    //dbg msg
+                    NSLog(@"line has audit token...");
+                    
+                    //pid extraction regex
+                    NSRegularExpression* regex = nil;
+                    
+                    //match
+                    NSTextCheckingResult* match = nil;
+                    
+                    //init regex
+                    regex = [NSRegularExpression regularExpressionWithPattern:@"(?<=PID: )[0-9]*" options:0 error:nil];
+                    
+                    //match/extract pid
+                    match = [regex firstMatchInString:line options:0 range:NSMakeRange(0, line.length)];
+                    if( (nil == match) ||
+                       (NSNotFound == match.range.location))
+                    {
+                        //dbg msg
+                        NSLog(@"no match on regex");
+                        
+                        //ignore
+                        continue;
+                    }
+                    
+                    //extract pid
+                    pid = @([[line substringWithRange:[match rangeAtIndex:0]] intValue]);
+                    
+                    //dbg msg
+                    NSLog(@"pid: %@", pid);
+                    
+                    //in audio list?
+                    if(YES == audioAttributionsList)
+                    {
+                        //dbg msg
+                        NSLog(@"...for audio");
+                        
+                        //add
+                        [newAudioAttributions addObject:[NSNumber numberWithInt:[pid intValue]]];
+                    }
+                    //in camera list?
+                    else if(YES == cameraAttributionsList)
+                    {
+                        //dbg msg
+                        NSLog(@"...for camera");
+                        
+                        //add
+                        [newCameraAttributions addObject:[NSNumber numberWithInt:[pid intValue]]];
+                    }
+                    
+                    //next
+                    continue;
+                }
+            }
+            
+            //macOS 12: off events trigger the removal of the list
+            // so then we'll just pass in an empty list in that case
+            if(12 == NSProcessInfo.processInfo.operatingSystemVersion.majorVersion)
+            {
+                //nil?
+                if(nil == newAudioAttributions)
+                {
+                    //init blank
+                    newAudioAttributions = [NSMutableArray array];
+                }
+                
+                //nil?
+                if(nil == newCameraAttributions)
+                {
+                    //init blank
+                    newCameraAttributions = [NSMutableArray array];
+                }
+            }
+            
+            //process attibutions
+            [self processAttributions:newAudioAttributions newCameraAttributions:newCameraAttributions];
+            
+        }//sync
+        
+    }];
+}
+
+//process attributions
+// will generate (any needed) events to trigger alerts to user
+-(void)processAttributions:(NSMutableArray*)newAudioAttributions newCameraAttributions:(NSMutableArray*)newCameraAttributions
+{
+    //audio differences
+    NSOrderedCollectionDifference* audioDifferences = nil;
+    
+    //camera differences
+    NSOrderedCollectionDifference* cameraDifferences = nil;
+    
+    //client
+    __block Client* client = nil;
+    
+    //event
+    __block Event* event = nil;
+    
+    //dbg msg
+    NSLog(@"method '%s' invoked", __PRETTY_FUNCTION__);
+    
+    //diff audio differences
+    if( (nil != newAudioAttributions) &&
+        (nil != self.audioAttributions) )
+    {
+        //diff
+        audioDifferences = [newAudioAttributions differenceFromArray:self.audioAttributions];
+    }
+    
+    //diff camera differences
+    if( (nil != newCameraAttributions) &&
+        (nil != self.cameraAttributions) )
+    {
+        //diff
+        cameraDifferences = [newCameraAttributions differenceFromArray:self.cameraAttributions];
+    }
+    
+    /* audio event logic */
+    
+    //new audio event?
+    // handle (lookup mic, send event)
+    if(YES == audioDifferences.hasChanges)
+    {
+        //dbg msg
+        NSLog(@"new audio event");
+        
+        //active mic
+        AVCaptureDevice* activeMic = nil;
+        
+        //audio off?
+        // sent event
+        if(0 == audioDifferences.insertions.count)
+        {
+            //dbg msg
+            NSLog(@"audio event: off");
+            
+            //init event
+            // process (client) and device are nil
+            event = [[Event alloc] init:nil device:nil deviceType:Device_Microphone state:NSControlStateValueOff];
+            
+            //handle event
+            [self handleEvent:event];
+        }
+        
+        //audio on?
+        // send event
+        else
+        {
+            //dbg msg
+            NSLog(@"audio event: on");
+            
+            //send event for each process (attribution)
+            for(NSOrderedCollectionChange* audioAttribution in audioDifferences.insertions)
+            {
+                //init client from attribution
+                client = [[Client alloc] init];
+                client.pid = audioAttribution.object;
+                client.path = valueForStringItem(getProcessPath(client.pid.intValue));
+                client.name = valueForStringItem(getProcessName(client.path));
+                
+                //look for active mic
+                for(AVCaptureDevice* microphone in [AVCaptureDevice devicesWithMediaType:AVMediaTypeAudio])
+                {
+                    //off? skip
+                    if(NSControlStateValueOn != [self getMicState:microphone])
+                    {
+                        //skip
+                        continue;
+                    }
+                    
+                    //dbg msg
+                    NSLog(@"audio device: %@/%@ is on", microphone.manufacturer, microphone.localizedName);
+                    
+                    //save
+                    activeMic = microphone;
+                    
+                    //init event
+                    // with client and (active) mic
+                    event = [[Event alloc] init:client device:activeMic deviceType:Device_Microphone state:NSControlStateValueOn];
+                    
+                    //handle event
+                    [self handleEvent:event];
+                }
+                
+                //no mic found? (e.g. headphones as input)
+                // show (limited) alert
+                if(nil == activeMic)
+                {
+                    //init event
+                    // devivce is nil
+                    event = [[Event alloc] init:client device:nil deviceType:Device_Microphone state:NSControlStateValueOn];
+                    
+                    //handle event
+                    [self handleEvent:event];
+                }
+            }
+        }
+    
+    } //audio event
+    
+    /* camera event logic */
+
+    //new camera event?
+    // handle (lookup camera, send event)
+    if(YES == cameraDifferences.hasChanges)
+    {
+        //dbg msg
+        NSLog(@"new camera event");
+        
+        //active camera
+        AVCaptureDevice* activeCamera = nil;
+            
+        //camera off?
+        // send event
+        if(0 == cameraDifferences.insertions.count)
+        {
+            //dbg msg
+            NSLog(@"camera event: off");
+            
+            //init event
+            // process (client) and device are nil
+            event = [[Event alloc] init:nil device:nil deviceType:Device_Camera state:NSControlStateValueOff];
+            
+            //handle event
+            [self handleEvent:event];
+        }
+        
+        //camera on?
+        // send event
+        else
+        {
+            //dbg msg
+            NSLog(@"camera event: on");
+            
+            //send event for each process (attribution)
+            for(NSOrderedCollectionChange* cameraAttribution in cameraDifferences.insertions)
+            {
+                //init client from attribution
+                client = [[Client alloc] init];
+                client.pid = cameraAttribution.object;
+                client.path = valueForStringItem(getProcessPath(client.pid.intValue));
+                client.name = valueForStringItem(getProcessName(client.path));
+                
+                //look for active camera
+                for(AVCaptureDevice* camera in [AVCaptureDevice devicesWithMediaType:AVMediaTypeVideo])
+                {
+                    //off? skip
+                    if(NSControlStateValueOn != [self getCameraState:camera])
+                    {
+                        //skip
+                        continue;
+                    }
+                    
+                    //virtual
+                    // TODO: is there a better way to determine this?
+                    if(YES == [camera.localizedName containsString:@"Virtual"])
+                    {
+                        //skip
+                        continue;
+                    }
+                    
+                    //dbg msg
+                    NSLog(@"camera device: %@/%@ is on", camera.manufacturer, camera.localizedName);
+                    
+                    //save
+                    activeCamera = camera;
+                    
+                    //init event
+                    // with client and (active) camera
+                    event = [[Event alloc] init:client device:activeCamera deviceType:Device_Camera state:NSControlStateValueOn];
+                    
+                    //handle event
+                    [self handleEvent:event];
+                }
+                
+                //no camera found?
+                // show (limited) alert
+                if(nil == activeCamera)
+                {
+                    //init event
+                    // devivce is nil
+                    event = [[Event alloc] init:client device:nil deviceType:Device_Camera state:NSControlStateValueOn];
+                    
+                    //handle event
+                    [self handleEvent:event];
+                }
+            }
+        }
+        
+    } //camera event
+     
+    //update audio attributions
+    self.audioAttributions = [newAudioAttributions copy];
+        
+    //update camera attributions
+    self.cameraAttributions = [newCameraAttributions copy];
+    
+    return;
+}
+
+//TODO: refactor alerts
+// delay showing them!
+
+//register for audio changes
+-(BOOL)watchAudioDevice:(AVCaptureDevice*)device
+{
+    //ret var
+    BOOL bRegistered = NO;
+    
+    //status var
+    OSStatus status = -1;
+    
+    //device ID
+    AudioObjectID deviceID = 0;
+    
+    //property struct
+    AudioObjectPropertyAddress propertyStruct = {0};
+    
+    //init property struct's selector
+    propertyStruct.mSelector = kAudioDevicePropertyDeviceIsRunningSomewhere;
+    
+    //init property struct's scope
+    propertyStruct.mScope = kAudioObjectPropertyScopeGlobal;
+    
+    //init property struct's element
+    propertyStruct.mElement = kAudioObjectPropertyElementMain;
+    
+    //block
+    // invoked when audio changes
+    AudioObjectPropertyListenerBlock listenerBlock = ^(UInt32 inNumberAddresses, const AudioObjectPropertyAddress *inAddresses)
+    {
+        //state
+        NSInteger state = -1;
+        
+        //event
+        __block Event* event = nil;
+    
+        //get state
+        state = [self getMicState:device];
+        
+        //dbg msg
+        NSLog(@"Mic: %@ changed state to %ld", device.localizedName, (long)state);
+        
+        //save last mic off
+        if(NSControlStateValueOff == state)
+        {
+            //save
+            self.lastMicOff = device;
+        }
+    
+        //macOS 13.3+
+        // use this as trigger
+        // older version send event via log monitor
+        if (@available(macOS 12.0, *)) {
+            
+            //dbg msg
+            NSLog(@"new audio event");
+            
+            //audio off?
+            if(NSControlStateValueOff == state)
+            {
+                //dbg msg
+                NSLog(@"audio event: off");
+                
+                //still wait
+                // cuz the on event is waiting...
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.5 * NSEC_PER_SEC), dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                    
+                    //init event
+                    // process (client) and device are nil
+                    event = [[Event alloc] init:nil device:device deviceType:Device_Microphone state:NSControlStateValueOff];
+                    
+                    //handle event
+                    [self handleEvent:event];
+                    
+                });
+            }
+            
+            //audio on?
+            else if(NSControlStateValueOn == state)
+            {
+                //dbg msg
+                NSLog(@"audio event: on");
+                
+                //delay
+                // need time for logging to grab responsible process
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.5 * NSEC_PER_SEC), dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                
+                    //client
+                    Client* client = nil;
+                    
+                    //have client?
+                    if(0 != self.lastMicClient)
+                    {
+                        //init client from attribution
+                        client = [[Client alloc] init];
+                        client.pid = [NSNumber numberWithInteger:self.lastMicClient];
+                        client.path = valueForStringItem(getProcessPath(client.pid.intValue));
+                        client.name = valueForStringItem(getProcessName(client.path));
+                    }
+                
+                    //init event
+                    // devivce is nil
+                    event = [[Event alloc] init:client device:device deviceType:Device_Microphone state:NSControlStateValueOn];
+                            
+                    //handle event
+                    [self handleEvent:event];
+                    
+                });
+            }
+            
+        } //macOS 13.3+
+    };
+    
+    //get device ID
+    deviceID = [self getAVObjectID:device];
+    if(0 == deviceID)
+    {
+        //err msg
+        os_log_error(logHandle, "ERROR: 'failed to find %@'s object id", device.localizedName);
+        
+        //bail
+        goto bail;
+    }
+    
+    //add property listener for audio changes
+    status = AudioObjectAddPropertyListenerBlock(deviceID, &propertyStruct, self.eventQueue, listenerBlock);
+    if(noErr != status)
+    {
+        //err msg
+        os_log_error(logHandle, "ERROR: AudioObjectAddPropertyListenerBlock() failed with %d", status);
+        
+        //bail
+        goto bail;
+    }
+    
+    //save
+    self.audioListeners[device.uniqueID] = listenerBlock;
+    
+    //dbg msg
+    NSLog(@"monitoring %@ (uuid: %@ / %x) for audio changes", device.localizedName, device.uniqueID, deviceID);
+
+    //happy
+    bRegistered = YES;
+    
+bail:
+    
+    return bRegistered;
+}
+
+//register for video changes
+-(BOOL)watchVideoDevice:(AVCaptureDevice*)device
+{
+    //ret var
+    BOOL bRegistered = NO;
+    
+    //status var
+    OSStatus status = -1;
+    
+    //device id
+    CMIOObjectID deviceID = 0;
+    
+    //property struct
+    CMIOObjectPropertyAddress propertyStruct = {0};
+    
+    //init property struct's selector
+    propertyStruct.mSelector = kAudioDevicePropertyDeviceIsRunningSomewhere;
+    
+    //init property struct's scope
+    propertyStruct.mScope = kAudioObjectPropertyScopeGlobal;
+    
+    //init property struct's element
+    propertyStruct.mElement = kAudioObjectPropertyElementMain;
+    
+    //block
+    // invoked when video changes
+    CMIOObjectPropertyListenerBlock listenerBlock = ^(UInt32 inNumberAddresses, const CMIOObjectPropertyAddress addresses[])
+    {
+        //state
+        NSInteger state = -1;
+    
+        //get state
+        state = [self getCameraState:device];
+        
+        //dbg msg
+        NSLog(@"Camera: %@ changed state to %ld", device.localizedName, (long)state);
+        
+        //save last camera off
+        if(NSControlStateValueOff == state)
+        {
+            //save
+            self.lastCameraOff = device;
+        }
+        
+        //camera on?
+        // macOS 13.3+, use this as trigger
+        // older version send event via log monitor
+        // 从12系统开始观察设备状态
+        if (@available(macOS 12.0, *)) {
+            
+            //event
+            __block Event* event = nil;
+            
+            //dbg msg
+            NSLog(@"new camera event");
+            
+            //camera: on
+            if(NSControlStateValueOn == state)
+            {
+                //dbg msg
+                NSLog(@"camera event: on");
+                
+                //delay
+                // need time for logging to grab responsible process
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.5 * NSEC_PER_SEC), dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                
+                    //client
+                    Client* client = nil;
+                    
+                    //have a client?
+                    if(0 != self.lastCameraClient)
+                    {
+                        //init client from attribution
+                        client = [[Client alloc] init];
+                        client.pid = [NSNumber numberWithInteger:self.lastCameraClient];
+                        client.path = valueForStringItem(getProcessPath(client.pid.intValue));
+                        client.name = valueForStringItem(getProcessName(client.path));
+                    }
+                    
+                    //init event
+                    // with client and (active) camera
+                    event = [[Event alloc] init:client device:device deviceType:Device_Camera state:NSControlStateValueOn];
+                    
+                    //handle event
+                    [self handleEvent:event];
+                    
+                });
+            }
+            
+            //camera: off
+            else if(NSControlStateValueOff == state)
+            {
+                //dbg msg
+                NSLog(@"camera event: off");
+                
+                //still wait
+                // cuz the on event is waiting...
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.5 * NSEC_PER_SEC), dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                    
+                    //init event
+                    // process (client) and device are nil
+                    event = [[Event alloc] init:nil device:device deviceType:Device_Camera state:NSControlStateValueOff];
+                    
+                    //handle event
+                    [self handleEvent:event];
+                    
+                });
+            }
+            
+        } //macOS 13.3
+    };
+    
+    //get device ID
+    deviceID = [self getAVObjectID:device];
+    if(0 == deviceID)
+    {
+        //err msg
+        os_log_error(logHandle, "ERROR: 'failed to find %@'s object id", device.localizedName);
+        
+        //bail
+        goto bail;
+    }
+    
+    //register (add) property block listener
+    status = CMIOObjectAddPropertyListenerBlock(deviceID, &propertyStruct, self.eventQueue, listenerBlock);
+    if(noErr != status)
+    {
+        //err msg
+        os_log_error(logHandle, "ERROR: CMIOObjectAddPropertyListenerBlock() failed with %d", status);
+        
+        //bail
+        goto bail;
+    }
+    
+    //save
+    self.cameraListeners[device.uniqueID] = listenerBlock;
+    
+    //dbg msg
+    NSLog(@"monitoring %@ (uuid: %@ / %x) for video changes", device.localizedName, device.uniqueID, deviceID);
+    
+    //happy
+    bRegistered = YES;
+    
+bail:
+    
+    return bRegistered;
+}
+
+//enumerate active devices
+-(NSMutableArray*)enumerateActiveDevices
+{
+    //active device
+    NSMutableArray* activeDevices = nil;
+    
+    //init
+    activeDevices = [NSMutableArray array];
+    
+    //look for active cameras
+    for(AVCaptureDevice* camera in [AVCaptureDevice devicesWithMediaType:AVMediaTypeVideo])
+    {
+        //skip virtual devices (e.g. OBS virtual camera)
+        // TODO: is there a better way to determine this?
+        if(YES == [camera.localizedName containsString:@"Virtual"])
+        {
+            //skip
+            continue;
+        }
+        
+        //save those that are one
+        if(NSControlStateValueOn == [self getCameraState:camera])
+        {
+            //save
+            [activeDevices addObject:camera];
         }
     }
-    return cameraOn;
+    
+    //look for active mic
+    for(AVCaptureDevice* microphone in [AVCaptureDevice devicesWithMediaType:AVMediaTypeAudio])
+    {
+        //save those that are one
+        if(NSControlStateValueOn == [self getMicState:microphone])
+        {
+            //save
+            [activeDevices addObject:microphone];
+        }
+    }
+    
+    return activeDevices;
 }
 
 //get built-in mic
-- (AudioObjectID)findBuiltInMic
+// looks for Apple device that's 'BuiltInMicrophoneDevice'
+-(AVCaptureDevice*)findBuiltInMic
 {
-    AudioObjectID builtInMic = 0;
-
-    //look for mic that belongs to apple
-    for (AVCaptureDevice* currentMic in [AVCaptureDevice devicesWithMediaType:AVMediaTypeAudio])
+    //mic
+    AVCaptureDevice* builtInMic = 0;
+    
+    //built in mic appears as "BuiltInMicrophoneDevice"
+    for(AVCaptureDevice* currentMic in [AVCaptureDevice devicesWithMediaType:AVMediaTypeAudio])
     {
-        os_log_debug(logHandle, "device: %{public}@/%{public}@", currentMic.manufacturer, currentMic.localizedName);
+        //dbg msg
+        NSLog(@"device: %@/%@/%@", currentMic.manufacturer, currentMic.localizedName, currentMic.uniqueID);
         
-        //check if apple
-        // also check input source
-        if( (YES == [currentMic.manufacturer isEqualToString:@"Apple Inc."]) &&
-            (YES == [[[currentMic activeInputSource] inputSourceID] isEqualToString:@"imic"]) )
+        //is device apple + built in mic?
+        if(YES == [currentMic.manufacturer isEqualToString:@"Apple Inc."])
         {
-            builtInMic = [self getAVObjectID:currentMic];
-            break;
+            //is built in mic?
+            if( (YES == [currentMic.uniqueID isEqualToString:@"BuiltInMicrophoneDevice"]) ||
+                (YES == [currentMic.localizedName isEqualToString:@"Built-in Microphone"]) )
+            {
+                //found
+                builtInMic = currentMic;
+                break;
+            }
         }
     }
     
-    if (0 == builtInMic)
+    //not found?
+    // grab default
+    if(0 == builtInMic)
     {
-        builtInMic = [self getAVObjectID:[AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeAudio]];
-        os_log_debug(logHandle, "Apple mic not found, defaulting to default (id: %d)", builtInMic);
+        //get mic / id
+        builtInMic = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeAudio];
+        
+        //dbg msg
+        NSLog(@"Apple Mic not found, defaulting to default device: %@/%@", builtInMic.manufacturer, builtInMic.localizedName);
     }
     
     return builtInMic;
 }
 
-//获取av object's ID
-- (UInt32)getAVObjectID:(AVCaptureDevice *)audioObject
+//get built-in camera
+-(AVCaptureDevice*)findBuiltInCamera
 {
-    AudioObjectID objectID = 0;
+    //camera
+    AVCaptureDevice* builtInCamera = 0;
     
-    SEL methodSelector = nil;
-    methodSelector = NSSelectorFromString(@"connectionID");
-    
-    if (YES != [audioObject respondsToSelector:methodSelector])
+    //built in mic appears as "BuiltInMicrophoneDevice"
+    for(AVCaptureDevice* currentCamera in [AVCaptureDevice devicesWithMediaType:AVMediaTypeVideo])
     {
-        return 0;
+        //dbg msg
+        NSLog(@"device: %@/%@/%@", currentCamera.manufacturer, currentCamera.localizedName, currentCamera.uniqueID);
+        
+        //is device apple + built in camera?
+        if(YES == [currentCamera.manufacturer isEqualToString:@"Apple Inc."])
+        {
+            //is built in camera?
+            if( (YES == [currentCamera.uniqueID isEqualToString:@"FaceTime HD Camera"]) ||
+                (YES == [currentCamera.localizedName isEqualToString:@"FaceTime-HD-camera"]) ||
+                (YES == [currentCamera.localizedName isEqualToString:@"FaceTime HD Camera"]) )
+            {
+                //found
+                builtInCamera = currentCamera;
+                break;
+            }
+        }
     }
     
-    //ignore leak warning
-    #pragma clang diagnostic push
-    #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+    //not found?
+    // grab default
+    if(0 == builtInCamera)
+    {
+        //get mic / id
+        builtInCamera = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
+        
+        //dbg msg
+        NSLog(@"Apple Camera not found, defaulting to default device: %@/%@)", builtInCamera.manufacturer, builtInCamera.localizedName);
+    }
     
-    objectID = (unsigned int)[audioObject performSelector:methodSelector withObject:nil];
+    return builtInCamera;
+}
+
+//get av object's ID
+-(UInt32)getAVObjectID:(AVCaptureDevice*)device
+{
+    //object id
+    UInt32 objectID = 0;
+    
+    //selector for getting device id
+    SEL methodSelector = nil;
+
+    //init selector
+    methodSelector = NSSelectorFromString(@"connectionID");
+    
+    //sanity check
+    if(YES != [device respondsToSelector:methodSelector])
+    {
+        //bail
+        goto bail;
+    }
+    
+    //ignore warning
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Wpointer-to-int-cast"
+    #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+
+    //grab connection ID
+    objectID = (UInt32)[device performSelector:methodSelector withObject:nil];
     
     //restore
     #pragma clang diagnostic pop
     
+bail:
+    
     return objectID;
 }
 
-//is built-in mic on?
-- (BOOL)isMicOn
+//determine if audio device is active
+-(UInt32)getMicState:(AVCaptureDevice*)device
 {
-    BOOL isMicOn = NO;
-
-    AudioObjectID builtInMic = 0;
-    
-    os_log_debug(logHandle, "checking if built-in mic is active");
-    
-    builtInMic = [self findBuiltInMic];
-    if ((0 != builtInMic) &&
-        (NSControlStateValueOn == [self getMicState:builtInMic]))
-    {
-        os_log_debug(logHandle, "built-in mic is on");
-        isMicOn = YES;
-    }
-    return isMicOn;
-}
-    
-//注册audio notifcations，只关注mic deactivation events
-// ...only care about mic deactivation request
-- (BOOL)watchAudio:(AudioObjectID)builtInMic
-{
-    OSStatus status = -1;
-    AudioObjectPropertyAddress propertyStruct = {0};
-    
-    propertyStruct.mSelector = kAudioDevicePropertyDeviceIsRunningSomewhere;
-    propertyStruct.mScope = kAudioObjectPropertyScopeGlobal;
-    propertyStruct.mElement = kAudioObjectPropertyElementMaster;
-    
-    __unsafe_unretained typeof(self)weakSelf = self;
-    
-    self.listenerBlock = ^(UInt32 inNumberAddresses, const AudioObjectPropertyAddress *inAddresses)
-    {
-        NSInteger state = -1;
-        state = [self getMicState:builtInMic];
-        
-        os_log_debug(logHandle, "built in mic changed state to %ld", (long)state);
-        
-        Event *event = nil;
-        event = [[Event alloc] init:nil device:Device_Microphone state:state];
-        
-        //mic off?
-        if (NSControlStateValueOff == state)
-        {
-            os_log_debug(logHandle, "built in mic turned to off");
-            NSLog(@"!!!! built in mic turned to off");
-            
-            if (YES == [weakSelf generateNotification:event])
-            {
-                //execute action
-//                [weakSelf executeUserAction:event];
-            }
-            @synchronized (weakSelf) {
-                [weakSelf.audioClients removeAllObjects];
-                os_log_debug(logHandle, "removed all (audio) clients");
-            }
-        }
-    };
-    
-    //add property listener for audio changes
-    status = AudioObjectAddPropertyListenerBlock(builtInMic, &propertyStruct, dispatch_get_main_queue(), self.listenerBlock);
-    if (noErr != status)
-    {
-        os_log_error(logHandle, "ERROR: AudioObjectAddPropertyListenerBlock() failed with %d", status);
-        
-        return NO;
-    }
-    
-    return YES;
-}
-
-//stop audio monitor
-- (void)stopAudioMonitor
-{
-    OSStatus status = -1;
-    AudioObjectID builtInMic = 0;
-    AudioObjectPropertyAddress propertyStruct = {0};
-    
-    os_log_debug(logHandle, "stopping audio (device) monitor");
-    
-    propertyStruct.mSelector = kAudioDevicePropertyDeviceIsRunningSomewhere;
-    propertyStruct.mScope = kAudioObjectPropertyScopeGlobal;
-    propertyStruct.mElement = kAudioObjectPropertyElementMaster;
-    
-    builtInMic = [self findBuiltInMic];
-    if (0 != builtInMic)
-    {
-        //remove
-        status = AudioObjectRemovePropertyListenerBlock(builtInMic, &propertyStruct, dispatch_get_main_queue(), self.listenerBlock);
-        if (noErr != status)
-        {
-            os_log_error(logHandle, "ERROR: 'AudioObjectRemovePropertyListenerBlock' failed with %d", status);
-        }
-    }
-}
-
-// 获取mic状态
-- (UInt32)getMicState:(AudioObjectID)deviceID
-{
+    //status var
     OSStatus status = -1;
     
+    //device ID
+    AudioObjectID deviceID = 0;
+    
+    //running flag
     UInt32 isRunning = 0;
-    UInt32 propertySize = sizeof(isRunning);
     
-    AudioObjectPropertyAddress propertyAddress = {
-        kAudioDevicePropertyDeviceIsRunningSomewhere,
-        kAudioObjectPropertyScopeGlobal,
-        kAudioObjectPropertyElementMaster
-    };
+    //size of query flag
+    UInt32 propertySize = 0;
     
-    status = AudioObjectGetPropertyData(deviceID, &propertyAddress, 0, NULL, &propertySize, &isRunning);
-    if (noErr != status)
+    //get device ID
+    deviceID = [self getAVObjectID:device];
+    if(0 == deviceID)
     {
-        os_log_error(logHandle, "ERROR: getting status of audio device failed with %d", status);
+        //err msg
+        os_log_error(logHandle, "ERROR: 'failed to find %@'s object id", device.localizedName);
+        
+        //set error
         isRunning = -1;
+        
+        //bail
+        goto bail;
     }
+    
+    //init size
+    propertySize = sizeof(isRunning);
+    
+    //query to get 'kAudioDevicePropertyDeviceIsRunningSomewhere' status
+    status = AudioDeviceGetProperty(deviceID, 0, false, kAudioDevicePropertyDeviceIsRunningSomewhere, &propertySize, &isRunning);
+    if(noErr != status)
+    {
+        //err msg
+        os_log_error(logHandle, "ERROR: failed to get run state for %@ (error: %#x)", device.localizedName, status);
+        
+        //set error
+        isRunning = -1;
+        
+        //bail
+        goto bail;
+    }
+    
+bail:
+    
     return isRunning;
 }
 
 //check if a specified video is active
-// note: on M1 this always says 'on' (smh apple)
-- (UInt32)getCameraStatus:(CMIODeviceID)deviceID
+// note: on M1 this sometimes always says 'on' (smh apple)
+-(UInt32)getCameraState:(AVCaptureDevice*)device
 {
+    //status var
     OSStatus status = -1;
+    
+    //device ID
+    CMIODeviceID deviceID = 0;
+    
+    //running flag
     UInt32 isRunning = 0;
+    
+    //size of query flag
     UInt32 propertySize = 0;
+    
+    //property address struct
     CMIOObjectPropertyAddress propertyStruct = {0};
     
-    propertySize = sizeof(isRunning);
-    propertyStruct.mSelector = kAudioDevicePropertyDeviceIsRunningSomewhere;
-    propertyStruct.mScope = kCMIOObjectPropertyScopeGlobal;
-    propertyStruct.mElement = 0;
-    
-    status = CMIOObjectGetPropertyData(deviceID, &propertyStruct, 0, NULL, sizeof(kAudioDevicePropertyDeviceIsRunningSomewhere), &propertySize, &isRunning);
-    if (noErr != status)
+    //get device ID
+    deviceID = [self getAVObjectID:device];
+    if(0 == deviceID)
     {
-        os_log_error(logHandle, "ERROR: failed to get camera status (error: %#x)", status);
+        //err msg
+        os_log_error(logHandle, "ERROR: 'failed to find %@'s object id", device.localizedName);
+        
+        //set error
         isRunning = -1;
+        
+        //bail
+        goto bail;
     }
-    os_log_debug(logHandle, "isRunning: %d", isRunning);
+    
+    //init size
+    propertySize = sizeof(isRunning);
+    
+    //init property struct's selector
+    propertyStruct.mSelector = kAudioDevicePropertyDeviceIsRunningSomewhere;
+    
+    //init property struct's scope
+    propertyStruct.mScope = kCMIOObjectPropertyScopeGlobal;
+    
+    //init property struct's element
+    propertyStruct.mElement = kAudioObjectPropertyElementMain;
+    
+    //query to get 'kAudioDevicePropertyDeviceIsRunningSomewhere' status
+    status = CMIOObjectGetPropertyData(deviceID, &propertyStruct, 0, NULL, sizeof(kAudioDevicePropertyDeviceIsRunningSomewhere), &propertySize, &isRunning);
+    if(noErr != status)
+    {
+        //err msg
+        os_log_error(logHandle, "ERROR: failed to get run state for %@ (error: %#x)", device.localizedName, status);
+        
+        //set error
+        isRunning = -1;
+        
+        //bail
+        goto bail;
+    }
+
+bail:
     
     return isRunning;
 }
 
-//build and display notification
-- (BOOL)generateNotification:(Event *)event
+//should an event be shown?
+-(NSUInteger)shouldShowNotification:(Event*)event
 {
-    //(new) mic event?
-    // need extra logic, since macOS sometimes toggles / delivers 2x event, etc...
-    if (Device_Microphone == event.device)
+    //result
+    NSUInteger result = NOTIFICATION_ERROR;
+
+    //device ID
+    NSNumber* deviceID = 0;
+    
+    //device's last event
+    Event* deviceLastEvent = nil;
+    
+    //get device ID
+    deviceID = [NSNumber numberWithInt:[self getAVObjectID:event.device]];
+    if(0 == deviceID)
     {
-        //from same client?
-        // ignore if last event *just* occurred
-        if ((self.lastMicEvent.client.pid == event.client.pid) &&
-            ([[NSDate date] timeIntervalSinceDate:self.lastMicEvent.timestamp] < 1.0f))
-        {
-            NSLog(@"!!!! mic ignoring mic event, as it happened <0.5s");
-            os_log_debug(logHandle, "ignoring mic event, as it happened <0.5s ");
-            return NO;
-        }
+        //err msg
+        os_log_error(logHandle, "ERROR: 'failed to find %@'s object id", event.device.localizedName);
         
-        //or, was a 2x off?
-        if ((nil != self.lastMicEvent) &&
-            (NSControlStateValueOff == event.state) &&
-            (NSControlStateValueOff == self.lastMicEvent.state))
+        //bail
+        goto bail;
+    }
+    
+    //extract its last event
+    deviceLastEvent = self.deviceEvents[deviceID];
+    
+    //disabled?
+    // really shouldn't ever get here, but can't hurt to check
+    if(YES == [NSUserDefaults.standardUserDefaults boolForKey:PREF_IS_DISABLED])
+    {
+        //set result
+        result = NOTIFICATION_SPURIOUS;
+        
+        //dbg msg
+        NSLog(@"disable is set, so ignoring event");
+            
+        //bail
+        goto bail;
+    }
+    
+    //inactive alerting off?
+    // ignore if event is an inactive/off
+    if( (NSControlStateValueOff == event.state) &&
+        (YES == [NSUserDefaults.standardUserDefaults boolForKey:PREF_DISABLE_INACTIVE]))
+    {
+        //set result
+        result = NOTIFICATION_SKIPPED;
+        
+        //dbg msg
+        NSLog(@"disable inactive alerts set, so ignoring inactive/off event");
+            
+        //bail
+        goto bail;
+    }
+    
+    //no external devices mode?
+    if(YES == [NSUserDefaults.standardUserDefaults boolForKey:PREF_NO_EXTERNAL_DEVICES_MODE])
+    {
+        //on?
+        // we have the device directly
+        if(NSControlStateValueOn == event.state)
         {
-            NSLog(@"ignoring mic event, as it was a 2x off");
-            os_log_debug(logHandle, "ignoring mic event, as it was a 2x off");
-            //return NO;
-        }
-        if (nil == event.client /*&& NSControlStateValueOff == event.state*/) {
-            if (1 == self.audioClients.count) {
-                event.client = self.lastMicEvent.client;
+            //external device?
+            // don't show notification
+            if( (YES != [self.builtInMic.uniqueID isEqualToString:event.device.uniqueID]) &&
+                (YES != [self.builtInCamera.uniqueID isEqualToString:event.device.uniqueID]) )
+            {
+                //set result
+                result = NOTIFICATION_SKIPPED;
+                
+                //dbg msg
+                NSLog(@"ingore external devices is set, so ignoring external device 'on' event");
+                
+                //bail
+                goto bail;
             }
         }
-        self.lastMicEvent = event;
+        
+        //off
+        // check last device that turned off
+        else
+        {
+            //mic
+            // check last mic off device
+            if( (Device_Microphone == event.deviceType) &&
+                (nil != self.lastMicOff) &&
+                (YES != [self.builtInMic.uniqueID isEqualToString:self.lastMicOff.uniqueID]) )
+            {
+                //set result
+                result = NOTIFICATION_SKIPPED;
+                
+                //dbg msg
+                NSLog(@"ingore external devices is set, so ignoring external mic 'off' event");
+                
+                //bail
+                goto bail;
+            }
+            
+            //camera
+            // check last camera off device
+            if( (Device_Camera == event.deviceType) &&
+                (nil != self.lastCameraOff) &&
+                (YES != [self.builtInCamera.uniqueID isEqualToString:self.lastCameraOff.uniqueID]) )
+            {
+                //set result
+                result = NOTIFICATION_SKIPPED;
+                
+                //dbg msg
+                NSLog(@"ingore external devices is set, so ignoring external camera 'off' event");
+                
+                //bail
+                goto bail;
+            }
+        }
+        
+    } //PREF_NO_EXTERNAL_DEVICES_MODE
+    
+    //macOS sometimes toggles delivers 2x events for same device
+    if(deviceLastEvent.deviceType == event.deviceType)
+    {
+        //ignore if last event was < 1.0s ago
+        if([event.timestamp timeIntervalSinceDate:deviceLastEvent.timestamp] < 1.0f)
+        {
+            //ignore if last event was same state
+            if( (deviceLastEvent.state == event.state) &&
+                ([event.timestamp timeIntervalSinceDate:deviceLastEvent.timestamp] < 1.0f) )
+            {
+                //set result
+                result = NOTIFICATION_SPURIOUS;
+                
+                //dbg msg
+                NSLog(@"ignoring event as it was same state as last (%ld), and happened <1.0s ago", (long)event.state);
+                
+                //bail
+                goto bail;
+            }
+        }
+        
+    } //same device
+
+    //client provided?
+    // check if its allowed
+    if(nil != event.client)
+    {
+        //match is simply: device and path
+        for(NSDictionary* allowedItem in [NSUserDefaults.standardUserDefaults objectForKey:PREFS_ALLOWED_ITEMS])
+        {
+            //match?
+            if( ([allowedItem[EVENT_DEVICE] intValue] == event.deviceType) &&
+                (YES == [allowedItem[EVENT_PROCESS_PATH] isEqualToString:event.client.path]) )
+            {
+                //set result
+                result = NOTIFICATION_SKIPPED;
+                
+                //dbg msg
+                NSLog(@"%@ is allowed to access %d, so no notification will not be shown", event.client.path, event.deviceType);
+                
+                //done
+                goto bail;
+            }
+        }
     }
-    if (self.completeBlock) {
-        self.completeBlock(event.device, event.state, event.client);
-    }
-    return YES;
+    
+    //set result
+    result = NOTIFICATION_DELIVER;
+    
+bail:
+    
+    //(always) update last event
+    self.deviceEvents[deviceID] = event;
+    
+    return result;
 }
 
+//handle an event
+// show alert / exec user action
+-(void)handleEvent:(Event*)event
+{
+    if (self.eventCallback) {
+        self.eventCallback(event);
+        return;
+    }
+#if kLemonUseAVMonitorNotification
+    //result
+    NSInteger result = NOTIFICATION_ERROR;
+    
+    //dbg msg
+    NSLog(@"handling event: %@", event);
+    
+    //should show?
+    @synchronized (self) {
+        
+       //show?
+       result = [self shouldShowNotification:event];
+    }
+    
+    //dbg msg
+    NSLog(@"'shouldShowNotification:' method returned %ld", (long)result);
+    
+    //deliver/show user?
+    if(NOTIFICATION_DELIVER == result)
+    {
+        //deliver
+        [self showNotification:event];
+    }
+    //should (also) exec user action?
+    if( (NOTIFICATION_ERROR != result) &&
+        (NOTIFICATION_SPURIOUS != result) &&
+        (0 != [[NSUserDefaults.standardUserDefaults objectForKey:PREF_EXECUTE_PATH] length]) )
+    {
+        //exec
+        [self executeUserAction:event];
+    }
 
-////execute user action
-//-(BOOL)executeUserAction:(AVDevice)device state:(NSControlStateValue)state client:(Client*)client
-//{
-//    //flag
-//    BOOL wasExecuted = NO;
-//
-//    //path to action
-//    NSString* action = nil;
-//
-//    //args
-//    NSMutableArray* args = nil;
-//
-//    //execute user-specified action?
-//    if(YES != [NSUserDefaults.standardUserDefaults boolForKey:PREF_EXECUTE_ACTION])
-//    {
-//        //dbg msg
-//        os_log_debug(logHandle, "'execute action' is disabled");
-//
-//        //bail
-//        goto bail;
-//    }
-//
-//    //dbg msg
-//    os_log_debug(logHandle, "executing user action");
-//
-//    //grab action
-//    action = [NSUserDefaults.standardUserDefaults objectForKey:PREF_EXECUTE_PATH];
-//    if(YES != [NSFileManager.defaultManager fileExistsAtPath:action])
-//    {
-//        //err msg
-//        os_log_error(logHandle, "ERROR: %{public}@ is not a valid action", action);
-//
-//        //bail
-//        goto bail;
-//    }
-//
-//    //pass args?
-//    if(YES == [NSUserDefaults.standardUserDefaults boolForKey:PREF_EXECUTE_ACTION_ARGS])
-//    {
-//        //alloc
-//        args = [NSMutableArray array];
-//
-//        //add device
-//        [args addObject:@"-device"];
-//        (Device_Camera == device) ? [args addObject:@"camera"] : [args addObject:@"microphone"];
-//
-//        //add event
-//        [args addObject:@"-event"];
-//        (NSControlStateValueOn == state) ? [args addObject:@"on"] : [args addObject:@"off"];
-//
-//        //add process
-//        if(nil != client)
-//        {
-//            //add
-//            [args addObject:@"-process"];
-//            [args addObject:client.pid.stringValue];
-//        }
-//    }
-//
-//    //exec user specified action
-//    execTask(action, args, NO, NO);
-//
-//bail:
-//
-//    return wasExecuted;
-//}
+    return;
+#endif
+}
+
+#if kLemonUseAVMonitorNotification
+//build and display notification
+-(void)showNotification:(Event*)event
+{
+    //notification content
+    UNMutableNotificationContent* content = nil;
+    
+    //notificaito0n request
+    UNNotificationRequest* request = nil;
+    
+    //alloc content
+    content = [[UNMutableNotificationContent alloc] init];
+    
+    //title
+    NSMutableString* title = nil;
+    
+    //set (default) category
+    content.categoryIdentifier = CATEGORY_CLOSE;
+    
+    //alloc title
+    title = [NSMutableString string];
+
+    //set device type
+    (Device_Camera == event.deviceType) ? [title appendString:@"📸"] : [title appendFormat:@"🎙️"];
+    
+    //set status
+    (NSControlStateValueOn == event.state) ? [title appendString:NSLocalizedString(@" Became Active!",@" Became Active!")] : [title appendString:NSLocalizedString(@" Became Inactive.", @" Became Inactive.")];
+    
+    //set title
+    content.title = title;
+    
+    //sub-title
+    // device name
+    if(nil != event.device)
+    {
+        //set
+        content.subtitle = [NSString stringWithFormat:@"%@", event.device.localizedName];
+    }
+    
+    //have client?
+    // use as body
+    if(nil != event.client)
+    {
+        //set body
+        content.body = [NSString stringWithFormat:NSLocalizedString(@"Process: %@ (%@)", @"Process: %@ (%@)"), event.client.name, (0 != event.client.pid.intValue) ? event.client.pid : NSLocalizedString(@"pid: unknown", @"pid: unknown")];
+        
+        //set category
+        content.categoryIdentifier = CATEGORY_ACTION;
+        
+        //set user info
+        content.userInfo = @{EVENT_DEVICE:@(event.deviceType), EVENT_PROCESS_ID:event.client.pid, EVENT_PROCESS_PATH:event.client.path};
+    }
+    else if(nil != event.device)
+    {
+        //set body
+        content.body = [NSString stringWithFormat:NSLocalizedString(@"Device: %@", @"Device: %@"), event.device.localizedName];
+    }
+    
+    //init request
+    request = [UNNotificationRequest requestWithIdentifier:NSUUID.UUID.UUIDString content:content trigger:NULL];
+    
+    //log: on
+    if(NSControlStateValueOn == event.state)
+    {
+        //log
+        os_log(logHandle, "[Alert] On Event: %@ / Device: %@ / %@", content.title, content.subtitle, content.body);
+    }
+    //log: off
+    else
+    {
+        //log
+        os_log(logHandle, "[Alert] Off Event: %@ / Device: %@", content.title, content.subtitle);
+    }
+    
+    //send notification
+    [UNUserNotificationCenter.currentNotificationCenter addNotificationRequest:request withCompletionHandler:^(NSError *_Nullable error)
+    {
+        //error?
+        if(nil != error)
+        {
+            //err msg
+            os_log_error(logHandle, "ERROR failed to deliver notification (error: %@)", error);
+        }
+    }];
+
+bail:
+
+    return;
+}
+
+//execute user action
+// via the shell to handle binaries and scripts
+-(BOOL)executeUserAction:(Event*)event
+{
+    //flag
+    BOOL wasExecuted = NO;
+    
+    //path to action
+    NSString* action = nil;
+    
+    //args
+    NSMutableString* args = nil;
+    
+    //dbg msg
+    NSLog(@"executing user action");
+    
+    //alloc
+    args = [NSMutableString string];
+    
+    //grab action
+    action = [NSUserDefaults.standardUserDefaults objectForKey:PREF_EXECUTE_PATH];
+    if(YES != [NSFileManager.defaultManager fileExistsAtPath:action])
+    {
+        //err msg
+        os_log_error(logHandle, "ERROR: action %@, does not exist", action);
+        
+        //bail
+        goto bail;
+    }
+    
+    //pass args?
+    if(YES == [NSUserDefaults.standardUserDefaults boolForKey:PREF_EXECUTE_ACTION_ARGS])
+    {
+        //add device
+        [args appendString:@"-device "];
+        (Device_Camera == event.deviceType) ? [args appendString:@"camera"] : [args appendString:@"microphone"];
+        
+        //add event
+        [args appendString:@" -event "];
+        (NSControlStateValueOn == event.state) ? [args appendString:@"on"] : [args appendString:@"off"];
+        
+        //add process
+        if(nil != event.client)
+        {
+            //add
+            [args appendString:@" -process "];
+            [args appendString:event.client.pid.stringValue];
+        }
+        
+        //add active device count
+        [args appendString:@" -activeCount "];
+        [args appendFormat:@"%lu", [self enumerateActiveDevices].count];
+    }
+    
+    //exec user specified action
+    execTask(SHELL, @[@"-c", [NSString stringWithFormat:@"\"%@\" %@", action, args]], NO, NO);
+    
+bail:
+    
+    return wasExecuted;
+}
+#endif
 
 //stop monitor
-- (void)stop
+-(void)stop
 {
-    [self.videoLogMonitor stop];
-    [self.audioLogMonitor stop];
-    [self stopAudioMonitor];
+    //dbg msg
+    NSLog(@"stopping log monitor");
+
+    //stop log monitoring
+    [self.logMonitor stop];
+    [self.audio13logMonitor stop];
+    
+    //dbg msg
+    NSLog(@"stopping audio monitor(s)");
+    
+    //unwatch all input audio (mic) devices
+    for(AVCaptureDevice* audioDevice in [AVCaptureDevice devicesWithMediaType:AVMediaTypeAudio])
+    {
+        //unwatch
+        [self unwatchAudioDevice:audioDevice];
+    }
+       
+    //dbg msg
+    NSLog(@"stopping video monitor(s)");
+    
+    //unwatch all input video (cam) devices
+    for(AVCaptureDevice* videoDevice in [AVCaptureDevice devicesWithMediaType:AVMediaTypeVideo])
+    {
+        //unwatch
+        [self unwatchVideoDevice:videoDevice];
+    }
+    
+    //dbg msg
+    NSLog(@"unregistering notifications");
+    
+    //remove connection notification
+    [NSNotificationCenter.defaultCenter removeObserver:self name:AVCaptureDeviceWasConnectedNotification object:nil];
+    
+    //remove disconnection notification
+    [NSNotificationCenter.defaultCenter removeObserver:self name:AVCaptureDeviceWasDisconnectedNotification object:nil];
+    
+    //dbg msg
+    NSLog(@"all stopped...");
+    
+    return;
 }
+
+//stop audio monitor
+-(void)unwatchAudioDevice:(AVCaptureDevice*)device
+{
+    //status
+    OSStatus status = -1;
+    
+    //device ID
+    AudioObjectID deviceID = 0;
+
+    //property struct
+    AudioObjectPropertyAddress propertyStruct = {0};
+    
+    //bail if device was disconnected
+    if(NO == device.isConnected)
+    {
+        //bail
+        goto bail;
+    }
+    
+    //get device ID
+    deviceID = [self getAVObjectID:device];
+    if(0 == deviceID)
+    {
+        //err msg
+        os_log_error(logHandle, "ERROR: 'failed to find %@'s object id", device.localizedName);
+        
+        //bail
+        goto bail;
+    }
+
+    //init property struct's selector
+    propertyStruct.mSelector = kAudioDevicePropertyDeviceIsRunningSomewhere;
+    
+    //init property struct's scope
+    propertyStruct.mScope = kAudioObjectPropertyScopeGlobal;
+    
+    //init property struct's element
+    propertyStruct.mElement = kAudioObjectPropertyElementMain;
+    
+    //remove
+    status = AudioObjectRemovePropertyListenerBlock(deviceID, &propertyStruct, self.eventQueue, self.audioListeners[device.uniqueID]);
+    if(noErr != status)
+    {
+        //err msg
+        os_log_error(logHandle, "ERROR: 'AudioObjectRemovePropertyListenerBlock' failed with %d", status);
+        
+        //bail
+        goto bail;
+    }
+    
+    //dbg msg
+    NSLog(@"stopped monitoring %@ (uuid: %@ / %x) for audio changes", device.localizedName, device.uniqueID, deviceID);
+    
+    //unset listener block
+    self.audioListeners[device.uniqueID] = nil;
+    
+bail:
+    
+    return;
+}
+
+//stop video monitor
+-(void)unwatchVideoDevice:(AVCaptureDevice*)device
+{
+    //status
+    OSStatus status = -1;
+    
+    //device id
+    CMIOObjectID deviceID = 0;
+    
+    //property struct
+    CMIOObjectPropertyAddress propertyStruct = {0};
+    
+    //bail if device was disconnected
+    if(NO == device.isConnected)
+    {
+        //bail
+        goto bail;
+    }
+    
+    //get device ID
+    deviceID = [self getAVObjectID:device];
+    if(0 == deviceID)
+    {
+        //err msg
+        os_log_error(logHandle, "ERROR: 'failed to find %@'s object id", device.localizedName);
+        
+        //bail
+        goto bail;
+    }
+    
+    //init property struct's selector
+    propertyStruct.mSelector = kAudioDevicePropertyDeviceIsRunningSomewhere;
+    
+    //init property struct's scope
+    propertyStruct.mScope = kAudioObjectPropertyScopeGlobal;
+    
+    //init property struct's element
+    propertyStruct.mElement = kAudioObjectPropertyElementMain;
+    
+    //remove
+    status = CMIOObjectRemovePropertyListenerBlock(deviceID, &propertyStruct, self.eventQueue, self.cameraListeners[device.uniqueID]);
+    if(noErr != status)
+    {
+        //err msg
+        os_log_error(logHandle, "ERROR: 'AudioObjectRemovePropertyListenerBlock' failed with %d", status);
+        
+        //bail
+        goto bail;
+    }
+    
+    //dbg msg
+    NSLog(@"stopped monitoring %@ (uuid: %@ / %x) for video changes", device.localizedName, device.uniqueID, deviceID);
+    
+bail:
+    
+    //always unset listener block
+    self.cameraListeners[device.uniqueID] = nil;
+    
+    return;
+    
+}
+
+# pragma mark UNNotificationCenter Delegate Methods
+#if kLemonUseAVMonitorNotification
+- (void)userNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification withCompletionHandler:(void (^)(UNNotificationPresentationOptions options))completionHandler {
+    
+    completionHandler(UNNotificationPresentationOptionAlert);
+    
+    return;
+}
+
+//handle user response to notification
+-(void)userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)(void))completionHandler {
+    
+    //allowed items
+    NSMutableArray* allowedItems = nil;
+    
+    //device
+    NSNumber* device = nil;
+    
+    //process path
+    NSString* processPath = nil;
+    
+    //process name
+    NSString* processName = nil;
+    
+    //process id
+    NSNumber* processID = nil;
+    
+    //error
+    int error = 0;
+    
+    //dbg msg
+    //os_log_debug(logHandle, "user response to notification: %@", response);
+    
+    //extract device
+    device = response.notification.request.content.userInfo[EVENT_DEVICE];
+    
+    //extact process path
+    processPath = response.notification.request.content.userInfo[EVENT_PROCESS_PATH];
+    
+    //extract process id
+    processID = response.notification.request.content.userInfo[EVENT_PROCESS_ID];
+    
+    //get process name
+    processName = valueForStringItem(getProcessName(processPath));
+    
+    //default action
+    // set/save for logic in 'applicationShouldHandleReopen' ...which gets called :|
+    if(YES == [response.actionIdentifier isEqualToString:@"com.apple.UNNotificationDefaultActionIdentifier"])
+    {
+        //dbg msg
+        NSLog(@"user click triggered 'com.apple.UNNotificationDefaultActionIdentifier'");
+        
+        //save
+        self.lastNotificationDefaultAction = [NSDate date];
+        
+        //done
+        goto bail;
+    }
+
+    //close?
+    // nothing to do
+    if(YES == [response.notification.request.content.categoryIdentifier isEqualToString:CATEGORY_CLOSE])
+    {
+        //dbg msg
+        NSLog(@"user clicked 'Ok'");
+        
+        //done
+        goto bail;
+    }
+        
+    //allow?
+    // really nothing to do
+    else if(YES == [response.actionIdentifier isEqualToString:@"Allow"])
+    {
+        //dbg msg
+        NSLog(@"user clicked 'Allow'");
+        
+        //done
+        goto bail;
+    }
+    
+    //always allow?
+    // added to 'allowed' items
+    if(YES == [response.actionIdentifier isEqualToString:@"AllowAlways"])
+    {
+        //dbg msg
+        NSLog(@"user clicked 'Allow Always'");
+        
+        //load allowed items
+        allowedItems = [[NSUserDefaults.standardUserDefaults objectForKey:PREFS_ALLOWED_ITEMS] mutableCopy];
+        if(nil == allowedItems)
+        {
+            //alloc
+            allowedItems = [NSMutableArray array];
+        }
+        
+        //add item
+        [allowedItems addObject:@{EVENT_PROCESS_PATH:processPath, EVENT_DEVICE:device}];
+        
+        //save & sync
+        [NSUserDefaults.standardUserDefaults setObject:allowedItems forKey:PREFS_ALLOWED_ITEMS];
+        [NSUserDefaults.standardUserDefaults synchronize];
+        
+        //dbg msg
+        NSLog(@"added %@ to list of allowed items", processPath);
+        
+        //broadcast
+        [[NSNotificationCenter defaultCenter] postNotificationName:RULES_CHANGED object:nil userInfo:nil];
+        
+        //done
+        goto bail;
+    }
+    
+    //block?
+    // kill process
+    if(YES == [response.actionIdentifier isEqualToString:@"Block"])
+    {
+        //dbg msg
+        NSLog(@"user clicked 'Block'");
+        
+        //kill
+        error = kill(processID.intValue, SIGKILL);
+        if(0 != error)
+        {
+            //err msg
+            os_log_error(logHandle, "ERROR: failed to kill %@ (%@)", processName, processID);
+    
+            //show an alert
+            showAlert([NSString stringWithFormat:NSLocalizedString(@"ERROR: failed to terminate %@ (%@)", @"ERROR: failed to terminate %@ (%@)"), processName, processID], [NSString stringWithFormat:NSLocalizedString(@"system error code: %d", @"system error code: %d"), error], @"OK");
+            
+            //bail
+            goto bail;
+        }
+        
+        //dbg msg
+        NSLog(@"killed %@ (%@)", processName, processID);
+    }
+   
+bail:
+    
+    //gotta call
+    completionHandler();
+    
+    return;
+}
+#endif
 
 @end

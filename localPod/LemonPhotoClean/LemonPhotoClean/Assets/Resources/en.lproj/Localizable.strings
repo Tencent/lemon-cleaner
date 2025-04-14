@@ -63,4 +63,7 @@
 "CheckDeleteSystemPhotoViewController_operateButton_scanAgain" = "Reflash";
 "CheckDeleteSystemPhotoViewController_cleaning_loadingText" = "Cleaning… Please wait a moment";
 "LMSimilarPhotoResultViewContoller_intelligentSelect_text" = "Smart select";
+"该图片所在磁盘为只读模式，不支持清理" = "The disk containing the image is set to read-only and does not support cleaning.";
+"该图片为只读模式，不支持清理" = "The image is in read-only mode and does not support cleaning.";
+"图片为只读模式，不支持清理" = "The images is in read-only mode and does not support cleaning.";
 

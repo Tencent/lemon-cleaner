@@ -64,11 +64,11 @@ int GetPhysMemoryInfo(uint64_t mem_info[4])
     dispatch_group_async(dispatchGroup, dispatch_get_global_queue(0, 0), ^(){
         do
         {
-            if (purgeRamByHugeMallocFree() == 0) {
+            if (purgeRamByHugeMMAPFree() == 0) {
                 result = YES;
                 break;
             }
-            if (purgeRamByAllocFree() == 0) {
+            if (purgeRamByHugeMallocFree() == 0) {
                 result = YES;
                 break;
             }
@@ -76,10 +76,17 @@ int GetPhysMemoryInfo(uint64_t mem_info[4])
                 result = YES;
                 break;
             }
-            if (purgeRamBySyscall() == 0) {
-                result = YES;
-                break;
-            }
+// 分配之后占用更大了，先去掉
+//            if (purgeRamByAllocFree() == 0) {
+//                result = YES;
+//                break;
+//            }
+
+// 10.12之后就废弃了，基本用不上
+//            if (purgeRamBySyscall() == 0) {
+//                result = YES;
+//                break;
+//            }
             
         } while (NO);
     });
@@ -177,44 +184,90 @@ int GetPhysMemoryInfo2(uint64_t mem_info[5]) {
     return 0;
 }
 
-// malloc huge memory immediately and free
-int purgeRamByHugeMallocFree(void)
-{
-    uint64_t meminfo[5] = {0};
-    int ret = GetPhysMemoryInfo2(meminfo);
-    NSLog(@"purgeRamByHugeMallocFree GetPhysMemoryInfo ret: %d", ret);
-    if (ret != 0) {
-        NSLog(@"purgeRamByHugeMallocFree GetPhysMemoryInfo ret: %d,  %d  -1", ret, (ret != 0));
+// 通过 mmap 强制占用物理内存
+int purgeRamByHugeMMAPFree(void) {
+    uint64_t before[5] = {0};
+    if (GetPhysMemoryInfo2(before) != 0) {
+        fprintf(stderr, "Failed to get memory stats\n");
         return -1;
     }
-    
-    // free + inactive
-    uint64_t totalFree = meminfo[0] + meminfo[1];// + meminfo[4];
-    
-    if (totalFree == 0)
+
+    const uint64_t alloc_size = before[0] + before[1] + before[4];
+    if (alloc_size == 0) {
+        NSLog(@"No reclaimable memory");
         return 0;
+    }
     
-    void *mem = malloc(totalFree);
-    if (mem == NULL) {
+    // 检查alloc_size是否超过size_t最大值
+    if (alloc_size > SIZE_MAX) {
+        NSLog(@"purgeRamByHugeMMAPFree: alloc_size exceeds SIZE_MAX");
         return -1;
     }
-    NSLog(@"purgeRamByHugeMallocFree GetPhysMemoryInfo totalFree: %llu", totalFree);
 
-    // 为了防止代码给优化，跑空
-    int randIndex = rand()%totalFree;
-    Byte *temp = (Byte *)mem;
-    if (temp[randIndex] == 0) {
-        temp[randIndex] = 1;
+    // 通过 mmap 分配匿名内存（避免堆碎片）
+    void *mem = mmap(NULL, alloc_size, PROT_READ | PROT_WRITE,
+                    MAP_ANON | MAP_PRIVATE, -1, 0);
+    if (mem == MAP_FAILED) {
+        NSLog(@"mmap failed");
+        return -1;
     }
-    memset(mem, 0, totalFree);
+    
+    NSLog(@"purgeRamByHugeMMAPFree GetPhysMemoryInfo2 totalFree: %llu", alloc_size);
 
-    // free
-    free(mem);
+    // 强制占用物理内存：每 page_size 页写入首个字节
+    const size_t page_size = getpagesize();
+    for (uint64_t offset = 0; offset < alloc_size; offset += page_size) {
+        ((volatile char*)mem)[offset] = 0xAA;
+    }
 
-    NSLog(@"purgeRamByHugeMallocFree GetPhysMemoryInfo end");
+    // 立即释放内存（触发内核回收）
+    munmap(mem, alloc_size);
+    
+    malloc_zone_pressure_relief(malloc_default_zone(), 0);
+
     return 0;
 }
 
+// 大块内存立即分配释放
+int purgeRamByHugeMallocFree(void) {
+    uint64_t before[5] = {0};
+    if (GetPhysMemoryInfo2(before) != 0) return -1;
+
+    const uint64_t alloc_size = before[0] + before[1] + before[4];
+    if (alloc_size == 0) {
+        return 0;
+    }
+    
+    // 检查alloc_size是否超过size_t最大值
+    if (alloc_size > SIZE_MAX) {
+        NSLog(@"purgeRamByHugeMallocFree: alloc_size exceeds SIZE_MAX");
+        return -1;
+    }
+
+    // 使用稀疏写入模式
+    void *mem = malloc(alloc_size);
+    if (!mem) {
+        return -1;
+    }
+    NSLog(@"purgeRamByHugeMallocFree GetPhysMemoryInfo2 totalFree: %llu", alloc_size);
+    
+    // 每page_size页写入首个字节（避免全量写入）
+    const size_t page_size = getpagesize();
+    for (uint64_t offset = 0; offset < alloc_size; offset += page_size) {
+        ((volatile char*)mem)[offset]= 0xAA;
+    }
+
+    free(mem);
+    
+    // 建议内存回收
+    malloc_zone_t *zone = malloc_default_zone();
+    if (zone) {
+        malloc_zone_pressure_relief(zone, 0);
+    }
+    return 0;
+}
+
+// 这个方法测试下来，释放后比释放前占用更多，和第一种方法类似，且效率低
 // alloc huge memory and free
 int purgeRamByAllocFree(void)
 {

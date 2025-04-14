@@ -30,7 +30,7 @@
 #define STATUS_TYPE_GPU  (1 << 7)
 #define STATUS_TYPE_GLOBAL (0x80000000)
 #define STATUS_TYPE_BOOTSHOW (0x40000000)
-#define kLemonStatusOptionsChanged @"kLemonStatusOptionsChanged"
+#define STATUS_TYPE_USE (0x20000000)
 #define kStatusChangedNotification @"StatusChangedNotification"
 
 //sharepreference key

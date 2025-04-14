@@ -31,9 +31,16 @@ static NSImage *mixedImage_pressed_new = nil;
     
     id eventMonitor;
 }
+
+@property (nonatomic) BOOL isHoveredBubble; // 为气泡准备的hover
 @end
 
 @implementation LMCheckboxButton
+
+- (void)dealloc {
+    self.hoverBubbleHandler = nil;
+    self.isHoveredBubble = NO;
+}
 
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
@@ -159,6 +166,26 @@ static NSImage *mixedImage_pressed_new = nil;
     [self setNeedsDisplay];
 }
 
+- (void)setIsHoveredBubble:(BOOL)isHoveredBubble {
+    BOOL temp = _isHoveredBubble; // 记录之前的值
+    _isHoveredBubble = isHoveredBubble;
+    if (temp != _isHoveredBubble) {
+        if (self.hoverBubbleHandler) self.hoverBubbleHandler(_isHoveredBubble);
+        // 处理添加在scrollview上的滚动情况
+        if (isHoveredBubble) {
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(__scrollViewDidLiveScrollNotification:) name:NSScrollViewDidLiveScrollNotification object:nil];
+        } else {
+            [[NSNotificationCenter defaultCenter]  removeObserver:self name:NSScrollViewDidLiveScrollNotification object:nil];
+        }
+    }
+}
+
+- (void)__scrollViewDidLiveScrollNotification:(NSNotification *)notify {
+    if (![NSEvent mouseInView:self]) {
+        [self mouseExited:nil];
+    }
+}
+
 - (void)viewDidMoveToSuperview
 {
     if (!self.superview && mouseEnter)
@@ -193,6 +220,8 @@ static NSImage *mixedImage_pressed_new = nil;
 
 - (void)mouseEntered:(NSEvent *)event
 {
+    self.isHoveredBubble = YES;
+    
     if (!self.isEnabled)
     {
         return;
@@ -214,6 +243,8 @@ static NSImage *mixedImage_pressed_new = nil;
 
 - (void)mouseExited:(NSEvent *)event
 {
+    self.isHoveredBubble = NO;
+    
     if (!self.isEnabled)
     {
         return;

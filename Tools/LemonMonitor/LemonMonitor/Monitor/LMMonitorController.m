@@ -625,7 +625,7 @@ enum
         NSInteger type = 0;
         NSDictionary* dict = notification.userInfo;
         type = ((NSNumber*)dict[@"type"]).integerValue;
-        if ((type & STATUS_TYPE_GLOBAL) == 0)
+        if ((type & STATUS_TYPE_USE) == 0)          // 这里接收到Lemon发过来的消息，判断是否自杀，现在自杀只有两种，1种开机启动判断，然后就是这里lemon通知
         {
             [[NSApplication sharedApplication] terminate:nil];
             return;

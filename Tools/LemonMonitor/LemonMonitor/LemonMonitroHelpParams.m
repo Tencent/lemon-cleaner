@@ -8,6 +8,8 @@
 
 #import "LemonMonitroHelpParams.h"
 #import <QMCoreFunction/QMShellExcuteHelper.h>
+#import <sys/sysctl.h>
+#import <libproc.h>
 
 @interface LemonMonitroHelpParams ()
 @property (nonatomic, strong) NSTimer *memTopTimer;
@@ -33,124 +35,117 @@
     [self.memTopTimer invalidate];
     self.memTopTimer = nil;
 }
-- (UInt64)getMemorySizeFromString:(NSString*)strVal{
-    UInt64 memSize = 0;
-    int per = 1000;
-    if ([strVal hasSuffix:@"B+"] || [strVal hasSuffix:@"B"]) {
-        if ([strVal hasSuffix:@"B+"]) {
-            memSize = [[strVal substringToIndex:[strVal length] - [@"B+" length]] longLongValue];
-        } else {
-            memSize = [[strVal substringToIndex:[strVal length] - [@"B" length]] longLongValue];
-        }
-        memSize = memSize;
-    } else if ([strVal hasSuffix:@"K+"] || [strVal hasSuffix:@"K"]) {
-        if ([strVal hasSuffix:@"K+"]) {
-            memSize = [[strVal substringToIndex:[strVal length] - [@"K+" length]] longLongValue];
-        } else {
-            memSize = [[strVal substringToIndex:[strVal length] - [@"K" length]] longLongValue];
-        }
-        memSize = memSize * (per);
-    } else if ([strVal hasSuffix:@"M+"] || [strVal hasSuffix:@"M"]) {
-        if ([strVal hasSuffix:@"M+"]) {
-            memSize = [[strVal substringToIndex:[strVal length] - [@"M+" length]] longLongValue];
-            if (memSize > 1000) {
-                NSLog(@"%@", strVal);
-            }
-        } else {
-            memSize = [[strVal substringToIndex:[strVal length] - [@"M" length]] longLongValue];
-        }
-        memSize = memSize * (per * per);
-    } else if ([strVal hasSuffix:@"G+"] || [strVal hasSuffix:@"G"]) {
-        if ([strVal hasSuffix:@"G+"]) {
-            memSize = [[strVal substringToIndex:[strVal length] - [@"G+" length]] longLongValue];
-        } else {
-            memSize = [[strVal substringToIndex:[strVal length] - [@"G" length]] longLongValue];
-        }
-        memSize = memSize * (per * per * per);
-    } else if ([strVal hasSuffix:@"+"]) {
-        memSize = [[strVal substringToIndex:[strVal length] - [@"+" length]] longLongValue];
-    }
-    return memSize;
-}
-- (void)memoryTopRepeater{
-    __weak LemonMonitroHelpParams *weakSelf = self;
-    dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        @autoreleasepool{
-            //第二个appName会有空格，无法按指定的位置获取值
-            //NSString *outputStr = [QMShellExcuteHelper excuteCmd:@"top -l 1 |awk '{print \"PID=\"$1\"  MEM=\"$8\"  PURG=\"$9\"  CMPRS=\"$12}'"];
-            NSString *outputStr = [QMShellExcuteHelper excuteCmd:@"top -l 1  -o -mem"];
-            //outputStr = [NSString stringWithContentsOfFile:@"/Users/torsysmeng/Desktop/top.log" encoding:NSUTF8StringEncoding error:nil];
-            NSArray *portArr = [outputStr componentsSeparatedByString:@"\n"];
-            NSMutableArray<McProcessInfoData *> *resArray = [NSMutableArray array];
-            
-            BOOL start = NO;
-            for (NSString *portItem in portArr) {
-                
-                if (!start && [portItem hasPrefix:@"PID"]) {
-                    start = YES;
-                    continue;
-                }
-                if (!start) {
-                    continue;
-                }
-                NSRange cpuR = [portItem rangeOfString:@"0.0"];
-                if (cpuR.location == NSNotFound) {
-                    continue;
-                }
-                NSString *pidAndAppname = [portItem substringWithRange:NSMakeRange(0, cpuR.location)];
-                int pid = -1;
-                NSArray *pidArray = [pidAndAppname componentsSeparatedByString:@" "];
-                if (pidArray.count > 0) {
-                    pid = [[pidArray objectAtIndex:0] intValue];
-                }
-                if (pid < 0) {
-                    continue;
-                }
-                NSString *strMem = [portItem substringWithRange:NSMakeRange(cpuR.location + cpuR.length, portItem.length-(cpuR.location + cpuR.length))];
-                NSError* error;
-                NSRegularExpression* regex = [NSRegularExpression regularExpressionWithPattern:@"[^ ]+" options:0 error:&error];
-                NSArray *tempArr = [regex matchesInString:strMem options:0 range:NSMakeRange(0, [strMem length])];
-                NSMutableArray *reArr = [NSMutableArray arrayWithArray:tempArr];
-                
-                UInt64 totalMemory = 0;
-                McProcessInfoData *data = [[McProcessInfoData alloc] init];
-                for (int i = 0; i < reArr.count; i++) {
-                    NSTextCheckingResult *res = [reArr objectAtIndex:i];
-                    NSString *strVal = [strMem substringWithRange:res.range];
-                    if (i == 4){
-                        // MEM
-                        UInt64 memSize = [self getMemorySizeFromString:strVal];
-                        totalMemory += memSize;
-                        //[dic setObject:@(memSize) forKey:@"mem"];
-                    } else if (i == 5){
-                        //[dic setObject:strVal forKey:@"purg"];
-                    } else if (i == 6){
-                        // CMPRS (Compressed Memory)
-//                        UInt64 compressedMem = [self getMemorySizeFromString:strVal];
-                        
-                        // 使用 Top命令时可能有两种状态,  状态一: Activity Monitor 中的 Memory 大约等于 top 中的 Memory
-                        // 状态二: Activity Monitor 中的 Memory 大约等于  top 中的 (Memory  + CMPRS (Compressed Memory)) .
-                        // 状态二的特点是. 一般 top命令结果的 MEM < CMPRS
-                        
-//                        if(totalMemory < compressedMem){
-//                            totalMemory += compressedMem;
-//                        }
-                        //[dic setObject:@(memSize) forKey:@"cmprs"];
-                    }
-                }
-                
 
+// 对应活动监视器里面的 实际内存 （反映了进程真正占用的物理内存空间，不包括那些已被换出到磁盘交换空间的部分，正好有用户提了建议）
+- (void)memoryTopRepeater {
+    __weak typeof(self) weakSelf = self;
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        @autoreleasepool {
+            NSDate *beginTime = [NSDate date];
+            
+            // 1. 通过 sysctl 获取所有进程的 PID 和 PPID（替代 ps 命令）
+            NSMutableDictionary<NSNumber *, NSNumber *> *pidToPpid = [NSMutableDictionary new];
+            NSMutableDictionary<NSNumber *, NSNumber *> *pidToRss = [NSMutableDictionary new];
+            int mib[4] = {CTL_KERN, KERN_PROC, KERN_PROC_ALL, 0};
+            size_t len = 0;
+            
+            // 动态计算缓冲区大小
+            if (sysctl(mib, 4, NULL, &len, NULL, 0) != 0) {
+                NSLog(@"Failed to get buffer size: %s", strerror(errno));
+                return;
+            }
+            
+            struct kinfo_proc *procs = malloc(len);
+            if (!procs) {
+                NSLog(@"Memory allocation failed");
+                return;
+            }
+            
+            if (sysctl(mib, 4, procs, &len, NULL, 0) != 0) {
+                free(procs);
+                NSLog(@"Failed to retrieve process info: %s", strerror(errno));
+                return;
+            }
+            
+            // 2. 填充进程数据
+            int count = (int)(len / sizeof(struct kinfo_proc));
+            for (int i = 0; i < count; i++) {
+                pid_t pid = procs[i].kp_proc.p_pid;
+                pid_t ppid = procs[i].kp_eproc.e_ppid;
+                pidToPpid[@(pid)] = @(ppid);
                 
-                
-                if (totalMemory > 0) {
-                    //[dic setObject:@(totalMemory) forKey:@"totalMemory"];
-                    data.pid = pid;
-                    data.resident_size = totalMemory;
-                    [resArray addObject:data];
+                struct proc_taskinfo taskInfo;
+                if (proc_pidinfo(pid, PROC_PIDTASKINFO, 0, &taskInfo, sizeof(taskInfo)) > 0) {
+                    pidToRss[@(pid)] = @(taskInfo.pti_resident_size);
                 }
             }
-            NSLog(@"%s topMemoryArrayCount: %lu", __FUNCTION__, (unsigned long)resArray.count);
+            free(procs);
+            
+            // 3. 构建父-子进程树
+            NSMutableDictionary<NSNumber *, NSMutableArray<NSNumber *> *> *parentChildMap = [NSMutableDictionary new];
+            for (NSNumber *pid in pidToPpid.allKeys) {
+                NSNumber *ppid = pidToPpid[pid];
+                NSMutableArray *children = parentChildMap[ppid] ?: [NSMutableArray new];
+                [children addObject:pid];
+                parentChildMap[ppid] = children;
+            }
+            
+            // 4. 后序遍历优化
+            NSMutableDictionary<NSNumber *, NSNumber *> *aggregatedMemory = [NSMutableDictionary new];
+            NSMutableArray<NSArray<NSNumber *> *> *stack = [NSMutableArray new];
+            NSMutableSet<NSNumber *> *visited = [NSMutableSet new];
+            
+            // 初始化栈：所有未访问的 PID
+            for (NSNumber *pid in pidToRss) {
+                if (![visited containsObject:pid]) {
+                    [stack addObject:@[pid, @(NO)]];
+                }
+            }
+            
+            // 栈模拟后序遍历
+            while (stack.count > 0) {
+                NSArray *currentElement = stack.lastObject;
+                NSNumber *currentPid = currentElement[0];
+                BOOL isProcessed = [currentElement[1] boolValue];
+                
+                if (!isProcessed) {
+                    // 标记为已处理，并替换栈顶元素
+                    [stack removeLastObject];
+                    [stack addObject:@[currentPid, @(YES)]];
+                    
+                    // 添加子进程到栈（反向保证顺序）
+                    NSArray<NSNumber *> *children = parentChildMap[currentPid];
+                    for (NSNumber *childPid in [children reverseObjectEnumerator]) {
+                        if (![visited containsObject:childPid]) {
+                            [stack addObject:@[childPid, @(NO)]];
+                        }
+                    }
+                } else {
+                    // 计算当前进程的总内存（子进程已处理）
+                    [stack removeLastObject];
+                    [visited addObject:currentPid];
+                    
+                    NSUInteger totalRSS = [pidToRss[currentPid] unsignedLongLongValue];
+                    NSArray<NSNumber *> *children = parentChildMap[currentPid];
+                    for (NSNumber *childPid in children) {
+                        totalRSS += [aggregatedMemory[childPid] unsignedLongLongValue];
+                    }
+                    aggregatedMemory[currentPid] = @(totalRSS);
+                }
+            }
+            
+            // 5. 生成最终数据
+            NSMutableArray<McProcessInfoData *> *resArray = [NSMutableArray array];
+            for (NSNumber *pid in aggregatedMemory) {
+                McProcessInfoData *data = [McProcessInfoData new];
+                data.pid = pid.intValue;
+                data.resident_size = [aggregatedMemory[pid] unsignedLongLongValue];
+                [resArray addObject:data];
+            }
+            
+            // 6. 主线程回调
             dispatch_async(dispatch_get_main_queue(), ^{
+                NSLog(@"Process count: %ld, Time cost: %.2fms", resArray.count, [[NSDate date] timeIntervalSinceDate:beginTime] * 1000);
                 weakSelf.topMemoryArray = resArray;
             });
         }
