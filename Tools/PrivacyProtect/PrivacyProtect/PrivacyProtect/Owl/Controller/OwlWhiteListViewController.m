@@ -18,13 +18,20 @@
 #import <QMUICommon/MMScroller.h>
 #import <QMUICommon/LMCheckboxButton.h>
 #import <Masonry/Masonry.h>
-#import "OwlCollectionViewItem.h"
 #import <QMUICommon/LMAppThemeHelper.h>
 #import <QMCoreFunction/NSButton+Extension.h>
+#import <QMUICommon/LMViewHelper.h>
+#import <QMUICommon/LMBorderButton.h>
+#import <QMUICommon/LMTitleButton.h>
+#import "OwlViewController.h"
+#import <QMCoreFunction/LanguageHelper.h>
+#import "OwlListPlaceHolderView.h"
+#import "utilities.h"
 
 typedef void(^removeOwlWhiteListItem)(NSInteger);
 typedef void(^checkOwlWhiteListItemCamera)(NSInteger, LMCheckboxButton *btn);
 typedef void(^checkOwlWhiteListItemAudio)(NSInteger, LMCheckboxButton *btn);
+typedef void(^checkOwlWhiteListItemSpeaker)(NSInteger, LMCheckboxButton *btn);
 
 @interface OwlWhiteListCell : NSTableCellView{
     
@@ -34,13 +41,15 @@ typedef void(^checkOwlWhiteListItemAudio)(NSInteger, LMCheckboxButton *btn);
 @property (nonatomic, strong) NSTextField *tfKind;
 @property (nonatomic, strong) LMCheckboxButton *cameraCheck;
 @property (nonatomic, strong) LMCheckboxButton *audioCheck;
+@property (nonatomic, strong) LMCheckboxButton *speakerCheck;
 @property (nonatomic, assign) NSInteger indexRow;
 @property (nonatomic, strong) removeOwlWhiteListItem action;
 @property (nonatomic, strong) checkOwlWhiteListItemCamera cameraCheckAction;
 @property (nonatomic, strong) checkOwlWhiteListItemAudio audioCheckAction;
+@property (nonatomic, strong) checkOwlWhiteListItemSpeaker speakerCheckAction;
 @property (nonatomic, strong) NSTextField *checkLabelCamera;
 @property (nonatomic, strong) NSTextField *checkLabelAudio;
-
+@property (nonatomic, strong) NSTextField *checkLabelSpeaker;
 
 @end
 
@@ -57,7 +66,7 @@ typedef void(^checkOwlWhiteListItemAudio)(NSInteger, LMCheckboxButton *btn);
         [_tfAppName setLineBreakMode:NSLineBreakByTruncatingTail];
         [self addSubview:_tfAppName];
         
-        _tfKind = [OwlWhiteListViewController buildLabel:@"" font:[NSFontHelper getLightSystemFont:12] color:[NSColor colorWithHex:0x94979B]];
+        _tfKind = [OwlWhiteListViewController buildLabel:@"" font:[NSFontHelper getLightSystemFont:12] color:[LMAppThemeHelper getTitleColor]];
         [self addSubview:_tfKind];
         
         _cameraCheck = [[LMCheckboxButton alloc] init];
@@ -98,60 +107,101 @@ typedef void(^checkOwlWhiteListItemAudio)(NSInteger, LMCheckboxButton *btn);
         _checkLabelAudio = [OwlWhiteListViewController buildLabel:NSLocalizedStringFromTableInBundle(@"OwlWhiteListViewController_initWithFrame_1553136870_2", nil, [NSBundle bundleForClass:[self class]], @"") font:[NSFontHelper getLightSystemFont:12] color:[NSColor colorWithHex:0x94979B]];
         [self addSubview:_checkLabelAudio];
         
-        LMGradientTitleButton *removeBtn = [[LMGradientTitleButton alloc] initWithFrame:NSZeroRect];
-        removeBtn.title = NSLocalizedStringFromTableInBundle(@"OwlWhiteListViewController_initWithFrame_removeBtn_3", nil, [NSBundle bundleForClass:[self class]], @"");
-        removeBtn.target = self;
-        removeBtn.action = @selector(clickRemoveOwlItem:);
-        removeBtn.isGradient = NO;
-//        removeBtn.titleNormalColor = [LMAppThemeHelper getTitleColor];
-        removeBtn.fillColor = [LMAppThemeHelper getMainBgColor];
-//        removeBtn.normalColor = [NSColor redColor];
-//        removeBtn.color
+        _speakerCheck = [[LMCheckboxButton alloc] init];
+        _speakerCheck.imageScaling = NSImageScaleProportionallyDown;
+        _speakerCheck.title = @"";
+        [_speakerCheck setButtonType:NSButtonTypeSwitch];
+        _speakerCheck.allowsMixedState = YES;
+        [_speakerCheck setTarget:self];
+        [_speakerCheck setAction:@selector(checkSpeaker:)];
+        [self addSubview:_speakerCheck];
+        
+        _checkLabelSpeaker = [OwlWhiteListViewController buildLabel:NSLocalizedStringFromTableInBundle(@"扬声器音频", nil, [NSBundle bundleForClass:[self class]], @"") font:[NSFontHelper getLightSystemFont:12] color:[NSColor colorWithHex:0x94979B]];
+        [self addSubview:_checkLabelSpeaker];
+        
+        LMTitleButton *removeBtn = [[LMTitleButton alloc] initWithFrame:NSMakeRect(0, 0, 36, 20)];
+        [removeBtn setBezelStyle:NSBezelStylePush];
+        removeBtn.bordered = NO;
+                
+        NSDictionary *attributes = @{
+            NSFontAttributeName: [NSFont systemFontOfSize:12 weight:NSFontWeightLight],
+            NSForegroundColorAttributeName: [NSColor colorWithHex:0x1A83F7]
+        };
+        NSAttributedString *attributedTitle = [[NSAttributedString alloc] initWithString:NSLocalizedStringFromTableInBundle(@"移除", nil, [NSBundle bundleForClass:[self class]], nil) attributes:attributes];
+        [removeBtn setAttributedTitle:attributedTitle];
+        [removeBtn setTarget:self];
+        [removeBtn setAction:@selector(clickRemoveOwlItem:)];
+        
         [self addSubview:removeBtn];
         
         [_appIcon mas_makeConstraints:^(MASConstraintMaker *make) {
             make.centerY.equalTo(self);
-            make.left.equalTo(@0).offset(OwlElementLeft);
+            if (@available(macOS 11.0, *)) {
+                make.left.equalTo(@0).offset(OwlElementLeft - 5);
+            } else {
+                make.left.equalTo(@0).offset(OwlElementLeft);
+            }
             make.height.equalTo(@22);
             make.width.equalTo(@(22));
         }];
         [_tfKind mas_makeConstraints:^(MASConstraintMaker *make) {
             make.centerY.equalTo(self);
-            make.left.equalTo(@0).offset(158);
+            if (@available(macOS 11.0, *)) {
+                make.left.equalTo(@0).offset(158 -5);
+            } else {
+                make.left.equalTo(@0).offset(158);
+            }
             make.width.equalTo(@(100));
         }];
         [_tfAppName mas_makeConstraints:^(MASConstraintMaker *make) {
             make.centerY.equalTo(self);
-            make.left.equalTo(self.appIcon.mas_right).offset(10);
-            //make.right.equalTo(self.tfKind).offset(-10);
-            make.width.equalTo(@(106));
+            make.left.equalTo(_appIcon.mas_right).offset(10);
+            make.right.lessThanOrEqualTo(self.tfKind.mas_left).offset(-4);
         }];
         [_cameraCheck mas_makeConstraints:^(MASConstraintMaker *make) {
             make.centerY.equalTo(self);
-            make.left.equalTo(@0).offset(294);
+            if (@available(macOS 11.0, *)) {
+                make.left.equalTo(@0).offset(266 - 5);
+            } else {
+                make.left.equalTo(@0).offset(266);
+            }
+            
             make.height.width.equalTo(@(14));
         }];
         [_checkLabelCamera mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.equalTo(self.cameraCheck.mas_right).offset(7);
+            make.left.equalTo(self.cameraCheck.mas_right).offset(4);
             make.centerY.equalTo(self);
-            make.width.equalTo(@160);
         }];
         [_audioCheck mas_makeConstraints:^(MASConstraintMaker *make) {
             make.centerY.equalTo(self);
-            make.left.equalTo(@0).offset(382);
+            make.left.mas_equalTo(self.checkLabelCamera.mas_right).offset(12);
             make.height.width.equalTo(@(14));
         }];
         [_checkLabelAudio mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.equalTo(self.audioCheck.mas_right).offset(7);
+            make.left.equalTo(self.audioCheck.mas_right).offset(4);
             make.centerY.equalTo(self);
-            make.width.equalTo(@160);
         }];
+        
+        [_speakerCheck mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerY.mas_equalTo(0);
+            make.left.mas_equalTo(self.checkLabelAudio.mas_right).offset(12);
+            make.height.width.equalTo(@(14));
+        }];
+        [_checkLabelSpeaker mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.equalTo(self.speakerCheck.mas_right).offset(4);
+            make.centerY.equalTo(self);
+        }];
+        
         [removeBtn mas_makeConstraints:^(MASConstraintMaker *make) {
             make.centerY.equalTo(self);
+            CGFloat leftMargin = 538;
+            if([LanguageHelper getCurrentSystemLanguageType] == SystemLanguageTypeEnglish){
+                leftMargin = 560;
+            }
             if (@available(macOS 11, *)) {
-                make.right.equalTo(self).offset(-OwlElementLeft - 6);
+                make.left.equalTo(self.mas_left).offset(leftMargin - 5);
             } else {
-                make.right.equalTo(self).offset(-OwlElementLeft);
+                make.left.equalTo(self.mas_left).offset(leftMargin);
             }
             make.width.equalTo(@(60));
             make.height.equalTo(@(24));
@@ -174,14 +224,30 @@ typedef void(^checkOwlWhiteListItemAudio)(NSInteger, LMCheckboxButton *btn);
             [_appIcon setImage:iconImage];
         }
     } else {
-        if ([iconPath isEqualToString:@"console"]) {
+        NSImage *image = nil;
+        NSString *appPath = [appDic valueForKey:OwlBubblePath];
+        if ([appPath isKindOfClass:NSString.class]) {
+            image = [[NSWorkspace sharedWorkspace] iconForFile:appPath];
+        }
+        
+        if (image) {
+            [_appIcon setImage:image];
+        } else if ([iconPath isEqualToString:@"console"]) {
             NSBundle *bundle = [NSBundle bundleForClass:[self class]];
             [_appIcon setImage:[bundle imageForResource:@"defaultTeminate"]];
         } else {
-            [_appIcon setImage:[OwlCollectionViewItem getDefaultAppIcon]];
+            [_appIcon setImage:[self getDefaultAppIcon]];
         }
     }
     
+    // 特殊处理，在MacOS 15以上 图书应用的/System/Applications/Books.app/Contents/Resources/AppIcon.icns
+    // 是一张纯黑图片
+    if (@available(macOS 15.0, *)) {
+        NSImage *image = getAppImage(appDic, AppleIBookIdentifier);
+        if (image) {
+            [_appIcon setImage:image];
+        }
+    }
     
     [_tfAppName setStringValue:[appDic valueForKey:OwlAppName]];
     if ([[appDic valueForKey:OwlAppleApp] boolValue]) {
@@ -191,10 +257,23 @@ typedef void(^checkOwlWhiteListItemAudio)(NSInteger, LMCheckboxButton *btn);
     }
     _cameraCheck.state = [[appDic objectForKey:OwlWatchCamera] boolValue];
     _audioCheck.state = [[appDic objectForKey:OwlWatchAudio] boolValue];
+    _speakerCheck.state = [[appDic objectForKey:OwlWatchSpeaker] boolValue];
     
     [self updateCameraLabel];
     [self updateAudioLabel];
+    [self updateSpeakerLabel];
 }
+
+- (NSImage*)getDefaultAppIcon{
+    static NSImage *defaultIcon = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        defaultIcon = [[NSWorkspace sharedWorkspace] iconForFileType:NSFileTypeForHFSTypeCode(kGenericApplicationIcon)];
+        [defaultIcon setSize:NSMakeSize(64, 64)];
+    });
+    return defaultIcon;
+}
+
 - (void)clickRemoveOwlItem:(id)sender{
     if (self.action) {
         self.action(self.indexRow);
@@ -214,6 +293,15 @@ typedef void(^checkOwlWhiteListItemAudio)(NSInteger, LMCheckboxButton *btn);
         self.checkLabelAudio.textColor = [NSColor colorWithHex:0x94979B];
     }
 }
+
+- (void)updateSpeakerLabel {
+    if (self.speakerCheck.state) {
+        self.checkLabelSpeaker.textColor = [LMAppThemeHelper getTitleColor];
+    } else {
+        self.checkLabelSpeaker.textColor = [NSColor colorWithHex:0x94979B];
+    }
+}
+
 - (BOOL)wantRemove{
     if (self.action) {
         NSAlert *alert = [[NSAlert alloc] init];
@@ -235,7 +323,7 @@ typedef void(^checkOwlWhiteListItemAudio)(NSInteger, LMCheckboxButton *btn);
 }
 - (void)checkCamera:(id)sender{
     if (self.cameraCheckAction) {
-        if (!self.audioCheck.state && !self.cameraCheck.state) {
+        if (!self.audioCheck.state && !self.cameraCheck.state && !self.speakerCheck.state) {
             if (![self wantRemove]) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     self.cameraCheck.state = !self.cameraCheck.state;
@@ -250,7 +338,7 @@ typedef void(^checkOwlWhiteListItemAudio)(NSInteger, LMCheckboxButton *btn);
 }
 - (void)checkAudio:(id)sender{
     if (self.audioCheckAction) {
-        if (!self.audioCheck.state && !self.cameraCheck.state) {
+        if (!self.audioCheck.state && !self.cameraCheck.state && !self.speakerCheck.state) {
             if (![self wantRemove]) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     self.audioCheck.state = !self.audioCheck.state;
@@ -263,6 +351,24 @@ typedef void(^checkOwlWhiteListItemAudio)(NSInteger, LMCheckboxButton *btn);
         }
     }
 }
+
+- (void)checkSpeaker:(id)sender {
+    if (self.speakerCheckAction) {
+        if (!self.audioCheck.state && !self.cameraCheck.state && !self.speakerCheck.state) {
+            if (![self wantRemove]) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    self.speakerCheck.state = !self.speakerCheck.state;
+                    [self updateSpeakerLabel];
+                });
+            }
+        } else {
+            self.speakerCheckAction(self.indexRow, self.speakerCheck);
+            [self updateSpeakerLabel];
+        }
+    }
+}
+
+
 // fix 不同系统选中下，textfield的文字颜色不同，有些是黑有些是白的问题
 - (void)setBackgroundStyle:(NSBackgroundStyle)backgroundStyle{
     [super setBackgroundStyle:NSBackgroundStyleLight];
@@ -275,13 +381,14 @@ typedef void(^checkOwlWhiteListItemAudio)(NSInteger, LMCheckboxButton *btn);
 @interface OwlWhiteListViewController () <NSTableViewDelegate, NSTableViewDataSource>{
     NSTableView *tableView;
     NSScrollView *scrollView;
+    NSButton *cancelBtn;
     NSButton *addBtn;
     NSString *identifier;
 }
 @property(weak) NSView *contentView;
 @property(weak) NSView *bLineview;
 @property(weak) MMScroller *scroller;
-
+@property (nonatomic, strong) OwlListPlaceHolderView *listPlaceHolderView;
 @end
 
 @implementation OwlWhiteListViewController
@@ -319,7 +426,15 @@ typedef void(^checkOwlWhiteListItemAudio)(NSInteger, LMCheckboxButton *btn);
         layer.backgroundColor = [NSColor whiteColor].CGColor;
         contentView.layer = layer;
         self.contentView = contentView;
-        scrollView = [[NSScrollView alloc] initWithFrame:NSMakeRect(0, 0, frame.size.width, frame.size.height-OwlWindowTitleHeight*2)];
+        
+        NSRect scrollViewRect = NSMakeRect(0, 52, frame.size.width, frame.size.height-OwlWindowTitleHeight*2 - 52);
+        
+        // list 为空占位图 “暂无白名单应用”
+        self.listPlaceHolderView = [[OwlListPlaceHolderView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"暂无白名单应用", nil, [NSBundle bundleForClass:[self class]], nil)];
+        self.listPlaceHolderView.frame = scrollViewRect;
+        [self.contentView addSubview:self.listPlaceHolderView];
+        
+        scrollView = [[NSScrollView alloc] initWithFrame:scrollViewRect];
         
         tableView = [[NSTableView alloc] init];
         [tableView setDelegate:self];
@@ -361,21 +476,20 @@ typedef void(^checkOwlWhiteListItemAudio)(NSInteger, LMCheckboxButton *btn);
         //        }];
         tableView.frame = NSMakeRect(0, 0, scrollView.frame.size.width, scrollView.frame.size.height);
         
-        addBtn = [[NSButton alloc] init];
-        [addBtn setButtonType:NSButtonTypeMomentaryChange];
-        NSBundle *bundle = [NSBundle bundleForClass:[self class]];
-        addBtn.image = [bundle imageForResource:@"owl_add"];
-        //addBtn.image = [NSImage imageNamed:@"owl_add"];
-        addBtn.imagePosition = NSImageLeft;
-        //addBtn.alignment = NSTextAlignmentRight;
-        addBtn.title = NSLocalizedStringFromTableInBundle(@"OwlWhiteListViewController_initWithFrame_addBtn_1", nil, [NSBundle bundleForClass:[self class]], @"");
+        cancelBtn = [[LMBorderButton alloc] init];
+        cancelBtn.title = NSLocalizedStringFromTableInBundle(@"取消", nil, [NSBundle bundleForClass:[self class]], @"");
+        cancelBtn.target = self;
+        cancelBtn.action = @selector(cancelBtnClicked:);
+        cancelBtn.font = [NSFontHelper getRegularSystemFont:12];
+        
+        addBtn = [LMViewHelper createSmallGreenButton:12 title:NSLocalizedStringFromTableInBundle(@"前往设置", nil, [NSBundle bundleForClass:[self class]], nil)];
+        addBtn.wantsLayer = YES;
+        addBtn.layer.cornerRadius = 2;
         addBtn.target = self;
         addBtn.action = @selector(clickBtn:);
-        addBtn.bordered = NO;
-        addBtn.font = [NSFont systemFontOfSize:12];
-        [addBtn setFontColor:[LMAppThemeHelper getTitleColor]];
         
         [contentView addSubview:scrollView];
+        [contentView addSubview:cancelBtn];
         [contentView addSubview:addBtn];
         self.view = contentView;
         
@@ -397,6 +511,9 @@ typedef void(^checkOwlWhiteListItemAudio)(NSInteger, LMCheckboxButton *btn);
         NSTextField *labelSpecOp = [OwlWhiteListViewController buildLabel:NSLocalizedStringFromTableInBundle(@"OwlWhiteListViewController_initWithFrame_labelSpecOp _5", nil, [NSBundle bundleForClass:[self class]], @"") font:[NSFontHelper getRegularSystemFont:12]color:[LMAppThemeHelper getTitleColor]];
         [contentView addSubview:labelSpecOp];
         
+        NSTextField *labelSpecOperation = [OwlWhiteListViewController buildLabel:NSLocalizedStringFromTableInBundle(@"操作", nil, [NSBundle bundleForClass:[self class]], nil) font:[NSFontHelper getRegularSystemFont:12]color:[LMAppThemeHelper getTitleColor]];
+        [contentView addSubview:labelSpecOperation];
+        
         NSView *bLineview = [[NSView alloc] init];
         bLineview.wantsLayer = YES;
         CALayer *lineLayer = [[CALayer alloc] init];
@@ -410,10 +527,24 @@ typedef void(^checkOwlWhiteListItemAudio)(NSInteger, LMCheckboxButton *btn);
             make.centerX.equalTo(contentView);
         }];
         [addBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.top.equalTo(@9);
-            make.right.equalTo(contentView).offset(-30);
-            make.height.equalTo(@20);
-            make.width.equalTo(@50);
+            make.bottom.equalTo(@(-16));
+            make.right.equalTo(contentView).offset(-16);
+            make.height.equalTo(@24);
+            if([LanguageHelper getCurrentSystemLanguageType] == SystemLanguageTypeEnglish){
+                make.size.mas_equalTo(NSMakeSize(100, 24));
+            } else {
+                make.size.mas_equalTo(NSMakeSize(68, 24));
+            }
+        }];
+        [cancelBtn mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerY.mas_equalTo(addBtn);
+            make.right.mas_equalTo(addBtn.mas_left).offset(-8);
+            if([LanguageHelper getCurrentSystemLanguageType] == SystemLanguageTypeEnglish){
+                make.size.mas_equalTo(NSMakeSize(52, 24));
+            } else {
+                make.size.mas_equalTo(NSMakeSize(44, 24));
+            }
+            
         }];
         [labelSpecApp mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.equalTo(@0).offset(OwlElementLeft);
@@ -426,9 +557,13 @@ typedef void(^checkOwlWhiteListItemAudio)(NSInteger, LMCheckboxButton *btn);
             make.width.equalTo(@160);
         }];
         [labelSpecOp mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.equalTo(@0).offset(294);
+            make.left.equalTo(@0).offset(264);
             make.top.equalTo(@52);
             make.width.equalTo(@160);
+        }];
+        [labelSpecOperation mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.left.equalTo(self.view.mas_left).offset(553);
+            make.top.equalTo(@52);
         }];
         [bLineview mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(@(OwlWindowTitleHeight));
@@ -437,7 +572,7 @@ typedef void(^checkOwlWhiteListItemAudio)(NSInteger, LMCheckboxButton *btn);
             make.width.equalTo(contentView);
         }];
         
-        [tableView reloadData];
+        [self reloadWhiteList];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(whiteListChange:) name:OwlWhiteListChangeNotication object:nil];
     }
     return self;
@@ -452,7 +587,12 @@ typedef void(^checkOwlWhiteListItemAudio)(NSInteger, LMCheckboxButton *btn);
     }
 }
 - (void)whiteListChange:(NSNotification*)no{
-    [tableView reloadData];
+    [self reloadWhiteList];
+}
+
+- (void)cancelBtnClicked:(NSButton *)btn {
+    [self.view.window close];
+    ((OwlViewController*)self.view.window.parentWindow.contentViewController).wlWindowController = nil;
 }
 
 - (void)clickBtn:(id)sender{
@@ -473,6 +613,10 @@ typedef void(^checkOwlWhiteListItemAudio)(NSInteger, LMCheckboxButton *btn);
 }
 
 - (void)reloadWhiteList{
+    // 是否展示占位图
+    scrollView.hidden = (0 == [Owl2Manager sharedManager].wlArray.count);
+    self.listPlaceHolderView.hidden = (0 != [Owl2Manager sharedManager].wlArray.count);
+    
     [tableView reloadData];
 }
 #pragma mark NSTableViewDelegate
@@ -501,7 +645,7 @@ typedef void(^checkOwlWhiteListItemAudio)(NSInteger, LMCheckboxButton *btn);
         NSLog(@"action row: %ld", (long)indexRow);
         [[Owl2Manager sharedManager] removeAppWhiteItemIndex:indexRow];
         __strong typeof(weakSelf) strongSelf = weakSelf;
-        [strongSelf->tableView reloadData];
+        [strongSelf reloadWhiteList];
     };
     view.cameraCheckAction = ^(NSInteger indexRow, LMCheckboxButton *btn) {
         if ([Owl2Manager sharedManager].wlArray.count < indexRow) {
@@ -517,6 +661,14 @@ typedef void(^checkOwlWhiteListItemAudio)(NSInteger, LMCheckboxButton *btn);
         }
         NSMutableDictionary *dic = [[Owl2Manager sharedManager].wlArray objectAtIndex:indexRow];
         [dic setValue:[NSNumber numberWithBool:btn.state] forKey:OwlWatchAudio];
+        [[Owl2Manager sharedManager] replaceAppWhiteItemIndex:indexRow];
+    };
+    view.speakerCheckAction = ^(NSInteger indexRow, LMCheckboxButton *btn) {
+        if ([Owl2Manager sharedManager].wlArray.count < indexRow) {
+            return;
+        }
+        NSMutableDictionary *dic = [[Owl2Manager sharedManager].wlArray objectAtIndex:indexRow];
+        [dic setValue:[NSNumber numberWithBool:btn.state] forKey:OwlWatchSpeaker];
         [[Owl2Manager sharedManager] replaceAppWhiteItemIndex:indexRow];
     };
     view.indexRow = row;

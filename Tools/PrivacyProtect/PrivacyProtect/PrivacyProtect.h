@@ -14,8 +14,12 @@ FOUNDATION_EXPORT double PrivacyProtectVersionNumber;
 //! Project version string for PrivacyProtect.
 FOUNDATION_EXPORT const unsigned char PrivacyProtectVersionString[];
 
-// In this header, you should import all the public headers of your framework using statements like #import <PrivacyProtect/PublicHeader.h>
-//#import "OwlManager.h"
-//#import "OwlConstant.h"
+#ifndef PrivacyProtect_h
+#define PrivacyProtect_h
 
+#import "Owl2Manager.h"
+#import "Owl2Manager+Guide.h"
+#import "QMUserNotificationCenter.h"
+#import "OwlWindowController.h"
 
+#endif /* PrivacyProtect_h */

@@ -42,7 +42,7 @@
     }
     
     [self.experienceBtn setFont:[NSFontHelper getLightSystemFont:13]];
-    [self.experienceBtn setTitle:NSLocalizedStringFromTableInBundle(@"ToolCellView_awakeFromNib_experienceBtn_1", nil, [NSBundle bundleForClass:[self class]], @"")];
+    [self.experienceBtn setTitle:LMLocalizedSelfBundleString(@"立即体验", nil)];
 }
 
 -(void)setCellWithToolModel:(ToolModel *)toolModel {

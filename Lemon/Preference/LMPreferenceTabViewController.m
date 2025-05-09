@@ -114,7 +114,7 @@
     self.windowTitleBgView.layer.backgroundColor = [NSColor redColor].CGColor;
     
     //window 标题栏
-    NSTextField *windowTitle = [self buildLabel:NSLocalizedStringFromTableInBundle(@"PreferenceViewController_setupViews_tfWindowTitle _8", nil, [NSBundle bundleForClass:[self class]], @"") font:[NSFont systemFontOfSize:16] color:[LMAppThemeHelper getTitleColor]];
+    NSTextField *windowTitle = [self buildLabel:NSLocalizedString(@"偏好设置", nil) font:[NSFont systemFontOfSize:16] color:[LMAppThemeHelper getTitleColor]];
     self.windowTitle = windowTitle;
     [self.windowTitleBgView addSubview:self.windowTitle];
     [self.windowTitle mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -149,8 +149,8 @@
 }
 
 -(void)initData{
-    NSString *generalString = NSLocalizedStringFromTableInBundle(@"PreferenceViewController_setupViews_tabBar_title_general", nil, [NSBundle bundleForClass:[self class]], @"");
-     NSString *statusBarString = NSLocalizedStringFromTableInBundle(@"PreferenceViewController_setupViews_tabBar_title_statusBar", nil, [NSBundle bundleForClass:[self class]], @"");
+    NSString *generalString = NSLocalizedString(@" 通用 ", nil);
+     NSString *statusBarString = NSLocalizedString(@"状态栏", nil);
     NSArray *titles = @[generalString,statusBarString];
     self.tableViewItems = [[NSMutableArray alloc]init];
     self.preferenceViewController = [[PreferenceViewController alloc] init];

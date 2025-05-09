@@ -15,10 +15,14 @@
 #import <QMUICommon/MMScroller.h>
 #import <Masonry/Masonry.h>
 #import <QMUICommon/LMAppThemeHelper.h>
+#import <QMCoreFunction/LanguageHelper.h>
 
 @interface OwlCellView : NSView
+@property (nonatomic, strong) NSImageView *iconImageView;
+@property (nonatomic, strong) NSTextField *labelProcess;
 @property (nonatomic, strong) NSTextField *labelTime;
 @property (nonatomic, strong) NSTextField *labelEvent;
+@property (nonatomic, strong) NSTextField *labelOperation;
 
 @end
 
@@ -28,6 +32,21 @@
     self = [super initWithFrame:frame];
     if (self) {
         
+        self.iconImageView = [[NSImageView alloc] init];
+        self.iconImageView.imageScaling = NSImageScaleProportionallyUpOrDown;
+        [self addSubview:self.iconImageView];
+        
+        self.labelProcess = [[NSTextField alloc] init];
+        self.labelProcess.alignment = NSTextAlignmentLeft;
+        self.labelProcess.bordered = NO;
+        self.labelProcess.editable = NO;
+        self.labelProcess.backgroundColor = [NSColor clearColor];
+        self.labelProcess.font = [NSFontHelper getLightSystemFont:12];
+        self.labelProcess.textColor = [NSColor colorWithHex:0x94979B];
+        self.labelProcess.maximumNumberOfLines = 1;
+        self.labelProcess.lineBreakMode = NSLineBreakByTruncatingTail;
+        [self addSubview:self.labelProcess];
+        
         self.labelTime = [[NSTextField alloc] init];
         self.labelTime.alignment = NSTextAlignmentLeft;
         self.labelTime.bordered = NO;
@@ -35,6 +54,7 @@
         self.labelTime.backgroundColor = [NSColor clearColor];
         self.labelTime.font = [NSFontHelper getLightSystemFont:12];
         self.labelTime.textColor = [NSColor colorWithHex:0x94979B];
+        self.labelTime.maximumNumberOfLines = 1;
         [self addSubview:self.labelTime];
         
         self.labelEvent = [[NSTextField alloc] init];
@@ -44,25 +64,56 @@
         self.labelEvent.backgroundColor = [NSColor clearColor];
         self.labelEvent.font = [NSFontHelper getLightSystemFont:12];
         self.labelEvent.textColor = [NSColor colorWithHex:0x94979B];
+        self.labelEvent.maximumNumberOfLines = 1;
         [self addSubview:self.labelEvent];
         
+        self.labelOperation = [[NSTextField alloc] init];
+        self.labelOperation.alignment = NSTextAlignmentLeft;
+        self.labelOperation.bordered = NO;
+        self.labelOperation.editable = NO;
+        self.labelOperation.backgroundColor = [NSColor clearColor];
+        self.labelOperation.font = [NSFontHelper getLightSystemFont:12];
+        self.labelOperation.textColor = [NSColor colorWithHex:0x989A9E];
+        self.labelOperation.maximumNumberOfLines = 1;
+        [self addSubview:self.labelOperation];
+        
+        [self.iconImageView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerY.equalTo(self);
+            make.left.equalTo(self.mas_left).offset(24);
+            make.size.equalTo(@(NSMakeSize(20, 20)));
+        }];
+        
+        [self.labelProcess mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerY.equalTo(self);
+            make.left.equalTo(self.iconImageView.mas_right).offset(12);
+            make.width.equalTo(@90);
+        }];
         
         [self.labelTime mas_makeConstraints:^(MASConstraintMaker *make) {
             make.centerY.equalTo(self);
-            make.left.equalTo(self.mas_left).offset(50);
-            make.width.equalTo(@(170));
+            make.left.equalTo(self.mas_left).offset(180);
+            make.width.equalTo(@140);
         }];
+        
         [self.labelEvent mas_makeConstraints:^(MASConstraintMaker *make) {
             make.centerY.equalTo(self);
-            make.left.equalTo(self.labelTime.mas_right);
-            make.width.equalTo(@(600-170));
+            make.left.equalTo(self.mas_left).offset(350);
+            make.right.lessThanOrEqualTo(self.labelOperation.mas_left).offset(-4);
+        }];
+        
+        [self.labelOperation mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerY.equalTo(self);
+            make.left.equalTo(self.mas_left).offset(480);
+            if([LanguageHelper getCurrentSystemLanguageType] == SystemLanguageTypeEnglish){
+                make.right.equalTo(self.mas_right).offset(-4);
+            } else {
+                make.right.equalTo(self.mas_right).offset(-24);
+            }
         }];
     }
     return self;
 }
-- (void)drawRect:(NSRect)dirtyRect{
-    
-}
+
 @end
 
 @interface OwlLogViewController () <NSTableViewDelegate, NSTableViewDataSource> {
@@ -70,6 +121,7 @@
     NSString *timeIdentifier;
     NSString *eventIdentifier;
 }
+@property(weak) MMScroller *scroller;
 @property (weak)NSView *bLineview;
 @end
 
@@ -112,8 +164,12 @@
         [scrollView setDocumentView:tableView];
         
         MMScroller *scroller = [[MMScroller alloc] init];
+        self.scroller = scroller;
+        scroller.wantsLayer = YES;
+        [scroller.layer setBackgroundColor:[LMAppThemeHelper getMainBgColor].CGColor];
         [scrollView setVerticalScroller:scroller];
         [tableView setBackgroundColor:[LMAppThemeHelper getMainBgColor]];
+        
         
         //NSTableHeaderView *headerView = [[NSTableHeaderView alloc] initWithFrame:NSMakeRect(0, 0, 300, 30)];
         //[tableView setHeaderView:headerView];
@@ -159,6 +215,16 @@
         self.bLineview = bLineview;
         [contentView addSubview:bLineview];
         
+        NSTextField *labelProcess = [[NSTextField alloc] init];
+        labelProcess.alignment = NSTextAlignmentLeft;
+        labelProcess.bordered = NO;
+        labelProcess.editable = NO;
+        labelProcess.stringValue = NSLocalizedStringFromTableInBundle(@"软件进程", nil, [NSBundle bundleForClass:[self class]], nil);
+        labelProcess.backgroundColor = [NSColor clearColor];
+        labelProcess.font = [NSFontHelper getMediumSystemFont:12];
+        labelProcess.textColor = [LMAppThemeHelper getSecondTextColor];
+        [contentView addSubview:labelProcess];
+        
         NSTextField *labelTime = [[NSTextField alloc] init];
         labelTime.alignment = NSTextAlignmentLeft;
         labelTime.bordered = NO;
@@ -179,28 +245,57 @@
         labelEvent.textColor = [LMAppThemeHelper getSecondTextColor];
         [contentView addSubview:labelEvent];
         
+        NSTextField *labelOperation = [[NSTextField alloc] init];
+        labelOperation.alignment = NSTextAlignmentLeft;
+        labelOperation.bordered = NO;
+        labelOperation.editable = NO;
+        labelOperation.stringValue = NSLocalizedStringFromTableInBundle(@"操作记录", nil, [NSBundle bundleForClass:[self class]], nil);
+        labelOperation.backgroundColor = [NSColor clearColor];
+        labelOperation.font = [NSFontHelper getMediumSystemFont:12];
+        labelOperation.textColor = [LMAppThemeHelper getSecondTextColor];
+        [contentView addSubview:labelOperation];
+        
         [tfTitle mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(@9);
             make.centerX.equalTo(contentView);
         }];
+        
+        [labelProcess mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(@(52));
+            if (@available(macOS 11.0, *)) {
+                make.left.equalTo(@(24+5));
+            } else {
+                make.left.equalTo(@24);
+            }
+        }];
+        
         [labelTime mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(@(52));
             if (@available(macOS 11.0, *)) {
-                make.left.equalTo(contentView.mas_left).offset(55);
+                make.left.equalTo(@(180+5));
             } else {
-                make.left.equalTo(contentView.mas_left).offset(50);
+                make.left.equalTo(@180);
             }
-            make.width.equalTo(@(170));
         }];
+        
         [labelEvent mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(@(52));
             if (@available(macOS 11.0, *)) {
-                make.left.equalTo(@(170+55));
+                make.left.equalTo(@(350+5));
             } else {
-                make.left.equalTo(@(170+50));
+                make.left.equalTo(@(350));
             }
-            make.width.equalTo(@(170));
         }];
+        
+        [labelOperation mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.top.equalTo(@(52));
+            if (@available(macOS 11.0, *)) {
+                make.left.equalTo(@(480+5));
+            } else {
+                make.left.equalTo(@(480));
+            }
+        }];
+        
         [bLineview mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(@(OwlWindowTitleHeight));
             make.left.equalTo(contentView);
@@ -217,6 +312,7 @@
 - (void)viewWillLayout{
     [super viewWillLayout];
     [LMAppThemeHelper setDivideLineColorFor:self.bLineview];
+    [LMAppThemeHelper setLayerBackgroundWithMainBgColorFor:self.scroller];
 }
 
 - (void)dealloc{
@@ -244,45 +340,114 @@
 //}
 
 - (NSView *)tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row{
-    NSString *idenifier = @"";
-    NSString *strValue = @"";
-    NSMutableAttributedString *attributed = [[NSMutableAttributedString alloc] init];
-    strValue = [[[Owl2Manager sharedManager].logArray objectAtIndex:row] objectForKey:@"time"];
-    NSString *appName = [[[Owl2Manager sharedManager].logArray objectAtIndex:row] objectForKey:OwlAppName];
-    appName = [appName stringByAppendingString:@"  "];
-    NSString *event = [[[Owl2Manager sharedManager].logArray objectAtIndex:row] objectForKey:@"event"];
-    NSString *strLanguageKey = nil;
-    if ([event isEqualToString:@"OwlManager_analyseDeviceInfoForNotificationWithArray_NSString_1"]) {
-        strLanguageKey = @"OwlManager_analyseDeviceInfoForNotificationWithArray_NSString_1";
-    } else if ([event isEqualToString:@"OwlManager_analyseDeviceInfoForNotificationWithArray_NSString_2"]) {
-        strLanguageKey = @"OwlManager_analyseDeviceInfoForNotificationWithArray_NSString_2";
-    } else if ([event isEqualToString:@"OwlManager_analyseDeviceInfoForNotificationWithArray_NSString_3"]) {
-        strLanguageKey = @"OwlManager_analyseDeviceInfoForNotificationWithArray_NSString_3";
-    } else if ([event isEqualToString:@"OwlManager_analyseDeviceInfoForNotificationWithArray_NSString_4"]) {
-        strLanguageKey = @"OwlManager_analyseDeviceInfoForNotificationWithArray_NSString_4";
-    } else if ([event isEqualToString:@"OwlManager_analyseDeviceInfoForNotificationWithArray_NSString_5"]) {
-        strLanguageKey = @"OwlManager_analyseDeviceInfoForNotificationWithArray_NSString_5";
-    } else if ([event isEqualToString:@"OwlManager_analyseDeviceInfoForNotificationWithArray_NSString_6"]) {
-        strLanguageKey = @"OwlManager_analyseDeviceInfoForNotificationWithArray_NSString_6";
-    }
-    if (strLanguageKey) {
-        event = NSLocalizedStringFromTableInBundle(strLanguageKey, nil, [NSBundle bundleForClass:[self class]], @"");
-    }
+    NSDictionary *dict = [[Owl2Manager sharedManager].logArray objectAtIndex:row];
+    NSString *time        = [dict objectForKey:OwlTime];
+    NSString *appName     = [dict objectForKey:OwlAppName];
+    NSString *appIconPath = [dict objectForKey:OwlAppIconPath];
+    NSNumber *appAction   = [dict objectForKey:OwlAppAction];
+    NSNumber *userAction  = [dict objectForKey:OwlUserAction];
+    NSNumber *hardware    = [dict objectForKey:OwlHardware];
     
-    [attributed appendAttributedString:[[NSAttributedString alloc] initWithString:appName attributes:@{NSFontAttributeName: [NSFontHelper getMediumSystemFont:12],
-                                                                                                       NSForegroundColorAttributeName:[LMAppThemeHelper getTitleColor]}]];
-    [attributed appendAttributedString:[[NSAttributedString alloc] initWithString:event attributes:@{NSFontAttributeName: [NSFontHelper getLightSystemFont:12],
-                                                                                                     NSForegroundColorAttributeName:[NSColor colorWithHex:0x94979B]}]];
-    OwlCellView *view = [tableView makeViewWithIdentifier:@"owlLogCellView" owner:self];
+    NSString *idenifier = @"owlLogCellView";
+    OwlCellView *view = [tableView makeViewWithIdentifier:idenifier owner:self];
     if (view == nil) {
         view = [[OwlCellView alloc] initWithFrame:NSMakeRect(0, 0, tableColumn.width, 32)];
         view.identifier = idenifier;
-        view.labelTime.stringValue = strValue;
-        view.labelEvent.attributedStringValue = attributed;
-    } else {
-        view.labelTime.stringValue = strValue;
-        view.labelEvent.attributedStringValue = attributed;
     }
+    view = [[OwlCellView alloc] initWithFrame:NSMakeRect(0, 0, tableColumn.width, 32)];
+    view.identifier = idenifier;
+    
+    void (^loadIconBlock)(NSImage *icon) = ^(NSImage *icon) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if (icon) {
+                view.iconImageView.image = icon;
+            } else {
+                view.iconImageView.image = [[NSBundle bundleForClass:[self class]] imageForResource:@"owl_default_icon"];
+            }
+        });
+    };
+    if (appIconPath) {
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            // 获取应用程序的图标
+            NSData *data = [[NSData alloc] initWithContentsOfFile:appIconPath];
+            if (data) {
+                NSImage *image = [[NSImage alloc] initWithData:data];
+                loadIconBlock(image);
+            } else {
+                loadIconBlock(nil);
+            }
+        });
+    } else {
+        loadIconBlock(nil);
+    }
+
+    if (time) view.labelTime.stringValue = time;
+    if (appName) view.labelProcess.stringValue = appName;
+    
+    NSString *appActionStr = @"";
+    switch (appAction.intValue) {
+        case Owl2LogAppActionStart:
+            if (hardware.intValue == Owl2LogHardwareSystemAudio) {
+                appActionStr = @"开始录制";
+            } else {
+                appActionStr = @"正在使用";
+            }
+            
+            break;
+        case Owl2LogAppActionStop:
+            if (hardware.intValue == Owl2LogHardwareSystemAudio) {
+                appActionStr = @"结束录制";
+            } else {
+                appActionStr = @"停止使用";
+            }
+            break;
+        case Owl2LogAppActionNone:
+        default:
+            break;
+    }
+    
+    NSString *hardwareStr = @"";    
+    switch (hardware.intValue) {
+        case Owl2LogHardwareVedio:
+            hardwareStr = @"摄像头";
+            break;
+        case Owl2LogHardwareAudio:
+            hardwareStr = @"麦克风";
+            break;
+        case Owl2LogHardwareSystemAudio:
+            hardwareStr = @"扬声器音频";
+            break;
+        default:
+            break;
+    }
+    
+    NSString *eventStr = [NSString stringWithFormat:@"%@%@", appActionStr, hardwareStr];
+    view.labelEvent.stringValue = NSLocalizedStringFromTableInBundle(eventStr, nil, [NSBundle bundleForClass:[self class]], nil);;
+    
+    NSString *userActionStr = @"";
+    switch (userAction.intValue) {
+        case Owl2LogUserActionAllow:
+            userActionStr = NSLocalizedStringFromTableInBundle(@"本次允许", nil, [NSBundle bundleForClass:[self class]], nil);
+            break;
+        case Owl2LogUserActionDefaultAllow: // 20s自动消失
+        case Owl2LogUserActionClose:
+        case Owl2LogUserActionContent:
+            if (appAction.intValue == Owl2LogAppActionStart) {
+                userActionStr = NSLocalizedStringFromTableInBundle(@"默认允许", nil, [NSBundle bundleForClass:[self class]], nil);
+            }
+            break;
+        case Owl2LogUserActionAlwaysAllowed:
+            userActionStr = NSLocalizedStringFromTableInBundle(@"永久允许", nil, [NSBundle bundleForClass:[self class]], nil);
+            break;
+        case Owl2LogUserActionPrevent:
+            userActionStr = NSLocalizedStringFromTableInBundle(@"阻止", nil, [NSBundle bundleForClass:[self class]], nil);
+            break;
+        case Owl2LogUserActionNone:
+        default:
+            break;
+    }
+    view.labelOperation.stringValue = userActionStr;
+    
     return view;
 }
 

@@ -45,7 +45,7 @@
 
     
     self.tipTextFiled = [[NSTextField alloc] init];
-    self.tipTextFiled.stringValue = NSLocalizedStringFromTableInBundle(@"beObscured", nil, [NSBundle bundleForClass:[self class]], @"");
+    self.tipTextFiled.stringValue = NSLocalizedString(@"状态栏可能被刘海屏遮挡，尝试显示更少的图标或关闭其余不使用的状态栏图标", nil);
     self.tipTextFiled.font = [NSFont systemFontOfSize:14.0f];
     self.tipTextFiled.bordered = NO;
     self.tipTextFiled.editable = NO;
@@ -60,7 +60,7 @@
         make.centerX.equalTo(self.view);
     }];
 
-    NSString *cancelString = NSLocalizedStringFromTableInBundle(@"Cancel_Tip", nil, [NSBundle mainBundle], @"");
+    NSString *cancelString = NSLocalizedString(@"好的", nil);
     LMBorderButton *cancelBtn = [[LMBorderButton alloc] init];
     [self.view addSubview:cancelBtn];
     cancelBtn.title = cancelString;
@@ -84,7 +84,7 @@
                                 NSFontAttributeName:[NSFont systemFontOfSize:12.0],
                                 NSForegroundColorAttributeName:[NSColor whiteColor]
                                 };
-        NSAttributedString *updateButtonStr = [[NSAttributedString alloc] initWithString:NSLocalizedStringFromTableInBundle(@"OK_Tip", nil, [NSBundle bundleForClass:[self class]], @"") attributes:dict];
+        NSAttributedString *updateButtonStr = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"偏好设置", nil) attributes:dict];
         self.prefenceBtn.attributedTitle =  updateButtonStr;
         self.prefenceBtn.wantsLayer = YES;
         self.prefenceBtn.layer.backgroundColor = [NSColor colorWithHex:0x64DFA7].CGColor;

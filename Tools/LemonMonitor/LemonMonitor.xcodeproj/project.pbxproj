@@ -25,6 +25,8 @@
 		B7A82D6E2D703A3900036DEE /* NSDate+LMCalendar.m in Sources */ = {isa = PBXBuildFile; fileRef = B7A82D6D2D703A3900036DEE /* NSDate+LMCalendar.m */; };
 		B7A82D792D7080C800036DEE /* LemonMonitorDNCServer.m in Sources */ = {isa = PBXBuildFile; fileRef = B7A82D782D7080C800036DEE /* LemonMonitorDNCServer.m */; };
 		B7A82D9B2D718F4200036DEE /* LemonMonitorDNCClient.m in Sources */ = {isa = PBXBuildFile; fileRef = B7A82D9A2D718F4200036DEE /* LemonMonitorDNCClient.m */; };
+		B7D8F53D2DB23CA500D5D00E /* LMPPOneClickGuideView.m in Sources */ = {isa = PBXBuildFile; fileRef = B7D8F53C2DB23CA500D5D00E /* LMPPOneClickGuideView.m */; };
+		B7D8F5492DB25B6600D5D00E /* LMPPOneClickGuideBgView.m in Sources */ = {isa = PBXBuildFile; fileRef = B7D8F5482DB25B6600D5D00E /* LMPPOneClickGuideBgView.m */; };
 		B88029CF196BE562007CFE8D /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B88029CE196BE562007CFE8D /* SystemConfiguration.framework */; };
 		B88029D1196BE573007CFE8D /* libpcap.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = B88029D0196BE573007CFE8D /* libpcap.dylib */; };
 		B8B6CAF8198B8EA000946160 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B8B6CAF7198B8EA000946160 /* QuartzCore.framework */; };
@@ -169,6 +171,10 @@
 		B7A82D782D7080C800036DEE /* LemonMonitorDNCServer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LemonMonitorDNCServer.m; sourceTree = "<group>"; };
 		B7A82D992D718F4200036DEE /* LemonMonitorDNCClient.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LemonMonitorDNCClient.h; sourceTree = "<group>"; };
 		B7A82D9A2D718F4200036DEE /* LemonMonitorDNCClient.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LemonMonitorDNCClient.m; sourceTree = "<group>"; };
+		B7D8F53B2DB23CA500D5D00E /* LMPPOneClickGuideView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LMPPOneClickGuideView.h; sourceTree = "<group>"; };
+		B7D8F53C2DB23CA500D5D00E /* LMPPOneClickGuideView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LMPPOneClickGuideView.m; sourceTree = "<group>"; };
+		B7D8F5472DB25B6600D5D00E /* LMPPOneClickGuideBgView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LMPPOneClickGuideBgView.h; sourceTree = "<group>"; };
+		B7D8F5482DB25B6600D5D00E /* LMPPOneClickGuideBgView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LMPPOneClickGuideBgView.m; sourceTree = "<group>"; };
 		B88029CE196BE562007CFE8D /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		B88029D0196BE573007CFE8D /* libpcap.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpcap.dylib; path = usr/lib/libpcap.dylib; sourceTree = SDKROOT; };
 		B8B6CAF7198B8EA000946160 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
@@ -347,6 +353,17 @@
 			path = DNC;
 			sourceTree = "<group>";
 		};
+		B7D8F5382DB23C4900D5D00E /* PirvacyProtect */ = {
+			isa = PBXGroup;
+			children = (
+				B7D8F53B2DB23CA500D5D00E /* LMPPOneClickGuideView.h */,
+				B7D8F53C2DB23CA500D5D00E /* LMPPOneClickGuideView.m */,
+				B7D8F5472DB25B6600D5D00E /* LMPPOneClickGuideBgView.h */,
+				B7D8F5482DB25B6600D5D00E /* LMPPOneClickGuideBgView.m */,
+			);
+			path = PirvacyProtect;
+			sourceTree = "<group>";
+		};
 		B804997919750498002C38DE /* Controller */ = {
 			isa = PBXGroup;
 			children = (
@@ -380,6 +397,7 @@
 		B846A9DB196A444400A877E0 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				B7D8F5382DB23C4900D5D00E /* PirvacyProtect */,
 				DE27949826A038BE007B4443 /* LMUpdatePopoverBackgroundView.h */,
 				DE27949A26A038BE007B4443 /* LMUpdatePopoverBackgroundView.m */,
 				DE27949926A038BE007B4443 /* LMUpdatePopoverRootView.h */,
@@ -794,6 +812,7 @@
 				B7A82D9B2D718F4200036DEE /* LemonMonitorDNCClient.m in Sources */,
 				BC89F8A922759B7200983314 /* QMStatusCircleView.m in Sources */,
 				18FD67BA2248825C00036012 /* LMMonitorTrashManager.m in Sources */,
+				B7D8F53D2DB23CA500D5D00E /* LMPPOneClickGuideView.m in Sources */,
 				797D5CCF2364774D000DC4BE /* LMHardWareDataUtil.m in Sources */,
 				DE27949D26A038BE007B4443 /* LMUpdatePopoverRootView.m in Sources */,
 				BCF3875221EEEDD90031A2FD /* LMSystemFeatureViewController.m in Sources */,
@@ -818,6 +837,7 @@
 				79A96341236A84F000DB0B1D /* TrashCheckMonitor.m in Sources */,
 				BC89F8A822759B7200983314 /* QMDragEffectView.m in Sources */,
 				B8F110511962572100D29FFC /* main.m in Sources */,
+				B7D8F5492DB25B6600D5D00E /* LMPPOneClickGuideBgView.m in Sources */,
 				F2D881CA198A644F007FA339 /* QMNetworkPlotView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

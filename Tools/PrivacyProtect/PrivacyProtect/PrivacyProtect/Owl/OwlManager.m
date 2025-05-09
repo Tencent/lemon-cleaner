@@ -225,7 +225,7 @@ typedef void (^OwlCompleteBlock)(void);
 
 - (void)resaveWhiteList{
     [[NSNotificationCenter defaultCenter] postNotificationName:OwlWhiteListChangeNotication object:nil];
-    [self resaveWhiteListToDB];
+//    [self resaveWhiteListToDB];
 }
 - (void)addAppWhiteItem:(NSDictionary*)dic{
     NSLog(@"QMPIPE_CMD_OWL_DATA addAppWhiteItem: %@", dic);
@@ -1440,7 +1440,7 @@ typedef void (^OwlCompleteBlock)(void);
         // Note: `UNNotificationActionDidAllow` 从`UNNotification` 中触发的操作
         NSString *actionId = [notification.userInfo objectForKey:@"ACTION_ID"];
         if (notification.activationType == NSUserNotificationActivationTypeContentsClicked
-            || ![actionId isEqualToString:UNNotificationActionDidBlock]) {
+            /*|| ![actionId isEqualToString:UNNotificationActionDidBlock] */) {
             if (deviceType == OwlProtectVedio) {
                 [[QMUserNotificationCenter defaultUserNotificationCenter] removeScheduledNotificationWithKey:kOwlVedioNotification flagsBlock:nil];
             } else if (deviceType == OwlProtectAudio) {
@@ -1449,7 +1449,7 @@ typedef void (^OwlCompleteBlock)(void);
                 [[QMUserNotificationCenter defaultUserNotificationCenter] removeScheduledNotificationWithKey:kOwlVedioAndAudioNotification flagsBlock:nil];
             }
         } else if (notification.activationType == NSUserNotificationActivationTypeActionButtonClicked
-                   || [actionId isEqualToString:UNNotificationActionDidBlock]) {
+                   /*|| [actionId isEqualToString:UNNotificationActionDidBlock] */) {
             NSString *executableName = [notification.userInfo objectForKey:OWL_PROC_NAME];
             FMResultSet *resultSet = [db executeQuery:[NSString stringWithFormat:@"select * from %@", OwlProBlockTable]];
             BOOL exist = NO;

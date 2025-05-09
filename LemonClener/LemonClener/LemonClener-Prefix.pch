@@ -18,4 +18,6 @@
 #import <QMCoreFunction/QMDataCenter.h>
 #import <QMCoreFunction/QMNetworkClock.h>
 
+#define LMLocalizedSelfBundleString(key, common) NSLocalizedStringFromTableInBundle(key, nil, [NSBundle bundleForClass:[self class]], common)
+
 #endif /* LemonClener_Prefix_pch */

@@ -7,6 +7,7 @@
 //
 
 #import "QMUserNotificationCenter.h"
+#import "NSUserNotification+QMExtensions.h"
 
 #define kNotificationKey @"_notification_key"
 #define kNotificationCategoryKey @"_category_key"
@@ -132,6 +133,46 @@
     }
 }
 
+- (void)removeDeliveredNotificationWithIdentifier:(NSString *)identifier {
+    if (![identifier isKindOfClass:NSString.class]) {
+        return;
+    }
+    if (@available(macOS 10.14, *)) {
+        [[UNUserNotificationCenter currentNotificationCenter] removeDeliveredNotificationsWithIdentifiers:@[identifier]];
+    } else {
+        // Fallback on earlier versions
+        NSUserNotification *targetNoti = nil;
+        for (NSUserNotification *noti in [NSUserNotificationCenter defaultUserNotificationCenter].deliveredNotifications) {
+            if ([noti.identifier isEqualToString:identifier]) {
+                targetNoti = noti;
+                break;
+            }
+        }
+        if (targetNoti) {
+            [[NSUserNotificationCenter defaultUserNotificationCenter] removeDeliveredNotification:targetNoti];
+        }
+    }
+}
+
+- (void)removeScheduledNotificationWithIdentifier:(NSString *)identifier {
+    if (![identifier isKindOfClass:NSString.class]) {
+        return;
+    }
+    if (@available(macOS 10.14, *)) {
+        [[UNUserNotificationCenter currentNotificationCenter] removePendingNotificationRequestsWithIdentifiers:@[identifier]];
+    } else {
+        // Fallback on earlier versions
+        NSUserNotification *targetNoti = nil;
+        for (NSUserNotification *noti in [NSUserNotificationCenter defaultUserNotificationCenter].scheduledNotifications) {
+            if ([noti.identifier isEqualToString:identifier]) {
+                targetNoti = noti;
+                break;
+            }
+        }
+        [[NSUserNotificationCenter defaultUserNotificationCenter] removeScheduledNotification:targetNoti];
+    }
+}
+
 - (void)addDelegate:(id<NSUserNotificationCenterDelegate>)delegate forKey:(NSString *)key
 {
     if (!delegate)
@@ -141,14 +182,6 @@
     if (!_delegateDict) _delegateDict = [[NSMutableDictionary alloc] init];
     [_delegateDict setObject:delegate forKey:key];
 }
-//- (void)removeDelegate:(NSString *)key
-//{
-//    if (!key)
-//        return;
-//    [self removeScheduledNotificationWithKey:key flagsBlock:nil];
-//    [_delegateDict removeObjectForKey:key];
-//}
-
 
 - (void)removeAllScheduledNotification
 {
@@ -275,19 +308,29 @@
      UNNotificationActionOptionDestructive  销毁模式，不进入APP
      */
  
-    // 打开应用按钮
-    UNNotificationAction *action = nil;
-    if (notification.hasActionButton) {
-        action = [UNNotificationAction actionWithIdentifier:UNNotificationActionDidBlock
-                                                      title:notification.actionButtonTitle
-                                                    options:UNNotificationActionOptionForeground];
-    } else {
-        action = [UNNotificationAction actionWithIdentifier:UNNotificationActionDidBlock
-                                                      title:notification.otherButtonTitle
-                                                    options:UNNotificationActionOptionForeground];
+    NSMutableArray *actions = [[NSMutableArray alloc] init];
+    if (notification.hasActionButton && notification.actionButtonTitle.length > 0) {
+        UNNotificationAction *action = [UNNotificationAction
+                                        actionWithIdentifier:UNNotificationActionButtonDidBlock
+                                        title:notification.actionButtonTitle
+                                        options:UNNotificationActionOptionForeground];
+        [actions addObject:action];
+    }
+    if (notification.otherButtonTitle.length > 0) {
+        UNNotificationAction *action = [UNNotificationAction
+                                        actionWithIdentifier:UNNotificationActionOtherButtonDidBlock
+                                        title:notification.otherButtonTitle
+                                        options:UNNotificationActionOptionForeground];
+        [actions addObject:action];
+    }
+    for (QMUserNotificationAction *__action in notification.qm_actions) {
+        UNNotificationAction *action = [UNNotificationAction
+                                        actionWithIdentifier:__action.actionIdentifier
+                                        title:__action.title
+                                        options:__action.options];
+        [actions addObject:action];
     }
         
-    
     // 创建分类
     /**
      Identifier:分类的标识符，通知可以添加不同类型的分类交互按钮
@@ -297,7 +340,7 @@
      */
     UNNotificationCategory *category =
         [UNNotificationCategory categoryWithIdentifier:kNotificationCategoryKey
-                                               actions:@[action]
+                                               actions:actions.copy
                                      intentIdentifiers:@[]
                                                options:UNNotificationCategoryOptionCustomDismissAction];
  

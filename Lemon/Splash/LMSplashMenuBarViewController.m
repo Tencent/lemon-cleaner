@@ -74,12 +74,12 @@
     NSTextField *cleanTabLabel = [LMViewHelper createNormalLabel:9 fontColor:[NSColor colorWithHex:0x515151]];
     [LMAppThemeHelper setTitleColorForTextField:cleanTabLabel];
     [_cleanAndRelaseView addSubview:cleanTabLabel];
-    cleanTabLabel.stringValue = NSLocalizedStringFromTableInBundle(@"LMSplashMenuBarViewController_tabbar_clean", nil, [NSBundle bundleForClass:[self class]], @"");
+    cleanTabLabel.stringValue = NSLocalizedString(@"清理释放", nil);
     
     NSTextField *systemTabLabel = [LMViewHelper createNormalLabel:9 fontColor:[NSColor colorWithHex:0x515151]];
     [LMAppThemeHelper setTitleColorForTextField:systemTabLabel];
     [_cleanAndRelaseView addSubview:systemTabLabel];
-    systemTabLabel.stringValue = NSLocalizedStringFromTableInBundle(@"LMSplashMenuBarViewController_tabbar_system", nil, [NSBundle bundleForClass:[self class]], @"");
+    systemTabLabel.stringValue = NSLocalizedString(@"系统功能", nil);
 
     [_cleanAndRelaseView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.equalTo(@262);
@@ -109,12 +109,12 @@
     NSTextField *cleanTabLabel = [LMViewHelper createNormalLabel:9 fontColor:[NSColor colorWithHex:0x515151]];
      [LMAppThemeHelper setTitleColorForTextField:cleanTabLabel];
     [_systemViewFunctionView addSubview:cleanTabLabel];
-    cleanTabLabel.stringValue = NSLocalizedStringFromTableInBundle(@"LMSplashMenuBarViewController_tabbar_clean", nil, [NSBundle bundleForClass:[self class]], @"");
+    cleanTabLabel.stringValue = NSLocalizedString(@"清理释放", nil);
     
     NSTextField *systemTabLabel = [LMViewHelper createNormalLabel:9 fontColor:[NSColor colorWithHex:0x515151]];
     [LMAppThemeHelper setTitleColorForTextField:systemTabLabel];
     [_systemViewFunctionView addSubview:systemTabLabel];
-    systemTabLabel.stringValue = NSLocalizedStringFromTableInBundle(@"LMSplashMenuBarViewController_tabbar_system", nil, [NSBundle bundleForClass:[self class]], @"");
+    systemTabLabel.stringValue = NSLocalizedString(@"系统功能", nil);
     
     [_systemViewFunctionView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.width.equalTo(@262);
@@ -138,11 +138,11 @@
     NSTextField *titleLabel = [LMViewHelper createNormalLabel:24 fontColor:[NSColor colorWithHex:0x515151] fonttype:LMFontTypeRegular];
     [LMAppThemeHelper setTitleColorForTextField:titleLabel];
     [self.view addSubview:titleLabel];
-    titleLabel.stringValue = NSLocalizedStringFromTableInBundle(@"LMSplashMenuBarViewController_menu_title", nil, [NSBundle bundleForClass:[self class]], @"");
+    titleLabel.stringValue = NSLocalizedString(@"查看网速，快捷清理", nil);
     
     NSTextField *descLabel = [LMViewHelper createNormalLabel:14 fontColor:[NSColor colorWithHex:0x7E7E7E] fonttype:LMFontTypeRegular];
     [self.view addSubview:descLabel];
-    descLabel.stringValue = NSLocalizedStringFromTableInBundle(@"LMSplashMenuBarViewController_menu_subtitle", nil, [NSBundle bundleForClass:[self class]], @"");
+    descLabel.stringValue = NSLocalizedString(@"方便查看实时状态指标，轻轻一点，快速清理垃圾释放内存", nil);
     
     [titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.equalTo(self.view);

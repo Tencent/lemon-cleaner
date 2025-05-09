@@ -110,6 +110,9 @@
 #define OWL_PROC_NAME           @"OWL_PROC_NAME"
 #define OWL_PROC_PATH           @"OWL_PROC_PATH"
 #define OWL_DEVICE_TYPE         @"OWL_DEVICE_TYPE"
+#define OWL_DEVICE_NAME         @"OWL_DEVICE_NAME"
+#define OWL_BUNDLE_ID           @"OWL_BUNDLE_ID"
+
 #define VDCAssistantPath                @"/System/Library/Frameworks/CoreMediaIO.framework/Versions/A/Resources/VDC.plugin/Contents/Resources/VDCAssistant"
 //macOS11以下系统上的路径
 #define AppleCameraAssistantPath        @"/Library/CoreMediaIO/Plug-Ins/DAL/AppleCamera.plugin/Contents/Resources/AppleCameraAssistant"

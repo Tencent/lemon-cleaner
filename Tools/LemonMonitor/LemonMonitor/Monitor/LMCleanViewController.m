@@ -317,7 +317,7 @@
     _trashCountText = trashCountText;
     
     // lable wording 2
-    NSTextField* trashTipsText = [NSTextField labelWithStringCompat:NSLocalizedStringFromTableInBundle(@"LMCleanViewController_showTrashContainerView_1553842683_1", nil, [NSBundle bundleForClass:[self class]], @"")];
+    NSTextField* trashTipsText = [NSTextField labelWithStringCompat:NSLocalizedString(@"垃圾可清理", nil)];
     trashTipsText.font = [NSFontHelper getLightSystemFont:12];
     trashTipsText.textColor = [NSColor colorWithHex:0x7E7E7E alpha:1.0];
     [containerView addSubview:trashTipsText];
@@ -327,7 +327,7 @@
     }];
     
     // button
-    NSButton* trashCleanButton = [LMViewHelper createSmallGreenButton:12 title:NSLocalizedStringFromTableInBundle(@"LMCleanViewController_showTrashContainerView_1553842683_2", nil, [NSBundle bundleForClass:[self class]], @"")];
+    NSButton* trashCleanButton = [LMViewHelper createSmallGreenButton:12 title:NSLocalizedString(@"清理", nil)];
     [trashCleanButton setTarget:self];
     [trashCleanButton setAction:@selector(clickTrashClean)];
     [containerView addSubview:trashCleanButton];
@@ -389,7 +389,7 @@
     
     // lable wording
     NSTextField *trashTipsText = [LMViewHelper createNormalLabel:20 fontColor:[LMAppThemeHelper getTitleColor]];
-    trashTipsText.stringValue = NSLocalizedStringFromTableInBundle(@"LMCleanViewController_showTrashCleaningView_trashTipsText_1", nil, [NSBundle bundleForClass:[self class]], @"");
+    trashTipsText.stringValue = NSLocalizedString(@"正在清理中...", nil);
     trashTipsText.font = [NSFontHelper getMediumSystemFont:20];
     [containerView addSubview:trashTipsText];
     [trashTipsText mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -470,7 +470,7 @@
     
     // lable wording 1
     NSTextField *trashCountText = [LMViewHelper createNormalLabel:20 fontColor:[LMAppThemeHelper getTitleColor]];
-    trashCountText.stringValue = NSLocalizedStringFromTableInBundle(@"LMCleanViewController_showTrashCleanedView_trashCountText_1", nil, [NSBundle bundleForClass:[self class]], @"");
+    trashCountText.stringValue = NSLocalizedString(@"垃圾已清理", nil);
     [containerView addSubview:trashCountText];
     [trashCountText mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(containerView).offset(94);
@@ -480,7 +480,7 @@
     
     // lable wording 2
     NSTextField* trashTipsText = [LMViewHelper createNormalLabel:12 fontColor:[NSColor colorWithHex:0x94979B]];
-    trashTipsText.stringValue = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"LMCleanViewController_showTrashCleanedView_NSString_2", nil, [NSBundle bundleForClass:[self class]], @""),[NSString stringFromDiskSize:size]];
+    trashTipsText.stringValue = [NSString stringWithFormat:NSLocalizedString(@"本次清理 %@", nil),[NSString stringFromDiskSize:size]];
     [containerView addSubview:trashTipsText];
     [trashTipsText mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(containerView).offset(94);
@@ -538,7 +538,7 @@
     
     // lable wording 1
     NSTextField *trashTipsText1 = [LMViewHelper createNormalLabel:20 fontColor:[LMAppThemeHelper getTitleColor]];
-    trashTipsText1.stringValue = NSLocalizedStringFromTableInBundle(@"LMCleanViewController_showTrashCleanessView_trashTipsText1_1", nil, [NSBundle bundleForClass:[self class]], @"");
+    trashTipsText1.stringValue = NSLocalizedString(@"你的电脑很干净", nil);
     trashTipsText1.font = [NSFontHelper getMediumSystemFont:20];
     [containerView addSubview:trashTipsText1];
     [trashTipsText1 mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -548,7 +548,7 @@
     
     // lable wording 2
     NSTextField *trashTipsText2 = [LMViewHelper createNormalLabel:12 fontColor:[NSColor colorWithHex:0x7E7E7E]];
-    trashTipsText2.stringValue = NSLocalizedStringFromTableInBundle(@"LMCleanViewController_showTrashCleanessView_trashTipsText2_2", nil, [NSBundle bundleForClass:[self class]], @"");
+    trashTipsText2.stringValue = NSLocalizedString(@"继续保持哦", nil);
     
     
     trashTipsText2.textColor = [NSColor colorWithHex:0x94979B];
@@ -608,7 +608,7 @@
     
     // lable wording 1
     NSTextField *trashTipsText1 = [LMViewHelper createNormalLabel:20 fontColor:[LMAppThemeHelper getTitleColor]];
-    trashTipsText1.stringValue = NSLocalizedStringFromTableInBundle(@"LMCleanViewController_showScaningTrashView_trashTipsText1_1", nil, [NSBundle bundleForClass:[self class]], @"");
+    trashTipsText1.stringValue = NSLocalizedString(@"正在扫描中...", nil);
     trashTipsText1.font = [NSFontHelper getMediumSystemFont:20];
     [containerView addSubview:trashTipsText1];
     [trashTipsText1 mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -618,7 +618,7 @@
     
     // lable wording 2
     NSTextField *trashTipsText2 = [LMViewHelper createNormalLabel:12 fontColor:[NSColor colorWithHex:0x7E7E7E]];
-    trashTipsText2.stringValue = NSLocalizedStringFromTableInBundle(@"LMCleanViewController_showScaningTrashView_trashTipsText2_2", nil, [NSBundle bundleForClass:[self class]], @"");
+    trashTipsText2.stringValue = NSLocalizedString(@"请等待一会", nil);
     
     
     trashTipsText2.textColor = [NSColor colorWithHex:0x94979B];
@@ -677,7 +677,7 @@
     
     // lable wording 1
     NSTextField *memTipsText = [LMViewHelper createNormalLabel:12 fontColor:[LMAppThemeHelper getTitleColor]];
-    memTipsText.stringValue = NSLocalizedStringFromTableInBundle(@"LMCleanViewController_showMemContainerView_memTipsText_1", nil, [NSBundle bundleForClass:[self class]], @"");
+    memTipsText.stringValue = NSLocalizedString(@"内存占用", nil);
     [containerView addSubview:memTipsText];
     [memTipsText mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.equalTo(containerView);
@@ -695,7 +695,7 @@
     _memCountText = memCountText;
     
     // button
-    NSTextField *memButtonText = [NSTextField labelWithStringCompat:NSLocalizedStringFromTableInBundle(@"LMCleanViewController_showMemContainerView_memButtonText _2", nil, [NSBundle bundleForClass:[self class]], @"")];
+    NSTextField *memButtonText = [NSTextField labelWithStringCompat:NSLocalizedString(@"释放", nil)];
     memButtonText.font = [NSFont systemFontOfSize:12];
     memButtonText.textColor = [NSColor colorWithHex:0x1A83F7 alpha:1.0];
     [containerView addSubview:memButtonText];
@@ -761,7 +761,7 @@
     
     // lable wording
     NSTextField *memTipsText = [LMViewHelper createNormalLabel:12 fontColor:[LMAppThemeHelper getTitleColor]];
-    memTipsText.stringValue = NSLocalizedStringFromTableInBundle(@"LMCleanViewController_showMemCleaningView_memTipsText_1", nil, [NSBundle bundleForClass:[self class]], @"");
+    memTipsText.stringValue = NSLocalizedString(@"正在释放内存", nil);
     [containerView addSubview:memTipsText];
     self->memTipsText = memTipsText;
     [memTipsText mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -870,7 +870,7 @@
     
     // lable wording
     NSTextField* memTipsText1 = [LMViewHelper createNormalLabel:12 fontColor:[LMAppThemeHelper getTitleColor]];
-    memTipsText1.stringValue = NSLocalizedStringFromTableInBundle(@"LMCleanViewController_showMemCleanedView_memTipsText1_1", nil, [NSBundle bundleForClass:[self class]], @"");
+    memTipsText1.stringValue = NSLocalizedString(@"已释放", nil);
     [containerView addSubview:memTipsText1];
     [memTipsText1 mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.equalTo(containerView);
@@ -890,7 +890,7 @@
     }];
     
     NSTextField* memTipsText2 = [LMViewHelper createNormalLabel:12 fontColor:[LMAppThemeHelper getTitleColor]];
-    memTipsText2.stringValue = NSLocalizedStringFromTableInBundle(@"LMCleanViewController_showMemCleanedView_memTipsText2_2", nil, [NSBundle bundleForClass:[self class]], @"");
+    memTipsText2.stringValue = NSLocalizedString(@"内存", nil);
     [containerView addSubview:memTipsText2];
     [memTipsText2 mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.equalTo(containerView);
@@ -1118,9 +1118,12 @@
 //        NSArray *processInfos = [[McCoreFunction shareCoreFuction] processInfo:NULL totalMemory:NULL];
         
         [[McCoreFunction shareCoreFuction] processInfo:NULL totalMemory:NULL block:^(NSArray *processInfos) {
+            NSLog(@"core get process info count: %ld, %d", processInfos.count, self.hasAppearTip);
             if (processInfos == nil && self.hasAppearTip == NO) {
                 self.hasAppearTip = YES;
                 [self repairApp];
+                // 这里先加一个return，后续看是否可以考虑把这个获取processInfo的方法干掉，但副作用就是之后会没发触发修复功能（这个方法通过守护进程在干活，原逻辑获取不到则提示修复），理论上通过下面的topMemoryArray已经可以实现这个功能了。
+                return;
             }
             NSArray *topMemoryArray = [LemonMonitroHelpParams sharedInstance].topMemoryArray;
             if (topMemoryArray && topMemoryArray.count > 0) {

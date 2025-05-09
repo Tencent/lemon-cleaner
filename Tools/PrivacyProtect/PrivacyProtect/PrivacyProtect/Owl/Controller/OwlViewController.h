@@ -13,8 +13,13 @@
 
 @property (nonatomic, strong) NSWindowController *wlWindowController;
 @property (nonatomic, strong) NSWindowController *logWindowController;
+@property (nonatomic, strong) NSWindowController *npWindowController;
 
 - (instancetype)initWithFrame:(NSRect)frame;
 
 - (void)removeNotifyDelegate;
+
+// 一键开启
+- (void)oneClick;
+
 @end

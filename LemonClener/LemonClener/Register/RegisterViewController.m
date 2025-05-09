@@ -99,7 +99,7 @@
     style.alignment = NSCenterTextAlignment;
     
     NSColor *placeholderColor = [NSColor colorWithHex:0x93979B];
-    NSAttributedString *placeholderAttrStr = [[NSMutableAttributedString alloc] initWithString:NSLocalizedStringFromTableInBundle(@"RegisterViewController_setupViews_placeholderAttrStr _1", nil, [NSBundle bundleForClass:[self class]], @"") attributes:@{NSForegroundColorAttributeName: placeholderColor , NSParagraphStyleAttributeName:style}]; //前面添加空格 为了对齐效果.
+    NSAttributedString *placeholderAttrStr = [[NSMutableAttributedString alloc] initWithString:NSLocalizedStringFromTableInBundle(@"           输入内测码，畅享极致清理", nil, [NSBundle bundleForClass:[self class]], @"") attributes:@{NSForegroundColorAttributeName: placeholderColor , NSParagraphStyleAttributeName:style}]; //前面添加空格 为了对齐效果.
     registerCodeTextField.placeholderAttributedString = placeholderAttrStr;
 
     
@@ -126,7 +126,7 @@
     NSTextField *warningLabel = [LMViewHelper createNormalLabel:12 fontColor:[NSColor colorWithHex:0xE6704C]];
     [self.view addSubview:warningLabel];
     self.warningLabel = warningLabel;
-    warningLabel.stringValue = NSLocalizedStringFromTableInBundle(@"RegisterViewController__WarningRegisterCodeError_1", nil, [NSBundle bundleForClass:[self class]], @"");
+    warningLabel.stringValue = NSLocalizedStringFromTableInBundle(@"未知错误,请检查网络状态和内测码", nil, [NSBundle bundleForClass:[self class]], @"");
     warningLabel.preferredMaxLayoutWidth = 300;
     warningLabel.alignment = NSCenterTextAlignment;
     if (@available(macOS 10.11, *)) {
@@ -208,7 +208,7 @@
     BOOL formatValidate = [self simpleVerifyRegisterCodeFormat:registerCode];
     if (!formatValidate) {
         [_warningLabel setHidden:NO];
-        _warningLabel.stringValue = NSLocalizedStringFromTableInBundle(@"RegisterViewController__WarningRegisterCodeFormatInValidate _2", nil, [NSBundle bundleForClass:[self class]], @"");
+        _warningLabel.stringValue = NSLocalizedStringFromTableInBundle(@"内测码格式错误，请检查后重新输入", nil, [NSBundle bundleForClass:[self class]], @"");
         return;
     }
 }

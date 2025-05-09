@@ -42,10 +42,10 @@
     //    CGFloat i =  _windowAbout.contentView.frame.size.height;
     //    CGFloat j =  _windowAbout.contentView.frame.size.width;
     
-    windowAbout.title = NSLocalizedString(@"About_windowAboutTitle_lemon", @"");
+    windowAbout.title = NSLocalizedString(@"关于腾讯柠檬清理", @"");
     
     //    [LMAppThemeHelper setTitleColorForTextField:windowAbout];
-    NSTextField* LemonProductName = [NSTextField labelWithStringCompat:NSLocalizedStringFromTableInBundle(@"LMMonitorTabController_rightAboutAction_LemonProductName_1", nil, [NSBundle bundleForClass:[self class]], @"")];
+    NSTextField* LemonProductName = [NSTextField labelWithStringCompat:NSLocalizedString(@"腾讯柠檬清理", nil)];
     
     NSImageView* LemonIcon = [[NSImageView alloc] initWithFrame:CGRectMake(0, 0, 10, 10)];
     [LemonIcon setImage:[[NSBundle mainBundle] imageForResource:@"new_app_icon"]];
@@ -84,7 +84,7 @@
     [serviceAgreeButton setTarget:self];
     [serviceAgreeButton setAction:@selector(serviceAgreeBtn)];
     NSMutableAttributedString *serviceAgreeAttrStr = [[NSMutableAttributedString alloc]
-                                                      initWithString:NSLocalizedStringFromTableInBundle(@"Services Agreement", nil, [NSBundle bundleForClass:[self class]], @"")
+                                                      initWithString:NSLocalizedString(@"服务协议", nil)
                                                       attributes:@{NSForegroundColorAttributeName : [NSColor colorWithHex:0x989A9E alpha:1.0]}];
     [serviceAgreeButton setAttributedTitle:serviceAgreeAttrStr];
     serviceAgreeButton.font = [NSFont systemFontOfSize:12.0f];
@@ -124,7 +124,7 @@
     [websiteButton setTarget:self];
     [websiteButton setAction:@selector(websiteBtn)];
     NSMutableAttributedString *websiteAttrStr = [[NSMutableAttributedString alloc]
-                                                 initWithString:NSLocalizedStringFromTableInBundle(@"Website", nil, [NSBundle bundleForClass:[self class]], @"")
+                                                 initWithString:NSLocalizedString(@"官网网站", nil)
                                                  attributes:@{NSForegroundColorAttributeName : [NSColor colorWithHex:0x989A9E alpha:1.0]}];
     [websiteButton setAttributedTitle:websiteAttrStr];
     websiteButton.font = [NSFont systemFontOfSize:12.0f];
@@ -141,7 +141,7 @@
     [privacyPolicyButton setTarget:self];
     [privacyPolicyButton setAction:@selector(privacyPolicyBtn)];
     NSMutableAttributedString *privacyAttrStr = [[NSMutableAttributedString alloc]
-                                                 initWithString:NSLocalizedStringFromTableInBundle(@"Privacy Policy", nil, [NSBundle bundleForClass:[self class]], @"")
+                                                 initWithString:NSLocalizedString(@"隐私政策", nil)
                                                  attributes:@{NSForegroundColorAttributeName : [NSColor colorWithHex:0x989A9E alpha:1.0]}];
     [privacyPolicyButton setAttributedTitle:privacyAttrStr];
     privacyPolicyButton.font = [NSFont systemFontOfSize:12.0f];

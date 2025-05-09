@@ -39,18 +39,18 @@
     NSTextField *titleLabel = [LMViewHelper createNormalLabel:24 fontColor:[NSColor colorWithHex:0x515151] fonttype:LMFontTypeRegular];
     [LMAppThemeHelper setTitleColorForTextField:titleLabel];
     [self.view addSubview:titleLabel];
-    titleLabel.stringValue = NSLocalizedStringFromTableInBundle(@"LMSplashMainAppViewController_system_title", nil, [NSBundle bundleForClass:[self class]], @"");
+    titleLabel.stringValue = NSLocalizedString(@"多维扫描，深度清理", nil);
 
     
     NSTextField *descLabel = [LMViewHelper createNormalLabel:14 fontColor:[NSColor colorWithHex:0x7E7E7E] fonttype:LMFontTypeRegular];
     [self.view addSubview:descLabel];
-    descLabel.stringValue = NSLocalizedStringFromTableInBundle(@"LMSplashMainAppViewController_system_subtitle", nil, [NSBundle bundleForClass:[self class]], @"");
+    descLabel.stringValue = NSLocalizedString(@"全方位深度分析系统，揪出占用磁盘元凶，彻底卸载软件", nil);
     
     NSButton *button = [[LMRectangleButton alloc] init];
     [self.view addSubview:button];
     button.target = self;
     button.action = @selector(onClickButton);
-    button.title = NSLocalizedStringFromTableInBundle(@"LMSplashMainAppViewController_system_register_button", nil, [NSBundle bundleForClass:[self class]], @"");
+    button.title = NSLocalizedString(@"立即体验", nil);
     button.font = [NSFont systemFontOfSize:18];
     
     [pageImage mas_makeConstraints:^(MASConstraintMaker *make) {

@@ -7,6 +7,7 @@
 
 #import <PrivacyProtect/PrivacyProtect.h>
 #import "Owl2Manager.h"
+#import "OwlConstant.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -18,9 +19,23 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)setWatchVedioToDB:(BOOL)state;
 - (void)setWatchAudioToDB:(BOOL)state;
 - (void)addAppWhiteItemToDB:(NSDictionary*)dic;
-- (void)resaveWhiteListToDB;
 - (void)removeAppWhiteItemToDB:(NSDictionary*)dic;
-- (void)addLogItem:(NSString*)log appName:(NSString*)appName;
+- (void)addLogItem:(NSString*)log appName:(NSString*)appName; // 废弃
+- (void)addLogItemWithUuid:(NSString *)uuid
+                   appName:(NSString *)appName
+                   appPath:(NSString *)appPath
+                 appAction:(Owl2LogAppAction)appAction
+                userAction:(Owl2LogUserAction)userAction
+                  hardware:(Owl2LogHardware)hardware;
+- (void)updateLogItemWithUuid:(NSString *)uuid
+                      appName:(NSString *)appName
+                      appPath:(NSString *)appPath
+                    appAction:(Owl2LogAppAction)appAction
+                   userAction:(Owl2LogUserAction)userAction
+                     hardware:(Owl2LogHardware)hardware;
+
+// 获取白名单
+- (NSArray *)getWhiteList;
 
 @end
 

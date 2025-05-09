@@ -16,21 +16,21 @@
 
 #import "QMDataConst.h"
 #import "LemonDaemonConst.h"
-#import <PrivacyProtect/OwlManager.h>
+#import <PrivacyProtect/PrivacyProtect.h>
 #import "McStatInfoConst.h"
 
 #import <LemonStat/McDiskInfo.h>
-#import <PrivacyProtect/OwlManager.h>
-#import <PrivacyProtect/OwlWindowController.h>
+#import <PrivacyProtect/PrivacyProtect.h>
 #import <LemonHardware/LemonHardwareWindowController.h>
 #import <QMCoreFunction/LanguageHelper.h>
 #import <QMCoreFunction/NSBundle+LMLanguage.h>
 #import <QMCoreFunction/McStatMonitor.h>
+#import <QMCoreFunction/LMReferenceDefines.h>
 #import <LemonStat/McDiskInfo.h>
 #import <QMUICommon/LMAppThemeHelper.h>
 #import "LMHardWareDataUtil.h"
 #import <PrivacyProtect/Owl2Manager.h>
-
+#import "LMPPOneClickGuideView.h"
 
 static const NSUInteger kMaxCount = 5;
 static NSString * const kImageKey = @"image";
@@ -67,6 +67,7 @@ static NSString * const kPidKey = @"pid";
 @property (nonatomic, weak) LemonHardwareWindowController *hardwareController;
 @property (nonatomic, weak) NSTextField *diskSizeLabel;
 @property (nonatomic, strong) NSString *mainDiskName;
+@property (nonatomic, strong) LMPPOneClickGuideView *guideView;
 
 @end
 
@@ -108,12 +109,21 @@ static NSString * const kPidKey = @"pid";
     [super viewWillAppear];
     [self updateVedioState];
     [self updateAudioState];
+    [self updateOneClickGuideView];
 }
 
 - (void)viewWillLayout{
     [super viewWillLayout];
     [LMAppThemeHelper setDivideLineColorFor:_divideView];
     
+}
+
+- (void)updateOneClickGuideView {
+    if ([Owl2Manager sharedManager].showOneClickGuideView) {
+        // 引导开启隐私保护浮条曝光
+    } else {
+        self.guideView.hidden = YES;
+    }
 }
 
 -(void)updateVedioState
@@ -133,16 +143,16 @@ static NSString * const kPidKey = @"pid";
     
     if ( isWatchVedio)
     {
-        _privacyCameraLabel.stringValue = NSLocalizedStringFromTableInBundle(@"LMSystemFeatureViewController_updateVedioState__privacyCameraLabel_1", nil, [NSBundle bundleForClass:[self class]], @"");
+        _privacyCameraLabel.stringValue = NSLocalizedString(@"监控中", nil);
         _privacyCameraLabel.textColor = [NSColor colorWithHex:0x1A83F7];
     }
     else
     {
-        _privacyCameraLabel.stringValue = NSLocalizedStringFromTableInBundle(@"LMSystemFeatureViewController_updateVedioState__privacyCameraLabel_2", nil, [NSBundle bundleForClass:[self class]], @"");
-        _privacyCameraLabel.textColor = [NSColor colorWithHex:0x94979b];
+        _privacyCameraLabel.stringValue = NSLocalizedString(@"去开启", nil);
+        _privacyCameraLabel.textColor = [NSColor colorWithHex:0x1A83F7];
     }
     if ([self isMacOS11_3]) {
-        _privacyCameraLabel.stringValue = NSLocalizedStringFromTableInBundle(@"LMSystemFeatureViewController_updateVedioState__privacyCameraLabel_not_work", nil, [NSBundle bundleForClass:[self class]], @"");
+        _privacyCameraLabel.stringValue = NSLocalizedString(@"暂不支持11.3系统", nil);
         _privacyCameraLabel.textColor = [NSColor colorWithHex:0x94979b];
         [_imageCamera setImage:[myBundle imageForResource:@"lemon_camera_normal"]];
     }
@@ -165,16 +175,16 @@ static NSString * const kPidKey = @"pid";
     
     if (isWatchAudio)
     {
-        _privacyMicrophoneLabel.stringValue = NSLocalizedStringFromTableInBundle(@"LMSystemFeatureViewController_updateAudioState__privacyMicrophoneLabel_1", nil, [NSBundle bundleForClass:[self class]], @"");
+        _privacyMicrophoneLabel.stringValue = NSLocalizedString(@"监控中", nil);
         _privacyMicrophoneLabel.textColor = [NSColor colorWithHex:0x1A83F7];
     }
     else
     {
-        _privacyMicrophoneLabel.stringValue = NSLocalizedStringFromTableInBundle(@"LMSystemFeatureViewController_updateAudioState__privacyMicrophoneLabel_2", nil, [NSBundle bundleForClass:[self class]], @"");
-        _privacyMicrophoneLabel.textColor = [NSColor colorWithHex:0x94979b];
+        _privacyMicrophoneLabel.stringValue = NSLocalizedString(@"去开启", nil);
+        _privacyMicrophoneLabel.textColor = [NSColor colorWithHex:0x1A83F7];
     }
     if ([self isMacOS11_3]) {
-        _privacyMicrophoneLabel.stringValue = NSLocalizedStringFromTableInBundle(@"LMSystemFeatureViewController_updateAudioState__privacyMicrophoneLabel__not_work", nil, [NSBundle bundleForClass:[self class]], @"");
+        _privacyMicrophoneLabel.stringValue = NSLocalizedString(@"正在研究，请等更新", nil);
         _privacyMicrophoneLabel.textColor = [NSColor colorWithHex:0x94979b];
         [_imageMicrophone setImage:[myBundle imageForResource:@"lemon_microphone_gray"]];
     }
@@ -298,7 +308,7 @@ static NSString * const kPidKey = @"pid";
     [diskContainerView addSubview:diskSizeLabel];
     self.diskSizeLabel = diskSizeLabel;
     
-    NSButton *diskButton = [LMViewHelper createNormalTextButton:12 title:NSLocalizedStringFromTableInBundle(@"LemonHardwareViewController_initView_diskButton_1", nil, [NSBundle bundleForClass:[self class]], @"") textColor:[NSColor colorWithHex:0x1A83F7]];
+    NSButton *diskButton = [LMViewHelper createNormalTextButton:12 title:NSLocalizedString(@"硬件详情", nil) textColor:[NSColor colorWithHex:0x1A83F7]];
     diskButton.target = self;
     diskButton.action = @selector(clickDiskCheckButton);
     [diskContainerView addSubview:diskButton];
@@ -470,7 +480,7 @@ static NSString * const kPidKey = @"pid";
 
     NSTextField *cameraLabel = [LMViewHelper createNormalLabel:12 fontColor:[LMAppThemeHelper getTitleColor]];
     [owlContainerView addSubview:cameraLabel];
-    cameraLabel.stringValue = NSLocalizedStringFromTableInBundle(@"LMSystemFeatureViewController_setupOwlViews_cameraLabel_1", nil, [NSBundle bundleForClass:[self class]], @"");
+    cameraLabel.stringValue = NSLocalizedString(@"摄像头隐私保护", nil);
     
     NSTextField *cameraStateLabel = [LMViewHelper createNormalLabel:12 fontColor:[NSColor colorWithHex:0x94979b]];
     _privacyCameraLabel = cameraStateLabel;
@@ -485,15 +495,35 @@ static NSString * const kPidKey = @"pid";
     
     NSTextField *microphoneLabel = [LMViewHelper createNormalLabel:12 fontColor:[LMAppThemeHelper getTitleColor]];
     [owlContainerView addSubview:microphoneLabel];
-    microphoneLabel.stringValue = NSLocalizedStringFromTableInBundle(@"LMSystemFeatureViewController_setupOwlViews_microphoneLabel_2", nil, [NSBundle bundleForClass:[self class]], @"");
+    microphoneLabel.stringValue = NSLocalizedString(@"系统音频隐私保护", nil);
     
     NSTextField *microhoneStateLabel = [LMViewHelper createNormalLabel:12 fontColor:[NSColor colorWithHex:0x94979b]];
     _privacyMicrophoneLabel = microhoneStateLabel;
 
     [owlContainerView addSubview:microhoneStateLabel];
     
-
-    
+    // '一键开启'引导
+    if ([Owl2Manager sharedManager].showOneClickGuideView) {
+        LMPPOneClickGuideView *guideView = [LMPPOneClickGuideView new];
+        self.guideView = guideView;
+        @weakify(self);
+        guideView.oneClickBlock = ^{
+            @strongify(self);
+            [self clickOwlView]; // 展示隐私保护主页
+            [self.owlController oneClick]; // 再一键开启
+        };
+        [self.view addSubview:guideView];
+        [guideView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.bottom.mas_equalTo(owlContainerView.mas_top).offset(-12);
+            make.left.mas_equalTo(10);
+            make.right.mas_equalTo(-10);
+            if ([LanguageHelper getCurrentSystemLanguageType] == SystemLanguageTypeEnglish) {
+                make.height.mas_equalTo(44);
+            } else {
+                make.height.mas_equalTo(32);
+            }
+        }];
+    }
     
     [owlContainerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.height.equalTo(@71);
@@ -716,7 +746,7 @@ static NSString * const kPidKey = @"pid";
     _cpuTemperatureText = cpuTemperatureText;
     
     NSTextField* cpuText = [LMViewHelper createNormalLabel:13 fontColor:[NSColor colorWithHex:0x94979B] fonttype:LMFontTypeLight];
-    cpuText.stringValue = NSLocalizedStringFromTableInBundle(@"LMSystemFeatureViewController_setupMiscView_cpuText_1", nil, [NSBundle bundleForClass:[self class]], @"");
+    cpuText.stringValue = NSLocalizedString(@"CPU温度", nil);
     [colCpuContainerView addSubview:cpuText];
     [cpuText mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(cpuTemperatureText.mas_bottom).offset(8);
@@ -745,7 +775,7 @@ static NSString * const kPidKey = @"pid";
     _fanSpeedText = fanSpeedText;
     
     NSTextField* fanText = [LMViewHelper createNormalLabel:13 fontColor:[NSColor colorWithHex:0x94979B] fonttype:LMFontTypeLight];
-    fanText.stringValue = NSLocalizedStringFromTableInBundle(@"LMSystemFeatureViewController_setupMiscView_fanText_2", nil, [NSBundle bundleForClass:[self class]], @"");
+    fanText.stringValue = NSLocalizedString(@"风扇转速", nil);
     [colFanContainerView addSubview:fanText];
     [fanText mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(fanSpeedText.mas_bottom).offset(8);
@@ -766,7 +796,7 @@ static NSString * const kPidKey = @"pid";
     NSTextField *diskInfoLabel = [LMViewHelper createNormalLabel:13 fontColor:[NSColor colorWithHex:0x94979B]];
     [hardDiskContainerView addSubview:diskInfoLabel];
     diskInfoLabel.font = [NSFontHelper getLightSystemFont:12];
-    diskInfoLabel.stringValue = NSLocalizedStringFromTableInBundle(@"LMSystemFeatureViewController_setupMiscView_diskInfoLabel_3", nil, [NSBundle bundleForClass:[self class]], @"");
+    diskInfoLabel.stringValue = NSLocalizedString(@"磁盘占用", nil);
     
     [hardDiskContainerView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.height.equalTo(containerView);
@@ -934,15 +964,15 @@ static NSString * const kPidKey = @"pid";
         }
         
         if (totalBytes > 0) {
-            NSString *diskSize = [NSString stringWithFormat:@"%@ %@ / %@ %@", NSLocalizedStringFromTableInBundle(@"LMSystemFeatureViewController_initNetworkData_diskSize_1", nil, [NSBundle bundleForClass:[self class]], @""), [NSString stringFromDiskSize:leftBytes], NSLocalizedStringFromTableInBundle(@"LMSystemFeatureViewController_initNetworkData_diskSize_2", nil, [NSBundle bundleForClass:[self class]], @""), [NSString stringFromDiskSize:totalBytes]];
+            NSString *diskSize = [NSString stringWithFormat:@"%@ %@ / %@ %@", NSLocalizedString(@"可用", nil), [NSString stringFromDiskSize:leftBytes], NSLocalizedString(@"共", nil), [NSString stringFromDiskSize:totalBytes]];
             //从前往后拿单位range
             NSString *firstUnit = [NSString unitStringFromSize:leftBytes diskMode:YES];
             NSRange firstRange = [diskSize rangeOfString:firstUnit];
             NSString *secondUnit = [NSString unitStringFromSize:totalBytes diskMode:YES];
             NSRange secondRange = [diskSize rangeOfString:secondUnit options:NSBackwardsSearch];
             NSRange thirdRange = [diskSize rangeOfString:@"/"];
-            NSRange fourthRange = [diskSize rangeOfString:NSLocalizedStringFromTableInBundle(@"LMSystemFeatureViewController_initNetworkData_diskSize_1", nil, [NSBundle bundleForClass:[self class]], @"")];
-            NSRange fifthRange = [diskSize rangeOfString:NSLocalizedStringFromTableInBundle(@"LMSystemFeatureViewController_initNetworkData_diskSize_2", nil, [NSBundle bundleForClass:[self class]], @"")];
+            NSRange fourthRange = [diskSize rangeOfString:NSLocalizedString(@"可用", nil)];
+            NSRange fifthRange = [diskSize rangeOfString:NSLocalizedString(@"共", nil)];
             NSMutableAttributedString *attrString = [[NSMutableAttributedString alloc] initWithString:diskSize];
             [attrString addAttribute:NSForegroundColorAttributeName value:[NSColor colorWithHex:0x93979B] range:firstRange];
             [attrString addAttribute:NSForegroundColorAttributeName value:[NSColor colorWithHex:0x93979B] range:secondRange];

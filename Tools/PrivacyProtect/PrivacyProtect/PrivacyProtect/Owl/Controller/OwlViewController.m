@@ -19,6 +19,9 @@
 #import <Masonry/Masonry.h>
 #import <QMUICommon/LMAppThemeHelper.h>
 #import "LemonDaemonConst.h"
+#import "OwlNotificationPermissionViewController.h"
+#import <QMCoreFunction/LMReferenceDefines.h>
+#import <QMUICommon/LMTitleButton.h>
 
 @interface OwlBorderView : NSView
 
@@ -107,6 +110,10 @@
     return self;
 }
 
+- (void)viewWillAppear {
+    [super viewWillAppear];
+}
+
 - (void)viewWillLayout{
     [super viewWillLayout];
     [LMAppThemeHelper setLayerBackgroundWithMainBgColorFor:self.ccView];
@@ -129,6 +136,13 @@
     [[QMUserNotificationCenter defaultUserNotificationCenter] removeScheduledNotificationWithKey:@"OwlVideoCheckOnceNotification" flagsBlock:nil];
     [[QMUserNotificationCenter defaultUserNotificationCenter] removeScheduledNotificationWithKey:@"OwlAudioCheckOnceNotification" flagsBlock:nil];
 }
+
+// 一键开启
+- (void)oneClick {
+    self.audioSwitch.on = YES;
+    self.vedioSwitch.on = YES;
+}
+
 - (void)whiteListChange:(NSNotification*)no{
     _wlistBtn.title = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"OwlViewController_whiteListChange_NSString_1", nil, [NSBundle bundleForClass:[self class]], @""), (unsigned long)[Owl2Manager sharedManager].wlArray.count];
 }
@@ -173,7 +187,7 @@
     [self.loadingView removeFromSuperview];
     [self.view addSubview:self.ccView];
     
-    NSTextField *labelTitle = [self buildLabel:NSLocalizedStringFromTableInBundle(@"OwlViewController_setFinishUI_labelTitle _1", nil, [NSBundle bundleForClass:[self class]], @"") font:[NSFont systemFontOfSize:32]color:[LMAppThemeHelper getTitleColor]];
+    NSTextField *labelTitle = [self buildLabel:NSLocalizedStringFromTableInBundle(@"设备隐私保护", nil, [NSBundle bundleForClass:[self class]], nil) font:[NSFont systemFontOfSize:32]color:[LMAppThemeHelper getTitleColor]];
     labelTitle.backgroundColor = [NSColor clearColor];
     [self.ccView addSubview:labelTitle];
     //    NSTextField *labelSpec = [self buildLabel:@"保护你的摄像头和麦克风安全" font:[NSFont systemFontOfSize:12]color:[NSColor darkGrayColor]];
@@ -233,8 +247,12 @@
                                                                      userInfo:@{@"state":[NSNumber numberWithBool:button.on]}
                                                            deliverImmediately:YES];
         [[NSUserDefaults standardUserDefaults] setBool:button.on forKey:K_IS_WATCHING_VEDIO];
+        if (button.on) {
+            [weakSelf showNotificationPermissionViewWithCompletionHandler:^(BOOL isAuthorized) {
+            }];
+        }
     }];
-    vedioSwitch.on = [[Owl2Manager sharedManager] isWatchVideo];
+    [vedioSwitch updateSwitchState:[[Owl2Manager sharedManager] isWatchVideo]];
     if (vedioSwitch.on) {
         vedioImageView.image = [bundle imageForResource:@"owl_vedio_nomal"];
     } else {
@@ -244,6 +262,7 @@
     COSwitch *audioSwitch = [[COSwitch alloc] init];
     self.audioSwitch = audioSwitch;
     [audioSwitch setOnValueChanged:^(COSwitch *button) {
+        if (!button) return;
         [[Owl2Manager sharedManager] setWatchAudio:button.on toDb:YES];
         if (button.on) {
             audioImageView.image = [bundle imageForResource:@"owl_audio_nomal"];
@@ -256,8 +275,13 @@
                                                                      userInfo:@{@"state":[NSNumber numberWithBool:button.on]}
                                                            deliverImmediately:YES];
         [[NSUserDefaults standardUserDefaults] setBool:button.on forKey:K_IS_WATCHING_AUDIO];
+        if (button.on) {
+            // 开启前判断通知权限
+            [weakSelf showNotificationPermissionViewWithCompletionHandler:^(BOOL isAuthorized) {
+            }];
+        }
     }];
-    audioSwitch.on = [[Owl2Manager sharedManager] isWatchAudio];
+    [audioSwitch updateSwitchState:[[Owl2Manager sharedManager] isWatchAudio]];
     if (audioSwitch.on) {
         audioImageView.image = [bundle imageForResource:@"owl_audio_nomal"];
     } else {
@@ -295,6 +319,39 @@
     _wlistBtn.bordered = NO;
     _wlistBtn.font = [NSFont systemFontOfSize:12];
     [self.bottomBgView addSubview:_wlistBtn];
+    
+    @weakify(self);
+    [self getNotificationPermissionGrantedWithCompletionHandler:^(BOOL isAuthorized) {
+        @strongify(self);
+        if (isAuthorized) {
+            return;
+        }
+        NSTextField *notificationTipLabel = [self buildLabel:NSLocalizedStringFromTableInBundle(@"请开启通知权限以接收隐私保护提示", nil, [NSBundle bundleForClass:[self class]], @"") font:[NSFontHelper getLightSystemFont:12]color:[LMAppThemeHelper getTitleColor]];
+        notificationTipLabel.backgroundColor = [NSColor clearColor];
+        
+        LMTitleButton *detailBtn = [[LMTitleButton alloc] initWithFrame:NSMakeRect(0, 0, 58, 20)];
+        [detailBtn setBezelStyle:NSBezelStylePush];
+        detailBtn.bordered = NO;
+                
+        NSDictionary *attributes = @{
+            NSFontAttributeName: [NSFont systemFontOfSize:12 weight:NSFontWeightRegular],
+            NSForegroundColorAttributeName: [LMAppThemeHelper getColor:LMColor_Blue_Normal]
+        };
+        NSAttributedString *attributedTitle = [[NSAttributedString alloc] initWithString:NSLocalizedStringFromTableInBundle(@"查看详情", nil, [NSBundle bundleForClass:[self class]], nil) attributes:attributes];
+        [detailBtn setAttributedTitle:attributedTitle];
+        [detailBtn setTarget:self];
+        [detailBtn setAction:@selector(detailBtnClicked:)];
+        
+        NSStackView *stackView = [NSStackView stackViewWithViews:@[notificationTipLabel, detailBtn]];
+        stackView.orientation = NSUserInterfaceLayoutOrientationHorizontal;
+        stackView.spacing = 0;
+        [self.ccView addSubview:stackView];
+        
+        [stackView mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.centerX.mas_equalTo(0);
+            make.bottom.mas_equalTo(self.bottomBgView.mas_top).offset(-24);
+        }];
+    }];
     
     int space = 10;
     int width = 268;
@@ -355,15 +412,15 @@
         make.top.equalTo(audioLabelTitle.mas_bottom).offset(space/2);
         make.left.right.equalTo(audioView);
     }];
-    [vedioSwitch mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(vedioLabelSpec.mas_bottom).offset(27);
-        make.centerX.equalTo(vedioView);
-        make.width.equalTo(@(60));
-        make.height.equalTo(@(28));
-    }];
     [audioSwitch mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(audioLabelSpec.mas_bottom).offset(27);
         make.centerX.equalTo(audioView);
+        make.width.equalTo(@(60));
+        make.height.equalTo(@(28));
+    }];
+    [vedioSwitch mas_makeConstraints:^(MASConstraintMaker *make) {      // 和audio的对齐，audio英文模式有两行
+        make.top.equalTo(audioSwitch);
+        make.centerX.equalTo(vedioView);
         make.width.equalTo(@(60));
         make.height.equalTo(@(28));
     }];
@@ -428,6 +485,56 @@
         });
     }
 }
+
+#pragma mark - 启通知提醒权限
+
+- (void)getNotificationPermissionGrantedWithCompletionHandler:(void(^)(BOOL isAuthorized))handler {
+    if (@available(macOS 10.14, *)) {
+        // 使用 UserNotifications 框架（macOS 10.14 及以上）
+        UNUserNotificationCenter *center = [UNUserNotificationCenter currentNotificationCenter];
+        [center getNotificationSettingsWithCompletionHandler:^(UNNotificationSettings *settings) {
+            BOOL result = settings.authorizationStatus == UNAuthorizationStatusAuthorized;
+            if ([[NSThread currentThread] isMainThread]) {
+                if (handler) handler(result);
+            } else {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (handler) handler(result);
+                });
+            }
+        }];
+    } else {
+        // 10.14以下系统未提供api来判断。默认认为关闭，与产品已确认
+        if (handler) handler(NO);
+    }
+}
+
+- (void)showNotificationPermissionViewWithCompletionHandler:(void(^)(BOOL isAuthorized))handler {
+    @weakify(self);
+    [self getNotificationPermissionGrantedWithCompletionHandler:^(BOOL isAuthorized) {
+        @strongify(self);
+        if (isAuthorized) {
+            if (handler) handler(isAuthorized);
+        } else {
+            [self showNotificationPermissionView];
+            if (handler) handler(NO);
+        }
+    }];
+}
+
+- (void)showNotificationPermissionView {
+    if (!_npWindowController) {
+        NSRect prect = self.view.window.frame;
+        NSRect srect = NSMakeRect(prect.origin.x + (prect.size.width - kOwlNPWindowWidth) / 2, prect.origin.y + (prect.size.height - kOwlNPWindowHeight) / 2, kOwlNPWindowWidth, kOwlNPWindowHeight);
+        OwlNotificationPermissionViewController *vc = [[OwlNotificationPermissionViewController alloc] initWithFrame:srect];
+        self.npWindowController = [[OwlWindowController alloc] initViewController:vc];
+        [self.view.window addChildWindow:self.npWindowController.window ordered:NSWindowAbove];
+        [self.npWindowController showWindow:nil];
+        [self.npWindowController.window setFrame:srect display:NO];
+    } else {
+        [self.npWindowController showWindow:nil];
+    }
+}
+
 #pragma mark NSUserNotificationCenterDelegate
 
 - (void)userNotificationCenter:(NSUserNotificationCenter *)center didDeliverNotification:(NSUserNotification *)notification
@@ -446,6 +553,9 @@
 {
     return YES;
 }
+
+#pragma mark - action
+
 - (void)clickLogBtn:(id)sender{
     if (!self.logWindowController) {
         NSRect prect = self.view.window.frame;
@@ -461,8 +571,9 @@
 }
 - (void)clickWlistBtn:(id)sender{
     if (!self.wlWindowController) {
+        CGFloat widht = 647;
         NSRect prect = self.view.window.frame;
-        NSRect srect = NSMakeRect(prect.origin.x + (prect.size.width - OwlWindowWidth) / 2, prect.origin.y + (prect.size.height - OwlWindowHeight) / 2, OwlWindowWidth, OwlWindowHeight);
+        NSRect srect = NSMakeRect(prect.origin.x + (prect.size.width - widht) / 2, prect.origin.y + (prect.size.height - OwlWindowHeight) / 2, widht, OwlWindowHeight);
         NSViewController *viewController = [[OwlWhiteListViewController alloc] initWithFrame:srect];
         self.wlWindowController = [[OwlWindowController alloc] initViewController:viewController];
         [self.view.window addChildWindow:self.wlWindowController.window ordered:NSWindowAbove];
@@ -471,6 +582,10 @@
     } else {
         [self.wlWindowController showWindow:nil];
     }
+}
+
+- (void)detailBtnClicked:(id)sender {
+    [self showNotificationPermissionView];
 }
 
 @end

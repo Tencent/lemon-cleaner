@@ -11,6 +11,7 @@
 #import "OwlConstant.h"
 #import "OwlWhiteListViewController.h"
 #import "OwlLogViewController.h"
+#import "OwlNotificationPermissionViewController.h"
 #import "OwlSelectViewController.h"
 #import <Masonry/Masonry.h>
 
@@ -108,9 +109,21 @@
     if ([vc isKindOfClass:[OwlLogViewController class]]) {
         ((OwlViewController*)vc.view.window.parentWindow.contentViewController).logWindowController = nil;
     }
+    if ([vc isKindOfClass:[OwlNotificationPermissionViewController class]]) {
+        ((OwlViewController*)vc.view.window.parentWindow.contentViewController).npWindowController = nil;
+    }
+    
 }
 - (void)windowClose:(NSNotification*)notification{
     NSLog(@"windowClose: %@", notification);
+}
+
+// 一键开启
+- (void)oneClick {
+    NSViewController *vc = self.window.contentViewController;
+    if ([vc isKindOfClass:[OwlViewController class]]) {
+        [((OwlViewController*)vc) oneClick];
+    }
 }
 
 @end

@@ -21,5 +21,7 @@
 //name
 @property(nonatomic, retain)NSString* name;
 
+@property(nonatomic, copy) NSString *processBundleID;
+
 @end
 

@@ -26,7 +26,7 @@
 
 #import <QMCoreFunction/LanguageHelper.h>
 #import <QMCoreFunction/NSBundle+LMLanguage.h>
-#import <PrivacyProtect/OwlWindowController.h>
+#import <PrivacyProtect/PrivacyProtect.h>
 #import <LemonHardware/LemonHardwareWindowController.h>
 #import <LemonHardware/MachineModel.h>
 #import <LemonUninstaller/AppTrashDel.h>
@@ -260,12 +260,12 @@ enum
 - (void)alert
 {
     NSAlert *alert = [NSAlert new];
-    [alert setMessageText:NSLocalizedStringFromTableInBundle(@"beObscured", nil, [NSBundle bundleForClass:[self class]], @"")];
+    [alert setMessageText:NSLocalizedString(@"状态栏可能被刘海屏遮挡，尝试显示更少的图标或关闭其余不使用的状态栏图标", nil)];
     if (statusView.statusNum <= 1) {
-        [alert addButtonWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel_Tip", nil, [NSBundle mainBundle], @"")];
+        [alert addButtonWithTitle:NSLocalizedString(@"好的", nil)];
     } else {
-        [alert addButtonWithTitle:NSLocalizedStringFromTableInBundle(@"OK_Tip", nil, [NSBundle bundleForClass:[self class]], @"")];
-        [alert addButtonWithTitle:NSLocalizedStringFromTableInBundle(@"Cancel_Tip", nil, [NSBundle mainBundle], @"")];
+        [alert addButtonWithTitle:NSLocalizedString(@"偏好设置", nil)];
+        [alert addButtonWithTitle:NSLocalizedString(@"好的", nil)];
     }
     
     NSModalResponse result = [alert runModal];

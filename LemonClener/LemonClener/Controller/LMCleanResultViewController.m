@@ -160,10 +160,10 @@
 }
 
 -(void)initViewText{
-//    theDayTitleLabel.stringValue = NSLocalizedStringFromTableInBundle(@"LMCleanResultViewController_initViewText_theDayTitleLabel_1", nil, [NSBundle bundleForClass:[self class]], @"");
-    mainTitle.stringValue = NSLocalizedStringFromTableInBundle(@"LMCleanResultViewController_initViewText_mainTitle_2", nil, [NSBundle bundleForClass:[self class]], @"");
-    recent7DaysTitle.stringValue = NSLocalizedStringFromTableInBundle(@"LMCleanResultViewController_initViewText_recent7DaysTitle_3", nil, [NSBundle bundleForClass:[self class]], @"");
-    [doneButton setTitle:NSLocalizedStringFromTableInBundle(@"LMCleanResultViewController_initViewText_doneButton_4", nil, [NSBundle bundleForClass:[self class]], @"") withColor:[NSColor whiteColor]];
+//    theDayTitleLabel.stringValue = LMLocalizedSelfBundleString(@"当日清理", nil);
+    mainTitle.stringValue = LMLocalizedSelfBundleString(@"成功清理", nil);
+    recent7DaysTitle.stringValue = LMLocalizedSelfBundleString(@"最近7天已清理", nil);
+    [doneButton setTitle:LMLocalizedSelfBundleString(@"完成", nil) withColor:[NSColor whiteColor]];
 }
 
 -(void)setLabelFont{
@@ -180,11 +180,11 @@
     NSString *fileSizeString = [NSString stringFromDiskSize:fileSize];
     [[LMCleanerDataCenter shareInstance] setIsBigPage:YES];
     [mainText setStringValue:fileSizeString];
-    [fileNumText setStringValue:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"LMCleanResultViewController_setResultViewWithCleanFileSize_fileNumText_1", nil, [NSBundle bundleForClass:[self class]], @""), fileNum]];
+    [fileNumText setStringValue:[NSString stringWithFormat:LMLocalizedSelfBundleString(@"清理文件：%ld个", nil), fileNum]];
     if (cleanTime > 0) {
-        [timeText setStringValue:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"LMCleanResultViewController_setResultViewWithCleanFileSize_timeText_2", nil, [NSBundle bundleForClass:[self class]], @""), cleanTime]];
+        [timeText setStringValue:[NSString stringWithFormat:LMLocalizedSelfBundleString(@"清理耗时：%lds", nil), cleanTime]];
     }else{
-        [timeText setStringValue:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"LMCleanResultViewController_setResultViewWithCleanFileSize_timeText_3", nil, [NSBundle bundleForClass:[self class]], @"")]];
+        [timeText setStringValue:[NSString stringWithFormat:LMLocalizedSelfBundleString(@"清理耗时：1s", nil)]];
     }
     
     [self initResultView];

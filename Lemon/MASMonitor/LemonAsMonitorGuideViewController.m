@@ -96,13 +96,13 @@ typedef NS_ENUM(NSUInteger, UserSelectType) {
     
     NSTextField *titleLabel = [LMViewHelper createNormalLabel:16 fontColor:[NSColor colorWithHex:0x515151]];
     [self.view addSubview:titleLabel];
-    titleLabel.stringValue = NSLocalizedStringFromTableInBundle(@"LemonAsMonitorGuideViewController_setupViews_titleLabel_1", nil, [NSBundle bundleForClass:[self class]], @"");
+    titleLabel.stringValue = NSLocalizedString(@"需要在状态栏显示图标吗？", nil);
     titleLabel.maximumNumberOfLines = 2;
     
     //副标题
     NSTextField *descLabel = [LMViewHelper createNormalLabel:12 fontColor:[NSColor colorWithHex:0x94979b]];
     [self.view addSubview:descLabel];
-    descLabel.stringValue = NSLocalizedStringFromTableInBundle(@"LemonAsMonitorGuideViewController_setupViews_descLabel_1", nil, [NSBundle bundleForClass:[self class]], @"");
+    descLabel.stringValue = NSLocalizedString(@"显示后可以在状态栏查看实时网速。", nil);
     descLabel.maximumNumberOfLines = 2;
     
     NSButton *onceBtn = [[NSButton alloc]init];
@@ -120,7 +120,7 @@ typedef NS_ENUM(NSUInteger, UserSelectType) {
     
     NSTextField *onceTitle = [LMViewHelper createNormalLabel:14 fontColor:[NSColor colorWithHex:0x515151]];
     [self.view addSubview:onceTitle];
-    onceTitle.stringValue = NSLocalizedStringFromTableInBundle(@"LemonAsMonitorGuideViewController_setupViews_onceTitle_1", nil, [NSBundle bundleForClass:[self class]], @"");
+    onceTitle.stringValue = NSLocalizedString(@"仅本次", nil);
     
     NSButton *alwayBtn = [[NSButton alloc]init];
     alwayBtn.frame = NSMakeRect(0, 0, 14, 14);
@@ -137,10 +137,10 @@ typedef NS_ENUM(NSUInteger, UserSelectType) {
     
     NSTextField *alwayTitle = [LMViewHelper createNormalLabel:14 fontColor:[NSColor colorWithHex:0x515151]];
     [self.view addSubview:alwayTitle];
-    alwayTitle.stringValue = NSLocalizedStringFromTableInBundle(@"LemonAsMonitorGuideViewController_setupViews_alwayTitle_1", nil, [NSBundle bundleForClass:[self class]], @"");;
+    alwayTitle.stringValue = NSLocalizedString(@"开机默认显示", nil);;
     
-    NSString *showString = NSLocalizedStringFromTableInBundle(@"LemonAsMonitorGuideViewController_setupViews_showString _2", nil, [NSBundle bundleForClass:[self class]], @"");
-//NSLocalizedStringFromTableInBundle(@"RunningAppPopViewController_setupViews_cancelButton_2", nil, [NSBundle bundleForClass:[self class]], @"")
+    NSString *showString = NSLocalizedString(@"确定", nil);
+//NSLocalizedString(@"RunningAppPopViewController_setupViews_cancelButton_2", nil)
     NSButton *showButton = [LMViewHelper createSmallGreenButton:12 title:showString];
     [self.view addSubview:showButton];
     showButton.wantsLayer = YES;
@@ -150,7 +150,7 @@ typedef NS_ENUM(NSUInteger, UserSelectType) {
     showButton.action = @selector(onShowStatusBarIconButtonClick);
     self.showBtn = showButton;
     
-    NSString *cancelString = NSLocalizedStringFromTableInBundle(@"LemonAsMonitorGuideViewController_setupViews_cancelString _3", nil, [NSBundle bundleForClass:[self class]], @"");
+    NSString *cancelString = NSLocalizedString(@"取消", nil);
     LMBorderButton *cancelButton = [[LMBorderButton alloc] init];
     [self.view addSubview:cancelButton];
     cancelButton.title = cancelString;

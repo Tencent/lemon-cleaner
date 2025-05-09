@@ -117,7 +117,7 @@
 
     // 打开lemon时显示
 
-    NSTextField *showStatusBarIconText = [self buildLabel:NSLocalizedStringFromTableInBundle(@"PreferenceViewController_setupViews_showMonitorWhenOpenLemon", nil, [NSBundle bundleForClass:[self class]], @"Show status bar on open Lemon") font:[NSFont systemFontOfSize:14] color:[LMAppThemeHelper getTitleColor]];
+    NSTextField *showStatusBarIconText = [self buildLabel:NSLocalizedString(@"打开主界面时显示状态栏", nil) font:[NSFont systemFontOfSize:14] color:[LMAppThemeHelper getTitleColor]];
     
     COSwitch *statusBarVisibilitySwitch = [[COSwitch alloc] init];
     self.statusBarVisibilitySwitch = statusBarVisibilitySwitch;
@@ -159,7 +159,7 @@
     
     // 状态栏开机时启动
 
-    NSTextField *showStatusBarIconOnBootText = [self buildLabel:NSLocalizedStringFromTableInBundle(@"PreferenceViewController_setupViews_bootMonitorTitle _16", nil, [NSBundle bundleForClass:[self class]], @"") font:[NSFont systemFontOfSize:14] color:[LMAppThemeHelper getTitleColor]];
+    NSTextField *showStatusBarIconOnBootText = [self buildLabel:NSLocalizedString(@"开机时显示状态栏", nil) font:[NSFont systemFontOfSize:14] color:[LMAppThemeHelper getTitleColor]];
     
 
     COSwitch *bootMonitorSwitch = [[COSwitch alloc] init];
@@ -200,7 +200,7 @@
     }];
     
     // 启用状态栏 总开关
-    NSTextField *useStatusBarText = [self buildLabel:NSLocalizedStringFromTableInBundle(@"PreferenceViewController_setupViews_useMonitor", nil, [NSBundle bundleForClass:[self class]], @"Use status bar") font:[NSFont boldSystemFontOfSize:14] color:[LMAppThemeHelper getTitleColor]];
+    NSTextField *useStatusBarText = [self buildLabel:NSLocalizedString(@"启用状态栏", nil) font:[NSFont boldSystemFontOfSize:14] color:[LMAppThemeHelper getTitleColor]];
     
     COSwitch *useStatusBarSwitch = [[COSwitch alloc] init];
     self.useStatusBarSwitch = useStatusBarSwitch;
@@ -245,7 +245,7 @@
     }];
     
     // 状态栏图标显示
-    NSTextField *tfMonitorTitle = [self buildLabel:NSLocalizedStringFromTableInBundle(@"PreferenceViewController_setupViews_tfMonitorTitle _9", nil, [NSBundle bundleForClass:[self class]], @"") font:[NSFont systemFontOfSize:14] color:[LMAppThemeHelper getTitleColor]];
+    NSTextField *tfMonitorTitle = [self buildLabel:NSLocalizedString(@"状态栏展示信息设置", nil) font:[NSFont systemFontOfSize:14] color:[LMAppThemeHelper getTitleColor]];
     NSImageView *monitorImageView = [[NSImageView alloc] init];
     if ([LanguageHelper getCurrentSystemLanguageType] == SystemLanguageTypeChinese) {
         monitorImageView.image = [[NSBundle mainBundle] imageForResource:@"navigation_bar_pattern_ch"];
@@ -253,7 +253,7 @@
         monitorImageView.image = [[NSBundle mainBundle] imageForResource:@"navigation_bar_pattern_en"];
     }
     
-    NSTextField* tfMonitorWarningTips = [self buildLabel:NSLocalizedStringFromTableInBundle(@"PreferenceViewController_setupViews_1553049563_10", nil, [NSBundle bundleForClass:[self class]], @"") font:[NSFont systemFontOfSize:12] color:[NSColor colorWithHex:0x94979B]];
+    NSTextField* tfMonitorWarningTips = [self buildLabel:NSLocalizedString(@"请至少选择一项", nil) font:[NSFont systemFontOfSize:12] color:[NSColor colorWithHex:0x94979B]];
     self.tfMonitorWarningTips = tfMonitorWarningTips;
     [tfMonitorWarningTips setHidden:YES];
     
@@ -264,15 +264,15 @@
         appLogoTitle = @"App\n logo";
     }
     NSView* optLogo = [self getOptionView:@"logo":appLogoTitle:STATUS_TYPE_LOGO];
-    NSView* optMem = [self getOptionView:@"stat_mem":NSLocalizedStringFromTableInBundle(@"PreferenceViewController_setupViews_1553049563_11", nil, [NSBundle bundleForClass:[self class]], @""):STATUS_TYPE_MEM];
-    NSView* optDisk = [self getOptionView:@"stat_disk":NSLocalizedStringFromTableInBundle(@"PreferenceViewController_setupViews_1553049563_12", nil, [NSBundle bundleForClass:[self class]], @""):STATUS_TYPE_DISK];
-    NSView* optCpuTem = [self getOptionView:@"stat_cpu_temperature":NSLocalizedStringFromTableInBundle(@"PreferenceViewController_setupViews_1553049563_13", nil, [NSBundle bundleForClass:[self class]], @""):STATUS_TYPE_TEP];
-    NSView* optCpuFan = [self getOptionView:@"stat_cpu_fan":NSLocalizedStringFromTableInBundle(@"PreferenceViewController_setupViews_1553049563_14", nil, [NSBundle bundleForClass:[self class]], @""):STATUS_TYPE_FAN];
-    NSView* optNet = [self getOptionView:@"stat_net":NSLocalizedStringFromTableInBundle(@"PreferenceViewController_setupViews_1553049563_15", nil, [NSBundle bundleForClass:[self class]], @""):STATUS_TYPE_NET];
+    NSView* optMem = [self getOptionView:@"stat_mem":NSLocalizedString(@"内存占用", nil):STATUS_TYPE_MEM];
+    NSView* optDisk = [self getOptionView:@"stat_disk":NSLocalizedString(@"磁盘占用", nil):STATUS_TYPE_DISK];
+    NSView* optCpuTem = [self getOptionView:@"stat_cpu_temperature":NSLocalizedString(@"CPU温度", nil):STATUS_TYPE_TEP];
+    NSView* optCpuFan = [self getOptionView:@"stat_cpu_fan":NSLocalizedString(@"风扇转速", nil):STATUS_TYPE_FAN];
+    NSView* optNet = [self getOptionView:@"stat_net":NSLocalizedString(@"网速", nil):STATUS_TYPE_NET];
     
-    NSView* optCpuUsed = [self getOptionView:@"stat_cpu_usage":NSLocalizedStringFromTableInBundle(@"PreferenceViewController_setupViews_1553049563_16", nil, [NSBundle bundleForClass:[self class]], @""):STATUS_TYPE_CPU];
+    NSView* optCpuUsed = [self getOptionView:@"stat_cpu_usage":NSLocalizedString(@"CPU占用", nil):STATUS_TYPE_CPU];
     
-    NSView* optGpuUsed = [self getOptionView:@"stat_gpu_usage":NSLocalizedStringFromTableInBundle(@"PreferenceViewController_setupViews_1553049563_17", nil, [NSBundle bundleForClass:[self class]], @""):STATUS_TYPE_GPU];
+    NSView* optGpuUsed = [self getOptionView:@"stat_gpu_usage":NSLocalizedString(@"GPU占用", nil):STATUS_TYPE_GPU];
     
     LMPreferenceMaskView * mask = [[LMPreferenceMaskView alloc] init];
     self.maskView = mask;

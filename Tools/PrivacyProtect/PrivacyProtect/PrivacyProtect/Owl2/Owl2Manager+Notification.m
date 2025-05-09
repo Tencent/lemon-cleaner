@@ -6,9 +6,12 @@
 //
 
 #import "Owl2Manager+Notification.h"
+#import "NSUserNotification+QMExtensions.h"
 #import "OwlConstant.h"
 #import "LemonDaemonConst.h"
 #import "Owl2Manager+Database.h"
+#import <QMCoreFunction/LMReferenceDefines.h>
+#import "utilities.h"
 
 NSNotificationName const Owl2WhiteListChangeNotication = @"OwlWhiteListChangeNotication";
 NSNotificationName const Owl2LogChangeNotication = @"OwlLogChangeNotication";
@@ -20,6 +23,21 @@ NSNotificationName const Owl2WatchAudioStateChange = @"OwlWatchAudioStateChange"
 NSNotificationName const kOwl2VedioNotification = @"kOwlVedioNotification";
 NSNotificationName const kOwl2AudioNotification = @"kOwlAudioNotification";
 NSNotificationName const kOwl2VedioAndAudioNotification = @"kOwlVedioAndAudioNotification";
+NSNotificationName const kOwl2SystemAudioNotification = @"kOwl2SystemAudioNotification";
+
+
+static NSString * const kUNNotificationActionPreventButtonDidBlock = @"kUNNotificationActionPreventButtonDidBlock";
+
+static NSString * const kSuffixApp = @".app/";
+static NSString * const kSuffixAppex = @".appex/";
+
+@interface Owl2ManagerNotificationCustomObject : NSObject
+@property (nonatomic, copy) dispatch_block_t insertLog;
+@property (nonatomic, copy) dispatch_block_t updateLog;
+@end
+
+@implementation Owl2ManagerNotificationCustomObject @end
+
 
 @implementation Owl2Manager (Notification)
 
@@ -31,11 +49,14 @@ NSNotificationName const kOwl2VedioAndAudioNotification = @"kOwlVedioAndAudioNot
                                                                    forKey:kOwl2AudioNotification];
     [[QMUserNotificationCenter defaultUserNotificationCenter] addDelegate:(id<NSUserNotificationCenterDelegate>)self
                                                                    forKey:kOwl2VedioAndAudioNotification];
+    [[QMUserNotificationCenter defaultUserNotificationCenter] addDelegate:(id<NSUserNotificationCenterDelegate>)self
+                                                                   forKey:kOwl2SystemAudioNotification];
 }
 
 - (void)analyseDeviceInfoForNotificationWithArray:(NSArray<NSDictionary *>*)itemArray;
 {
-    //NSLog(@"analyseDeviceInfoForNotificationWithArray:, %@", itemArray);
+    NSLog(@"analyseDeviceInfoForNotificationWithArray:, %@", itemArray);
+    
     if (!self.isWatchVideo && !self.isWatchAudio) {
         return;
     }
@@ -58,47 +79,70 @@ NSNotificationName const kOwl2VedioAndAudioNotification = @"kOwlVedioAndAudioNot
     } else {
         [filterArray addObjectsFromArray:itemArray];
     }
-    for (NSDictionary *dic in filterArray) {
+    for (NSDictionary *originDic in filterArray) {
+        NSDictionary *dic = originDic;
         //OWL_PROC_ID/OWL_PROC_NAME/OWL_PROC_PATH/OWL_PROC_DELTA/OWL_DEVICE_TYPE
         int deviceType = [dic[OWL_DEVICE_TYPE] intValue];
         int count = [[dic objectForKey:OWL_PROC_DELTA] intValue];
         NSString *appName = dic[OWL_PROC_NAME];
-        if (!appName || [appName isEqualToString:@""] || [dic[OWL_PROC_ID] intValue] < 0) {
+        NSString *appPath = dic[OWL_PROC_PATH];
+        if (!appName ||
+            [appName isEqualToString:@""] ||
+            [appName isEqualToString:@"corespeechd"] ||
+            [appName isEqualToString:@"replayd"] ||
+            [dic[OWL_PROC_ID] intValue] < 0) {
             NSLog(@"%s appName is %@, pid: %d", __FUNCTION__, appName, [dic[OWL_PROC_ID] intValue]);
             continue;
         }
         
         BOOL isWhite = NO;
-        for (NSDictionary *item in self.wlArray) {
-            if ([[item objectForKey:OwlExecutableName] isEqualToString:dic[OWL_PROC_NAME]]) {
-                if (deviceType == OwlProtectVedio) {
-                    if ([[item objectForKey:OwlWatchCamera] boolValue]) {
-                        isWhite = YES;
-                        break;
+        
+        // 找到主app, mainAppInfo 可能为nil
+        // 主app可能为应用本身
+        NSDictionary *mainAppInfo = [self mainAppInfoWithPath:appPath];
+        NSString *mainAppIdentifier = mainAppInfo[OwlIdentifier];
+        if (mainAppIdentifier) {
+            for (NSDictionary *item in self.wlArray) {
+                if ([[item objectForKey:OwlIdentifier] isEqualToString:mainAppIdentifier]) {
+                    if (deviceType == OwlProtectVedio) {
+                        if ([[item objectForKey:OwlWatchCamera] boolValue]) {
+                            isWhite = YES;
+                            break;
+                        }
+                    } else if (deviceType == OwlProtectAudio) {
+                        if ([[item objectForKey:OwlWatchAudio] boolValue]) {
+                            isWhite = YES;
+                            break;
+                        }
+                    } else if (deviceType == OwlProtectSystemAudio) {
+                        if ([[item objectForKey:OwlWatchSpeaker] boolValue]) {
+                            isWhite = YES;
+                            break;
+                        }
                     }
-                } else if (deviceType == OwlProtectAudio) {
-                    if ([[item objectForKey:OwlWatchAudio] boolValue]) {
-                        isWhite = YES;
-                        break;
-                    }
-                } else if (deviceType == OwlProtectVedioAndAudio) {
-                    isWhite = NO;
                     break;
                 }
-                break;
             }
+            
+            // 将主app的信息添加到原始数据中
+            NSMutableDictionary *targetDict = mainAppInfo.mutableCopy;
+            [targetDict addEntriesFromDictionary:dic];
+            dic = targetDict.copy;
+            // 统一替换为主app的
+            appName = [mainAppInfo objectForKey:OwlAppName];
         }
+        
         if (isWhite) {
             continue;
         }
-        for (NSDictionary *item in self.allApps) {
-            if ([[item objectForKey:OwlExecutableName] isEqualToString:dic[OWL_PROC_NAME]]) {
-                NSLog(@"AppName: %@, %@, %@", appName, [item objectForKey:OwlExecutableName], [item objectForKey:OwlAppName]);
-                appName = [item objectForKey:OwlAppName];
-            }
+        
+        if (appName == nil) { // 进程名
+            // 中文名（p0）-> 进程英文（P1）->pid(p2) ->未知（p3）
+            appName = [NSString stringWithFormat:@"%@", dic[OWL_PROC_ID]];
         }
-        if (appName == nil) {
-            continue;
+        if (appName == nil) { // 未知
+            // 中文名（p0）-> 进程英文（P1）->pid(p2) ->未知（p3）
+            appName = NSLocalizedStringFromTableInBundle(@"未知应用", nil, [NSBundle bundleForClass:[self class]], nil);
         }
         NSString *stringTitle = @"";
         
@@ -157,55 +201,76 @@ NSNotificationName const kOwl2VedioAndAudioNotification = @"kOwlVedioAndAudioNot
                 }
             }
         }
-        if ((deviceType != OwlProtectVedio) && (deviceType != OwlProtectAudio) && (deviceType != OwlProtectVedioAndAudio)) {
+        if (deviceType == OwlProtectSystemAudio) {
+            if (!self.isWatchAudio) {
+                continue;
+            }
+            NSDictionary *startDic = [self.owlSystemAudioItemDic objectForKey:appIdentifier]; //appName
+            if (count > 0) {
+                //开始项count大于0
+                if (startDic && [[startDic objectForKey:OWL_PROC_DELTA] intValue] > 0) {
+                    //如果已经有开始过的，丢弃
+                    //continue;
+                }
+                //[self.owlAudioItemDic setObject:dic forKey:appIdentifier]; //appName
+            } else if (count < 0) {
+                if (startDic == nil) {
+                    //没有开始就结束的项，为检测异常项，丢弃
+                    continue;
+                } else {
+                    //完成配对，移除开始项
+                    //if ([self.owlItemDic allKeys].count == 1 && self.isWatchingVedio) {
+                    
+                    //}
+                    [self.owlSystemAudioItemDic removeObjectForKey:appIdentifier]; //appName
+                }
+            }
+        }
+        if ((deviceType != OwlProtectVedio) && (deviceType != OwlProtectAudio) && deviceType != OwlProtectSystemAudio) {
             continue;
         }
         NSString *strLanguageKey = @"";
+        NSString *deviceName = dic[OWL_DEVICE_NAME];
         if (count > 0) {
-            if (deviceType == OwlProtectVedio) {
-                strLanguageKey = @"OwlManager_analyseDeviceInfoForNotificationWithArray_NSString_1";
-            } else if (deviceType == OwlProtectAudio) {
-                strLanguageKey = @"OwlManager_analyseDeviceInfoForNotificationWithArray_NSString_2";
-            } else if (deviceType == OwlProtectVedioAndAudio) {
-                strLanguageKey = @"OwlManager_analyseDeviceInfoForNotificationWithArray_NSString_3";
+            if (deviceType == OwlProtectSystemAudio) {
+                strLanguageKey = @"开始录制";
+            } else {
+                strLanguageKey = @"开始使用";
             }
         } else if (count < 0) {
-            if (deviceType == OwlProtectVedio) {
-                strLanguageKey = @"OwlManager_analyseDeviceInfoForNotificationWithArray_NSString_4";
-            } else if (deviceType == OwlProtectAudio) {
-                strLanguageKey = @"OwlManager_analyseDeviceInfoForNotificationWithArray_NSString_5";
-            } else if (deviceType == OwlProtectVedioAndAudio) {
-                strLanguageKey = @"OwlManager_analyseDeviceInfoForNotificationWithArray_NSString_6";
+            if (deviceType == OwlProtectSystemAudio) {
+                strLanguageKey = @"结束录制";
+            } else {
+                strLanguageKey = @"结束使用";
             }
         } else {
             continue;
         }
-        stringTitle = [NSString stringWithFormat:@"%@  %@", appName, NSLocalizedStringFromTableInBundle(strLanguageKey, nil, [NSBundle bundleForClass:[self class]], @"")];
-        if ([dic[OWL_PROC_NAME] length] == 0) {
-            continue;
+        if (deviceType == OwlProtectVedio) {
+            deviceName = deviceName?:@"摄像头";
+        } else if (deviceType == OwlProtectAudio) {
+            deviceName = deviceName?:@"麦克风";
+        } else if (deviceType == OwlProtectSystemAudio) {
+            deviceName = NSLocalizedStringFromTableInBundle(@"扬声器音频", nil, [NSBundle bundleForClass:[self class]], @"");
         }
+        if (deviceName.length > 25) {
+            deviceName = [[deviceName substringToIndex:25] stringByAppendingString:@"..."];
+        }
+        
+        BOOL unkonwApp = [appName isEqualToString:NSLocalizedStringFromTableInBundle(@"未知应用", nil, [NSBundle bundleForClass:[self class]], nil)];
+        if (unkonwApp) {
+            stringTitle = [NSString stringWithFormat:@"%@ %@ %@\n%@", appName, NSLocalizedStringFromTableInBundle(strLanguageKey, nil, [NSBundle bundleForClass:[self class]], @""), deviceName, NSLocalizedStringFromTableInBundle(@"若需阻止请手动检查并关闭", nil, [NSBundle bundleForClass:[self class]], nil)];
+        } else {
+            stringTitle = [NSString stringWithFormat:@"%@ %@ %@", appName, NSLocalizedStringFromTableInBundle(strLanguageKey, nil, [NSBundle bundleForClass:[self class]], @""), deviceName];
+        }
+        // 允许弹出未知应用 - 产品需求 Lemon 5.1.14
+//        if ([dic[OWL_PROC_NAME] length] == 0) {
+//            continue;
+//        }
         
         if (count != 0) {
             NSUserNotification *notification = [[NSUserNotification alloc] init];
-            if (count > 0) {
-                if (deviceType == OwlProtectVedio) {
-                    //notification.title = cameraObserver.cameraName;
-                    notification.title = NSLocalizedStringFromTableInBundle(@"OwlManager_analyseDeviceInfoForNotificationWithArray_notification_7", nil, [NSBundle bundleForClass:[self class]], @"");
-                } else if (deviceType == OwlProtectAudio) {
-                    notification.title = NSLocalizedStringFromTableInBundle(@"OwlManager_analyseDeviceInfoForNotificationWithArray_notification_8", nil, [NSBundle bundleForClass:[self class]], @"");
-                } else if (deviceType == OwlProtectVedioAndAudio) {
-                    notification.title = NSLocalizedStringFromTableInBundle(@"OwlManager_analyseDeviceInfoForNotificationWithArray_notification_9", nil, [NSBundle bundleForClass:[self class]], @"");
-                }
-            } else if (count < 0) {
-                if (deviceType == OwlProtectVedio) {
-                    //notification.title = cameraObserver.cameraName;
-                    notification.title = NSLocalizedStringFromTableInBundle(@"OwlManager_analyseDeviceInfoForNotificationWithArray_notification_10", nil, [NSBundle bundleForClass:[self class]], @"");
-                } else if (deviceType == OwlProtectAudio) {
-                    notification.title = NSLocalizedStringFromTableInBundle(@"OwlManager_analyseDeviceInfoForNotificationWithArray_notification_11", nil, [NSBundle bundleForClass:[self class]], @"");
-                } else if (deviceType == OwlProtectVedioAndAudio) {
-                    notification.title = NSLocalizedStringFromTableInBundle(@"OwlManager_analyseDeviceInfoForNotificationWithArray_notification_12", nil, [NSBundle bundleForClass:[self class]], @"");
-                }
-            }
+            notification.title = NSLocalizedStringFromTableInBundle(@"隐私保护提示", nil, [NSBundle bundleForClass:[self class]], nil);
             //[notification setValue:[NSImage imageNamed:NSImageNameApplicationIcon] forKey:@"_identityImage"];
             //notification.contentImage = [NSImage imageNamed:NSImageNameApplicationIcon];
             notification.identifier = [NSString stringWithFormat:@"%@.TimeUpNotification type:%d count:%d time:%@", [[NSBundle mainBundle] bundleIdentifier], deviceType, self.notificationCount, [[NSDate date] description]];
@@ -215,211 +280,321 @@ NSNotificationName const kOwl2VedioAndAudioNotification = @"kOwlVedioAndAudioNot
             // Note: (v4.8.9)由于无法直接kill掉Siri，弹窗显示不带阻止按钮！
             BOOL notActions = [dic[OWL_PROC_NAME] isEqualToString:@"Siri"];
             
-            if (count > 0 && !notActions) {
+            Owl2LogAppAction appAction = Owl2LogAppActionNone;
+            NSString *uuid = [[NSUUID UUID] UUIDString];
+            // Note: 未知应用不提供kill能力
+            if (count > 0 && !notActions && !unkonwApp) {
+                appAction = Owl2LogAppActionStart;
+                if (@available(macOS 10.14, *)) {
+                    notification.hasActionButton = YES;
+                    notification.actionButtonTitle = NSLocalizedStringFromTableInBundle(@"本次允许", nil, [NSBundle bundleForClass:[self class]], nil);
+                    notification.otherButtonTitle = NSLocalizedStringFromTableInBundle(@"永久允许", nil, [NSBundle bundleForClass:[self class]], nil);
+                    QMUserNotificationAction *preventAction = [QMUserNotificationAction new];
+                    preventAction.actionIdentifier = kUNNotificationActionPreventButtonDidBlock;
+                    preventAction.title = NSLocalizedStringFromTableInBundle(@"阻止", nil, [NSBundle bundleForClass:[self class]], nil);
+                    preventAction.options = UNNotificationActionOptionForeground;
+                    notification.qm_actions = @[preventAction];
+                } else {
+                    notification.hasActionButton = YES;
+                    notification.actionButtonTitle = NSLocalizedStringFromTableInBundle(@"阻止", nil, [NSBundle bundleForClass:[self class]], nil);
+                }
+                
+                NSMutableDictionary *userInfo = dic.mutableCopy;
+                [userInfo setObject:@(appAction) forKey:OwlAppAction];
+                [userInfo setObject:@(deviceType) forKey:OwlHardware];
+                [userInfo setObject:uuid forKey:OwlUUID];
+                notification.userInfo = userInfo;
+                
+            } else if (count < 0 || notActions || unkonwApp) {
+                appAction = Owl2LogAppActionStop;
                 notification.hasActionButton = YES;
-                notification.otherButtonTitle = NSLocalizedStringFromTableInBundle(@"OwlManager_analyseDeviceInfoForNotificationWithArray_1553136870_13", nil, [NSBundle bundleForClass:[self class]], @"");
-                notification.actionButtonTitle = NSLocalizedStringFromTableInBundle(@"OwlManager_analyseDeviceInfoForNotificationWithArray_1553136870_14", nil, [NSBundle bundleForClass:[self class]], @"");
-                notification.userInfo = @{OWL_PROC_NAME : dic[OWL_PROC_NAME], OWL_PROC_PATH : dic[OWL_PROC_PATH], OWL_PROC_ID : dic[OWL_PROC_ID], @"TYPE": @"allow", @"APPTYPE": @(deviceType)};
-            } else if (count < 0 || notActions) {
-                notification.hasActionButton = NO;
-                notification.otherButtonTitle = NSLocalizedStringFromTableInBundle(@"OwlManager_analyseDeviceInfoForNotificationWithArray_1553136870_15", nil, [NSBundle bundleForClass:[self class]], @"");
-                notification.userInfo = @{OWL_PROC_NAME : dic[OWL_PROC_NAME], OWL_PROC_PATH : dic[OWL_PROC_PATH], OWL_PROC_ID : dic[OWL_PROC_ID], @"TYPE": @"nothing", @"APPTYPE": @(deviceType)};
+                notification.actionButtonTitle = NSLocalizedStringFromTableInBundle(@"关闭", nil, [NSBundle bundleForClass:[self class]], @"");
+                
+                NSMutableDictionary *userInfo = dic.mutableCopy;
+                [userInfo setObject:@(appAction) forKey:OwlAppAction];
+                [userInfo setObject:@(deviceType) forKey:OwlHardware];
+                [userInfo setObject:uuid forKey:OwlUUID];
+                notification.userInfo = userInfo;
+                
             } else {
             }
             
+            NSLog(@"notification deliver deviceType=%@, userInfo=%@", @(deviceType), notification.userInfo);
             if (deviceType == OwlProtectVedio) {
-                [[QMUserNotificationCenter defaultUserNotificationCenter] deliverNotification:notification
-                                                                                           key:kOwl2VedioNotification];
+                [[QMUserNotificationCenter defaultUserNotificationCenter] deliverNotification:notification key:kOwl2VedioNotification];
             } else if (deviceType == OwlProtectAudio) {
-                [[QMUserNotificationCenter defaultUserNotificationCenter] deliverNotification:notification
-                                                                                           key:kOwl2AudioNotification];
-            } else if (deviceType == OwlProtectVedioAndAudio) {
-                [[QMUserNotificationCenter defaultUserNotificationCenter] deliverNotification:notification
-                                                                                           key:kOwl2VedioAndAudioNotification];
+                [[QMUserNotificationCenter defaultUserNotificationCenter] deliverNotification:notification key:kOwl2AudioNotification];
+            } else if (deviceType == OwlProtectSystemAudio) {
+                [[QMUserNotificationCenter defaultUserNotificationCenter] deliverNotification:notification key:kOwl2SystemAudioNotification];
             }
-            //NSLog(@"postAudioChangeNotifocationForUsingStatue: %@", notification.userInfo);
-            //[[NSUserNotificationCenter defaultUserNotificationCenter] scheduleNotification:notification];
-            @try{
-                //[self addLogItem:[stringTitle stringByReplacingOccurrencesOfString:appName withString:@""] appName:appName];
-                [self addLogItem:strLanguageKey appName:appName];
-            }
-            @catch (NSException *exception) {
-                
-            }
-            //[self performSelectorOnMainThread:@selector(addLogItem:appName:) withObject:stringTitle waitUntilDone:NO];
-            
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(20 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//                NSUserNotificationCenter * center = [NSUserNotificationCenter defaultUserNotificationCenter];
-//                [center removeDeliveredNotification:notification];
-                [[QMUserNotificationCenter defaultUserNotificationCenter] removeAllDeliveredNotifications];
+                        
+            // 通知过期60s，此处是防止用户未开通知权限时累积过多，属于兜底
+            // 因为需求是默认20s消失，因此可以60s过期，如果需要长期驻留在用户的通知中心，则不能移除
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(60 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                //移除尚未送达给用户的通知
+                [[QMUserNotificationCenter defaultUserNotificationCenter] removeScheduledNotificationWithIdentifier:notification.identifier];
             });
         }
     }
-    //}
 }
 
 #pragma mark NSUserNotificationCenterDelegate
 
-- (void)userNotificationCenter:(NSUserNotificationCenter *)center didDeliverNotification:(NSUserNotification *)notification
-{
+- (void)userNotificationCenter:(NSUserNotificationCenter *)center didDeliverNotification:(NSUserNotification *)notification {
+    // 通知被展示
+    NSLog(@"notification show: %@", notification.userInfo);
     
+    NSDictionary *userInfo = notification.userInfo;
+    Owl2LogAppAction appAction = [[userInfo objectForKey:OwlAppAction] integerValue];
+    Owl2LogHardware hardware = [[userInfo objectForKey:OwlHardware] integerValue];
+    Owl2LogUserAction userAction = Owl2LogUserActionNone;
+    NSString *appName = [userInfo objectForKey:OwlAppName];
+    if (!appName) appName = [userInfo objectForKey:OWL_PROC_NAME];
+    NSString *appPath = [userInfo objectForKey:OwlBubblePath];
+    NSString *processPath = [userInfo objectForKey:OWL_PROC_PATH];
+    if (appPath.length == 0) appPath = processPath;
+    NSString *uuid = [userInfo objectForKey:OwlUUID];
+    NSString *identifier = [userInfo objectForKey:OwlIdentifier];
+    
+    if (appAction == Owl2LogAppActionStart) {
+        
+        // 放在前面是防止block引用了Owl2ManagerNotificationCustomObject对象
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(20 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            NSLog(@"notification 20s atuo diss: %@", notification.userInfo);
+            // 20s移除通知
+            [[QMUserNotificationCenter defaultUserNotificationCenter] removeDeliveredNotificationWithIdentifier:notification.identifier];
+            
+            NSString *uuid = [userInfo objectForKey:OwlUUID];
+            Owl2ManagerNotificationCustomObject *customObject = [self.notificationInsertLogList objectForKey:uuid];
+            // 更新为默认允许
+            if (customObject.updateLog) customObject.updateLog();
+        });
+        
+        @weakify(self);
+        Owl2ManagerNotificationCustomObject *customObject = [Owl2ManagerNotificationCustomObject new];
+        customObject.updateLog = ^{
+            @strongify(self);
+            // 更新日志的操作记录
+            [self updateLogItemWithUuid:uuid appName:appName appPath:appPath appAction:appAction userAction:Owl2LogUserActionDefaultAllow hardware:hardware];
+        };
+        [self.notificationInsertLogList setObject:customObject forKey:uuid];
+        
+        // 开始
+        @try{
+            [self addLogItemWithUuid:uuid appName:appName appPath:appPath appAction:appAction userAction:userAction hardware:hardware];
+        }@catch (NSException *exception) {}
+    }
+    
+    if (appAction == Owl2LogAppActionStop) {
+        // 停止
+        
+        // 5s 后通知消失
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            NSLog(@"notification 5s atuo diss: %@", notification.userInfo);
+            [[QMUserNotificationCenter defaultUserNotificationCenter] removeDeliveredNotificationWithIdentifier:notification.identifier];
+        });
+        
+        @try{
+            [self addLogItemWithUuid:uuid appName:appName appPath:appPath appAction:appAction userAction:userAction hardware:hardware];
+        }@catch (NSException *exception) {}
+    }
 }
 
 - (void)userNotificationCenter:(NSUserNotificationCenter *)center didActivateNotification:(NSUserNotification *)notification
 {
-    if ([[notification.userInfo objectForKey:@"TYPE"] isEqualToString:@"allow"]) {
-        int deviceType = [[notification.userInfo objectForKey:@"APPTYPE"] intValue];
+    // 通知被操作
+    NSLog(@"notification didActivate: %@", notification.userInfo);
+    
+    NSDictionary *userInfo = notification.userInfo;
+    Owl2LogAppAction appAction = [[userInfo objectForKey:OwlAppAction] integerValue];
+    Owl2LogHardware hardware = [[userInfo objectForKey:OwlHardware] integerValue];
+    Owl2LogUserAction userAction = Owl2LogUserActionNone;
+    NSString *appName = [userInfo objectForKey:OwlAppName];
+    if (!appName) appName = [userInfo objectForKey:OWL_PROC_NAME];
+    NSString *appPath = [userInfo objectForKey:OwlBubblePath];
+    NSString *processPath = [userInfo objectForKey:OWL_PROC_PATH];
+    if (appPath.length == 0) appPath = processPath;
+    NSString *uuid = [userInfo objectForKey:OwlUUID];
+    NSString *identifier = [userInfo objectForKey:OwlIdentifier];
+    int count = [[userInfo objectForKey:OWL_PROC_DELTA] intValue];
+    // 开始时
+    if (appAction == Owl2LogAppActionStart) {
         
-        // Note: `UNNotificationActionDidAllow` 从`UNNotification` 中触发的操作
-        NSString *actionId = [notification.userInfo objectForKey:@"ACTION_ID"];
-        if (notification.activationType == NSUserNotificationActivationTypeContentsClicked
-            || ![actionId isEqualToString:UNNotificationActionDidBlock]) {
-            if (deviceType == OwlProtectVedio) {
-                [[QMUserNotificationCenter defaultUserNotificationCenter] removeScheduledNotificationWithKey:kOwl2VedioNotification flagsBlock:nil];
-            } else if (deviceType == OwlProtectAudio) {
-                [[QMUserNotificationCenter defaultUserNotificationCenter] removeScheduledNotificationWithKey:kOwl2AudioNotification flagsBlock:nil];
-            } else if (deviceType == OwlProtectVedioAndAudio) {
-                [[QMUserNotificationCenter defaultUserNotificationCenter] removeScheduledNotificationWithKey:kOwl2VedioAndAudioNotification flagsBlock:nil];
+        if (@available(macOS 10.14, *)) {
+            NSString *actionId = [notification.userInfo objectForKey:@"ACTION_ID"];
+            if ([actionId isEqualToString:UNNotificationDismissActionIdentifier]) {
+                // 点击了左上角的x
+                userAction = Owl2LogUserActionClose;
             }
-        } else if (notification.activationType == NSUserNotificationActivationTypeActionButtonClicked
-                   || [actionId isEqualToString:UNNotificationActionDidBlock]) {
             
-            NSString *executableName = [notification.userInfo objectForKey:OWL_PROC_NAME];
-            FMResultSet *resultSet = [db executeQuery:[NSString stringWithFormat:@"select * from %@", OwlProBlockTable]];
-            BOOL exist = NO;
-            while ([resultSet next]) {
-                if ([[resultSet objectForColumn:OwlExecutableName] isEqualToString:executableName]) {
-                    exist = YES;
-                }
+            if ([actionId isEqualToString:UNNotificationDefaultActionIdentifier]) {
+                //点击了内容
+                // do nothing
+                userAction = Owl2LogUserActionContent;
             }
-            if (!exist)
+            
+            if ([actionId isEqualToString:UNNotificationActionButtonDidBlock]) {
+                //本次允许
+                userAction = Owl2LogUserActionAllow;
+            }
+            
+            if ([actionId isEqualToString:UNNotificationActionOtherButtonDidBlock]) {
+                // 点击了永久允许,添加到白名单中
+                userAction = Owl2LogUserActionAlwaysAllowed;
+                [self addWhiteListWith:userInfo hardware:hardware];
+            }
+            
+            if ([actionId isEqualToString:kUNNotificationActionPreventButtonDidBlock]) {
+                // 点击了阻止
+                userAction = Owl2LogUserActionPrevent;
+                
+                NSString *uuid = [userInfo objectForKey:OwlUUID];
+                @weakify(self);
+                [self killWithUserInfo:userInfo completionHandler:^(BOOL prevent) {
+                    @strongify(self);
+                    @try{
+                        [self updateLogItemWithUuid:uuid appName:appName appPath:appPath appAction:appAction userAction:prevent?userAction:Owl2LogUserActionAllow hardware:hardware];
+                    } @catch (NSException *exception) {}
+                }];
+            }
+            
+        } else {
+            // 无法监听或者没有X关闭
+            
+            if (notification.activationType == NSUserNotificationActivationTypeContentsClicked) {
+                // 点击了内容
+                userAction = Owl2LogUserActionContent;
+            }
+            
+            if (notification.activationType == NSUserNotificationActivationTypeActionButtonClicked) {
+                // 点击了阻止 （也只有阻止）
+                userAction = Owl2LogUserActionPrevent;
+                
+                NSString *uuid = [userInfo objectForKey:OwlUUID];
+                @weakify(self);
+                [self killWithUserInfo:userInfo completionHandler:^(BOOL prevent) {
+                    @strongify(self);
+                    if (prevent) {
+                        @try{
+                            [self updateLogItemWithUuid:uuid appName:appName appPath:appPath appAction:appAction userAction:userAction hardware:hardware];
+                        }@catch (NSException *exception) {}
+                    }
+                }];
+            }
+        }
+        
+        // 点击内容不处理
+        // 点击阻止特殊处理
+        switch (userAction) {
+            case Owl2LogUserActionAllow:
+            case Owl2LogUserActionClose:
+            case Owl2LogUserActionDefaultAllow:
+            case Owl2LogUserActionAlwaysAllowed:
             {
-                NSAlert *alert = [[NSAlert alloc] init];
-                alert.alertStyle = NSAlertStyleInformational;
-                if (deviceType == OwlProtectVedio) {
-                    alert.messageText = NSLocalizedStringFromTableInBundle(@"OwlManager_userNotificationCenter_alert_1", nil, [NSBundle bundleForClass:[self class]], @"");
-                } else if (deviceType == OwlProtectAudio) {
-                    alert.messageText = NSLocalizedStringFromTableInBundle(@"OwlManager_userNotificationCenter_alert_2", nil, [NSBundle bundleForClass:[self class]], @"");
-                } else if (deviceType == OwlProtectVedioAndAudio) {
-                    alert.messageText = NSLocalizedStringFromTableInBundle(@"OwlManager_userNotificationCenter_alert_3", nil, [NSBundle bundleForClass:[self class]], @"");
-                }
-                alert.informativeText = NSLocalizedStringFromTableInBundle(@"OwlManager_userNotificationCenter_alert_4", nil, [NSBundle bundleForClass:[self class]], @"");
-                [alert addButtonWithTitle:NSLocalizedStringFromTableInBundle(@"OwlSelectViewController_initWithFrame_ok_2", nil, [NSBundle bundleForClass:[self class]], @"")];
-                [alert addButtonWithTitle:NSLocalizedStringFromTableInBundle(@"OwlSelectViewController_initWithFrame_cancel_1", nil, [NSBundle bundleForClass:[self class]], @"")];
-                
-                NSInteger responseTag = [alert runModal];
-                if (responseTag == NSAlertFirstButtonReturn) {
-                    kill([[notification.userInfo objectForKey:OWL_PROC_ID] intValue], SIGKILL);
-//                    [[McCoreFunction shareCoreFuction] killProcessByID:[[notification.userInfo objectForKey:OWL_PROC_ID] intValue]];
-                }
-                
-                [db executeUpdate:[NSString stringWithFormat:@"INSERT INTO %@ (%@) VALUES  (?);", OwlProBlockTable, OwlExecutableName], executableName];
-            } else {
-                kill([[notification.userInfo objectForKey:OWL_PROC_ID] intValue], SIGKILL);
-//                [[McCoreFunction shareCoreFuction] killProcessByID:[[notification.userInfo objectForKey:OWL_PROC_ID] intValue]];
+                @try{
+                    [self updateLogItemWithUuid:uuid appName:appName appPath:appPath appAction:appAction userAction:userAction hardware:hardware];
+                }@catch (NSException *exception) {}
             }
-        } else {
+                break;
+            case Owl2LogUserActionContent:
+            {
+                // 更新日志的操作记录
+                [self updateLogItemWithUuid:uuid appName:appName appPath:appPath appAction:appAction userAction:Owl2LogUserActionDefaultAllow hardware:hardware];
+            }
+                break;
+            case Owl2LogUserActionPrevent:
+            case Owl2LogUserActionNone:
+            default:
+                break;
+        }
+        
+        if (userAction != Owl2LogUserActionNone) {
+            // 取消20s延时的默认允许上报
+            [self.notificationInsertLogList removeObjectForKey:uuid];
         }
     }
+    
+    
+    if (appAction == Owl2LogAppActionStop) {
+        // 停止时操作
+        // 不做任何记录
+    }
+    
+    // 移除通知
+    [[QMUserNotificationCenter defaultUserNotificationCenter] removeDeliveredNotificationWithIdentifier:notification.identifier];
 }
 
-- (void)userNotificationCenter:(NSUserNotificationCenter *)center didDismissAlert:(NSUserNotification *)notification{
-    NSLog(@"notification.userInfo: %@", notification.userInfo);
-    if ([[notification.userInfo objectForKey:@"TYPE"] isEqualToString:@"allow"]) {
-        int deviceType = [[notification.userInfo objectForKey:@"APPTYPE"] intValue];
-        NSNumber *watchCamera = [NSNumber numberWithBool:NO];
-        NSNumber *watchAudio = [NSNumber numberWithBool:NO];
-        if (deviceType == OwlProtectVedio) {
-            watchCamera = [NSNumber numberWithBool:YES];
-            watchAudio = [NSNumber numberWithBool:NO];
-        } else if (deviceType == OwlProtectAudio) {
-            watchCamera = [NSNumber numberWithBool:NO];
-            watchAudio = [NSNumber numberWithBool:YES];
-        } else if (deviceType == OwlProtectVedioAndAudio) {
-            watchCamera = [NSNumber numberWithBool:YES];
-            watchAudio = [NSNumber numberWithBool:YES];
-        }
-        NSString *executableName = [notification.userInfo objectForKey:OWL_PROC_NAME];
-        if (executableName == nil) {
-            return;
-        }
-        
-        NSAlert *alert = [[NSAlert alloc] init];
-        alert.alertStyle = NSAlertStyleInformational;
-        alert.messageText = NSLocalizedStringFromTableInBundle(@"OwlManager_userNotificationCenter_alert_5", nil, [NSBundle bundleForClass:[self class]], @"");
-        alert.informativeText = NSLocalizedStringFromTableInBundle(@"OwlManager_userNotificationCenter_alert_6", nil, [NSBundle bundleForClass:[self class]], @"");
-        [alert addButtonWithTitle:NSLocalizedStringFromTableInBundle(@"OwlManager_userNotificationCenter_alert_7", nil, [NSBundle bundleForClass:[self class]], @"")];
-        [alert addButtonWithTitle:NSLocalizedStringFromTableInBundle(@"OwlManager_userNotificationCenter_alert_8", nil, [NSBundle bundleForClass:[self class]], @"")];
-        
-        NSInteger responseTag = [alert runModal];
-        if (responseTag == NSAlertFirstButtonReturn) {
-            BOOL isExist = NO;
-            for (NSMutableDictionary *subDic in self.wlArray) {
-                if ([[subDic objectForKey:OwlExecutableName] isEqualToString:executableName]) {
-                    isExist = YES;
-                    int index = (int)[self.wlArray indexOfObject:subDic];
-                    if (deviceType == OwlProtectVedio) {
-                        [subDic setObject:[NSNumber numberWithBool:YES] forKey:OwlWatchCamera];
-                    } else if (deviceType == OwlProtectAudio) {
-                        [subDic setObject:[NSNumber numberWithBool:YES] forKey:OwlWatchAudio];
-                    } else if (deviceType == OwlProtectVedioAndAudio) {
-                        [subDic setObject:[NSNumber numberWithBool:YES] forKey:OwlWatchCamera];
-                        [subDic setObject:[NSNumber numberWithBool:YES] forKey:OwlWatchAudio];
-                    }
-                    [self.wlArray replaceObjectAtIndex:index withObject:subDic];
-                    [self replaceAppWhiteItemIndex:index];
-                    [[NSNotificationCenter defaultCenter] postNotificationName:OwlWhiteListChangeNotication object:nil];
-                    break;
-                }
-            }
-            if (!isExist) {
-                NSString *proc_path = [notification.userInfo objectForKey:OWL_PROC_PATH];
-                NSLog(@"proc_path: %@", proc_path);
-                // /Applications/Photo Booth.app/Contents/MacOS/Photo Booth
-                NSString *appPath = [[[proc_path stringByDeletingLastPathComponent] stringByDeletingLastPathComponent] stringByDeletingLastPathComponent];
-                if ([[appPath pathExtension] isEqualToString:@"app"]) {
-                    NSString *appName = [appPath lastPathComponent];
-                    NSMutableDictionary *resDic = [self getAppInfoWithPath:[appPath stringByDeletingLastPathComponent] appName:appName];
-                    if (resDic) {
-                        [resDic setObject:watchCamera forKey:OwlWatchCamera];
-                        [resDic setObject:watchAudio forKey:OwlWatchAudio];
-                        [self addAppWhiteItem:resDic];
-                    }
-                } else {
-                    NSLog(@"proc is not app type");
-                    NSNumber *appleApp;
-                    if ([executableName hasPrefix:@"com.apple"]) {
-                        appleApp = [NSNumber numberWithBool:YES];
-                    } else {
-                        appleApp = [NSNumber numberWithBool:NO];
-                    }
-                    if (proc_path == nil) {
-                        proc_path = @"";
-                    }
-                    NSMutableDictionary *appDic = [[NSMutableDictionary alloc] init];
-                    [appDic setObject:executableName forKey:OwlAppName];
-                    [appDic setObject:executableName forKey:OwlExecutableName];
-                    [appDic setObject:proc_path forKey:OwlBubblePath];
-                    [appDic setObject:executableName forKey:OwlIdentifier];
-                    [appDic setObject:@"console" forKey:OwlAppIcon];
-                    [appDic setObject:appleApp forKey:OwlAppleApp];
-                    [appDic setObject:watchCamera forKey:OwlWatchCamera];
-                    [appDic setObject:watchAudio forKey:OwlWatchAudio];
-                    [appDic setObject:executableName forKey:OwlAppName];
-                    [self addAppWhiteItem:appDic];
-                }
-            }
-        } else {
-            
-        }
+// 将内嵌app转换为非内嵌主app，如果不是内嵌app，则返回app本身的信息
+- (NSDictionary *)mainAppInfoWithPath:(NSString *)appPath {
+    if (![appPath isKindOfClass:NSString.class]) {
+        return nil;
+    }
+    // 从左往右找到父app
+    NSString *parentAppPath = [self appPathFromExecutablePath:appPath fileExtension:kSuffixApp options:0];
+    if (!parentAppPath) {
+        parentAppPath = [self appPathFromExecutablePath:appPath fileExtension:kSuffixAppex options:0];
+    }
+    
+    if (parentAppPath) {
+        return [self getAppInfoWithPath:parentAppPath appName:@""];
+    }
+    return [self getAppInfoWithPath:appPath appName:@""];
+}
+
+// 添加白名单
+- (void)addWhiteListWith:(NSDictionary *)dict hardware:(Owl2LogHardware)hardware {
+    NSMutableDictionary *muDict = dict.mutableCopy;
+    switch (hardware) {
+        case Owl2LogHardwareAudio:
+            [muDict setObject:[NSNumber numberWithBool:YES] forKey:OwlWatchAudio];
+            break;
+        case Owl2LogHardwareVedio:
+            [muDict setObject:[NSNumber numberWithBool:YES] forKey:OwlWatchCamera];
+            break;
+        case Owl2LogHardwareSystemAudio:
+            [muDict setObject:[NSNumber numberWithBool:YES] forKey:OwlWatchSpeaker];
+            break;
+        default:
+            break;
+    }
+    
+    [self addAppWhiteItem:muDict.copy];
+}
+
+// kill app
+- (void)killWithUserInfo:(NSDictionary *)userInfo completionHandler:(void(^)(BOOL prevent))handler {
+    
+    Owl2LogHardware hardware = [[userInfo objectForKey:OwlHardware] integerValue];
+    
+    // 每次均提示是否阻止
+    NSAlert *alert = [[NSAlert alloc] init];
+    alert.alertStyle = NSAlertStyleInformational;
+    if (hardware == Owl2LogHardwareVedio) {
+        alert.messageText = NSLocalizedStringFromTableInBundle(@"OwlManager_userNotificationCenter_alert_1", nil, [NSBundle bundleForClass:[self class]], @"");
+    } else if (hardware == Owl2LogHardwareAudio) {
+        alert.messageText = NSLocalizedStringFromTableInBundle(@"OwlManager_userNotificationCenter_alert_2", nil, [NSBundle bundleForClass:[self class]], @"");
+    } else if (hardware == Owl2LogHardwareSystemAudio) {
+        NSLocalizedStringFromTableInBundle(@"App会被强制退出，以防继续使用扬声器", nil, [NSBundle bundleForClass:[self class]], @"");
+    }
+    alert.informativeText = NSLocalizedStringFromTableInBundle(@"OwlManager_userNotificationCenter_alert_4", nil, [NSBundle bundleForClass:[self class]], @"");
+    [alert addButtonWithTitle:NSLocalizedStringFromTableInBundle(@"OwlSelectViewController_initWithFrame_ok_2", nil, [NSBundle bundleForClass:[self class]], @"")];
+    [alert addButtonWithTitle:NSLocalizedStringFromTableInBundle(@"OwlSelectViewController_initWithFrame_cancel_1", nil, [NSBundle bundleForClass:[self class]], @"")];
+    
+    NSInteger responseTag = [alert runModal];
+    if (responseTag == NSAlertFirstButtonReturn) {
+        if (handler) handler(YES);
+        kill([[userInfo objectForKey:OWL_PROC_ID] intValue], SIGKILL);
     } else {
-        
+        if (handler) handler(NO);
     }
 }
 
-- (BOOL)userNotificationCenter:(NSUserNotificationCenter *)center shouldPresentNotification:(NSUserNotification *)notification
-{
-    return YES;
+- (NSString *)appPathFromExecutablePath:(NSString *)executablePath fileExtension:(NSString *)fileExtension options:(NSStringCompareOptions)mask {
+    NSRange range = [executablePath rangeOfString:fileExtension options:mask];
+    if (range.location != NSNotFound) {
+        return [executablePath substringToIndex:range.location + range.length];
+    }
+    return nil;
 }
 
 @end

@@ -90,7 +90,7 @@ typedef NS_ENUM(NSUInteger, CreateActionItemType) {
     subItem.subCategoryID = subCateId;
     subItem.bundleId = subCateId;
     subItem.title = appDisplayName;
-    subItem.tips = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"QMItemCreateHelper_createSoftAdaptCategorySubItemWithId_1553048057_1", nil, [NSBundle bundleForClass:[self class]], @""), appDisplayName];
+    subItem.tips = [NSString stringWithFormat:LMLocalizedSelfBundleString(@"清理%@缓存文件及日志文件", nil), appDisplayName];
     subItem.fastMode = YES;
     subItem.showAction = YES;
     if ([bundleId isEqualToString:@"com.google.android.studio"] || [bundleId isEqualToString:@"com.jetbrains.intellij"] || [bundleId isEqualToString:@"com.jetbrains.PhpStorm"]) {
@@ -124,7 +124,7 @@ typedef NS_ENUM(NSUInteger, CreateActionItemType) {
         actionItem.bundleID = bundleId;
         actionItem.appPath = appPath;
         actionItem.sandboxType = sandboxType;
-        actionItem.title = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"QMItemCreateHelper_createActionItemWithId_actionItem_1", nil, [NSBundle bundleForClass:[self class]], @""), appDisplayName];
+        actionItem.title = [NSString stringWithFormat:LMLocalizedSelfBundleString(@"%@缓存", nil), appDisplayName];
         //添加扫描路径 包括SystemDir
 //        if (isSandbox) {
 //            QMActionPathItem *sandboxPathItem = [QMItemCreateHelper createPathItemWithType:@"abs" path:[NSString stringWithFormat:@"~/Library/Containers/%@/Data/Library/Caches/", bundleId] bundleId:bundleId];
@@ -144,7 +144,7 @@ typedef NS_ENUM(NSUInteger, CreateActionItemType) {
         
     }else if (type == CreateActionItemTypeLogs){
         actionItem.type = QMActionFileType;
-        actionItem.title = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"QMItemCreateHelper_createActionItemWithId_actionItem_2", nil, [NSBundle bundleForClass:[self class]], @""), appDisplayName];
+        actionItem.title = [NSString stringWithFormat:LMLocalizedSelfBundleString(@"%@日志", nil), appDisplayName];
         if (sandboxType == SandboxTypeYes) {
             QMActionPathItem *sandboxBundlePathItem = [QMItemCreateHelper createPathItemWithType:@"abs" path:[NSString stringWithFormat:@"~/Library/Containers/%@/Data/Library/Logs/", bundleId] bundleId:bundleId];
             [actionItem addActionPathItem:sandboxBundlePathItem];

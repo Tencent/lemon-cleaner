@@ -156,7 +156,7 @@
         [self.sizeLabel setStringValue:@""];
 //
         if (self.noPrivacyBtn == nil) {
-            self.noPrivacyBtn = [LMViewHelper createNormalTextButton:12 title:NSLocalizedStringFromTableInBundle(@"SubCategoryCellView_setCellData_1553048057_1", nil, [NSBundle bundleForClass:[self class]], @"") textColor:[NSColor colorWithHex:0xFF9600] alignment:NSTextAlignmentRight];
+            self.noPrivacyBtn = [LMViewHelper createNormalTextButton:12 title:LMLocalizedSelfBundleString(@"获取扫描权限", nil) textColor:[NSColor colorWithHex:0xFF9600] alignment:NSTextAlignmentRight];
             [self.noPrivacyBtn setFrame:NSMakeRect(775, 5, 100, 19)];
             [self addSubview:self.noPrivacyBtn];
             self.noPrivacyBtn.target = self;
@@ -173,20 +173,20 @@
     NSString *sizeStr = [self getSizeStr:item];
     if ([item isCleanning]){
         [LMAppThemeHelper setTitleColorForTextField:self.sizeLabel];
-        [self.sizeLabel setStringValue:NSLocalizedStringFromTableInBundle(@"SubCategoryCellView_setCellData_sizeLabel_2", nil, [NSBundle bundleForClass:[self class]], @"")];
+        [self.sizeLabel setStringValue:LMLocalizedSelfBundleString(@"正在清理...", nil)];
     }else{
         if ([item isScanning]) {
             [LMAppThemeHelper setTitleColorForTextField:self.sizeLabel];
-            [self.sizeLabel setStringValue:NSLocalizedStringFromTableInBundle(@"SubCategoryCellView_setCellData_sizeLabel_3", nil, [NSBundle bundleForClass:[self class]], @"")];
+            [self.sizeLabel setStringValue:LMLocalizedSelfBundleString(@"正在扫描...", nil)];
         }else{
             if ([sizeStr isEqualToString:@"0 B"]) {
                 if ([item showAction]) {
                     [self.sizeLabel setStringValue:sizeStr];
                 }else{
                     [self.sizeLabel setTextColor:[NSColor colorWithHex:0x33D39D]];
-                    [self.sizeLabel setStringValue:NSLocalizedStringFromTableInBundle(@"SubCategoryCellView_setCellData_sizeLabel_4", nil, [NSBundle bundleForClass:[self class]], @"")];
+                    [self.sizeLabel setStringValue:LMLocalizedSelfBundleString(@"很干净", nil)];
                 }
-                if ([[item tips] isEqualToString:NSLocalizedStringFromTableInBundle(@"SubCategoryCellView_setCellData_[item tips]_5", nil, [NSBundle bundleForClass:[self class]], @"")]) {
+                if ([[item tips] isEqualToString:LMLocalizedSelfBundleString(@"默认清理缓存及日志，展开查看更多可清理项", nil)]) {
                     [self.descLabel setStringValue:@""];
                 }
             }else if([item isScaned]){
@@ -196,10 +196,10 @@
                 }else{
                     if ([item isCautious]) {
                         [LMAppThemeHelper setTitleColorForTextField:self.sizeLabel];
-                        [self.sizeLabel setStringValue:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"SubCategoryCellView_setCellData_sizeLabel_6", nil, [NSBundle bundleForClass:[self class]], @""),sizeStr]];
+                        [self.sizeLabel setStringValue:[NSString stringWithFormat:LMLocalizedSelfBundleString(@"共 %@，建议清理", nil),sizeStr]];
                     }else{
                         [self.sizeLabel setTextColor:[NSColor colorWithHex:0xE6704C]];
-                        [self.sizeLabel setStringValue:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"SubCategoryCellView_setCellData_sizeLabel_7", nil, [NSBundle bundleForClass:[self class]], @""),sizeStr]];
+                        [self.sizeLabel setStringValue:[NSString stringWithFormat:LMLocalizedSelfBundleString(@"共 %@，谨慎清理", nil),sizeStr]];
                     }
                 }
             }else{

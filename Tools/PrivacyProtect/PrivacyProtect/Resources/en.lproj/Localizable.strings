@@ -55,10 +55,10 @@
 "OwlViewController_whiteListChange_NSString_1" = "Whitelist（%lu）";
 "OwlViewController_setLoadingUI_loadingLabelSpec _1" = "Initializing...";
 "OwlViewController_setFinishUI_labelTitle _1" = "Device Access Alert";
-"OwlViewController_setFinishUI_vedioLabelTitle _2" = "Webcam Access Alert";
-"OwlViewController_setFinishUI_vedioLabelSpec _3" = "Get alerts when apps access your webcam";
-"OwlViewController_setFinishUI_audioLabelTitle _4" = "Microphone Access Alert";
-"OwlViewController_setFinishUI_audioLabelSpec _5" = "Get alerts when apps access your mic";
+"OwlViewController_setFinishUI_vedioLabelTitle _2" = "Camera Access Alert";
+"OwlViewController_setFinishUI_vedioLabelSpec _3" = "Get alerts when apps access your cam";
+"OwlViewController_setFinishUI_audioLabelTitle _4" = "System Audio Access Alert";
+"OwlViewController_setFinishUI_audioLabelSpec _5" = "Get alerts when apps access your mic or speaker audio";
 "OwlViewController_setFinishUI_logBtn_6" = "Activity log";
 "OwlViewController_setFinishUI_NSString_7" = "Whitelist（%lu）";
 "OwlViewController_showToastForFirst_notification_1" = "Mic access alert enabled";
@@ -69,3 +69,45 @@
 "OwlViewController_showToastForFirst_notification_4" = "Webcam access alert is enabled.";
 "OwlViewController_showToastForFirst_notification_5" = "You'll get notifications when your webcam is accessed.";
 
+"请开启通知提醒权限" = "Enable Notification Permissions";
+"若存在摄像头、麦克风或扬声器等隐私设备被调用情况，将发送通知告知隐私保护的情况" = "Notifications will alert you when a privacy device (e.g., camera, microphone, or speaker) is accessed";
+"步骤：\n【系统设置】——【通知】——【应用程序通知】——开启【LemonMonitor】" = "Path:\n [System Settings] → [Notifications] → [Application Notifications] → Enable [LemonMonitor]";
+"前往设置" = "Go to Settings";
+"取消" = "Cancel";
+"移除" = "Remove";
+"操作" = "Operation";
+"软件进程" = "Software Process";
+"操作记录" = "Operation Log";
+"本次允许" = "Allow Once";
+"默认允许" = "Default Allow";
+"永久允许" = "Always Allow";
+"阻止" = "Block";
+"隐私保护提示" = "Privacy Protection Alert";
+"隐私保护" = "Privacy Protection";
+"设备隐私保护" = "Device Privacy Protection";
+
+"开始使用" = "Start using";
+"结束使用" = "Stop using";
+"正在使用摄像头" = "Using cam";
+"正在使用麦克风" = "Using mic";
+"正在使用摄像头和麦克风" = "Using cam&mic";
+"停止使用摄像头" = "Stop using cam";
+"停止使用麦克风" = "Stop using mic";
+"停止使用摄像头和麦克风" = "Stop using cam&mic";
+"扬声器音频" = "Speaker audio";
+"开始录制扬声器音频" = "Start capture audio";
+"结束录制扬声器音频" = "Stop capture audio";
+"开始录制" = "Start capture";
+"结束录制" = "Stop capture";
+
+"系统应用" = "Build-in app";
+"第三方应用" = "Third-party app";
+"应用类型" = "Type";
+"添加应用" = "Add App";
+"应用列表" = "Application List";
+
+"暂无可添加应用" = "No Apps Available to Add";
+"暂无白名单应用" = "No Apps in Allow List";
+
+"请开启通知权限以接收隐私保护提示" = "Please grant notification permissions to receive privacy protection alerts";
+"查看详情" = "More details";
