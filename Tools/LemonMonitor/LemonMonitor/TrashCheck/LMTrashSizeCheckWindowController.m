@@ -121,27 +121,27 @@
             threshold = 1024;
         }
         sizeString = [self getTrashSizeStringWithThreshold:threshold];
-        sourceString =  [self getStringByKey:@"LMTrashSizeCheckWindowController_need_clean_size_tips_content_for_over_threshold"];
+        sourceString =  [self getStringByKey:@"废纸篓垃圾已超过 %@"];
     }else {
         sizeString = [NSString stringFromDiskSize:self.trashSize];
-        sourceString =  [self getStringByKey:@"LMTrashSizeCheckWindowController_need_clean_size_tips_content_for_delete_file"];
+        sourceString =  [self getStringByKey:@"废纸篓垃圾已占用 %@"];
     }
     sourceString = [NSString stringWithFormat:sourceString,sizeString];
     NSAttributedString *attributeString = [self attributedWithString:sourceString keywordsRange:[sourceString rangeOfString:sizeString]];
 //    [self.needCleanTipsFirst setAttributedStringValue:attributeString];
     
     [self.needCleanTipsSecond setAttributedStringValue:attributeString];
-    self.needCleanTipsFirst.stringValue = [self getStringByKey:@"LMTrashSizeCheckWindowController_need_clean_size_tips_content_second"];
-    self.nextRemindButton.title = [self getStringByKey:@"LMTrashSizeCheckWindowController_cleaning_next_remind_btn"];
-    self.cleanButton.title = [self getStringByKey:@"LMTrashSizeCheckWindowController_cleaning_clean_btn"];
+    self.needCleanTipsFirst.stringValue = [self getStringByKey:@"是否清空废纸篓？"];
+    self.nextRemindButton.title = [self getStringByKey:@"暂不清理"];
+    self.cleanButton.title = [self getStringByKey:@"清空"];
     
     //init cleaning view
-    self.progressTitle.stringValue = [self getStringByKey:@"LMTrashSizeCheckWindowController_cleaning_tips"];
-    self.cancelButton.title = [self getStringByKey:@"LMTrashSizeCheckWindowController_cleaning_cancel_btn"];
+    self.progressTitle.stringValue = [self getStringByKey:@"正在清理，请稍候..."];
+    self.cancelButton.title = [self getStringByKey:@"取消"];
     
     //init result view
-    self.cleanCompleteTips.stringValue = [self getStringByKey:@"LMTrashSizeCheckWindowController_cleaning_complete_tips"];
-    self.completeBtn.title = [self getStringByKey:@"LMTrashSizeCheckWindowController_cleaning_complete_btn"];
+    self.cleanCompleteTips.stringValue = [self getStringByKey:@"已清空废纸篓"];
+    self.completeBtn.title = [self getStringByKey:@"完成"];
 }
 
 -(NSString *)getTrashSizeStringWithThreshold: (NSInteger)threshold {
@@ -276,7 +276,7 @@ NSInteger kNSColorKeyNilCode         =  -1004;
 }
 
 -(NSString *)getStringByKey: (NSString *)key{
-    return NSLocalizedStringFromTableInBundle(key, nil, [NSBundle bundleForClass:[self class]], @"");
+    return NSLocalizedString(key, nil);
 }
 
 - (void)openFullDiskAccessSettingGuidePage {

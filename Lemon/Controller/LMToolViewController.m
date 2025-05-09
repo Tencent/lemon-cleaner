@@ -161,7 +161,7 @@
         [self.communityButton setAction:@selector(communityBtn)];
     }
     
-    NSMutableAttributedString *linkAttrStr = [[NSMutableAttributedString alloc] initWithString:NSLocalizedStringFromTableInBundle(@"Share valuable suggestions", nil, [NSBundle bundleForClass:[self class]], @"")];
+    NSMutableAttributedString *linkAttrStr = [[NSMutableAttributedString alloc] initWithString:NSLocalizedString(@"分享宝贵建议", nil)];
         [linkAttrStr addAttribute:NSUnderlineStyleAttributeName value:[NSNumber numberWithInt:NSUnderlineStyleSingle] range:NSMakeRange(0, linkAttrStr.length)];
         [self.communityButton setAttributedTitle:linkAttrStr];
     
@@ -184,7 +184,7 @@
     self.moreAppLink.image = [NSImage imageNamed:@"icon_tc_robot"];
     [self.moreAppTitle setFont:[NSFontHelper getLightSystemFont:12]];
     [self.moreAppTitle setTextColor:[NSColor colorWithHex:0xC9C9C9]];
-    [self.moreAppTitle setStringValue:NSLocalizedStringFromTableInBundle(@"LMToolViewController_initView_moreAppTitle_1", nil, [NSBundle bundleForClass:[self class]], @"")];
+    [self.moreAppTitle setStringValue:NSLocalizedString(@"前往社区分享你的宝贵意见", nil)];
     NSClickGestureRecognizer *recognizer = [[NSClickGestureRecognizer alloc] initWithTarget:self action:@selector(gotoMacqqCom:)];
     [self.moreAppTitle addGestureRecognizer:recognizer];
 //    [self.moreAppLink setFont:[NSFontHelper getLightSystemFont:12]];
@@ -366,7 +366,7 @@
             }
             if([self isNeedCheckFullDiskAccessWithClassName:className]){
                 //检查完全磁盘访问权限
-                if([FullDiskAccessPermissionViewController showFullDiskAccessRequestIfNeededWithParentController:self title:NSLocalizedStringFromTableInBundle(@"LMToolViewController_checkFullDiskAccess_need_permission_window_title", nil, [NSBundle bundleForClass:[self class]], @"") sourceType:SMALL_TOOLS_VIEW]) return;
+                if([FullDiskAccessPermissionViewController showFullDiskAccessRequestIfNeededWithParentController:self title:NSLocalizedString(@"10.15系统上，Lemon无权限访问废纸篓、桌面等文件夹，需要开启“完全磁盘访问权限”才能扫描并清理垃圾。", nil) sourceType:SMALL_TOOLS_VIEW]) return;
             }
             
             QMBaseWindowController *controller = [weakSelf getWindowControllerByClassname:className];
@@ -414,10 +414,10 @@
     
     NSAlert *alert = [[NSAlert alloc] init];
     alert.alertStyle = NSAlertStyleWarning;
-    [alert addButtonWithTitle:NSLocalizedStringFromTableInBundle(@"LMToolViewController_showNotSupportToast_alert_1", nil, [NSBundle bundleForClass:[self class]], @"")];
-    [alert addButtonWithTitle:NSLocalizedStringFromTableInBundle(@"LMToolViewController_showNotSupportToast_alert_2", nil, [NSBundle bundleForClass:[self class]], @"")];
-    alert.messageText = NSLocalizedStringFromTableInBundle(@"LMToolViewController_showNotSupportToast_alert_3", nil, [NSBundle bundleForClass:[self class]], @"");
-    alert.informativeText = NSLocalizedStringFromTableInBundle(@"LMToolViewController_showNotSupportToast_alert_4", nil, [NSBundle bundleForClass:[self class]], @"");
+    [alert addButtonWithTitle:NSLocalizedString(@"确定", nil)];
+    [alert addButtonWithTitle:NSLocalizedString(@"取消", nil)];
+    alert.messageText = NSLocalizedString(@"相似照片清理", nil);
+    alert.informativeText = NSLocalizedString(@"暂不支持Mac OS 10.10及以下的版本哟！", nil);
     [alert beginSheetModalForWindow:[NSApplication sharedApplication].keyWindow completionHandler:^(NSModalResponse returnCode) {
     
     }];

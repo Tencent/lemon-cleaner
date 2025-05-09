@@ -93,16 +93,16 @@
     
     if ([item isScanning]) {
         [self.titleLabel setStringValue:[item title]];
-        [self.sizeLabel setStringValue:NSLocalizedStringFromTableInBundle(@"CategoryCellView_setCellData_sizeLabel_1", nil, [NSBundle bundleForClass:[self class]], @"")];
+        [self.sizeLabel setStringValue:LMLocalizedSelfBundleString(@"正在扫描垃圾…", nil)];
         [self.sizeSelectLabel setHidden:YES];
         [self.categoryProgessView startAni];
     }else if ([item isCleanning]){
-        [self.sizeLabel setStringValue:NSLocalizedStringFromTableInBundle(@"CategoryCellView_setCellData_sizeLabel_2", nil, [NSBundle bundleForClass:[self class]], @"")];
+        [self.sizeLabel setStringValue:LMLocalizedSelfBundleString(@"正在清理垃圾…", nil)];
         [self.sizeSelectLabel setHidden:YES];
         [self.categoryProgessView startAni];
     }else{
         NSString *sizeTotalStr = [NSString stringFromDiskSize:[item resultFileSize]];
-        [self.sizeLabel setStringValue:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"CategoryCellView_setCellData_sizeLabel_3", nil, [NSBundle bundleForClass:[self class]], @""), sizeTotalStr]];
+        [self.sizeLabel setStringValue:[NSString stringWithFormat:LMLocalizedSelfBundleString(@"共 %@，已选择", nil), sizeTotalStr]];
         [self.sizeSelectLabel setHidden:NO];
         NSString *sizeSelectStr = [self getSizeStr:item];
         [self.sizeSelectLabel setStringValue:sizeSelectStr];

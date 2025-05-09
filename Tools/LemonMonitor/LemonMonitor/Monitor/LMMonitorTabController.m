@@ -24,6 +24,8 @@
 #import <QMUICommon/QMButton.h>
 #import "AppDelegate.h"
 #import "LMAboutWindow.h"
+#import <LemonFileManager/NSObject+LMDataCheck.h>
+#import <PrivacyProtect/PrivacyProtect.h>
 
 #define MONITOR_OPNE_LEMON_505      @"MONITOR_OPNE_LEMON_505" // 505活动入口标记
 
@@ -103,6 +105,10 @@ static const CGFloat kTopPadding = 10;
 - (void)loadView
 {
     NSRect rect = NSMakeRect(0, 0, 340, 444); //不包括箭头
+    if ([Owl2Manager sharedManager].showOneClickGuideView) {
+        // 展示隐私保护‘一键开启’引导视图
+        rect.size.height += 54;
+    }
     NSView *view = [[NSView alloc] initWithFrame:rect];
     self.view = view;
     view.wantsLayer = YES;
@@ -191,7 +197,10 @@ static const CGFloat kTopPadding = 10;
 - (void)viewWillAppear
 {
     [super viewWillAppear];
-  
+    
+    // owl 引导试图显示和不显示window的高度要动态调整
+    [self __updateWindowFrameWithShowOwlGuideState];
+
     if (mUpdateRedpointForSettings != nil)
     {
         if ([self CheckVersionUpdate])
@@ -204,6 +213,27 @@ static const CGFloat kTopPadding = 10;
         }
     }
     
+}
+
+- (void)__updateWindowFrameWithShowOwlGuideState {
+    float currentViewH = self.view.frame.size.height;
+    
+    NSRect normalViewFrame = NSMakeRect(0, 0, 340, 444); //不包括箭头
+    if ([Owl2Manager sharedManager].showOneClickGuideView) {
+        // 展示隐私保护‘一键开启’引导视图
+        normalViewFrame.size.height += 54;
+    }
+    float newHeight = normalViewFrame.size.height;
+    self.view.frame = normalViewFrame;
+
+    if (fabs(currentViewH - newHeight) > 10) {  // 有变化，窗口大小也要相应改变，至少相差54
+        NSRect windowFrame = self.view.window.frame;
+        float topLeftY = NSMaxY(windowFrame);
+        windowFrame.size.height = normalViewFrame.size.height + 6;
+        windowFrame.origin.y = topLeftY - windowFrame.size.height;  // 左上角固定
+        [self.view.window setFrame:windowFrame display:YES];
+    }
+
 }
 
 - (void)viewDidDisappear {
@@ -274,7 +304,7 @@ static const CGFloat kTopPadding = 10;
     //    NSButton* launchLemonBtn = [NSButton buttonWithTitle:@"打开 Lemon" target:self action:@selector(onLaunchLemon)];
     LMOpenButton *launchLemonBtn = [[LMOpenButton alloc] init];
     [launchLemonBtn setFont:[NSFontHelper getRegularSystemFont:12]];
-    launchLemonBtn.title = NSLocalizedStringFromTableInBundle(@"LMMonitorTabController_setupLauncherView_launchLemonBtn_1", nil, [NSBundle bundleForClass:[self class]], @"");
+    launchLemonBtn.title = NSLocalizedString(@"打开 Lemon", nil);
     launchLemonBtn.target = self;
     launchLemonBtn.action = @selector(onLaunchLemon);
     [self.view addSubview:launchLemonBtn];
@@ -506,16 +536,11 @@ static const CGFloat kTopPadding = 10;
     // UI
     NSMenu* rightClickMenu = [[NSMenu alloc] init];
     //    rightClickMenu.minimumWidth = 300.0f;
-    NSMenuItem *item1 = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(NSLocalizedStringFromTableInBundle(@"LMMonitorTabController_onLaunchSettings_item1 _1", nil, [NSBundle bundleForClass:[self class]], @""),
+    NSMenuItem *item1 = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(NSLocalizedString(@"关于 Lemon Cleaner", nil),
                                                                             @"") action:@selector(rightAboutAction:) keyEquivalent:@""];
-    //    NSMenuItem *item2 = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"隐私政策", @"") action:@selector(rightPrivacyAction:) keyEquivalent:@""];
-    //    NSMenuItem *item3 = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"语言设置", @"") action:@selector(rightLanguageAction:) keyEquivalent:@""];
-//    NSMenuItem *item4 = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(NSLocalizedStringFromTableInBundle(@"LMMonitorTabController_onLaunchSettings_item4 _2", nil, [NSBundle bundleForClass:[self class]], @""),
-//                                                                            @"") action:@selector(onRightUpdateAction:) keyEquivalent:@""];
-    //    NSMenuItem *item5 = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"退出", @"") action:@selector(rightQuitAction:) keyEquivalent:@""];
-    NSMenuItem *item6 = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(NSLocalizedStringFromTableInBundle(@"LMMonitorTabController_onLaunchSettings_item6 _3", nil, [NSBundle bundleForClass:[self class]], @""),
+    NSMenuItem *item6 = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(NSLocalizedString(@"偏好设置", nil),
                                                                             @"") action:@selector(rightOpenPreference:) keyEquivalent:@""];
-    NSMenuItem *item7 = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(NSLocalizedStringFromTableInBundle(@"LMMonitorTabController_onLaunchSettings_item7 _4", nil, [NSBundle bundleForClass:[self class]], @""),
+    NSMenuItem *item7 = [[NSMenuItem alloc] initWithTitle:NSLocalizedString(NSLocalizedString(@"退出状态栏", nil),
                                                                             @"") action:@selector(rightQuitAction:) keyEquivalent:@""];
     if (bNeedUpdate) {
 //        item4.image = [myBundle imageForResource:@"redpoint"];
@@ -673,7 +698,7 @@ static const CGFloat kTopPadding = 10;
     NSWindow* _windowLanguage = [[NSWindow alloc]initWithContentRect:CGRectMake(0, 0, 600, 600) styleMask:style backing:NSBackingStoreBuffered defer:YES];
     
     [_windowLanguage center];
-    _windowLanguage.title = NSLocalizedStringFromTableInBundle(@"LMMonitorTabController_rightLanguageAction__windowLanguage_1", nil, [NSBundle bundleForClass:[self class]], @"");
+    _windowLanguage.title = NSLocalizedString(@"语言设置", nil);
     
     NSButton* radioButtonChinese = [NSButton radioButtonWithTitle:@"CHINESE" target:self action:@selector(languageSelected:)];
     radioButtonChinese.tag = 1;
@@ -722,10 +747,10 @@ static const CGFloat kTopPadding = 10;
     {
         NSAlert *alert = [[NSAlert alloc] init];
         alert.alertStyle = NSAlertStyleInformational;
-        alert.messageText = NSLocalizedStringFromTableInBundle(@"LMMonitorTabController_rightQuitAction_alert_1", nil, [NSBundle bundleForClass:[self class]], @"");
+        alert.messageText = NSLocalizedString(@"关闭状态栏后，所有功能（包括自动检测卸载残留，摄像头使用提醒等）都不再生效。确定关闭吗？", nil);
         //alert.informativeText = @"确定要阻止吗？";
-        [alert addButtonWithTitle:NSLocalizedStringFromTableInBundle(@"LMMonitorTabController_rightQuitAction_alert_2", nil, [NSBundle bundleForClass:[self class]], @"")];
-        [alert addButtonWithTitle:NSLocalizedStringFromTableInBundle(@"LMMonitorTabController_rightQuitAction_alert_3", nil, [NSBundle bundleForClass:[self class]], @"")];
+        [alert addButtonWithTitle:NSLocalizedString(@"取消", nil)];
+        [alert addButtonWithTitle:NSLocalizedString(@"退出状态栏", nil)];
         NSInteger responseTag = [alert runModal];
         if (responseTag != NSAlertFirstButtonReturn) {
             ttype = NSTerminateNow;

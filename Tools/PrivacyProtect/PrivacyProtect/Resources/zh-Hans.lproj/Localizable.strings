@@ -54,11 +54,11 @@
 "OwlWhiteListViewController_initWithFrame_labelSpecOp _5" = "允许权限类型";
 "OwlViewController_whiteListChange_NSString_1" = "白名单（%lu）";
 "OwlViewController_setLoadingUI_loadingLabelSpec _1" = "正在初始化数据...";
-"OwlViewController_setFinishUI_labelTitle _1" = "设备保护";
+"OwlViewController_setFinishUI_labelTitle _1" = "设备隐私保护";
 "OwlViewController_setFinishUI_vedioLabelTitle _2" = "摄像头保护";
 "OwlViewController_setFinishUI_vedioLabelSpec _3" = "摄像头被软件占用时提示通知";
-"OwlViewController_setFinishUI_audioLabelTitle _4" = "麦克风保护";
-"OwlViewController_setFinishUI_audioLabelSpec _5" = "麦克风被软件占用时提示通知";
+"OwlViewController_setFinishUI_audioLabelTitle _4" = "系统音频保护";
+"OwlViewController_setFinishUI_audioLabelSpec _5" = "麦克风或扬声器输出音频被软件占用时提示通知";
 "OwlViewController_setFinishUI_logBtn_6" = "监控日志";
 "OwlViewController_setFinishUI_NSString_7" = "白名单（%lu）";
 "OwlViewController_showToastForFirst_notification_1" = "麦克风保护已开启";

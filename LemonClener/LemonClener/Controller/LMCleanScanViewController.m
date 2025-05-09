@@ -417,7 +417,7 @@
         NSString *userPath = [NSString getUserHomePath];
         isUserGiveHomePathPermission = [[LMBookMark defaultShareBookmark] accessingSecurityScopedResourceWithFilePath:userPath];
         if (!isUserGiveHomePathPermission) {
-            [self.startScanBtn setTitle:NSLocalizedStringFromTableInBundle(@"LMCleanScanViewController_initView_startScanBtn_1", nil, [NSBundle bundleForClass:[self class]], @"") withColor:[NSColor whiteColor]];
+            [self.startScanBtn setTitle:LMLocalizedSelfBundleString(@"获取权限", nil) withColor:[NSColor whiteColor]];
             [self.showToolBtn setHidden:YES];
         }else{
             if ([McCoreFunction isAppStoreVersion]) {//老用户升级 托盘权限的问题
@@ -434,9 +434,9 @@
                 }
             }
         }
-        [self.mainViewDescLabel setStringValue:NSLocalizedStringFromTableInBundle(@"LMCleanScanViewController_initView_mainViewDescLabel_2", nil, [NSBundle bundleForClass:[self class]], @"")];
+        [self.mainViewDescLabel setStringValue:LMLocalizedSelfBundleString(@"欢迎使用 Lemon Cleaner Lite", nil)];
     }else{
-        [self.mainViewDescLabel setStringValue:NSLocalizedStringFromTableInBundle(@"LMCleanScanViewController_initView_mainViewDescLabel_3", nil, [NSBundle bundleForClass:[self class]], @"")];
+        [self.mainViewDescLabel setStringValue:LMLocalizedSelfBundleString(@"欢迎使用 Lemon Cleaner", nil)];
     }
     
     //main imageview add gesture
@@ -733,13 +733,13 @@
 
 #pragma mark -- 控件初始化
 -(void)initViewText{
-    [self.startScanBtn setTitle:NSLocalizedStringFromTableInBundle(@"LMCleanScanViewController_initViewText_startScanBtn_1", nil, [NSBundle bundleForClass:[self class]], @"") withColor:[NSColor whiteColor]];
-    [self.mainViewTitleLabel setStringValue:NSLocalizedStringFromTableInBundle(@"LMCleanScanViewController_initViewText_mainViewTitleLabel_2", nil, [NSBundle bundleForClass:[self class]], @"")];
-    [self.noResultTipLabel setStringValue:NSLocalizedStringFromTableInBundle(@"LMCleanScanViewController_initViewText_noResultTipLabel_3", nil, [NSBundle bundleForClass:[self class]], @"")];
-    [self.showBIgBtn setTitle:NSLocalizedStringFromTableInBundle(@"LMCleanScanViewController_initViewText_showBIgBtn_4", nil, [NSBundle bundleForClass:[self class]], @"")];
-    [self.guideDescLabel1 setStringValue:NSLocalizedStringFromTableInBundle(@"LMCleanScanViewController_initViewText_guideDescLabel1_5", nil, [NSBundle bundleForClass:[self class]], @"")];
-    [self.guideDescLabel2 setStringValue:NSLocalizedStringFromTableInBundle(@"LMCleanScanViewController_initViewText_guideDescLabel2_6", nil, [NSBundle bundleForClass:[self class]], @"")];
-    [self.scanDetailBtn setTitle:NSLocalizedStringFromTableInBundle(@"LMCleanScanViewController_initViewText_scanDetailBtn_7", nil, [NSBundle bundleForClass:[self class]], @"")];
+    [self.startScanBtn setTitle:LMLocalizedSelfBundleString(@"开始扫描", nil) withColor:[NSColor whiteColor]];
+    [self.mainViewTitleLabel setStringValue:LMLocalizedSelfBundleString(@"畅快清理，清爽一下", nil)];
+    [self.noResultTipLabel setStringValue:LMLocalizedSelfBundleString(@"请继续保持良好的使用习惯哦～", nil)];
+    [self.showBIgBtn setTitle:LMLocalizedSelfBundleString(@"详情", nil)];
+    [self.guideDescLabel1 setStringValue:LMLocalizedSelfBundleString(@"点击“详情”按钮即可展开大界面，查", nil)];
+    [self.guideDescLabel2 setStringValue:LMLocalizedSelfBundleString(@"看垃圾的具体分类和详细信息哦～", nil)];
+    [self.scanDetailBtn setTitle:LMLocalizedSelfBundleString(@"详情", nil)];
 }
 
 -(void)setLightLabelFont{
@@ -749,13 +749,13 @@
     [_scanPathLabel setFont:[NSFontHelper getLightSystemFont:14]];
     [_scanDetailBtn setFont:[NSFontHelper getLightSystemFont:12]];
     [_systemRubbishLabel setFont:[NSFontHelper getLightSystemFont:14]];
-    [_systemRubbishLabel setStringValue:NSLocalizedStringFromTableInBundle(@"LMCleanScanViewController_setLightLabelFont_systemRubbishLabel_1", nil, [NSBundle bundleForClass:[self class]], @"")];
+    [_systemRubbishLabel setStringValue:LMLocalizedSelfBundleString(@"系统垃圾", nil)];
     //    [_systemRubbishSizeLabel setFont:[NSFontHelper getLightSystemFont:14]];
     [_appRubbishLabel setFont:[NSFontHelper getLightSystemFont:14]];
-    [_appRubbishLabel setStringValue:NSLocalizedStringFromTableInBundle(@"LMCleanScanViewController_setLightLabelFont_appRubbishLabel_2", nil, [NSBundle bundleForClass:[self class]], @"")];
+    [_appRubbishLabel setStringValue:LMLocalizedSelfBundleString(@"应用垃圾", nil)];
     //    [_appRubishSizeLabel setFont:[NSFontHelper getLightSystemFont:14]];
     [_internetRubbishLabel setFont:[NSFontHelper getLightSystemFont:14]];
-    [_internetRubbishLabel setStringValue:NSLocalizedStringFromTableInBundle(@"LMCleanScanViewController_setLightLabelFont_internetRubbishLabel_3", nil, [NSBundle bundleForClass:[self class]], @"")];
+    [_internetRubbishLabel setStringValue:LMLocalizedSelfBundleString(@"上网垃圾", nil)];
     //    [_internetRubbishSizeLabel setFont:[NSFontHelper getLightSystemFont:14]];
     [_floatViewScanning setFont:[NSFontHelper getLightSystemFont:14]];
     [_floatViewSize setFont:[NSFontHelper getLightSystemFont:14]];
@@ -803,14 +803,14 @@
     //        [self.resultTipLabel setStringValue:@"上网垃圾"];
     //    }else{
     [self.resultTipImageView setHidden:YES];
-    [self.resultTipLabel setStringValue:NSLocalizedStringFromTableInBundle(@"LMCleanScanViewController_setResultCircleImageViewProgress_resultTipLabel_1", nil, [NSBundle bundleForClass:[self class]], @"")];
+    [self.resultTipLabel setStringValue:LMLocalizedSelfBundleString(@"已发现垃圾", nil)];
     //    }
     
     //重新设置已选择大小以及刷新图标
     NSString *totalSizeString = [NSString stringFromDiskSize:_totalSize];
     NSString *nowSelectSizeString = [NSString stringFromDiskSize:_totalSelectedSize];
     [self.resultSizeLabel setStringValue:totalSizeString];
-    NSString *sizeString = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"LMCleanScanViewController_setResultCircleImageViewProgress_sizeString _2", nil, [NSBundle bundleForClass:[self class]], @""), nowSelectSizeString];
+    NSString *sizeString = [NSString stringWithFormat:LMLocalizedSelfBundleString(@"已选择 %@ 垃圾", nil), nowSelectSizeString];
     NSMutableAttributedString *attrString = [[NSMutableAttributedString alloc] initWithString:sizeString];
     NSRange range = [sizeString rangeOfString:nowSelectSizeString];
     [attrString addAttribute:NSForegroundColorAttributeName value:[NSColor colorWithHex:0xFFAA09] range:range];
@@ -830,10 +830,10 @@
     //设置清理按钮状态
     if ((_totalSize > 0) && (_totalSelectedSize == 0)) {
         _isCleanOrChooseRubbish = NO;
-        [self.resultBtn setTitle:NSLocalizedStringFromTableInBundle(@"LMCleanScanViewController_setResultCircleImageViewProgress_resultBtn_3", nil, [NSBundle bundleForClass:[self class]], @"") withColor:[NSColor whiteColor]];
+        [self.resultBtn setTitle:LMLocalizedSelfBundleString(@"去勾选", nil) withColor:[NSColor whiteColor]];
     }else{
         _isCleanOrChooseRubbish = YES;
-        [self.resultBtn setTitle:NSLocalizedStringFromTableInBundle(@"LMCleanScanViewController_setResultCircleImageViewProgress_resultBtn_4", nil, [NSBundle bundleForClass:[self class]], @"") withColor:[NSColor whiteColor]];
+        [self.resultBtn setTitle:LMLocalizedSelfBundleString(@"立即清理", nil) withColor:[NSColor whiteColor]];
     }
 }
 
@@ -887,9 +887,9 @@
         if(self.cleanStatus == CleanStatusCleanProgress) {
             QMCategoryItem* item = self.categoryArray[i-1];
             if([self isCategoryNoSelect:item])
-                cleanSizeString = NSLocalizedStringFromTableInBundle(@"LMCleanScanViewController_setCleanCategoryLabel_1553048057_1", nil, [NSBundle bundleForClass:[self class]], @"");
+                cleanSizeString = LMLocalizedSelfBundleString(@"未勾选", nil);
             else if(!item.isCleanning)
-                cleanSizeString = NSLocalizedStringFromTableInBundle(@"LMCleanScanViewController_setCleanCategoryLabel_1553048057_2", nil, [NSBundle bundleForClass:[self class]], @"");
+                cleanSizeString = LMLocalizedSelfBundleString(@"已清理", nil);
         }
         if (i == 1) {
             if (_sysSelectSize > 0) {
@@ -963,10 +963,10 @@
         
         [alert.accessoryView setFrameOrigin:NSMakePoint(0, 0)];
         alert.alertStyle = NSAlertStyleInformational;
-        alert.messageText = NSLocalizedStringFromTableInBundle(@"LMCleanScanViewController_startSmallClean_alert_1", nil, [NSBundle bundleForClass:[self class]], @"");
-        alert.informativeText = NSLocalizedStringFromTableInBundle(@"LMCleanScanViewController_startSmallClean_alert_2", nil, [NSBundle bundleForClass:[self class]], @"");
-        [alert addButtonWithTitle:NSLocalizedStringFromTableInBundle(@"LMCleanScanViewController_startSmallClean_alert_3", nil, [NSBundle bundleForClass:[self class]], @"")];
-        [alert addButtonWithTitle:NSLocalizedStringFromTableInBundle(@"LMCleanScanViewController_startSmallClean_alert_4", nil, [NSBundle bundleForClass:[self class]], @"")];
+        alert.messageText = LMLocalizedSelfBundleString(@"下次要按这次的调整来清理吗？", nil);
+        alert.informativeText = LMLocalizedSelfBundleString(@"如果不需要，将不会记住这次更改，会恢复默认勾选项！", nil);
+        [alert addButtonWithTitle:LMLocalizedSelfBundleString(@"不用", nil)];
+        [alert addButtonWithTitle:LMLocalizedSelfBundleString(@"需要", nil)];
         [alert beginSheetModalForWindow:self.view.window completionHandler:^(NSModalResponse returnCode) {
             if (returnCode == NSAlertSecondButtonReturn) {
                 [[LMCleanerDataCenter shareInstance] storeSubcateArrToDb];
@@ -1067,10 +1067,10 @@
             [self.mainView setHidden:YES];
             [self.sizeLabel setStringValue:@"0"];
             [self.unitLabel setStringValue:@"B"];
-            [self.scanTipLabel setStringValue:NSLocalizedStringFromTableInBundle(@"LMCleanScanViewController_reArrangeContentView_scanTipLabel_1", nil, [NSBundle bundleForClass:[self class]], @"")];
-            [self.systemRubbishSizeLabel setStringValue:NSLocalizedStringFromTableInBundle(@"LMCleanScanViewController_reArrangeContentView_systemRubbishSizeLabel_2", nil, [NSBundle bundleForClass:[self class]], @"")];
-            [self.appRubishSizeLabel setStringValue:NSLocalizedStringFromTableInBundle(@"LMCleanScanViewController_reArrangeContentView_appRubishSizeLabel_3", nil, [NSBundle bundleForClass:[self class]], @"")];
-            [self.internetRubbishSizeLabel setStringValue:NSLocalizedStringFromTableInBundle(@"LMCleanScanViewController_reArrangeContentView_internetRubbishSizeLabel_4", nil, [NSBundle bundleForClass:[self class]], @"")];
+            [self.scanTipLabel setStringValue:LMLocalizedSelfBundleString(@"发现垃圾", nil)];
+            [self.systemRubbishSizeLabel setStringValue:LMLocalizedSelfBundleString(@"等待中", nil)];
+            [self.appRubishSizeLabel setStringValue:LMLocalizedSelfBundleString(@"等待中", nil)];
+            [self.internetRubbishSizeLabel setStringValue:LMLocalizedSelfBundleString(@"等待中", nil)];
             [self startScanAniTimer];
             self.scanCancelBtn.alphaValue = 1.0f;
             [self.unitLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
@@ -1120,9 +1120,9 @@
                     }
                 }
             }else if (self.cleanStatus == CleanStatusScanNoResult){
-                [self.resultBtn setTitle:NSLocalizedStringFromTableInBundle(@"LMCleanScanViewController_reArrangeContentView_resultBtn_5", nil, [NSBundle bundleForClass:[self class]], @"") withColor:[NSColor whiteColor]];
+                [self.resultBtn setTitle:LMLocalizedSelfBundleString(@"完成", nil) withColor:[NSColor whiteColor]];
                 //                [self.resultTitleLabel setTextColor:[NSColor colorWithHex:0x00DB99]];
-                [self.resultTitleLabel setStringValue:NSLocalizedStringFromTableInBundle(@"LMCleanScanViewController_reArrangeContentView_resultTitleLabel_6", nil, [NSBundle bundleForClass:[self class]], @"")];
+                [self.resultTitleLabel setStringValue:LMLocalizedSelfBundleString(@"棒极了！Mac很干净！", nil)];
                 [self.backToMainBtn setHidden:YES];
             }
             break;
@@ -1133,7 +1133,7 @@
             [self.resultCircleImageView setSysFullSize:_sysSelectSize appFullSize:_appSelectSize intFullSize:_intSelectSize];
             [self.resultView setHidden:YES];
             self.scanCancelBtn.alphaValue = 0.0f;
-            [self.scanTipLabel setStringValue:NSLocalizedStringFromTableInBundle(@"LMCleanScanViewController_reArrangeContentView_scanTipLabel_7", nil, [NSBundle bundleForClass:[self class]], @"")];
+            [self.scanTipLabel setStringValue:LMLocalizedSelfBundleString(@"正在清理", nil)];
             [self.unitLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
                 make.right.equalTo(self.scanCancelBtn.mas_right);
                 make.centerY.equalTo(self.sizeLabel);
@@ -1154,13 +1154,13 @@
                 make.centerY.equalTo(self.resultTipImageView);
             }];
             [self setCategoryStateImageViewPic];
-            [self.resultTipLabel setStringValue:NSLocalizedStringFromTableInBundle(@"LMCleanScanViewController_reArrangeContentView_resultTipLabel_8", nil, [NSBundle bundleForClass:[self class]], @"")];
+            [self.resultTipLabel setStringValue:LMLocalizedSelfBundleString(@"已清理垃圾", nil)];
             [self.resultTipImageView setHidden:NO];
-            [self.resultBtn setTitle:NSLocalizedStringFromTableInBundle(@"LMCleanScanViewController_reArrangeContentView_resultBtn_9", nil, [NSBundle bundleForClass:[self class]], @"") withColor:[NSColor whiteColor]];
+            [self.resultBtn setTitle:LMLocalizedSelfBundleString(@"完成", nil) withColor:[NSColor whiteColor]];
             UInt64 totalSelectSize = [[LMCleanerDataCenter shareInstance] totalSelectSize];
             NSString *sizeRemoveSizeString = [NSString stringFromDiskSize:totalSelectSize];
             [self.resultSizeLabel setStringValue:sizeRemoveSizeString];
-            NSString *numString = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"LMCleanScanViewController_reArrangeContentView_numString _10", nil, [NSBundle bundleForClass:[self class]], @""), _cleanFileNums];
+            NSString *numString = [NSString stringWithFormat:LMLocalizedSelfBundleString(@"清理了 %ld 个文件", nil), _cleanFileNums];
             NSMutableAttributedString *attrString = [[NSMutableAttributedString alloc] initWithString:numString];
             NSString *cleanFileNumsString = [NSString stringWithFormat:@"%ld",_cleanFileNums];
             NSRange cleanNumRange = [numString rangeOfString:cleanFileNumsString];
@@ -2001,9 +2001,9 @@
     openDlg.canChooseDirectories = YES;
     openDlg.canChooseFiles = YES;
     //    NSString* language = [[NSLocale preferredLanguages] objectAtIndex:0];
-    [openDlg setPrompt:NSLocalizedStringFromTableInBundle(@"LMCleanScanViewController_showOpenPanelGetPermission_openDlg_1", nil, [NSBundle bundleForClass:[self class]], @"")];
+    [openDlg setPrompt:LMLocalizedSelfBundleString(@"允许访问", nil)];
     openDlg.delegate = self;
-    openDlg.message = NSLocalizedStringFromTableInBundle(@"LMCleanScanViewController_showOpenPanelGetPermission_openDlg_2", nil, [NSBundle bundleForClass:[self class]], @"");
+    openDlg.message = LMLocalizedSelfBundleString(@"正常使用lemon需要允许访问个人文件夹，请点击“允许访问”以继续", nil);
     openDlg.directoryURL = [NSURL URLWithString:userPath];
     __weak __typeof(self) weakSelf = self;
     [openDlg beginSheetModalForWindow:self.view.window completionHandler:^(NSModalResponse result) {
@@ -2018,7 +2018,7 @@
                 //            NSLog(@"user select complate path = %@", path);
                 if ([path isEqualToString:userPath]) {
                     strongSelf->isUserGiveHomePathPermission = YES;
-                    [strongSelf.startScanBtn setTitle:NSLocalizedStringFromTableInBundle(@"LMCleanScanViewController_showOpenPanelGetPermission_startScanBtn_3", nil, [NSBundle bundleForClass:[self class]], @"") withColor:[NSColor whiteColor]];
+                    [strongSelf.startScanBtn setTitle:LMLocalizedSelfBundleString(@"开始扫描", nil) withColor:[NSColor whiteColor]];
                     [strongSelf.showToolBtn setHidden:NO];
                     [[LMBookMark defaultShareBookmark] saveBookmarkWithFilePath:path];
                     
@@ -2407,14 +2407,14 @@
         }
         
         if (self.cleanStatus == CleanStatusScanResult) {
-            [self.resultTipLabel setStringValue:NSLocalizedStringFromTableInBundle(@"LMCleanScanViewController_selectCategory_resultTipLabel_1", nil, [NSBundle bundleForClass:[self class]], @"")];
+            [self.resultTipLabel setStringValue:LMLocalizedSelfBundleString(@"已发现垃圾", nil)];
             [self.resultTipLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
                 make.centerX.equalTo(self.resultView);
                 make.centerY.equalTo(self.resultTipImageView);
             }];
         }else if(self.cleanStatus == CleanStatusCleanResult){
             [self.resultTipImageView setHidden:NO];
-            [self.resultTipLabel setStringValue:NSLocalizedStringFromTableInBundle(@"LMCleanScanViewController_selectCategory_resultTipLabel_2", nil, [NSBundle bundleForClass:[self class]], @"")];
+            [self.resultTipLabel setStringValue:LMLocalizedSelfBundleString(@"已清理垃圾", nil)];
             [self.resultTipLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
                 make.left.equalTo(self.resultTipImageView.mas_right).offset(10);
                 make.centerY.equalTo(self.resultTipImageView);
@@ -2430,23 +2430,23 @@
                 make.centerY.equalTo(self.resultTipImageView);
             }];
             if(categoryNum == 1){
-                [self.resultTipLabel setStringValue:NSLocalizedStringFromTableInBundle(@"LMCleanScanViewController_selectCategory_resultTipLabel_3", nil, [NSBundle bundleForClass:[self class]], @"")];
+                [self.resultTipLabel setStringValue:LMLocalizedSelfBundleString(@"已发现系统垃圾", nil)];
             }else if (categoryNum == 2){
-                [self.resultTipLabel setStringValue:NSLocalizedStringFromTableInBundle(@"LMCleanScanViewController_selectCategory_resultTipLabel_4", nil, [NSBundle bundleForClass:[self class]], @"")];
+                [self.resultTipLabel setStringValue:LMLocalizedSelfBundleString(@"已发现应用垃圾", nil)];
             }else if (categoryNum == 3){
-                [self.resultTipLabel setStringValue:NSLocalizedStringFromTableInBundle(@"LMCleanScanViewController_selectCategory_resultTipLabel_5", nil, [NSBundle bundleForClass:[self class]], @"")];
+                [self.resultTipLabel setStringValue:LMLocalizedSelfBundleString(@"已发现上网垃圾", nil)];
             }
         }else if(self.cleanStatus == CleanStatusCleanResult){
             [self.resultTipImageView setHidden:YES];
             if(categoryNum == 1){
                 totalSize = [[LMCleanerDataCenter shareInstance] sysSelectSize];
-                [self.resultTipLabel setStringValue:NSLocalizedStringFromTableInBundle(@"LMCleanScanViewController_selectCategory_resultTipLabel_6", nil, [NSBundle bundleForClass:[self class]], @"")];
+                [self.resultTipLabel setStringValue:LMLocalizedSelfBundleString(@"已清理系统垃圾", nil)];
             }else if (categoryNum == 2){
                 totalSize = [[LMCleanerDataCenter shareInstance] appSelectSize];
-                [self.resultTipLabel setStringValue:NSLocalizedStringFromTableInBundle(@"LMCleanScanViewController_selectCategory_resultTipLabel_7", nil, [NSBundle bundleForClass:[self class]], @"")];
+                [self.resultTipLabel setStringValue:LMLocalizedSelfBundleString(@"已清理应用垃圾", nil)];
             }else if (categoryNum == 3){
                 totalSize = [[LMCleanerDataCenter shareInstance] intSelectSize];
-                [self.resultTipLabel setStringValue:NSLocalizedStringFromTableInBundle(@"LMCleanScanViewController_selectCategory_resultTipLabel_8", nil, [NSBundle bundleForClass:[self class]], @"")];
+                [self.resultTipLabel setStringValue:LMLocalizedSelfBundleString(@"已清理上网垃圾", nil)];
             }
             [self.resultTipLabel mas_remakeConstraints:^(MASConstraintMaker *make) {
                 make.centerX.equalTo(self.resultCircleImageView);
@@ -2510,10 +2510,10 @@
             }
             if(self.cleanStatus == CleanStatusCleanProgress) {
                 [_floatViewScanning setHidden:!item.isCleanning];
-                _floatViewScanning.stringValue = NSLocalizedStringFromTableInBundle(@"LMCleanScanViewController_showFloatViewInfo__floatViewScanning_1", nil, [NSBundle bundleForClass:[self class]], @"");
+                _floatViewScanning.stringValue = LMLocalizedSelfBundleString(@"正在清理...", nil);
             } else {
                 [_floatViewScanning setHidden:!item.isScanning];
-                _floatViewScanning.stringValue = NSLocalizedStringFromTableInBundle(@"LMCleanScanViewController_showFloatViewInfo__floatViewScanning_2", nil, [NSBundle bundleForClass:[self class]], @"");
+                _floatViewScanning.stringValue = LMLocalizedSelfBundleString(@"正在扫描...", nil);
             }
             if(isShowHighlight) {
                 [_floatViewTitle setTextColor:[NSColor colorWithHex:0xffbe46]];
@@ -2522,9 +2522,9 @@
                 [_floatViewSize setFont:[NSFont systemFontOfSize:16]];
                 if(self.cleanStatus == CleanStatusCleanProgress) {
                     if([self isCategoryNoSelect:item])
-                        _floatViewSize.stringValue = NSLocalizedStringFromTableInBundle(@"LMCleanScanViewController_showFloatViewInfo__floatViewSize_3", nil, [NSBundle bundleForClass:[self class]], @"");
+                        _floatViewSize.stringValue = LMLocalizedSelfBundleString(@"未勾选", nil);
                     else if(!item.isCleanning)
-                        _floatViewSize.stringValue = NSLocalizedStringFromTableInBundle(@"LMCleanScanViewController_showFloatViewInfo__floatViewSize_4", nil, [NSBundle bundleForClass:[self class]], @"");
+                        _floatViewSize.stringValue = LMLocalizedSelfBundleString(@"已清理", nil);
                     else {
                         if([_floatViewIdx isEqualToString:kCategorySys])
                             _floatViewSize.stringValue = [NSString stringFromDiskSize:_sysSelectSize];
@@ -2543,11 +2543,11 @@
                 [_floatViewSize setFont:[NSFont systemFontOfSize:14]];
                 if(self.cleanStatus == CleanStatusCleanProgress) {
                     if([self isCategoryNoSelect:item])
-                        _floatViewSize.stringValue = NSLocalizedStringFromTableInBundle(@"LMCleanScanViewController_showFloatViewInfo__floatViewSize_5", nil, [NSBundle bundleForClass:[self class]], @"");
+                        _floatViewSize.stringValue = LMLocalizedSelfBundleString(@"未勾选", nil);
                     else
-                        _floatViewSize.stringValue = NSLocalizedStringFromTableInBundle(@"LMCleanScanViewController_showFloatViewInfo__floatViewSize_6", nil, [NSBundle bundleForClass:[self class]], @"");
+                        _floatViewSize.stringValue = LMLocalizedSelfBundleString(@"待清理", nil);
                 } else {
-                    _floatViewSize.stringValue = NSLocalizedStringFromTableInBundle(@"LMCleanScanViewController_showFloatViewInfo__floatViewSize_7", nil, [NSBundle bundleForClass:[self class]], @"");
+                    _floatViewSize.stringValue = LMLocalizedSelfBundleString(@"待扫描", nil);
                 }
             }
         }

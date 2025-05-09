@@ -23,7 +23,7 @@
 
 -(NSString *)getSizeStr:(id)item{
     // 扫描完成，显示结果
-    NSString * sizeStr = NSLocalizedStringFromTableInBundle(@"ActionItemCellView_getSizeStr_ sizeStr _1", nil, [NSBundle bundleForClass:[self class]], @"");
+    NSString * sizeStr = LMLocalizedSelfBundleString(@"很干净", nil);
     NSUInteger fileSize = [item resultFileSize];
     if (fileSize > 0) {
         sizeStr = [NSString stringFromDiskSize:fileSize];
@@ -35,15 +35,15 @@
 -(void)setCellData:(id)item {
     [super setCellData:item];
     NSString *sizeStr = [self getSizeStr:item];
-    if ([sizeStr isEqualToString:NSLocalizedStringFromTableInBundle(@"ActionItemCellView_setCellData_sizeStr_1", nil, [NSBundle bundleForClass:[self class]], @"")]){
+    if ([sizeStr isEqualToString:LMLocalizedSelfBundleString(@"很干净", nil)]){
         [self.sizeLabel setTextColor:[NSColor colorWithHex:0x33D39D]];
     }else{
         if ([item recommend]) {
             [self.sizeLabel setTextColor:[LMAppThemeHelper getTitleColor]];
-            [self.sizeLabel setStringValue:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"ActionItemCellView_setCellData_sizeLabel_2", nil, [NSBundle bundleForClass:[self class]], @""),sizeStr]];
+            [self.sizeLabel setStringValue:[NSString stringWithFormat:LMLocalizedSelfBundleString(@"共 %@，建议清理", nil),sizeStr]];
         }else{
             [self.sizeLabel setTextColor:[NSColor colorWithHex:0xE6704C]];
-            [self.sizeLabel setStringValue:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"ActionItemCellView_setCellData_sizeLabel_3", nil, [NSBundle bundleForClass:[self class]], @""),sizeStr]];
+            [self.sizeLabel setStringValue:[NSString stringWithFormat:LMLocalizedSelfBundleString(@"共 %@，谨慎清理", nil),sizeStr]];
         }
     }
      [self.titleLabel setTextColor:[LMAppThemeHelper getTitleColor]];

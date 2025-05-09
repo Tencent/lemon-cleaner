@@ -133,4 +133,9 @@ BOOL hasAdminPrivileges(void);
 //get Do Not Distrub state
 BOOL DNDState(void);
 
+pid_t GUIApplicationPidForBundleIdentifier(NSString *name);
+
+NSString *getMACAddress(void);
+
+NSImage *getAppImage(NSDictionary *appDic, NSString *identifier);
 #endif

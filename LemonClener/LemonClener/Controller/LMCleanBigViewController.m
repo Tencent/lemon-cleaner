@@ -147,9 +147,9 @@ static NSString * const kLemonFileMoveIntroduceVCDidAppear = @"kLemonFileMoveInt
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(needDispalyCleaningPage) name:NEED_DISPLAY_BIG_VIEW_CLEANING object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showFullDiskPrivacySettingPage) name:START_TO_SHOW_FULL_DISK_PRIVACY_SETTING object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(backAction) name:LM_FILE_MOVE_DID_START_NOTIFICATION object:nil];
-    [self.removeButton setTitle:NSLocalizedStringFromTableInBundle(@"LMCleanBigViewController_initData_removeButton_1", nil, [NSBundle bundleForClass:[self class]], @"")];
-    [self.doneButton setTitle:NSLocalizedStringFromTableInBundle(@"LMCleanBigViewController_initData_doneButton_1", nil, [NSBundle bundleForClass:[self class]], @"")];
-    self.introText.stringValue = NSLocalizedStringFromTableInBundle(@"LMCleanBigViewController_initData_introText_1", nil, [NSBundle bundleForClass:[self class]], @"");
+    [self.removeButton setTitle:LMLocalizedSelfBundleString(@"立即清理", nil)];
+    [self.doneButton setTitle:LMLocalizedSelfBundleString(@"完成", nil)];
+    self.introText.stringValue = LMLocalizedSelfBundleString(@"电脑空间不足？可以试试以下小工具哦~", nil);
     [self setTitleColorForTextField:self.introText];
     [self.introText mas_remakeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(self.noResultView).offset(65);
@@ -246,7 +246,7 @@ static NSString * const kLemonFileMoveIntroduceVCDidAppear = @"kLemonFileMoveInt
     NSButton *fileMoveButton = [[NSButton alloc] init];
     fileMoveButton.bordered = NO;
     NSDictionary *dicAtt = @{NSForegroundColorAttributeName: [NSColor colorWithRed:25/255.0 green:131/255.0 blue:247/255.0 alpha:1/1.0]};
-    fileMoveButton.attributedTitle = [[NSAttributedString alloc] initWithString:NSLocalizedStringFromTableInBundle(@"File Moving", nil, [NSBundle bundleForClass:[self class]], @"") attributes:dicAtt];
+    fileMoveButton.attributedTitle = [[NSAttributedString alloc] initWithString:LMLocalizedSelfBundleString(@"文件搬家", nil) attributes:dicAtt];
     fileMoveButton.font = [NSFont systemFontOfSize:12];
     self.fileMoveButton = fileMoveButton;
     [self.scanResultView addSubview:self.fileMoveButton];
@@ -286,7 +286,7 @@ static NSString * const kLemonFileMoveIntroduceVCDidAppear = @"kLemonFileMoveInt
 
 -(void)setLabelFont{
     [_backBtn setFont:[NSFontHelper getLightSystemFont:12]];
-    [_backBtn setTitle:NSLocalizedStringFromTableInBundle(@"LMCleanBigViewController_setLabelFont_backBtn_1", nil, [NSBundle bundleForClass:[self class]], @"")];
+    [_backBtn setTitle:LMLocalizedSelfBundleString(@"返回", nil)];
     [_rubbishSelectTitle setFont:[NSFontHelper getLightSystemFont:14]];
     [_rubbishSelectLabel setFont:[NSFontHelper getLightSystemFont:14]];
     [self.fileNumText setFont:[NSFontHelper getLightSystemFont:14]];
@@ -405,7 +405,7 @@ static NSString * const kLemonFileMoveIntroduceVCDidAppear = @"kLemonFileMoveInt
                 make.centerY.equalTo(self.rubbishSelectLabel);
             }];
         }
-        [self.rubbishSelectTitle setStringValue:NSLocalizedStringFromTableInBundle(@"LMCleanBigViewController_setViewIsScanningOrCleanning_rubbishSelectTitle_1", nil, [NSBundle bundleForClass:[self class]], @"")];
+        [self.rubbishSelectTitle setStringValue:LMLocalizedSelfBundleString(@"已选择垃圾", nil)];
     }
 }
 
@@ -432,9 +432,9 @@ static NSString * const kLemonFileMoveIntroduceVCDidAppear = @"kLemonFileMoveInt
     NSString *totalSizeString = [NSString stringFromDiskSize:totalSize];
     NSString *selectSizeString = [NSString stringFromDiskSize:selectSize];
     if ([[LMCleanerDataCenter shareInstance] isScanning]) {
-        [self.rubbishSizeLabel setStringValue:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"LMCleanBigViewController_setResultTotalAndSelectSizeLabel_rubbishSizeLabel_1", nil, [NSBundle bundleForClass:[self class]], @""), totalSizeString]];
+        [self.rubbishSizeLabel setStringValue:[NSString stringWithFormat:LMLocalizedSelfBundleString(@"已发现可清理文件 %@", nil), totalSizeString]];
     }else{
-        [self.rubbishSizeLabel setStringValue:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"LMCleanBigViewController_setResultTotalAndSelectSizeLabel_rubbishSizeLabel_2", nil, [NSBundle bundleForClass:[self class]], @""), totalSizeString]];
+        [self.rubbishSizeLabel setStringValue:[NSString stringWithFormat:LMLocalizedSelfBundleString(@"共发现可清理文件 %@", nil), totalSizeString]];
     }
     
     [self.rubbishSelectLabel setStringValue:[NSString stringWithFormat:@"%@", selectSizeString]];
@@ -444,11 +444,11 @@ static NSString * const kLemonFileMoveIntroduceVCDidAppear = @"kLemonFileMoveInt
 -(void)setNoResultViewWithScanFileNum:(NSUInteger) fileNum  scanTime:(NSUInteger) scanTime{
     [self.scanResultView setHidden:YES];
     [self.noResultView setHidden:NO];
-    [_mainText setStringValue:NSLocalizedStringFromTableInBundle(@"LMCleanBigViewController_setNoResultViewWithScanFileNum_mainText_1", nil, [NSBundle bundleForClass:[self class]], @"")];
+    [_mainText setStringValue:LMLocalizedSelfBundleString(@" 棒极了，没有发现垃圾哦～", nil)];
     _mainText.alignment = NSTextAlignmentLeft;
     [self setTitleColorForTextField:_mainText];
-    [_fileNumText setStringValue:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"LMCleanBigViewController_setNoResultViewWithScanFileNum_fileNumText_2", nil, [NSBundle bundleForClass:[self class]], @""), fileNum]];
-    [_timeText setStringValue:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"LMCleanBigViewController_setNoResultViewWithScanFileNum_timeText_3", nil, [NSBundle bundleForClass:[self class]], @""), scanTime]];
+    [_fileNumText setStringValue:[NSString stringWithFormat:LMLocalizedSelfBundleString(@"扫描文件：%ld个", nil), fileNum]];
+    [_timeText setStringValue:[NSString stringWithFormat:LMLocalizedSelfBundleString(@"扫描耗时：%lds", nil), scanTime]];
     [self initNoResultData];
     [_tableView reloadData];
 }
@@ -467,7 +467,7 @@ static NSString * const kLemonFileMoveIntroduceVCDidAppear = @"kLemonFileMoveInt
 -(void)setRubbishSelectLabelSize{
     UInt64 cleanLeftSize = [[LMCleanerDataCenter shareInstance] cleanLeftSize];
     NSString *selectSizeString = [NSString stringFromDiskSize:cleanLeftSize];
-    NSString *sizeLabelStrring = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"LMCleanBigViewController_setRubbishSelectLabelSize_sizeLabelStrring _1", nil, [NSBundle bundleForClass:[self class]], @""), selectSizeString];
+    NSString *sizeLabelStrring = [NSString stringWithFormat:LMLocalizedSelfBundleString(@"%@ 清理中...", nil), selectSizeString];
     [self.rubbishSizeLabel setStringValue:sizeLabelStrring];
 }
 
@@ -630,7 +630,7 @@ static NSString * const kLemonFileMoveIntroduceVCDidAppear = @"kLemonFileMoveInt
     [self setViewIsScanningOrCleanning:YES];
     UInt64 scanSelectSize = [[LMCleanerDataCenter shareInstance] totalSelectSize];
     NSString *selectSizeString = [NSString stringFromDiskSize:scanSelectSize];
-    NSString *sizeLabelStrring = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"LMCleanBigViewController_needDispalyCleaningPage_sizeLabelStrring _1", nil, [NSBundle bundleForClass:[self class]], @""), selectSizeString];
+    NSString *sizeLabelStrring = [NSString stringWithFormat:LMLocalizedSelfBundleString(@"%@ 清理中...", nil), selectSizeString];
     [self.rubbishSizeLabel setStringValue:sizeLabelStrring];
     [self.removeButton setHidden:YES];
     [self.logoImageView setImage:[NSImage imageNamed:@"main_circle_bg_small" withClass:[self class]]];
@@ -1063,11 +1063,10 @@ static NSString * const kLemonFileMoveIntroduceVCDidAppear = @"kLemonFileMoveInt
     
     [alert.accessoryView setFrameOrigin:NSMakePoint(0, 0)];
     alert.alertStyle = NSAlertStyleInformational;
-    alert.messageText = NSLocalizedStringFromTableInBundle(@"LMCleanBigViewController_downloadSelectAll_alert_titleString_1", nil, [NSBundle bundleForClass:[self class]], @"");
-    alert.informativeText = NSLocalizedStringFromTableInBundle(@"LMCleanBigViewController_downloadSelectAll_alert_descString_1", nil, [NSBundle bundleForClass:[self class]], @"");
-    [alert addButtonWithTitle:NSLocalizedStringFromTableInBundle(@"LMCleanBigViewController_downloadSelectAll_alert_okButtonString_1", nil, [NSBundle bundleForClass:[self class]], @"")];
-    [alert addButtonWithTitle:NSLocalizedStringFromTableInBundle(@"LMCleanBigViewController_downloadSelectAll_alert_cancelButtonString_1", nil, [NSBundle bundleForClass:[self class]], @"")];
-
+    alert.messageText = LMLocalizedSelfBundleString(@"是否删除下载文件", nil);
+    alert.informativeText = LMLocalizedSelfBundleString(@"下载文件可能包含重要文件。例如通过浏览器下载的文件，请确认后勾选", nil);
+    [alert addButtonWithTitle:LMLocalizedSelfBundleString(@"确认勾选", nil)];
+    [alert addButtonWithTitle:LMLocalizedSelfBundleString(@"取消", nil)];
     __weak typeof(self) weakSelf = self;
     [alert beginSheetModalForWindow:self.view.window completionHandler:^(NSModalResponse returnCode) {
         if (returnCode == NSAlertFirstButtonReturn) {
@@ -1098,7 +1097,7 @@ static NSString * const kLemonFileMoveIntroduceVCDidAppear = @"kLemonFileMoveInt
     [self.scanProgressView setValue:progress];
     
     NSString *totalSizeString = [NSString stringFromDiskSize:scanTotalSize];
-    NSString *totalLabelString = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"LMCleanBigViewController_scanProgressRefresh_totalLabelString _1", nil, [NSBundle bundleForClass:[self class]], @""), totalSizeString];
+    NSString *totalLabelString = [NSString stringWithFormat:LMLocalizedSelfBundleString(@"已发现可清理文件 %@", nil), totalSizeString];
     [self.rubbishSizeLabel setStringValue:totalLabelString];
     NSString *selectSizeString = [NSString stringFromDiskSize:scanSelectSize];
     [self.rubbishSelectLabel setStringValue:selectSizeString];
@@ -1112,9 +1111,9 @@ static NSString * const kLemonFileMoveIntroduceVCDidAppear = @"kLemonFileMoveInt
             self.fileMoveLabel.hidden = NO;
             [[NSUserDefaults standardUserDefaults] setDouble:self.fileMoveTotalNum forKey:@"Lemon_KB_To_GB"];
             if ([LanguageHelper getCurrentSystemLanguageType] == SystemLanguageTypeChinese) {
-                self.fileMoveLabel.stringValue = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"needFileMoveTitle", nil, [NSBundle bundleForClass:[self class]], @""),totalNumGB];
+                self.fileMoveLabel.stringValue = [NSString stringWithFormat:@"文件、视频和图片已占 %dGB 空间不敢清理 ? 快试试", totalNumGB];
             } else {
-                self.fileMoveLabel.stringValue = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"needFileMoveTitle", nil, [NSBundle bundleForClass:[self class]], @"")];
+                self.fileMoveLabel.stringValue = @"Not sure to clean these apps’ media and docs? Try";
             }
         }
         _currentScanStop = NO;
@@ -1125,7 +1124,7 @@ static NSString * const kLemonFileMoveIntroduceVCDidAppear = @"kLemonFileMoveInt
             return;
         }
         NSLog(@"big scanProgressRefresh after");
-        totalLabelString = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"LMCleanBigViewController_scanProgressRefresh_1553048057_2", nil, [NSBundle bundleForClass:[self class]], @""), totalSizeString];
+        totalLabelString = [NSString stringWithFormat:LMLocalizedSelfBundleString(@"共发现可清理文件 %@", nil), totalSizeString];
         [self.rubbishSizeLabel setStringValue:totalLabelString];
         [self setViewIsScanningOrCleanning:NO];
         [self.logoImageView setImage:[NSImage imageNamed:@"big_circle_haverubbish" withClass:[self class]]];
@@ -1167,9 +1166,9 @@ static NSString * const kLemonFileMoveIntroduceVCDidAppear = @"kLemonFileMoveInt
 -(void)updatePathRefresh:(id)sender{
     if ((_curPath != nil) && (_curPath.length > 0)) {
         if ([[LMCleanerDataCenter shareInstance] isScanning]) {
-            [self.rubbishSelectTitle setStringValue:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"LMCleanBigViewController_updatePathRefresh_rubbishSelectTitle_1", nil, [NSBundle bundleForClass:[self class]], @""), _curPath]];
+            [self.rubbishSelectTitle setStringValue:[NSString stringWithFormat:LMLocalizedSelfBundleString(@"正在扫描%@", nil), _curPath]];
         }else if([[LMCleanerDataCenter shareInstance] isCleanning]){
-            [self.rubbishSelectTitle setStringValue:[NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"LMCleanBigViewController_updatePathRefresh_rubbishSelectTitle_2", nil, [NSBundle bundleForClass:[self class]], @""), _curPath]];
+            [self.rubbishSelectTitle setStringValue:[NSString stringWithFormat:LMLocalizedSelfBundleString(@"正在清理%@", nil), _curPath]];
         }
     }
     if (_currentScanStop || _currentCleanStop) {

@@ -17,10 +17,52 @@
 
 #define kLemonUseAVMonitorNotification 0
 
-/* GLOBALS */
-
-//log handle
 extern os_log_t logHandle;
+
+typedef NS_ENUM(NSUInteger, LMControlCenterLogStatusType) {
+    LMControlCenterLogStatusTypeUnknown,
+    LMControlCenterLogStatusTypeSystemAudio,
+    LMControlCenterLogStatusTypeMicrophone,
+    LMControlCenterLogStatusTypeCamera,
+    LMControlCenterLogStatusTypeScreen,
+};
+
+@interface LMControlCenterLogStatus : NSObject
+
+@property (nonatomic) LMControlCenterLogStatusType type;
+@property (nonatomic) NSString *displayName;
+@property (nonatomic) NSString *name; //process name
+
+@end
+
+@implementation LMControlCenterLogStatus
+
+- (NSString *)description
+{
+    return [self debugDescription];
+}
+
+- (NSString *)debugDescription
+{
+    return [self.name stringByAppendingFormat:@" %lu", (unsigned long)self.type];
+}
+
+@end
+
+
+
+@interface AVMonitor ()
+
+@property (nonatomic, copy) NSArray *lastPrivacyResult;
+@property (nonatomic, copy) NSDate *lastPrivacyResultDate;
+
+@property (nonatomic, copy) NSArray<LMControlCenterLogStatus *> *lastSystemAudioResult; //上次系统音频隐私状态
+@property (nonatomic, copy) NSArray<LMControlCenterLogStatus *> *lastCameraResult; //上次摄像头隐私状态
+@property (nonatomic, copy) NSArray<LMControlCenterLogStatus *> *lastMicResult; //上次麦克风隐私状态
+@property (nonatomic) AVCaptureDevice *activeCamera;
+@property (nonatomic) AVCaptureDevice *activeMic;
+
+@end
 
 @implementation AVMonitor
 
@@ -54,6 +96,7 @@ extern os_log_t logHandle;
         //init log monitor
         self.logMonitor = [[LogMonitor alloc] init];
         self.audio13logMonitor = [[LogMonitor alloc] init];
+        self.controlCenterLogMonitor = [[LogMonitor alloc] init];
         
         //init audio attributions
         self.audioAttributions = [NSMutableArray array];
@@ -124,6 +167,7 @@ extern os_log_t logHandle;
 
     //start log monitor
     [self startLogMonitor];
+    [self startControlCenterLogMonitor];
     
     //dbg msg
     NSLog(@"registering for device connection/disconnection notifications");
@@ -181,10 +225,7 @@ extern os_log_t logHandle;
 {
     //device
     AVCaptureDevice* device = NULL;
-    
-    //type
     device = notification.object;
-    
     //dbg msg
     NSLog(@"new device connected: %@", device.localizedName);
     
@@ -194,14 +235,12 @@ extern os_log_t logHandle;
         //watch
         [self watchAudioDevice:device];
     }
-    
     //video device
     else if(YES == [device hasMediaType:AVMediaTypeVideo])
     {
         //watch
         [self watchVideoDevice:device];
     }
-
     return;
 }
 
@@ -240,205 +279,258 @@ extern os_log_t logHandle;
     //dbg msg
     NSLog(@"starting log monitor for AV events");
     
-    //macOS 14+
-    if(@available(macOS 14.0, *)) {
-        
-        //regex for mic log msg
-        NSRegularExpression* micRegex = nil;
-        
-        //regex for camera log msg
-        NSRegularExpression* cameraRegex = nil;
-        
-        //dbg msg
-        NSLog(@">= macOS 14+: Using log monitor for AV events via w/ (camera): 'added <private> endpoint <private> camera <private>' AND (mic): '-[MXCoreSession beginInterruption]: Session <ID: xx, PID = xyz,...'");
-        
-        //init mic regex
-        micRegex = [NSRegularExpression regularExpressionWithPattern:@"PID = (\\d+)" options:0 error:nil];
-        
-        //init cam regex
-        cameraRegex = [NSRegularExpression regularExpressionWithPattern:@"\\[\\{private\\}(\\d+)\\]" options:0 error:nil];
-        
-        //start log monitoring
-        [self.logMonitor start:[NSPredicate predicateWithFormat:@"subsystem=='com.apple.cmio' OR subsystem=='com.apple.coremedia'"] level:Log_Level_Default callback:^(OSLogEvent* logEvent) {
-            
-            //sync to process
-            @synchronized (self) {
-                
-                //match
-                NSTextCheckingResult* match = nil;
-                
-                //pid
-                NSInteger pid = 0;
-                
-                //camera:
-                // "added <private> endpoint <private> camera <private> = <pid>;"
-                if( (YES == [logEvent.subsystem isEqual:@"com.apple.cmio"]) &&
-                   (YES == [logEvent.composedMessage hasSuffix:@"added <private> endpoint <private> camera <private>"]) )
-                {
-                    //reset
-                    self.lastCameraClient = 0;
-                    
-                    //match on pid
-                    match = [cameraRegex firstMatchInString:logEvent.composedMessage options:0 range:NSMakeRange(0, logEvent.composedMessage.length)];
-                    if( (nil == match) ||
-                       (NSNotFound == match.range.location) )
-                    {
-                        return;
-                    }
-                    
-                    //extract/convert pid
-                    pid = [[logEvent.composedMessage substringWithRange:[match rangeAtIndex:1]] integerValue];
-                    if( (0 == pid) ||
-                       (-1 == pid) )
-                    {
-                        return;
-                    }
-                    
-                    //save
-                    self.lastCameraClient = pid;
-                }
-                
-                //mic:
-                // "-[MXCoreSession beginInterruption]: Session <ID: xx, PID = xyz, ...":
-                else if( (YES == [logEvent.subsystem isEqual:@"com.apple.coremedia"]) &&
-                        (YES == [logEvent.composedMessage hasPrefix:@"-MXCoreSession- -[MXCoreSession beginInterruption]"]) &&
-                        (YES == [logEvent.composedMessage hasSuffix:@"Recording = YES> is going active"]) )
-                {
-                    
-                    //reset
-                    self.lastMicClient = 0;
-                    
-                    //match on pid
-                    match = [micRegex firstMatchInString:logEvent.composedMessage options:0 range:NSMakeRange(0, logEvent.composedMessage.length)];
-                    if( (nil == match) ||
-                       (NSNotFound == match.range.location) )
-                    {
-                        return;
-                    }
-                    
-                    //extract/convert pid
-                    pid = [[logEvent.composedMessage substringWithRange:[match rangeAtIndex:1]] integerValue];
-                    if( (0 == pid) ||
-                       (-1 == pid) )
-                    {
-                        return;
-                    }
-                    
-                    //save
-                    self.lastMicClient = pid;
-                }
-                // mic: 有时候调用麦克风没有上面的日志，但有下面这种日志，补齐日志提高判断范围
-                // "-MXSessionManager- -[MXSessionManager requestForSharedOwnership:... <ID: xx, PID = xyz, ...":
-                else if( (YES == [logEvent.subsystem isEqual:@"com.apple.coremedia"]) &&
-                        (YES == [logEvent.composedMessage hasPrefix:@"-MXSessionManager- -[MXSessionManager requestForSharedOwnership"]) &&
-                        (YES == [logEvent.composedMessage hasSuffix:@"Recording = YES>"]) )
-                {
-                    
-                    //reset
-                    self.lastMicClient = 0;
-                    
-                    //match on pid
-                    match = [micRegex firstMatchInString:logEvent.composedMessage options:0 range:NSMakeRange(0, logEvent.composedMessage.length)];
-                    if( (nil == match) ||
-                        (NSNotFound == match.range.location) )
-                    {
-                        return;
-                    }
-                    
-                    //extract/convert pid
-                    pid = [[logEvent.composedMessage substringWithRange:[match rangeAtIndex:1]] integerValue];
-                    if( (0 == pid) ||
-                       (-1 == pid) )
-                    {
-                        return;
-                    }
-                    
-                    //save
-                    self.lastMicClient = pid;
-                }
-                
-                //msg not of interest
-                else
-                {
-                    return;
-                }
-                
-            }
-            
-        }];
-        
+    if (@available(macOS 13.0, *)) {
+        // 13 以上使用控制中心日志
     }
-    
-    //macOS 13.3+
-    // use predicate: "subsystem=='com.apple.cmio'" looking for 'CMIOExtensionPropertyDeviceControlPID'
-    else if (@available(macOS 13.3, *)) {
-        if ([self isRunOnAppleSilicon]) {
-            [self monitor13VideoM1];
-        } else {
-            [self monitor13VideoIntel];
-        }
-    } else if (@available(macOS 12.0, *)) { // 12系统也能通过 monitor13VideoIntel 方法监控摄像头
-        if ([self isRunOnAppleSilicon]) {
-            [self monitorSystemStatus]; //测试发现intel 12 系统这个方法不生效， 但是有系统日志的，需要现场debug
-        } else {
-            [self monitor13VideoIntel];
-        }
+    else if (@available(macOS 12.0, *)) {
+        //previous versions of macOS
+        // use predicate: "subsystem=='com.apple.SystemStatus'"
+        [self monitor12VideoIntel];
+        [self monitor12Audio];
     }
-    
-    //previous versions of macOS
-    // use predicate: "subsystem=='com.apple.SystemStatus'"
     else {  //11 系统使用老方法
         [self monitorSystemStatus];
-    }
-    
-    if (@available(macOS 14.0, *)) {
-        
-    } else if (@available(macOS 12.0, *)) { //12-13系统的音频日志
-        
-        NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"pid:(\\d*)," options:0 error:nil];
-        [self.audio13logMonitor start:[NSPredicate predicateWithFormat:@"process == 'coreaudiod' && subsystem == 'com.apple.TCC' && category == 'access'"] level:Log_Level_Info callback:^(OSLogEvent *logEvent) {
-                //tcc request
-            if (YES == [logEvent.composedMessage containsString:@"function=TCCAccessRequest, service=kTCCServiceMicrophone"]) {
-                NSLog(@"new tcc access msg: %@", logEvent.composedMessage);
-                NSTextCheckingResult *match = nil;
-                match = [regex firstMatchInString:logEvent.composedMessage options:0 range:NSMakeRange(0, logEvent.composedMessage.length)];
-                if ((nil == match) ||
-                    (NSNotFound == match.range.location) ||
-                    (match.numberOfRanges < 2)) {
-                    //ignore
-                    return;
-                }
-                
-                NSInteger pid = [[logEvent.composedMessage substringWithRange:[match rangeAtIndex:1]] intValue];
-                if (pid <= 0) {
-                    return;
-                }
-                self.lastMicClient = pid;
-                NSLog(@"new client: %@", @(pid));
-            }
-        }];
     }
     return;
 }
 
-- (BOOL)isRunOnAppleSilicon {
-    BOOL result = NO;
-    if (@available(macOS 11, *)) {
-        char buf[100];
-        size_t buflen = 100;
-        sysctlbyname("machdep.cpu.brand_string", &buf, &buflen, NULL, 0);
-        NSString *cupArch = [[NSString alloc] initWithCString:(char*)buf encoding:NSASCIIStringEncoding];
-        if ([cupArch containsString:@"Apple"]) {
-            result = YES;
+- (void)startControlCenterLogMonitor
+{
+    if (@available(macOS 13.0, *)) {
+        if (@available(macOS 14.0, *)) {
         } else {
-            result = NO;
+            // 13 系统日志不是持续性的，先设置状态
+            self.lastSystemAudioResult = @[];
+            self.lastMicResult = @[];
+            self.lastCameraResult = @[];
+        }
+        [self.controlCenterLogMonitor start:[NSPredicate predicateWithFormat:@"subsystem=='com.apple.controlcenter'"] level:Log_Level_Default callback:^(OSLogEvent * _Nonnull event) {
+            NSArray *result = nil;
+            if (@available(macOS 14.0, *)) {
+                if ([event.composedMessage containsString:@"SystemStatus update: "]) {
+                    result = [self _parseAttributionsFromLog:event.composedMessage];
+                }
+            } else if (@available(macOS 13.0, *)) {
+                if ([event.composedMessage containsString:@"Active activity attributions changed to"]) {
+                    result = [self _parseMacOS12AttributionsFromLog:event.composedMessage];
+                }
+            }
+            if (result) {
+                self.lastPrivacyResult = result;
+                if (self.lastPrivacyResultDate && -[self.lastPrivacyResultDate timeIntervalSinceNow] < 1) { //后续消息延迟1秒消费
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                        if (-[self.lastPrivacyResultDate timeIntervalSinceNow] > 1) {
+                            self.lastPrivacyResultDate = [NSDate date];
+                            [self _consumeResult:self.lastPrivacyResult];
+                        }
+                    });
+                } else {
+                    self.lastPrivacyResultDate = [NSDate date];
+                    [self _consumeResult:self.lastPrivacyResult];
+                }
+            }
+        }];
+    }
+}
+
+- (void)_consumeResult:(NSArray *)result
+{
+    NSLog(@"_consumeResult %@", result);
+    [self _processPrivacyStatusChange:result type:LMControlCenterLogStatusTypeCamera];
+    [self _processPrivacyStatusChange:result type:LMControlCenterLogStatusTypeSystemAudio];
+    [self _processPrivacyStatusChange:result type:LMControlCenterLogStatusTypeMicrophone];
+}
+
+- (NSArray *)_filterResultArray:(NSArray *)result type:(LMControlCenterLogStatusType)type;
+{
+    NSMutableArray *currentResult = [NSMutableArray new];
+    for (LMControlCenterLogStatus *status in result) {
+        if (status.type == type) {
+            [currentResult addObject:status];
         }
     }
-    return result;
+    return currentResult;
+}
+
+- (void)_processPrivacyStatusChange:(NSArray *)result type:(LMControlCenterLogStatusType)type;
+{
+    NSArray *lastResult = nil;
+    NSArray *currentResult = [self _filterResultArray:result type:type];
+    if (type == LMControlCenterLogStatusTypeSystemAudio) {
+        if (!self.lastSystemAudioResult) {
+            self.lastSystemAudioResult = currentResult;
+            return;
+        }
+        lastResult = self.lastSystemAudioResult;
+        self.lastSystemAudioResult = currentResult;
+    } else if (type == LMControlCenterLogStatusTypeCamera) {
+        if (!self.lastCameraResult) {
+            self.lastCameraResult = currentResult;
+            return;
+        }
+        lastResult = self.lastCameraResult;
+        self.lastCameraResult = currentResult;
+    } else if (type == LMControlCenterLogStatusTypeMicrophone) {
+        if (!self.lastMicResult) {
+            self.lastMicResult = currentResult;
+            return;
+        }
+        lastResult = self.lastMicResult;
+        self.lastMicResult = currentResult;
+    } else {
+        return;
+    }
+    
+    if (currentResult.count <= 0 && lastResult.count <= 0) {
+        return; //无变化
+    }
+    
+    NSMutableArray *addArray = [NSMutableArray new];
+    NSMutableArray *delArray = [NSMutableArray new];
+    for (LMControlCenterLogStatus *lasStatus in lastResult) {
+        BOOL didDel = YES;
+        for (LMControlCenterLogStatus *currentStatus in currentResult) {
+            if ([lasStatus.name isEqualToString:currentStatus.name]) {
+                didDel = NO;
+                break;
+            }
+        }
+        if (didDel) {
+            [delArray addObject:lasStatus];
+            [self _processPrivacyEvent:lasStatus state:NSControlStateValueOff type:type];
+        }
+    }
+    for (LMControlCenterLogStatus *currentStatus in currentResult) {
+        BOOL didAdd = YES;
+        for (LMControlCenterLogStatus *lasStatus in lastResult) {
+            if ([lasStatus.name isEqualToString:currentStatus.name]) {
+                didAdd = NO;
+                break;
+            }
+        }
+        if (didAdd) {
+            [addArray addObject:currentStatus];
+            NSLog(@"_processPrivacyStatusChange new event %@", currentStatus);
+            [self _processPrivacyEvent:currentStatus state:NSControlStateValueOn type:type];
+        }
+    }
+}
+
+- (void)_processPrivacyEvent:(LMControlCenterLogStatus *)status state:(NSControlStateValue)state type:(LMControlCenterLogStatusType)type;
+{
+    Client *client = [[Client alloc] init];
+    client.processBundleID = status.name;
+    
+    if (state == NSControlStateValueOff) { //用户kill或者app停止调用，都根据配对信息获取，避免pid等信息失效
+        client.pid = nil;
+    } else {
+        client.pid = @(GUIApplicationPidForBundleIdentifier(status.name));
+        NSString *processPath = getProcessPath(client.pid.intValue);
+        client.path = valueForStringItem(processPath);
+        client.name = valueForStringItem(getProcessName(client.path));
+    }
+    
+    Event *event = nil;
+    if (type == LMControlCenterLogStatusTypeSystemAudio) {
+        event = [[Event alloc] init:client device:nil deviceType:Device_SystemAudio state:state];
+    } else if (type == LMControlCenterLogStatusTypeCamera) {
+        event = [[Event alloc] init:client device:self.activeCamera deviceType:Device_Camera state:state];
+    } else if (type == LMControlCenterLogStatusTypeMicrophone) {
+        event = [[Event alloc] init:client device:self.activeMic deviceType:Device_Microphone state:state];
+    } else {
+        return;
+    }
+
+    if (self.eventCallback) {
+        self.eventCallback(event);
+    }
+}
+
+- (NSArray *)_parseAttributionsFromLog:(NSString *)log {
+    NSError *error = nil;
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"\\[([a-zA-Z0-9_]+)\\]\\s*(.*?)\\s*\\(([^)]+)\\)" options:NSRegularExpressionDotMatchesLineSeparators error:&error];
+    
+    if (error) {
+        NSLog(@"regex error: %@", error);
+        return @[];
+    }
+    
+    NSArray *matches = [regex matchesInString:log options:0 range:NSMakeRange(0, log.length)];
+    NSMutableArray *result = [NSMutableArray array];
+    
+    for (NSTextCheckingResult *match in matches) {
+        if (match.numberOfRanges < 4) continue;
+        
+        LMControlCenterLogStatus *status = [LMControlCenterLogStatus new];
+        NSString *type = [log substringWithRange:[match rangeAtIndex:1]];
+        
+        if ([type isEqualToString:@"mic"]) {
+            status.type = LMControlCenterLogStatusTypeMicrophone;
+        } else if ([type isEqualToString:@"aud"]) {
+            status.type = LMControlCenterLogStatusTypeSystemAudio;
+        } else if ([type isEqualToString:@"scr"]) {
+            status.type = LMControlCenterLogStatusTypeScreen;
+        } else if ([type isEqualToString:@"cam"]) {
+            status.type = LMControlCenterLogStatusTypeCamera;
+        } else {
+            status.type = LMControlCenterLogStatusTypeUnknown;
+        }
+        
+        status.displayName = [[log substringWithRange:[match rangeAtIndex:2]] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+        status.name = [log substringWithRange:[match rangeAtIndex:3]];
+        
+        if (status.type == LMControlCenterLogStatusTypeSystemAudio ||
+            status.type == LMControlCenterLogStatusTypeCamera ||
+            status.type == LMControlCenterLogStatusTypeMicrophone) {
+            [result addObject:status];
+        }
+    }
+    return [result copy];
+}
+
+- (NSArray *)_parseMacOS12AttributionsFromLog:(NSString *)log {
+    NSError *error = nil;
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"\"([^:]+):([^\"]+)\"" options:NSRegularExpressionDotMatchesLineSeparators error:&error];
+    
+    if (error) {
+        NSLog(@"regex error: %@", error);
+        return @[];
+    }
+    
+    NSArray *matches = [regex matchesInString:log options:0 range:NSMakeRange(0, log.length)];
+    NSMutableArray *result = [NSMutableArray array];
+    
+    for (NSTextCheckingResult *match in matches) {
+        if (match.numberOfRanges < 3) continue;
+        
+        LMControlCenterLogStatus *status = [LMControlCenterLogStatus new];
+        NSString *type = [log substringWithRange:[match rangeAtIndex:1]];
+        
+        if ([type isEqualToString:@"mic"]) {
+            status.type = LMControlCenterLogStatusTypeMicrophone;
+        } else if ([type isEqualToString:@"aud"]) {
+            status.type = LMControlCenterLogStatusTypeSystemAudio;
+        } else if ([type isEqualToString:@"scr"]) {
+            status.type = LMControlCenterLogStatusTypeScreen;
+        } else if ([type isEqualToString:@"cam"]) {
+            status.type = LMControlCenterLogStatusTypeCamera;
+        } else {
+            status.type = LMControlCenterLogStatusTypeUnknown;
+        }
+        
+        status.name = [log substringWithRange:[match rangeAtIndex:2]];
+        
+        if (status.type == LMControlCenterLogStatusTypeSystemAudio ||
+            status.type == LMControlCenterLogStatusTypeCamera ||
+            status.type == LMControlCenterLogStatusTypeMicrophone) {
+            [result addObject:status];
+        }
+    }
+    return [result copy];
 }
 
 // 监听 intel 芯片 macOS 12/13 系统摄像头调用
-- (void)monitor13VideoIntel
+- (void)monitor12VideoIntel
 {
     NSLog(@"CPU architecuture: Intel ...will leverage 'VDCAssistant'");
     
@@ -459,59 +551,46 @@ extern os_log_t logHandle;
     }];
 }
 
-- (void)monitor13VideoM1
+- (void)monitor12Audio
 {
-    //regex
-    NSRegularExpression* regex = nil;
-    
-    //dbg msg
-    NSLog(@">= macOS 13.3+: Using 'CMIOExtensionPropertyDeviceControlPID'");
-    
-    //init regex
-    regex = [NSRegularExpression regularExpressionWithPattern:@"=\\s*(\\d+)\\s*;" options:0 error:nil];
-    
-    //start logging
-    [self.logMonitor start:[NSPredicate predicateWithFormat:@"subsystem=='com.apple.cmio'"] level:Log_Level_Debug callback:^(OSLogEvent* logEvent) {
-        
-        //match
-        NSTextCheckingResult* match = nil;
-        
-        //pid
-        NSInteger pid = 0;
-        
-        //sync to process
-        @synchronized (self) {
-            
-            //only interested on "CMIOExtensionPropertyDeviceControlPID = <pid>;" msgs
-            if(YES != [logEvent.composedMessage containsString:@"CMIOExtensionPropertyDeviceControlPID = "])
-            {
-                return;
-            }
-            
-            //reset
-            self.lastCameraClient = 0;
-            
-            //match on pid
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"pid:(\\d*)," options:0 error:nil];
+    [self.audio13logMonitor start:[NSPredicate predicateWithFormat:@"process == 'coreaudiod' && subsystem == 'com.apple.TCC' && category == 'access'"] level:Log_Level_Info callback:^(OSLogEvent *logEvent) {
+        //tcc request
+        if (YES == [logEvent.composedMessage containsString:@"function=TCCAccessRequest, service=kTCCServiceMicrophone"]) {
+            NSLog(@"new tcc access msg: %@", logEvent.composedMessage);
+            NSTextCheckingResult *match = nil;
             match = [regex firstMatchInString:logEvent.composedMessage options:0 range:NSMakeRange(0, logEvent.composedMessage.length)];
-            if( (nil == match) ||
-               (NSNotFound == match.range.location) )
-            {
+            if ((nil == match) ||
+                (NSNotFound == match.range.location) ||
+                (match.numberOfRanges < 2)) {
+                //ignore
                 return;
             }
             
-            //extract/convert pid
-            pid = [[logEvent.composedMessage substringWithRange:[match rangeAtIndex:1]] integerValue];
-            if( (0 == pid) ||
-               (-1 == pid) )
-            {
+            NSInteger pid = [[logEvent.composedMessage substringWithRange:[match rangeAtIndex:1]] intValue];
+            if (pid <= 0) {
                 return;
             }
-            
-            //save
-            self.lastCameraClient = pid;
+            self.lastMicClient = pid;
+            NSLog(@"new client: %@", @(pid));
         }
-        
     }];
+}
+
+- (BOOL)isRunOnAppleSilicon {
+    BOOL result = NO;
+    if (@available(macOS 11, *)) {
+        char buf[100];
+        size_t buflen = 100;
+        sysctlbyname("machdep.cpu.brand_string", &buf, &buflen, NULL, 0);
+        NSString *cupArch = [[NSString alloc] initWithCString:(char*)buf encoding:NSASCIIStringEncoding];
+        if ([cupArch containsString:@"Apple"]) {
+            result = YES;
+        } else {
+            result = NO;
+        }
+    }
+    return result;
 }
 
 - (void)monitorSystemStatus
@@ -926,10 +1005,7 @@ extern os_log_t logHandle;
     {
         //state
         NSInteger state = -1;
-        
-        //event
-        __block Event* event = nil;
-    
+
         //get state
         state = [self getMicState:device];
         
@@ -956,19 +1032,23 @@ extern os_log_t logHandle;
             {
                 //dbg msg
                 NSLog(@"audio event: off");
+                self.lastMicClient = 0;
                 
-                //still wait
-                // cuz the on event is waiting...
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.5 * NSEC_PER_SEC), dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                    
-                    //init event
-                    // process (client) and device are nil
-                    event = [[Event alloc] init:nil device:device deviceType:Device_Microphone state:NSControlStateValueOff];
-                    
-                    //handle event
-                    [self handleEvent:event];
-                    
-                });
+                if (@available(macOS 13.0, *)) { //13以上直接使用控制中心日志
+                } else {
+                    //still wait
+                    // cuz the on event is waiting...
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.5 * NSEC_PER_SEC), dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                        
+                        //init event
+                        // process (client) and device are nil
+                        Event *event = [[Event alloc] init:nil device:device deviceType:Device_Microphone state:NSControlStateValueOff];
+                        
+                        //handle event
+                        [self handleEvent:event];
+                        
+                    });
+                }
             }
             
             //audio on?
@@ -976,34 +1056,30 @@ extern os_log_t logHandle;
             {
                 //dbg msg
                 NSLog(@"audio event: on");
+                self.activeMic = device;
                 
-                //delay
-                // need time for logging to grab responsible process
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.5 * NSEC_PER_SEC), dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                 
-                    //client
-                    Client* client = nil;
+                if (@available(macOS 13.0, *)) { //13以上直接使用控制中心日志
+                } else {
                     
-                    //have client?
-                    if(0 != self.lastMicClient)
-                    {
-                        //init client from attribution
-                        client = [[Client alloc] init];
-                        client.pid = [NSNumber numberWithInteger:self.lastMicClient];
-                        client.path = valueForStringItem(getProcessPath(client.pid.intValue));
-                        client.name = valueForStringItem(getProcessName(client.path));
-                    }
-                
-                    //init event
-                    // devivce is nil
-                    event = [[Event alloc] init:client device:device deviceType:Device_Microphone state:NSControlStateValueOn];
-                            
-                    //handle event
-                    [self handleEvent:event];
-                    
-                });
+                    //delay
+                    // need time for logging to grab responsible process
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.5 * NSEC_PER_SEC), dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                        
+                        Client* client = nil;
+                        if(0 != self.lastMicClient)
+                        {
+                            //init client from attribution
+                            client = [[Client alloc] init];
+                            client.pid = [NSNumber numberWithInteger:self.lastMicClient];
+                            client.path = valueForStringItem(getProcessPath(client.pid.intValue));
+                            client.name = valueForStringItem(getProcessName(client.path));
+                        }
+                        Event *event = [[Event alloc] init:client device:device deviceType:Device_Microphone state:NSControlStateValueOn];
+                        [self handleEvent:event];
+                    });
+                }
             }
-            
         } //macOS 13.3+
     };
     
@@ -1092,43 +1168,34 @@ bail:
         // older version send event via log monitor
         // 从12系统开始观察设备状态
         if (@available(macOS 12.0, *)) {
-            
-            //event
-            __block Event* event = nil;
-            
             //dbg msg
             NSLog(@"new camera event");
             
             //camera: on
             if(NSControlStateValueOn == state)
             {
-                //dbg msg
                 NSLog(@"camera event: on");
+                self.activeCamera = device;
                 
                 //delay
                 // need time for logging to grab responsible process
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.5 * NSEC_PER_SEC), dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                 
-                    //client
-                    Client* client = nil;
-                    
-                    //have a client?
-                    if(0 != self.lastCameraClient)
-                    {
-                        //init client from attribution
-                        client = [[Client alloc] init];
-                        client.pid = [NSNumber numberWithInteger:self.lastCameraClient];
-                        client.path = valueForStringItem(getProcessPath(client.pid.intValue));
-                        client.name = valueForStringItem(getProcessName(client.path));
+                    if (@available(macOS 13.0, *)) { //13以上直接使用控制中心日志
+                    } else {
+                        Client* client = nil;
+                        if(0 != self.lastCameraClient)
+                        {
+                            //init client from attribution
+                            client = [[Client alloc] init];
+                            client.pid = [NSNumber numberWithInteger:self.lastCameraClient];
+                            client.path = valueForStringItem(getProcessPath(client.pid.intValue));
+                            client.name = valueForStringItem(getProcessName(client.path));
+                        }
+                        Event *event = [[Event alloc] init:client device:device deviceType:Device_Camera state:NSControlStateValueOn];
+                        [self handleEvent:event];
                     }
-                    
-                    //init event
-                    // with client and (active) camera
-                    event = [[Event alloc] init:client device:device deviceType:Device_Camera state:NSControlStateValueOn];
-                    
-                    //handle event
-                    [self handleEvent:event];
-                    
+
                 });
             }
             
@@ -1138,20 +1205,15 @@ bail:
                 //dbg msg
                 NSLog(@"camera event: off");
                 
-                //still wait
-                // cuz the on event is waiting...
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.5 * NSEC_PER_SEC), dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                     
-                    //init event
-                    // process (client) and device are nil
-                    event = [[Event alloc] init:nil device:device deviceType:Device_Camera state:NSControlStateValueOff];
-                    
-                    //handle event
-                    [self handleEvent:event];
-                    
+                    if (@available(macOS 13.0, *)) { //13以上直接使用控制中心日志
+                    } else {
+                        Event *event = [[Event alloc] init:nil device:device deviceType:Device_Camera state:NSControlStateValueOff];
+                        [self handleEvent:event];
+                    }
                 });
             }
-            
         } //macOS 13.3
     };
     
@@ -1845,6 +1907,7 @@ bail:
     //stop log monitoring
     [self.logMonitor stop];
     [self.audio13logMonitor stop];
+    [self.controlCenterLogMonitor stop];
     
     //dbg msg
     NSLog(@"stopping audio monitor(s)");
@@ -2152,3 +2215,5 @@ bail:
 #endif
 
 @end
+
+

@@ -14,6 +14,24 @@
 #import "consts.h"
 #import "Owl2Manager+Database.h"
 #import "Owl2Manager+Notification.h"
+#import "Owl2Manager+Guide.h"
+#import <QMCoreFunction/QMSafeMutableDictionary.h>
+#import <QMCoreFunction/QMSafeMutableArray.h>
+
+static NSString * kAppName(NSBundle *bundle) {
+    NSString *appName = nil;
+    appName = [bundle localizedInfoDictionary][@"CFBundleDisplayName"];
+    if (!appName) {
+        appName = [bundle localizedInfoDictionary][@"CFBundleName"];
+    }
+    if (!appName) {
+        appName = [bundle infoDictionary][@"CFBundleName"];
+    }
+    if (!appName) {
+        appName = [bundle infoDictionary][@"CFBundleExecutable"];
+    }
+    return appName;
+}
 
 @interface Owl2Manager () <NSUserNotificationCenterDelegate>
 
@@ -43,26 +61,25 @@ typedef void (^OwlCompleteBlock)(void);
     self = [super init];
     if (self) {
         _wlArray = [[NSMutableArray alloc] init];
-        _logArray = [[NSMutableArray alloc] init];
+        _logArray = [[QMSafeMutableArray alloc] init];
         _notificationDetailArray = [[NSMutableArray alloc] init];
         _owlVedioItemDic = [[NSMutableDictionary alloc] init];
         _owlAudioItemDic = [[NSMutableDictionary alloc] init];
+        _owlSystemAudioItemDic = [[NSMutableDictionary alloc] init];
         _isWatchAudio = NO;
         _isWatchVideo = NO;
         _isFetchDataFinish = NO;
         _isWantShowOwlWindow = NO;
         _notificationCount = 0;
         _allApps = [self getAllAppInfoWithIndexArray:nil];
+        self.notificationInsertLogList = [[QMSafeMutableDictionary alloc] init];
         
         _avMonitor = [[AVMonitor alloc] init];
         __weak typeof(self) weakSelf = self;
         _avMonitor.eventCallback = ^(Event *event) {
-            if (![event.device.manufacturer containsString:@"Apple"]) {
-                return;
-            }
             dispatch_async(dispatch_get_main_queue(), ^{
                @try {
-                   [weakSelf processedWatch:event.deviceType state:event.state client:event.client];
+                   [weakSelf processEvent:event];
                } @catch (NSException *exception) {
                    NSLog(@"%@", exception);
                } @finally {
@@ -80,82 +97,84 @@ typedef void (^OwlCompleteBlock)(void);
 {
     NSMutableArray *allAppArray = [[NSMutableArray alloc] init];
     NSFileManager *fm = [NSFileManager defaultManager];
-    NSString *appsPath = NSSearchPathForDirectoriesInDomains(NSApplicationDirectory, NSSystemDomainMask, YES)[0];
-    NSError *error = nil;
-    for (NSString *name in [fm contentsOfDirectoryAtPath:appsPath error:&error]) {
-        //NSLog(@"appName: %@", name);
-        if ([[name pathExtension] isEqualToString:@"app"]) {
-            if ([name isEqualToString:MAIN_APP_NAME]) {
-                continue;
-            }
-            NSString *path = [appsPath stringByAppendingPathComponent:name];
-            NSBundle *bubble = [NSBundle bundleWithPath:path];
-            //NSLog(@"info: %@", [bubble infoDictionary]);
-            NSString *icon = NSImageNameBonjour;
-            if ([[[bubble infoDictionary] allKeys] containsObject:@"CFBundleIconFile"]) {
-                icon = [[bubble infoDictionary] objectForKey:@"CFBundleIconFile"];
-                icon = [[bubble resourcePath] stringByAppendingPathComponent:icon];
-                if ([[icon pathExtension] isEqualToString:@""]) {
-                    icon = [icon stringByAppendingPathExtension:@"icns"];
+    
+    void (^block)(NSString *appsPath) = ^(NSString *appsPath) {
+        for (NSString *name in [fm contentsOfDirectoryAtPath:appsPath error:nil]) {
+            //NSLog(@"appName: %@", name);
+            if ([[name pathExtension] isEqualToString:@"app"]) {
+                if ([name isEqualToString:MAIN_APP_NAME]) {
+                    continue;
                 }
-            }
-            NSString *appName = nil;
-            if ([[[bubble localizedInfoDictionary] allKeys] containsObject:@"CFBundleDisplayName"]) {
-                appName = [[bubble localizedInfoDictionary] objectForKey:@"CFBundleDisplayName"];
-            } else {
-                if ([[[bubble infoDictionary] allKeys] containsObject:@"CFBundleName"]) {
-                    appName = [[bubble infoDictionary] objectForKey:@"CFBundleName"];
+                NSString *path = [appsPath stringByAppendingPathComponent:name];
+                NSBundle *bubble = [NSBundle bundleWithPath:path];
+                //NSLog(@"info: %@", [bubble infoDictionary]);
+                NSString *icon = NSImageNameBonjour;
+                if ([[[bubble infoDictionary] allKeys] containsObject:@"CFBundleIconFile"]) {
+                    icon = [[bubble infoDictionary] objectForKey:@"CFBundleIconFile"];
+                    icon = [[bubble resourcePath] stringByAppendingPathComponent:icon];
+                    if ([[icon pathExtension] isEqualToString:@""]) {
+                        icon = [icon stringByAppendingPathExtension:@"icns"];
+                    }
+                }
+                NSString *appName = kAppName(bubble);
+                if (!appName) {
+                    continue;
+                }
+                NSString *identifier = nil;
+                if ([[[bubble infoDictionary] allKeys] containsObject:@"CFBundleIdentifier"]) {
+                    identifier = [[bubble infoDictionary] objectForKey:@"CFBundleIdentifier"];
+                }
+                if (!identifier) {
+                    continue;
+                }
+                
+                if (!path) {
+                    continue;
+                }
+                NSString *executName = nil;
+                if ([[[bubble infoDictionary] allKeys] containsObject:@"CFBundleExecutable"]) {
+                    executName = [[bubble infoDictionary] objectForKey:@"CFBundleExecutable"];
+                }
+                if (!executName) {
+                    continue;
+                }
+                NSMutableDictionary *appDic = [[NSMutableDictionary alloc] init];
+                [appDic setObject:icon forKey:OwlAppIcon];
+                [appDic setObject:executName forKey:OwlExecutableName];
+                [appDic setObject:path forKey:OwlBubblePath];
+                [appDic setObject:identifier forKey:OwlIdentifier];
+                [appDic setObject:appName forKey:OwlAppName];
+                [appDic setObject:[NSNumber numberWithBool:NO] forKey:@"isSelected"];
+                if ([identifier hasPrefix:@"com.apple"]) {
+                    [appDic setObject:[NSNumber numberWithBool:YES] forKey:OwlAppleApp];
                 } else {
-                    appName = [[bubble infoDictionary] objectForKey:@"CFBundleExecutable"];
+                    [appDic setObject:[NSNumber numberWithBool:NO] forKey:OwlAppleApp];
                 }
+                if (indexArray) {
+                    [appDic setObject:[NSNumber numberWithInt:(int)indexArray.count] forKey:@"itemIndex"];
+                }
+                [allAppArray addObject:appDic];
             }
-            if (!appName) {
-                continue;
-            }
-            NSString *identifier = nil;
-            if ([[[bubble infoDictionary] allKeys] containsObject:@"CFBundleIdentifier"]) {
-                identifier = [[bubble infoDictionary] objectForKey:@"CFBundleIdentifier"];
-            }
-            if (!identifier) {
-                continue;
-            }
-            
-            if (!path) {
-                continue;
-            }
-            NSString *executName = nil;
-            if ([[[bubble infoDictionary] allKeys] containsObject:@"CFBundleExecutable"]) {
-                executName = [[bubble infoDictionary] objectForKey:@"CFBundleExecutable"];
-            }
-            if (!executName) {
-                continue;
-            }
-            NSMutableDictionary *appDic = [[NSMutableDictionary alloc] init];
-            [appDic setObject:icon forKey:OwlAppIcon];
-            [appDic setObject:executName forKey:OwlExecutableName];
-            [appDic setObject:path forKey:OwlBubblePath];
-            [appDic setObject:identifier forKey:OwlIdentifier];
-            [appDic setObject:appName forKey:OwlAppName];
-            [appDic setObject:[NSNumber numberWithBool:NO] forKey:@"isSelected"];
-            [appDic setObject:[NSNumber numberWithBool:YES] forKey:OwlWatchCamera];
-            [appDic setObject:[NSNumber numberWithBool:YES] forKey:OwlWatchAudio];
-            if ([identifier hasPrefix:@"com.apple"]) {
-                [appDic setObject:[NSNumber numberWithBool:YES] forKey:OwlAppleApp];
-            } else {
-                [appDic setObject:[NSNumber numberWithBool:NO] forKey:OwlAppleApp];
-            }
-            if (indexArray) {
-                [appDic setObject:[NSNumber numberWithInt:(int)indexArray.count] forKey:@"itemIndex"];
-            }
-            [allAppArray addObject:appDic];
         }
-    }
+    };
+    
+    NSString *systemAppsPath = NSSearchPathForDirectoriesInDomains(NSApplicationDirectory, NSSystemDomainMask, YES)[0];
+    block(systemAppsPath);
+    NSString *userAppsPath = NSSearchPathForDirectoriesInDomains(NSApplicationDirectory, NSLocalDomainMask, YES)[0];
+    block(userAppsPath);
+    
     return allAppArray;
 }
 
 - (void)setWatchVedio:(BOOL)state toDb:(BOOL)toDB
 {
     NSLog(@"setWatchVedio: %d, %d", _isWatchVideo, state);
+    if (state) {
+        // 设置过开启
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.isPreviouslyEnabled = YES;
+        });
+    }
     if (state != _isWatchVideo) {
         _isWatchVideo = state;
         if (toDB) {
@@ -174,6 +193,12 @@ typedef void (^OwlCompleteBlock)(void);
 - (void)setWatchAudio:(BOOL)state toDb:(BOOL)toDB
 {
     NSLog(@"setWatchAudio: %d, %d", _isWatchAudio, state);
+    if (state) {
+        // 设置过开启
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.isPreviouslyEnabled = YES;
+        });
+    }
     if (state != _isWatchAudio) {
         _isWatchAudio = state;
         if (toDB) {
@@ -189,22 +214,52 @@ typedef void (^OwlCompleteBlock)(void);
     }
 }
 
-- (void)resaveWhiteList
-{
-    [[NSNotificationCenter defaultCenter] postNotificationName:OwlWhiteListChangeNotication object:nil];
-    [self resaveWhiteListToDB];
-}
-
 - (void)addAppWhiteItem:(NSDictionary*)dic
 {
+    // 临时补丁，仅是可执行文件不允许添加到白名单
+    if (![dic objectForKey:OwlIdentifier]) {
+        return;
+    }
     NSLog(@"QMPIPE_CMD_OWL_DATA addAppWhiteItem: %@", dic);
+    NSMutableDictionary *mutableDic;
+    if ([dic isKindOfClass:NSMutableDictionary.class]) {
+        mutableDic = (NSMutableDictionary *)dic;
+    } else {
+        mutableDic = dic.mutableCopy;
+    }
+    
+    NSDictionary *existingDic = nil;
     for (NSDictionary *subDic in self.wlArray) {
         if ([[subDic objectForKey:OwlIdentifier] isEqualToString:[dic objectForKey:OwlIdentifier]]) {
-            return;
+            // 将旧的白名单获取与新的白名单合并
+            NSNumber *watchCam = subDic[OwlWatchCamera];
+            NSNumber *watchMic = subDic[OwlWatchAudio];
+            NSNumber *watchSpeaker = subDic[OwlWatchSpeaker];
+            
+            NSNumber *new_watchCam = mutableDic[OwlWatchCamera];
+            NSNumber *new_watchMic = mutableDic[OwlWatchAudio];
+            NSNumber *new_watchSpeaker = mutableDic[OwlWatchSpeaker];
+            
+            if (!new_watchCam && watchCam) {
+                [mutableDic setObject:watchCam forKey:OwlWatchCamera];
+            }
+            if (!new_watchMic && watchMic) {
+                [mutableDic setObject:watchMic forKey:OwlWatchAudio];
+            }
+            if (!new_watchSpeaker && watchSpeaker) {
+                [mutableDic setObject:watchSpeaker forKey:OwlWatchSpeaker];
+            }
+   
+            existingDic = subDic;
+            break;
         }
     }
-    [self.wlArray addObject:dic];
-    [self addAppWhiteItemToDB:dic];
+    if (existingDic) {
+        // 移除旧的
+        [self.wlArray removeObject:existingDic];
+    }
+    [self.wlArray addObject:mutableDic];
+    [self addAppWhiteItemToDB:mutableDic];
     [[NSNotificationCenter defaultCenter] postNotificationName:OwlWhiteListChangeNotication object:nil];
 }
 
@@ -243,7 +298,7 @@ typedef void (^OwlCompleteBlock)(void);
     
     [self closeDB];
     [self loadDB];
-
+    [_wlArray addObjectsFromArray:[self getWhiteList]];
     [self.avMonitor start];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         if (self.isWatchVideo) {
@@ -346,17 +401,7 @@ typedef void (^OwlCompleteBlock)(void);
             icon = [icon stringByAppendingPathExtension:@"icns"];
         }
     }
-    NSString *appName = @"";
-    
-    if ([[[bubble localizedInfoDictionary] allKeys] containsObject:@"CFBundleDisplayName"]) {
-        appName = [[bubble localizedInfoDictionary] objectForKey:@"CFBundleDisplayName"];
-    } else {
-        if ([[[bubble infoDictionary] allKeys] containsObject:@"CFBundleName"]) {
-            appName = [[bubble infoDictionary] objectForKey:@"CFBundleName"];
-        } else {
-            appName = [[bubble infoDictionary] objectForKey:@"CFBundleExecutable"];
-        }
-    }
+    NSString *appName = kAppName(bubble);
     if (!appName) {
         NSLog(@"getAppInfoWithPath appPath = %@, appNam = %@", path, appName);
         return nil;
@@ -392,8 +437,6 @@ typedef void (^OwlCompleteBlock)(void);
         appleApp = [NSNumber numberWithBool:NO];
     }
     [appDic setObject:appleApp forKey:OwlAppleApp];
-    [appDic setObject:[NSNumber numberWithBool:YES] forKey:OwlWatchCamera];
-    [appDic setObject:[NSNumber numberWithBool:YES] forKey:OwlWatchAudio];
     
     return appDic;
 }
@@ -470,15 +513,18 @@ typedef void (^OwlCompleteBlock)(void);
     }
 }
 
-- (void)processedWatch:(AVDevice)device state:(NSControlStateValue)state client:(Client *)client {
+- (void)processEvent:(Event *)event
+{
+    if (event.deviceType != Device_SystemAudio && ![event.device.manufacturer containsString:@"Apple"]) {
+        return;
+    }
+    AVDevice device = event.deviceType;
+    NSControlStateValue state = event.state;
+    Client *client = event.client;
+
     NSMutableArray *resArray = [NSMutableArray array];
     if (Device_Microphone == device) {
-        if (state == NSControlStateValueOn) {
-            self.isAudioDeviceActive = YES;
-        } else if (state == NSControlStateValueOff) {
-            self.isAudioDeviceActive = NO;
-        }
-        if (client) {
+        if (client.pid.intValue > 0) {
             //信息完整，开启，与单个关闭
             NSMutableDictionary *dicItem = [[NSMutableDictionary alloc] init];
             
@@ -486,14 +532,10 @@ typedef void (^OwlCompleteBlock)(void);
             dicItem[OWL_PROC_NAME] = [NSString stringWithUTF8String:client.name.UTF8String];
             dicItem[OWL_PROC_PATH] = [NSString stringWithUTF8String:client.path.UTF8String];
             dicItem[OWL_DEVICE_TYPE] = [NSNumber numberWithInt:device];
+            dicItem[OWL_DEVICE_NAME] = event.device.localizedName;
+            dicItem[OWL_BUNDLE_ID] = client.processBundleID;
+            dicItem[OWL_PROC_DELTA] = @(state == NSControlStateValueOn ? 1 : -1);
             
-//            if (state == NSControlStateValueOn) {
-//                dicItem[OWL_PROC_DELTA] = [NSNumber numberWithInt:1];
-//            } else {
-//                dicItem[OWL_PROC_DELTA] = [NSNumber numberWithInt:-1];
-//            }
-            
-            dicItem[OWL_PROC_DELTA] = [NSNumber numberWithInt:1];
             [resArray addObject:dicItem];
             [self.owlAudioItemDic setObject:dicItem forKey:dicItem[OWL_PROC_ID]];
             if (![self.owlAudioItemDic objectForKey:client.name]) {
@@ -502,16 +544,24 @@ typedef void (^OwlCompleteBlock)(void);
             
             [self analyseDeviceInfoForNotificationWithArray:resArray];
             NSLog(@"!!!! mic %@ %@", dicItem[OWL_PROC_NAME], dicItem[OWL_PROC_DELTA]);
-        } else {
-            //client 空（多个mic，全关才会回调
-            if (self.isAudioDeviceActive) {
-                return;
-            }
+        } else if (client.processBundleID) { //如果无 pid 且有 bundleID 说明用户单独阻止，进行单独配对
             
             for (NSString *key in self.owlAudioItemDic) {
                 NSMutableDictionary *dicItem = self.owlAudioItemDic[key];
                 if ([dicItem isKindOfClass:[NSMutableDictionary class]]) {
-                    dicItem[OWL_PROC_DELTA] = [NSNumber numberWithInt:-1];
+                    if ([dicItem[OWL_BUNDLE_ID] isEqualToString:client.processBundleID]) {
+                        dicItem[OWL_PROC_DELTA] = @(-1);
+                        NSLog(@"!!!! mic %@ %@", dicItem[OWL_PROC_NAME], dicItem[OWL_PROC_DELTA]);
+                        [resArray addObject:dicItem];
+                    }
+                }
+            }
+            [self analyseDeviceInfoForNotificationWithArray:resArray];
+        } else {
+            for (NSString *key in self.owlAudioItemDic) {
+                NSMutableDictionary *dicItem = self.owlAudioItemDic[key];
+                if ([dicItem isKindOfClass:[NSMutableDictionary class]]) {
+                    dicItem[OWL_PROC_DELTA] = @(-1);
                     NSLog(@"!!!! mic %@ %@", dicItem[OWL_PROC_NAME], dicItem[OWL_PROC_DELTA]);
                     [resArray addObject:dicItem];
                 }
@@ -520,7 +570,7 @@ typedef void (^OwlCompleteBlock)(void);
             [self analyseDeviceInfoForNotificationWithArray:resArray];
         }
     } else if (Device_Camera == device) {
-        if (client) {
+        if (client.pid.intValue > 0) {
             //信息完整
             NSMutableDictionary *dicItem = [[NSMutableDictionary alloc] init];
             
@@ -528,19 +578,31 @@ typedef void (^OwlCompleteBlock)(void);
             dicItem[OWL_PROC_NAME] = [NSString stringWithUTF8String:client.name.UTF8String];
             dicItem[OWL_PROC_PATH] = [NSString stringWithUTF8String:client.path.UTF8String];
             dicItem[OWL_DEVICE_TYPE] = [NSNumber numberWithInt:device];
-            
-            if (state == NSControlStateValueOn) {
-                dicItem[OWL_PROC_DELTA] = [NSNumber numberWithInt:1];
-            } else {
-                dicItem[OWL_PROC_DELTA] = [NSNumber numberWithInt:-1];
-            }
+            dicItem[OWL_DEVICE_NAME] = event.device.localizedName;
+            dicItem[OWL_BUNDLE_ID] = client.processBundleID;
+            dicItem[OWL_PROC_DELTA] = @(state == NSControlStateValueOn ? 1 : -1);
             
             [resArray addObject:dicItem];
             [self.owlVedioItemDic setObject:dicItem forKey:dicItem[OWL_PROC_ID]];
             [self.notificationDetailArray addObjectsFromArray:resArray];
             [self analyseDeviceInfoForNotificationWithArray:resArray];
             NSLog(@"!!!! video %@ %@", dicItem[OWL_PROC_NAME], dicItem[OWL_PROC_DELTA]);
-        } else {
+            
+        }  else if (client.processBundleID) {
+            
+            for (NSString *key in self.owlVedioItemDic) {
+                NSMutableDictionary *dicItem = self.owlVedioItemDic[key];
+                if ([dicItem isKindOfClass:[NSMutableDictionary class]]) {
+                    if ([dicItem[OWL_BUNDLE_ID] isEqualToString:client.processBundleID]) {
+                        dicItem[OWL_PROC_DELTA] = @(-1);
+                        NSLog(@"!!!! camera %@ %@", dicItem[OWL_PROC_NAME], dicItem[OWL_PROC_DELTA]);
+                        [resArray addObject:dicItem];
+                    }
+                }
+            }
+            [self analyseDeviceInfoForNotificationWithArray:resArray];
+        }
+        else {
             for (NSString *key in self.owlVedioItemDic) {
                 NSMutableDictionary *dicItem = self.owlVedioItemDic[key];
                 if ([dicItem isKindOfClass:[NSMutableDictionary class]]) {
@@ -550,6 +612,49 @@ typedef void (^OwlCompleteBlock)(void);
                 }
             }
 
+            [self analyseDeviceInfoForNotificationWithArray:resArray];
+        }
+    } else if (device == Device_SystemAudio) {
+        
+        if (client.pid.intValue > 0) {
+            NSMutableDictionary *dicItem = [[NSMutableDictionary alloc] init];
+            
+            dicItem[OWL_PROC_ID] = [NSNumber numberWithInt:client.pid.intValue];
+            dicItem[OWL_PROC_NAME] = [NSString stringWithUTF8String:client.name.UTF8String];
+            dicItem[OWL_PROC_PATH] = [NSString stringWithUTF8String:client.path.UTF8String];
+            dicItem[OWL_DEVICE_TYPE] = [NSNumber numberWithInt:device];
+            dicItem[OWL_BUNDLE_ID] = client.processBundleID;
+            dicItem[OWL_PROC_DELTA] = @(state == NSControlStateValueOn ? 1 : -1);
+            
+            [resArray addObject:dicItem];
+            [self.owlSystemAudioItemDic setObject:dicItem forKey:dicItem[OWL_PROC_ID]];
+            [self.notificationDetailArray addObjectsFromArray:resArray];
+            [self analyseDeviceInfoForNotificationWithArray:resArray];
+            NSLog(@"!!!! system audio %@ %@", dicItem[OWL_PROC_NAME], dicItem[OWL_PROC_DELTA]);
+            
+        } else if (client.processBundleID) {
+            
+            for (NSString *key in self.owlSystemAudioItemDic) {
+                NSMutableDictionary *dicItem = self.owlSystemAudioItemDic[key];
+                if ([dicItem isKindOfClass:[NSMutableDictionary class]]) {
+                    if ([dicItem[OWL_BUNDLE_ID] isEqualToString:client.processBundleID]) {
+                        dicItem[OWL_PROC_DELTA] = @(-1);
+                        NSLog(@"!!!! system audio %@ %@", dicItem[OWL_PROC_NAME], dicItem[OWL_PROC_DELTA]);
+                        [resArray addObject:dicItem];
+                    }
+                }
+            }
+            [self analyseDeviceInfoForNotificationWithArray:resArray];
+        }
+        else {
+            for (NSString *key in self.owlSystemAudioItemDic) {
+                NSMutableDictionary *dicItem = self.owlSystemAudioItemDic[key];
+                if ([dicItem isKindOfClass:[NSMutableDictionary class]]) {
+                    dicItem[OWL_PROC_DELTA] = @(-1);
+                    NSLog(@"!!!! system audio %@ %@", dicItem[OWL_PROC_NAME], dicItem[OWL_PROC_DELTA]);
+                    [resArray addObject:dicItem];
+                }
+            }
             [self analyseDeviceInfoForNotificationWithArray:resArray];
         }
     }

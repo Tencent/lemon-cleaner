@@ -116,8 +116,8 @@ static const CGFloat kDefaultBubbleMarginToScreen = 50;
         self.cleanViewController = [[LMCleanViewController alloc] init];
         self.tabViewController = [[LMMonitorTabController alloc]
                                   initWithControllers:@[ _cleanViewController,_systemFeatureViewController]
-                                  titles:@[NSLocalizedStringFromTableInBundle(@"LMMonitorPoppverController_setupBubble_1553842944_1", nil, [NSBundle bundleForClass:[self class]], @""),
-                NSLocalizedStringFromTableInBundle(@"LMMonitorPoppverController_setupBubble_1553842683_1", nil, [NSBundle bundleForClass:[self class]], @"")]];
+                                  titles:@[NSLocalizedString(@"清理释放", nil),
+                NSLocalizedString(@"系统功能", nil)]];
         self.cleanViewController.tabController = self.tabViewController;
         self.memoryViewController = _cleanViewController;
         self.networkViewController = _systemFeatureViewController;

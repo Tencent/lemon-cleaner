@@ -72,11 +72,11 @@
 
 -(NSTextField *)createLabelForTitleWithKey: (NSString *)titleKey{
     //[NSFont systemFontOfSize:14] color:[LMAppThemeHelper getTitleColor]
-   return [self createLabel:NSLocalizedStringFromTableInBundle(titleKey, nil, [NSBundle bundleForClass:[self class]], @"") font:[NSFont systemFontOfSize:14] color:[LMAppThemeHelper getTitleColor]];
+   return [self createLabel:NSLocalizedString(titleKey, nil) font:[NSFont systemFontOfSize:14] color:[LMAppThemeHelper getTitleColor]];
 }
 
 -(NSTextField *)createLabelForItem: (NSString *)itemKey{
-    return [self createLabel:NSLocalizedStringFromTableInBundle(itemKey, nil, [NSBundle bundleForClass:[self class]], @"") font:[NSFont systemFontOfSize:12] color:[LMAppThemeHelper getTitleColor]];
+    return [self createLabel:NSLocalizedString(itemKey, nil) font:[NSFont systemFontOfSize:12] color:[LMAppThemeHelper getTitleColor]];
 }
 
 
@@ -173,7 +173,7 @@
     //如果没有授权，状态栏在，“前往授权”
     if(![self checkFullDiskAuthorizationStatus] && button.on && [self isAppRunningBundleId:MONITOR_APP_BUNDLEID])
     {
-        [FullDiskAccessPermissionViewController showFullDiskAccessRequestWithParentController:self title:NSLocalizedStringFromTableInBundle(@"PreferenceViewController_monitor_checkFullDiskAccess_need_permission_tips", nil, [NSBundle mainBundle], @"") windowCloseBlock:^{
+        [FullDiskAccessPermissionViewController showFullDiskAccessRequestWithParentController:self title:NSLocalizedString(@"macOS 10.15系统，需授权Lemon废纸篓访问权限才可开启。点击“前往授权”。", nil) windowCloseBlock:^{
             button.on = NO;
         } okButtonBlock:^{
             if(button == self.autoUninstallSwitch){
@@ -192,7 +192,7 @@
     //如果没有授权，状态栏不在, "开启并授权"
     if(![self checkFullDiskAuthorizationStatus] && button.on && ![self isAppRunningBundleId:MONITOR_APP_BUNDLEID])
     {
-        [FullDiskAccessPermissionViewController showFullDiskAccessRequestWithParentController:self title:NSLocalizedStringFromTableInBundle(@"PreferenceViewController_monitor_checkFullDiskAccess_need_permission_open_monitor_tips", nil, [NSBundle mainBundle], @"") description:@"" okBtnTitle:NSLocalizedStringFromTableInBundle(@"PreferenceViewController_monitor_checkFullDiskAccess_need_permission_open_monitor_ok_button_title", nil, [NSBundle mainBundle], @"") windowHeight: 140 windowCloseBlock:^{
+        [FullDiskAccessPermissionViewController showFullDiskAccessRequestWithParentController:self title:NSLocalizedString(@"macOS 10.15系统，需要打开状态栏并且授权Lemon废纸篓访问权限才可开启。要开启并授权吗？", nil) description:@"" okBtnTitle:NSLocalizedString(@"开启并授权", nil) windowHeight: 140 windowCloseBlock:^{
             button.on = NO;
         } okButtonBlock:^{
             if(button == self.autoUninstallSwitch){
@@ -211,7 +211,7 @@
     //如果已经授权，状态栏不在，“打开状态栏”
     if([self checkFullDiskAuthorizationStatus] && button.on && ![self isAppRunningBundleId:MONITOR_APP_BUNDLEID])
     {
-        [FullDiskAccessPermissionViewController showFullDiskAccessRequestWithParentController:self title:NSLocalizedStringFromTableInBundle(@"PreferenceViewController_monitor_checkFullDiskAccess_need_open_monitor_tips", nil, [NSBundle mainBundle], @"") description:@"" okBtnTitle: NSLocalizedStringFromTableInBundle(@"PreferenceViewController_monitor_checkFullDiskAccess_need_open_monitor_ok_button_title", nil, [NSBundle mainBundle], @"") windowHeight:133 windowCloseBlock:nil okButtonBlock:^{
+        [FullDiskAccessPermissionViewController showFullDiskAccessRequestWithParentController:self title:NSLocalizedString(@"需要打开状态栏才可开启。要打开吗？", nil) description:@"" okBtnTitle: NSLocalizedString(@"打开状态栏", nil) windowHeight:133 windowCloseBlock:nil okButtonBlock:^{
             [self openMonitor];
             button.on = YES;
             if(button == self.autoUninstallSwitch){
@@ -229,8 +229,8 @@
 
 - (void)setupViews {
     // 自动卸载残留
-    NSTextField* autoUnintallresidualTitle =[self createLabel:NSLocalizedStringFromTableInBundle(@"PreferenceViewController_setupViews_1553049563_1", nil, [NSBundle bundleForClass:[self class]], @"") font:[NSFont systemFontOfSize:14] color:[LMAppThemeHelper getTitleColor]];
-    NSTextField* autoUnintallresidualDesc =[self createLabel:NSLocalizedStringFromTableInBundle(@"PreferenceViewController_setupViews_1553049563_2", nil, [NSBundle bundleForClass:[self class]], @"") font:[NSFontHelper getLightSystemFont:12] color:[NSColor colorWithHex:0x94979B]];
+    NSTextField* autoUnintallresidualTitle =[self createLabel:NSLocalizedString(@"自动检测卸载残留", nil) font:[NSFont systemFontOfSize:14] color:[LMAppThemeHelper getTitleColor]];
+    NSTextField* autoUnintallresidualDesc =[self createLabel:NSLocalizedString(@"需要保持状态栏开启才能正常使用。开启后，当拖动应用到废纸篓卸载时，将提示强力\n清理残留文件。", nil) font:[NSFontHelper getLightSystemFont:12] color:[NSColor colorWithHex:0x94979B]];
     if (@available(macOS 10.11, *)) {
         autoUnintallresidualDesc.maximumNumberOfLines = 2;
     }
@@ -259,7 +259,7 @@
     [self.view addSubview:uninstallLineView];
     
     //MARK: 废纸篓清理提醒
-    NSTextField *trashSizeCheckTitle = [self createLabelForTitleWithKey:@"PreferenceViewController_trash_size_check_title"];
+    NSTextField *trashSizeCheckTitle = [self createLabelForTitleWithKey:@"废纸篓清理提醒"];
     [self.view addSubview:trashSizeCheckTitle];
     
     COSwitch *trashSizeCheckSwitch = [[COSwitch alloc] init];
@@ -276,10 +276,10 @@
     NSButton *deleteFileRadioBtn = [self createRadioButtonWithSelector:@selector(trashSizeCheckWhenDeleteFile)];
     deleteFileRadioBtn.title = @"";
     self.deleteFileRadioBtn = deleteFileRadioBtn;
-    NSTextField *deleteFileRadioBtnDesc = [self createLabelForItem:@"PreferenceViewController_trash_size_check_when_delete_file"];
+    NSTextField *deleteFileRadioBtnDesc = [self createLabelForItem:@"删除文件到废纸篓时提醒"];
     NSButton *overSizeRadioBtn = [self createRadioButtonWithSelector:@selector(trashSizeCheckWhenOverSize)];
     self.overSizeRadioBtn = overSizeRadioBtn;
-    NSTextField *overSizeRadioBtnDesc = [self createLabelForItem:@"PreferenceViewCOntroller_trash_size_check_when_over_size_first"];
+    NSTextField *overSizeRadioBtnDesc = [self createLabelForItem:@"垃圾大小超过"];
     
 
     NSPopUpButton *popUpButton = [[NSPopUpButton alloc]init];
@@ -291,7 +291,7 @@
     [popUpButton setAction:@selector(popUpBtnAction:)];
     
     
-    NSTextField *overSizeRadioBtnDescEnd = [self createLabelForItem:@"PreferenceViewCOntroller_trash_size_check_when_over_size_second"];
+    NSTextField *overSizeRadioBtnDescEnd = [self createLabelForItem:@"时提醒"];
     if ([LanguageHelper getCurrentSystemLanguageType] == SystemLanguageTypeChinese){
          [self.view addSubview:overSizeRadioBtnDescEnd];
     }
@@ -312,7 +312,7 @@
     
     
     //MARK: 关闭主面板，Docker栏图标显示
-    NSTextField* dockTitle = [self createLabel:NSLocalizedStringFromTableInBundle(@"PreferenceViewController_setupViews_1553049563_3", nil, [NSBundle bundleForClass:[self class]], @"") font:[NSFont systemFontOfSize:14] color:[LMAppThemeHelper getTitleColor]];
+    NSTextField* dockTitle = [self createLabel:NSLocalizedString(@"关闭主面板", nil) font:[NSFont systemFontOfSize:14] color:[LMAppThemeHelper getTitleColor]];
     NSButton *dockRadioBtnMin = [[NSButton alloc]init];
     dockRadioBtnMin.frame = NSMakeRect(0, 0, 14, 14);
     dockRadioBtnMin.wantsLayer = YES;
@@ -323,7 +323,7 @@
     dockRadioBtnMin.target = self;
     [dockRadioBtnMin setAction:@selector(dockMinValueChange:)];
     
-    NSTextField* dockRadioBtnMinDes = [self createLabel:NSLocalizedStringFromTableInBundle(@"PreferenceViewController_setupViews_1553049563_4", nil, [NSBundle bundleForClass:[self class]], @"") font:[NSFontHelper getLightSystemFont:12] color:[LMAppThemeHelper getTitleColor]];
+    NSTextField* dockRadioBtnMinDes = [self createLabel:NSLocalizedString(@"最小化到程序坞（Dock栏），不退出程序", nil) font:[NSFontHelper getLightSystemFont:12] color:[LMAppThemeHelper getTitleColor]];
     
     NSButton *dockRadioBtnExit = [[NSButton alloc]init];
     dockRadioBtnExit.frame = NSMakeRect(0, 0, 14, 14);
@@ -335,15 +335,15 @@
     dockRadioBtnExit.target = self;
     [dockRadioBtnExit setAction:@selector(dockExitValueChange:)];
     
-    NSTextField* dockRadioBtnExitDes = [self createLabel:NSLocalizedStringFromTableInBundle(@"PreferenceViewController_setupViews_1553049563_5", nil, [NSBundle bundleForClass:[self class]], @"") font:[NSFontHelper getLightSystemFont:12] color:[LMAppThemeHelper getTitleColor]];
+    NSTextField* dockRadioBtnExitDes = [self createLabel:NSLocalizedString(@"直接退出程序", nil) font:[NSFontHelper getLightSystemFont:12] color:[LMAppThemeHelper getTitleColor]];
     
-    NSTextField* javaOsTipLabel = [self createLabel:NSLocalizedStringFromTableInBundle(@"PreferenceViewController_setupViews_1553049563_6", nil, [NSBundle bundleForClass:[self class]], @"") font:[NSFontHelper getLightSystemFont:12] color:[NSColor colorWithHex:0x999999]];
+    NSTextField* javaOsTipLabel = [self createLabel:NSLocalizedString(@"10.14系统后dock栏会默认保留近期使用的3款应用程序，", nil) font:[NSFontHelper getLightSystemFont:12] color:[NSColor colorWithHex:0x999999]];
     if (@available(macOS 10.11, *)) {
         javaOsTipLabel.maximumNumberOfLines = 2;
     }
     
     //更改设置
-    NSTextField* systemSettingBtn = [self createLabel:NSLocalizedStringFromTableInBundle(@"PreferenceViewController_setupViews_1553049563_7", nil, [NSBundle bundleForClass:[self class]], @"") font:[NSFontHelper getLightSystemFont:12] color:[NSColor colorWithHex:0x057cff]];
+    NSTextField* systemSettingBtn = [self createLabel:NSLocalizedString(@"更改设置", nil) font:[NSFontHelper getLightSystemFont:12] color:[NSColor colorWithHex:0x057cff]];
     NSClickGestureRecognizer *clickGes = [[NSClickGestureRecognizer alloc] initWithTarget:self action:@selector(gotoSystemSettingPage)];
     [systemSettingBtn addGestureRecognizer:clickGes];
     
@@ -385,7 +385,7 @@
     languageRadioBtnCh.target = self;
     [languageRadioBtnCh setAction:@selector(languageChangeToCh:)];
     
-    NSTextField* languageRadioBtnChDesc = [self createLabel:NSLocalizedStringFromTableInBundle(@"PreferenceViewController_setupViews_languageRadioBtnChDesc_1", nil, [NSBundle bundleForClass:[self class]], @"") font:[NSFontHelper getLightSystemFont:12] color:[LMAppThemeHelper getTitleColor]];
+    NSTextField* languageRadioBtnChDesc = [self createLabel:NSLocalizedString(@"简体中文", nil) font:[NSFontHelper getLightSystemFont:12] color:[LMAppThemeHelper getTitleColor]];
     
     NSButton *languageRadioBtnEn = [[NSButton alloc]init];
     languageRadioBtnEn.frame = NSMakeRect(0, 0, 14, 14);
@@ -397,7 +397,7 @@
     languageRadioBtnEn.target = self;
     [languageRadioBtnEn setAction:@selector(languageChangeToEn:)];
     
-    NSTextField* languageRadioBtnEnDesc = [self createLabel:NSLocalizedStringFromTableInBundle(@"PreferenceViewController_setupViews_languageRadioBtnEnDesc_1", nil, [NSBundle bundleForClass:[self class]], @"") font:[NSFontHelper getLightSystemFont:12] color:[LMAppThemeHelper getTitleColor]];
+    NSTextField* languageRadioBtnEnDesc = [self createLabel:NSLocalizedString(@"English", nil) font:[NSFontHelper getLightSystemFont:12] color:[LMAppThemeHelper getTitleColor]];
     
     [_myRadioControls setObject:languageRadioBtnCh forKey:@3];
     [_myRadioControls setObject:languageRadioBtnEn forKey:@2];
@@ -417,10 +417,10 @@
         languageRadioBtnEn.image = [[NSBundle mainBundle] imageForResource:@"radio_down"];
     }
     
-    NSTextField* languageTitle = [self createLabel:NSLocalizedStringFromTableInBundle(@"PreferenceViewController_setupViews_languageTitle_1", nil, [NSBundle bundleForClass:[self class]], @"") font:[NSFont systemFontOfSize:14] color:[LMAppThemeHelper getTitleColor]];
+    NSTextField* languageTitle = [self createLabel:NSLocalizedString(@"语言设置", nil) font:[NSFont systemFontOfSize:14] color:[LMAppThemeHelper getTitleColor]];
     ///主题设置
-    NSTextField *themeTitle = [self createLabel:NSLocalizedStringFromTableInBundle(@"PreferenceViewController_setupViews_themeTitle", nil, [NSBundle bundleForClass:[self class]], @"") font:[NSFont systemFontOfSize:14] color:[LMAppThemeHelper getTitleColor]];
-    NSTextField* themeDesc =[self createLabel:NSLocalizedStringFromTableInBundle(@"PreferenceViewController_setupViews_themeDesc", nil, [NSBundle bundleForClass:[self class]], @"") font:[NSFontHelper getLightSystemFont:12] color:[NSColor colorWithHex:0x94979B]];
+    NSTextField *themeTitle = [self createLabel:NSLocalizedString(@"主题设置", nil) font:[NSFont systemFontOfSize:14] color:[LMAppThemeHelper getTitleColor]];
+    NSTextField* themeDesc =[self createLabel:NSLocalizedString(@"仅支持macOS 10.14系统及以上", nil) font:[NSFontHelper getLightSystemFont:12] color:[NSColor colorWithHex:0x94979B]];
     
     NSButton *lightThemeRadioBtn = [[NSButton alloc]init];
     lightThemeRadioBtn.frame = NSMakeRect(0, 0, 14, 14);
@@ -459,9 +459,9 @@
     
     [self updateThemeRadioBtn];
     
-    NSTextField* themeRadioBtnLightDesc = [self createLabel:NSLocalizedStringFromTableInBundle(@"PreferenceViewController_setupViews_theme_radioBtn_lightDesc", nil, [NSBundle bundleForClass:[self class]], @"") font:[NSFontHelper getLightSystemFont:12] color:[LMAppThemeHelper getTitleColor]];
-    NSTextField* themeRadioBtnDarkDesc = [self createLabel:NSLocalizedStringFromTableInBundle(@"PreferenceViewController_setupViews_theme_radioBtn_darkDesc", nil, [NSBundle bundleForClass:[self class]], @"") font:[NSFontHelper getLightSystemFont:12] color:[LMAppThemeHelper getTitleColor]];
-    NSTextField* followSystemThemeRadioBtnDesc = [self createLabel:NSLocalizedStringFromTableInBundle(@"PreferenceViewController_setupViews_theme_radioBtn_follow_system", nil, [NSBundle bundleForClass:[self class]], @"") font:[NSFontHelper getLightSystemFont:12] color:[LMAppThemeHelper getTitleColor]];
+    NSTextField* themeRadioBtnLightDesc = [self createLabel:NSLocalizedString(@"浅色主题", nil) font:[NSFontHelper getLightSystemFont:12] color:[LMAppThemeHelper getTitleColor]];
+    NSTextField* themeRadioBtnDarkDesc = [self createLabel:NSLocalizedString(@"深色主题", nil) font:[NSFontHelper getLightSystemFont:12] color:[LMAppThemeHelper getTitleColor]];
+    NSTextField* followSystemThemeRadioBtnDesc = [self createLabel:NSLocalizedString(@"跟随系统", nil) font:[NSFontHelper getLightSystemFont:12] color:[LMAppThemeHelper getTitleColor]];
     
     NSView* themeLineView = [[NSView alloc] init];
     self.themeLineView = themeLineView;
@@ -781,8 +781,8 @@
         if([LanguageHelper getCurrentSystemLanguageType] == SystemLanguageTypeEnglish){
             imageName = @"setstep_en";
         }
-        NSString *title = NSLocalizedStringFromTableInBundle(@"PreferenceViewController_monitor_full_disk_access_guide_window_title", nil, [NSBundle bundleForClass:[self class]], @"");
-        NSString *descText = NSLocalizedStringFromTableInBundle(@"PreferenceViewController_monitor_full_disk_access_guide_window_desc", nil, [NSBundle bundleForClass:[self class]], @"");
+        NSString *title = NSLocalizedString(@"Lemon不会上传你的文件信息，请放心使用", nil);
+        NSString *descText = NSLocalizedString(@"步骤：【解锁】——【添加】——【应用程序】——【Lemon】", nil);
         self.permissionGuideWndController = [[LMPermissionGuideWndController alloc] initWithParaentCenterPos:centerPoint title:title descText:descText image:[NSImage imageNamed:imageName withClass:self.class] guideImageViewHeight:680];
         self.permissionGuideWndController.needCheckMonitorFullDiskAuthorizationStatus = YES;
         self.permissionGuideWndController.settingButtonEvent = ^{
@@ -945,10 +945,10 @@
     
     [alert.accessoryView setFrameOrigin:NSMakePoint(0, 0)];
     alert.alertStyle = NSAlertStyleInformational;
-    alert.messageText = NSLocalizedStringFromTableInBundle(@"PreferenceViewController_startAlertWindow_alert_1", nil, [NSBundle bundleForClass:[self class]], @"");
-    alert.informativeText = NSLocalizedStringFromTableInBundle(@"PreferenceViewController_startAlertWindow_alert_2", nil, [NSBundle bundleForClass:[self class]], @"");
-    [alert addButtonWithTitle:NSLocalizedStringFromTableInBundle(@"PreferenceViewController_startAlertWindow_alert_4", nil, [NSBundle bundleForClass:[self class]], @"")];
-    [alert addButtonWithTitle:NSLocalizedStringFromTableInBundle(@"PreferenceViewController_startAlertWindow_alert_3", nil, [NSBundle bundleForClass:[self class]], @"")];
+    alert.messageText = NSLocalizedString(@"Lemon将会自动重启，重启后语言切换生效。", nil);
+    alert.informativeText = NSLocalizedString(@"无需重启系统，仅重启Lemon应用。", nil);
+    [alert addButtonWithTitle:NSLocalizedString(@"好的", nil)];
+    [alert addButtonWithTitle:NSLocalizedString(@"取消", nil)];
     
     [alert beginSheetModalForWindow:self.view.window completionHandler:^(NSModalResponse returnCode) {
         if (returnCode == NSAlertFirstButtonReturn) {

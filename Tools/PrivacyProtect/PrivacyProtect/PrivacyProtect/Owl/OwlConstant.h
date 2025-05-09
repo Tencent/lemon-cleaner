@@ -17,19 +17,47 @@ static int OwlWindowHeight = 372;
 static int OwlWindowTitleHeight = 40;
 
 static int OwlLogCellWidth = 186;
-static int OwlElementLeft = 20;
+static int OwlElementLeft = 24;
+
+static CGFloat kOwlNPWindowWidth = 610;
+static CGFloat kOwlNPWindowHeight = 510;
 
 typedef NS_ENUM(NSInteger, OwlProtectType){
     OwlProtectVedio = 0,
     OwlProtectAudio = 1,
-    OwlProtectVedioAndAudio = 2
+    OwlProtectVedioAndAudio = 2, // 废弃，不可能同时出现
+    OwlProtectSystemAudio = 3,
+};
+
+typedef NS_ENUM(NSUInteger, Owl2LogUserAction) {
+    Owl2LogUserActionNone = 0, // 无操作
+    Owl2LogUserActionClose, // 用户关闭
+    Owl2LogUserActionContent, // 用户点击了内容
+    Owl2LogUserActionDefaultAllow , // 无操作,20s后默认允许
+    Owl2LogUserActionAllow, // 本次允许
+    Owl2LogUserActionAlwaysAllowed, // 永久允许
+    Owl2LogUserActionPrevent, // 阻止
+};
+
+typedef NS_ENUM(NSUInteger, Owl2LogAppAction) {
+    Owl2LogAppActionNone = 0,
+    Owl2LogAppActionStart = 1, // 开始
+    Owl2LogAppActionStop = 2, // 结束
+};
+
+typedef NS_ENUM(NSUInteger, Owl2LogHardware) {
+    Owl2LogHardwareVedio = OwlProtectVedio,
+    Owl2LogHardwareAudio = OwlProtectAudio,
+    Owl2LogHardwareSystemAudio = OwlProtectSystemAudio,
 };
 
 /*****************************************************
  db or dictionary key string
  *****************************************************/
+#define OwlVersionTable                @"version_info"
 #define OwlAppWhiteTable               @"app_white"
 #define OwlProcLogTable                @"proc_log"
+#define OwlProcLogTableNew             @"proc_log_New"
 #define OwlProBlockTable               @"proc_block"
 #define OwlProcProfileTable            @"proc_profile"
 
@@ -42,6 +70,14 @@ typedef NS_ENUM(NSInteger, OwlProtectType){
 
 #define OwlWatchCamera                 @"watchCamera"
 #define OwlWatchAudio                  @"watchAudio"
+#define OwlWatchSpeaker                @"watchSpeaker"
+
+#define OwlUUID                        @"uuid"
+#define OwlTime                        @"time"
+#define OwlAppIconPath                 @"appIconPath"
+#define OwlUserAction                  @"userAction"
+#define OwlAppAction                   @"appAction"
+#define OwlHardware                    @"hardware"
 
 /*****************************************************
  the constant string of main app process communication
@@ -67,5 +103,8 @@ typedef NS_ENUM(NSInteger, OwlProtectType){
 
 //helper --> main app
 #define FindWitchProcessUseCameraReply  @"find_witch_process_use_camera_replay"
+
+
+#define AppleIBookIdentifier @"com.apple.iBooksX"
 
 #endif /* OwlConstant_h */

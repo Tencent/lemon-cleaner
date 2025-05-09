@@ -1,16 +1,18 @@
 //
 //  OwlSelectViewController.h
-//  Lemon
+//  PrivacyProtect
 //
-
 //  Copyright © 2018年 Tencent. All rights reserved.
 //
 
-#import <Cocoa/Cocoa.h>
 #import <QMUICommon/QMBaseViewController.h>
+
+NS_ASSUME_NONNULL_BEGIN
+
 @interface OwlSelectViewController : QMBaseViewController
 @property (nonatomic, strong) NSMutableArray *wlModelArray;
 - (instancetype)initWithFrame:(NSRect)frame;
-- (void)clickCancel;
 - (void)reloadData;
 @end
+
+NS_ASSUME_NONNULL_END

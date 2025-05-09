@@ -48,7 +48,7 @@
     [self.view.window setTitlebarAppearsTransparent:YES];
     self.view.window.styleMask = NSWindowStyleMaskClosable | NSWindowStyleMaskMiniaturizable | NSWindowStyleMaskTitled | NSFullSizeContentViewWindowMask;
     [[self.view.window standardWindowButton:NSWindowZoomButton] setHidden:YES];
-    self.titleField.stringValue = NSLocalizedStringFromTableInBundle(@"Hey, dear users", nil, [NSBundle bundleForClass:[self class]], @"");
+    self.titleField.stringValue = LMLocalizedSelfBundleString(@"Hey, 柠檬用户", nil);
     self.titleField.textColor = [LMAppThemeHelper getTitleColor];
     [self.titleField mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.view).offset(85);
@@ -60,7 +60,7 @@
     NSMutableParagraphStyle *textParagraph = [[NSMutableParagraphStyle alloc] init];
     [textParagraph setLineSpacing:4.0];
     NSDictionary *attrDic = [NSDictionary dictionaryWithObjectsAndKeys:textParagraph,NSParagraphStyleAttributeName, nil];
-    NSAttributedString *attrString = [[NSAttributedString alloc] initWithString:NSLocalizedStringFromTableInBundle(@"We have launched \"File Moving\" to help you\nclean up the files you are not sure to clean.", nil, [NSBundle bundleForClass:[self class]], @"") attributes:attrDic];
+    NSAttributedString *attrString = [[NSAttributedString alloc] initWithString:LMLocalizedSelfBundleString(@"针对扫描出来很多文件不敢清理的情况\n我们推出了文件搬家功能", nil) attributes:attrDic];
     // 这个需要在设置属性之前设置
     [self.descFiled setAttributedStringValue:attrString];
     [self.descFiled mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -73,7 +73,7 @@
     NSMutableParagraphStyle *textParagraphEg = [[NSMutableParagraphStyle alloc] init];
     [textParagraphEg setLineSpacing:4.0];
     NSDictionary *attrDicEg = [NSDictionary dictionaryWithObjectsAndKeys:textParagraphEg,NSParagraphStyleAttributeName, nil];
-    NSAttributedString *attrStringEg = [[NSAttributedString alloc] initWithString:NSLocalizedStringFromTableInBundle(@"Videos, pictures, documents and other content of IM tools, we help you organize and move them to external storage or cloud disks with just one click in order to free up your spaces.", nil, [NSBundle bundleForClass:[self class]], @"") attributes:attrDicEg];
+    NSAttributedString *attrStringEg = [[NSAttributedString alloc] initWithString:NSLocalizedStringFromTableInBundle(@"例如聊天过程接收的视频、图片、文档等内容，一键整理转移到外设、云盘等，帮助你更好的释放磁盘空间。", nil, [NSBundle bundleForClass:[self class]], @"") attributes:attrDicEg];
     [self.egField setAttributedStringValue:attrStringEg];
     [self.egField mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.descFiled.mas_bottom).offset(8);
@@ -83,7 +83,7 @@
     }];
     
     
-    self.startButton.title = NSLocalizedStringFromTableInBundle(@"Start", nil, [NSBundle bundleForClass:[self class]], @"");
+    self.startButton.title = LMLocalizedSelfBundleString(@"去使用", nil);
     [self.startButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.egField.mas_bottom).offset(48);
         make.left.equalTo(self.view).offset(72);

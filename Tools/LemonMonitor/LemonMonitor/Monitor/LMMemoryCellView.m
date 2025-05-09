@@ -105,7 +105,7 @@
     [closeContainer setHidden:YES];
     
 
-    NSButton *closeButton = [LMViewHelper createNormalTextButton:12 title:NSLocalizedStringFromTableInBundle(@"LMMemoryCellView_setupCloseInfoViews_closeButton _1", nil, [NSBundle bundleForClass:[self class]], @"") textColor:[NSColor colorWithHex:0x1A83F7]];
+    NSButton *closeButton = [LMViewHelper createNormalTextButton:12 title:NSLocalizedString(@"关闭", nil) textColor:[NSColor colorWithHex:0x1A83F7]];
     [closeContainer addSubview:closeButton];
     closeButton.target = self;
     closeButton.action = @selector(closeProcess:);
@@ -313,7 +313,7 @@
     NSTextField *messageLabel = [LMViewHelper createNormalLabel:12 fontColor:[LMAppThemeHelper getTipsTextColor]];
     [self.view addSubview:messageLabel];
     self.messageLabel = messageLabel;
-    self.messageLabel.stringValue =  NSLocalizedStringFromTableInBundle(@"LMMemoryCellView_viewDidLoad_messageLabel_1", nil, [NSBundle bundleForClass:[self class]], @"");
+    self.messageLabel.stringValue =  NSLocalizedString(@"关闭将直接退出程序，请先保存重要数据", nil);
     
     [self.messageLabel mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.centerX.equalTo(self.view);

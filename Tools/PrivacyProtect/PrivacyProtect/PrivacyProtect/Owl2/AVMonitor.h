@@ -29,6 +29,8 @@ typedef void (^AVMonitorEventBlock)(Event* event);
 // 原 logMonitor 没有监听macOS13系统上音频日志，补充监听
 @property(nonatomic, retain) LogMonitor* audio13logMonitor;
 
+@property(nonatomic, retain) LogMonitor* controlCenterLogMonitor;
+
 //event callback
 @property(nonatomic, copy) AVMonitorEventBlock eventCallback;
 

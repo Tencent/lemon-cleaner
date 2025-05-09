@@ -331,7 +331,7 @@
     
     // 退出时析构
     [[NSUserNotificationCenter defaultUserNotificationCenter] setDelegate:nil];
-    [[NSUserNotificationCenter defaultUserNotificationCenter] removeAllDeliveredNotifications];
+    [[QMUserNotificationCenter defaultUserNotificationCenter] removeAllDeliveredNotifications];
     [[NSDistributedNotificationCenter defaultCenter] removeObserver:self];
     
     [[LMDaemonStartupHelper shareInstance] notiflyDaemonClientExit];

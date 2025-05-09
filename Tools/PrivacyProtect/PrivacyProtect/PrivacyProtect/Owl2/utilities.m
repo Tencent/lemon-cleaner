@@ -25,6 +25,10 @@
 #import <CommonCrypto/CommonDigest.h>
 #import <SystemConfiguration/SystemConfiguration.h>
 #import <UniformTypeIdentifiers/UniformTypeIdentifiers.h>
+#import <sys/socket.h>
+#import <net/if_dl.h>
+#import <ifaddrs.h>
+#import "OwlConstant.h"
 
 /* GLOBALS */
 
@@ -364,7 +368,23 @@ NSString* getProcessName(NSString* path)
     if(nil != appBundle)
     {
         //grab name from app's bundle
-        processName = [appBundle infoDictionary][@"CFBundleName"];
+        // 本地化名称
+        NSDictionary *appInfo = [appBundle localizedInfoDictionary];
+        processName = appInfo[@"CFBundleDisplayName"]; // 用户在设备上看到的应用名称
+        if (nil == processName) {
+            processName = appInfo[@"CFBundleName"]; // 应用程序的内部名称。
+        }
+        // 默认，一般来说是英文
+        appInfo = [appBundle infoDictionary];
+        if (nil == processName) {
+            processName = appInfo[@"CFBundleDisplayName"]; // 用户在设备上看到的应用名称
+        }
+        if (nil == processName) {
+            processName = appInfo[@"CFBundleName"]; // 应用程序的内部名称。
+        }
+        if (nil == processName) {
+            processName = appInfo[@"CFBundleExecutable"]; // 应用程序的可执行文件的名称。
+        }
     }
     
     //still nil?
@@ -1608,4 +1628,84 @@ BOOL DNDState(void)
     //return status of DND
     return [defaults boolForKey:@"doNotDisturb"];
     
+}
+
+pid_t GUIApplicationPidForBundleIdentifier(NSString *name) {
+    NSWorkspace *ws = [NSWorkspace sharedWorkspace];
+    
+    for (NSRunningApplication *app in ws.runningApplications) {
+        if ([app.bundleIdentifier isEqualToString:name]) {
+            return app.processIdentifier;
+        }
+    }
+    return 0;
+}
+
+
+NSString *getMACAddress(void) {
+    static NSString *cachedMACAddress = nil;
+    static NSLock *lock = nil;
+    static dispatch_once_t onceToken;
+    
+    // 初始化锁 (线程安全)
+    dispatch_once(&onceToken, ^{
+        lock = [[NSLock alloc] init];
+    });
+    
+    // 快速返回已缓存的有效地址
+    if (cachedMACAddress) {
+        return cachedMACAddress;
+    }
+    
+    [lock lock];
+    @try {
+        // 双重检查锁定模式
+        if (!cachedMACAddress) {
+            struct ifaddrs *interfaces = NULL;
+            
+            if (getifaddrs(&interfaces) == 0) {
+                struct ifaddrs *temp = interfaces;
+                
+                while (temp != NULL) {
+                    // 匹配物理网络接口
+                    if (temp->ifa_addr->sa_family == AF_LINK) {
+                        NSString *name = [NSString stringWithUTF8String:temp->ifa_name];
+                        
+                        // 扩展接口类型检测
+                        if ([name hasPrefix:@"en"] ||    // Ethernet/WiFi
+                            [name hasPrefix:@"awdl"] ||  // Apple Wireless Direct Link
+                            [name hasPrefix:@"llw"]) {   // Low Latency WAN
+                            
+                            struct sockaddr_dl *dlAddr = (struct sockaddr_dl *)temp->ifa_addr;
+                            
+                            if (dlAddr->sdl_alen == 6) {
+                                unsigned char *mac = (unsigned char *)LLADDR(dlAddr);
+                                cachedMACAddress = [NSString stringWithFormat:
+                                                   @"%02X:%02X:%02X:%02X:%02X:%02X",
+                                                   mac[0], mac[1], mac[2],
+                                                   mac[3], mac[4], mac[5]];
+                                break;
+                            }
+                        }
+                    }
+                    temp = temp->ifa_next;
+                }
+                freeifaddrs(interfaces);
+            }
+        }
+    } @finally {
+        [lock unlock];
+    }
+    
+    return cachedMACAddress;
+}
+
+
+NSImage *getAppImage(NSDictionary *appDic, NSString *identifier) {
+    NSString *appPath = [appDic objectForKey:OwlBubblePath];
+    if ([appDic[OwlIdentifier] isEqualToString:identifier] && [appPath isKindOfClass:NSString.class]) {
+        NSImage *image = [[NSWorkspace sharedWorkspace] iconForFile:appPath];
+        return image;
+    }
+    return nil;
 }

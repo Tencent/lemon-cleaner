@@ -247,7 +247,7 @@
 #define NOTIFICATION_DELIVER 2
 
 //av devices
-typedef enum {Device_Camera, Device_Microphone} AVDevice;
+typedef enum {Device_Camera, Device_Microphone, Device_AudioAndVideo, Device_SystemAudio} AVDevice;
 
 //updates
 typedef enum {Update_Error, Update_None, Update_NotSupported, Update_Available} UpdateStatus;

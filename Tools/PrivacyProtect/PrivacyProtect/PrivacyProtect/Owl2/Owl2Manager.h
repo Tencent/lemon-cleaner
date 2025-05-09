@@ -31,6 +31,7 @@ extern NSNotificationName const OwlWatchAudioStateChange;
 @property (nonatomic, assign) int notificationCount;
 @property (nonatomic, strong) NSMutableDictionary *owlVedioItemDic;
 @property (nonatomic, strong) NSMutableDictionary *owlAudioItemDic;
+@property (nonatomic, strong) NSMutableDictionary *owlSystemAudioItemDic;
 
 + (Owl2Manager *)sharedManager;
 
@@ -48,6 +49,8 @@ extern NSNotificationName const OwlWatchAudioStateChange;
 - (void)addAppWhiteItem:(NSDictionary*)dic;
 - (void)removeAppWhiteItemIndex:(NSInteger)index;
 - (void)replaceAppWhiteItemIndex:(NSInteger)index;
-- (void)resaveWhiteList;
+
+// 为通知创建
+@property (nonatomic, strong) NSMutableDictionary *notificationInsertLogList;
 
 @end

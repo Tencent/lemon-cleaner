@@ -225,6 +225,7 @@
 		8B5499B428A261D400B55BB8 /* LMAboutWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B5499B328A261D400B55BB8 /* LMAboutWindow.m */; };
 		B7A82D812D70826600036DEE /* LemonDNCClient.m in Sources */ = {isa = PBXBuildFile; fileRef = B7A82D802D70826600036DEE /* LemonDNCClient.m */; };
 		B7A82D9E2D71921B00036DEE /* LemonDNCServier.m in Sources */ = {isa = PBXBuildFile; fileRef = B7A82D9D2D71921B00036DEE /* LemonDNCServier.m */; };
+		B7BDBCFF2DB7727500FB5ADF /* NSUserNotification+QMExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = B7BDBCFE2DB7727500FB5ADF /* NSUserNotification+QMExtensions.m */; };
 		BC08ED082277F0CA00CEE24B /* LemonAsMonitorGuideViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = BC08ED012277F0CA00CEE24B /* LemonAsMonitorGuideViewController.m */; };
 		BC5D8A242177210D005D2220 /* RegisterWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = BC5D8A1B2177210D005D2220 /* RegisterWindowController.m */; };
 		BC5D8A252177210D005D2220 /* regiser_unable.png in Resources */ = {isa = PBXBuildFile; fileRef = BC5D8A1C2177210D005D2220 /* regiser_unable.png */; };
@@ -743,6 +744,8 @@
 		B7A82D802D70826600036DEE /* LemonDNCClient.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LemonDNCClient.m; sourceTree = "<group>"; };
 		B7A82D9C2D71921B00036DEE /* LemonDNCServier.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LemonDNCServier.h; sourceTree = "<group>"; };
 		B7A82D9D2D71921B00036DEE /* LemonDNCServier.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LemonDNCServier.m; sourceTree = "<group>"; };
+		B7BDBCFD2DB7727500FB5ADF /* NSUserNotification+QMExtensions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSUserNotification+QMExtensions.h"; sourceTree = "<group>"; };
+		B7BDBCFE2DB7727500FB5ADF /* NSUserNotification+QMExtensions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSUserNotification+QMExtensions.m"; sourceTree = "<group>"; };
 		BC08ED002277F0CA00CEE24B /* LemonAsMonitorGuideViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LemonAsMonitorGuideViewController.h; sourceTree = "<group>"; };
 		BC08ED012277F0CA00CEE24B /* LemonAsMonitorGuideViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LemonAsMonitorGuideViewController.m; sourceTree = "<group>"; };
 		BC5D8A1B2177210D005D2220 /* RegisterWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegisterWindowController.m; sourceTree = "<group>"; };
@@ -830,7 +833,6 @@
 		F813DF5E2251FC6600A9D961 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = en; path = en.lproj/ToolConfigAppStore.plist; sourceTree = "<group>"; };
 		F813DF5F2251FC6B00A9D961 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "zh-Hans"; path = "zh-Hans.lproj/ToolConfigAppStore.plist"; sourceTree = "<group>"; };
 		F813DF612251FC7D00A9D961 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
-		F813DF632251FC8100A9D961 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
 		F813DF642251FC8600A9D961 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		F8190EF421244FCB00454795 /* LemonMainWndController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LemonMainWndController.h; sourceTree = "<group>"; };
 		F8190EF521244FCB00454795 /* LemonMainWndController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LemonMainWndController.m; sourceTree = "<group>"; };
@@ -1343,6 +1345,8 @@
 				D49FA51F21DDA634004A416E /* QMMobileConnNotification.m */,
 				D49FA52021DDA634004A416E /* QMUserNotificationCenter.h */,
 				D49FA52121DDA634004A416E /* QMUserNotificationCenter.m */,
+				B7BDBCFD2DB7727500FB5ADF /* NSUserNotification+QMExtensions.h */,
+				B7BDBCFE2DB7727500FB5ADF /* NSUserNotification+QMExtensions.m */,
 			);
 			path = MobileNotification;
 			sourceTree = "<group>";
@@ -2116,6 +2120,21 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		2240B7BE6852FAE36FAD5FAA /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Lemonas/Pods-Lemonas-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		3BED47C800C2F555CF507D79 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -2171,6 +2190,8 @@
 				F85BC5BC212572AE00BD147D /* ToolTableCellView.m in Sources */,
 				792CFB20233366FD00B364D6 /* LMBaseLineSegmentedCell.m in Sources */,
 				BC7FBE3D2268193300D025CF /* LMSplashMenuBarViewController.m in Sources */,
+				B7BDBCFF2DB7727500FB5ADF /* NSUserNotification+QMExtensions.m in Sources */,
+				2F7D4CC0219ABBAD008D59E0 /* LMVersionHelper.m in Sources */,
 				D4F1DF80219C4344000CDA07 /* PreferenceViewController.m in Sources */,
 				B7A82D9E2D71921B00036DEE /* LemonDNCServier.m in Sources */,
 				BC76D79222783AEE001AE456 /* MasLoginItemManager.m in Sources */,
@@ -2263,7 +2284,6 @@
 			isa = PBXVariantGroup;
 			children = (
 				F813DF612251FC7D00A9D961 /* en */,
-				F813DF632251FC8100A9D961 /* Base */,
 				F813DF642251FC8600A9D961 /* zh-Hans */,
 			);
 			name = Localizable.strings;

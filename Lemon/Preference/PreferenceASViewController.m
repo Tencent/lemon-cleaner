@@ -112,11 +112,11 @@
     [self.statusActionDesc setTextColor:[NSColor colorWithHex:0x94979b]];
     [self.statusActionDesc setFont:[NSFontHelper getLightSystemFont:12]];
     self.statusActionDesc.maximumNumberOfLines = 2;
-    [self.titleLabel setStringValue:NSLocalizedStringFromTableInBundle(@"PreferenceASViewController_initView_titleLabel_1", nil, [NSBundle bundleForClass:[self class]], @"")];
-    [self.openActionTitle setStringValue:NSLocalizedStringFromTableInBundle(@"PreferenceASViewController_initView_openActionTitle_1", nil, [NSBundle bundleForClass:[self class]], @"")];
-    [self.openActionDesc setStringValue:NSLocalizedStringFromTableInBundle(@"PreferenceASViewController_initView_openActionDesc_1", nil, [NSBundle bundleForClass:[self class]], @"")];
-    [self.statusActionTitle setStringValue:NSLocalizedStringFromTableInBundle(@"PreferenceASViewController_initView_statusActionTitle_2", nil, [NSBundle bundleForClass:[self class]], @"")];
-    [self.statusActionDesc setStringValue:NSLocalizedStringFromTableInBundle(@"PreferenceASViewController_initView_statusActionDesc_3", nil, [NSBundle bundleForClass:[self class]], @"")];
+    [self.titleLabel setStringValue:NSLocalizedString(@"偏好设置", nil)];
+    [self.openActionTitle setStringValue:NSLocalizedString(@"显示状态栏", nil)];
+    [self.openActionDesc setStringValue:NSLocalizedString(@"启用后可在状态栏上实时查看当前网速。", nil)];
+    [self.statusActionTitle setStringValue:NSLocalizedString(@"开机时启动状态栏", nil)];
+    [self.statusActionDesc setStringValue:NSLocalizedString(@"开机时状态栏将默认显示实时网速。", nil)];
     
     //register 开关
     COSwitch *loginItemSwitch = [[COSwitch alloc] init];
@@ -251,10 +251,10 @@
     
     [alert.accessoryView setFrameOrigin:NSMakePoint(0, 0)];
     alert.alertStyle = NSAlertStyleInformational;
-    alert.messageText = NSLocalizedStringFromTableInBundle(@"PreferenceASViewController_startAlertWindow_alert_1", nil, [NSBundle bundleForClass:[self class]], @"");
-    alert.informativeText = NSLocalizedStringFromTableInBundle(@"PreferenceASViewController_startAlertWindow_alert_2", nil, [NSBundle bundleForClass:[self class]], @"");
-    [alert addButtonWithTitle:NSLocalizedStringFromTableInBundle(@"PreferenceASViewController_startAlertWindow_alert_3", nil, [NSBundle bundleForClass:[self class]], @"")];
-    [alert addButtonWithTitle:NSLocalizedStringFromTableInBundle(@"PreferenceASViewController_startAlertWindow_alert_4", nil, [NSBundle bundleForClass:[self class]], @"")];
+    alert.messageText = NSLocalizedString(@"确定要关闭开机启动状态栏吗？", nil);
+    alert.informativeText = NSLocalizedString(@"关闭开机启动状态栏后，当前状态栏（包括网速显示）也将直接退出", nil);
+    [alert addButtonWithTitle:NSLocalizedString(@"取消", nil)];
+    [alert addButtonWithTitle:NSLocalizedString(@"确定", nil)];
     
     __weak PreferenceASViewController *weakSelf = self;
     [alert beginSheetModalForWindow:self.view.window completionHandler:^(NSModalResponse returnCode) {

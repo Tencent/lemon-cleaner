@@ -13,4 +13,7 @@
 
 - (instancetype)initViewController:(NSViewController*)viewController;
 
+// 一键开启
+- (void)oneClick;
+
 @end
