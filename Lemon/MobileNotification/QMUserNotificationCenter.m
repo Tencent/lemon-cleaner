@@ -9,7 +9,8 @@
 #import "QMUserNotificationCenter.h"
 #import "NSUserNotification+QMExtensions.h"
 
-#define kNotificationKey @"_notification_key"
+NSString * const QMUserNotificationKey = @"_notification_key";
+NSString * const QMUserNotificationActionIdKey = @"ACTION_ID";
 #define kNotificationCategoryKey @"_category_key"
 
 @interface QMUserNotificationCenter ()
@@ -48,7 +49,7 @@
     NSMutableDictionary * dict = [notification.userInfo mutableCopy];
     if (!dict)
         dict = [[NSMutableDictionary alloc] init];
-    [dict setObject:key forKey:kNotificationKey];
+    [dict setObject:key forKey:QMUserNotificationKey];
     notification.userInfo = dict;
     [[NSUserNotificationCenter defaultUserNotificationCenter] scheduleNotification:notification];
 }
@@ -61,7 +62,7 @@
         NSMutableDictionary * dict = [notification.userInfo mutableCopy];
         if (!dict)
             dict = [[NSMutableDictionary alloc] init];
-        [dict setObject:key forKey:kNotificationKey];
+        [dict setObject:key forKey:QMUserNotificationKey];
         
         // notification content
         UNMutableNotificationContent* content = nil;
@@ -94,6 +95,7 @@
         [[UNUserNotificationCenter currentNotificationCenter] addNotificationRequest:request withCompletionHandler:^(NSError *_Nullable error)
         {
             if (!error) {
+                notification.userInfo = dict;
                 [weakSelf presentedWhenAuthorizedWithNotification:notification key:key];
             }
         }];
@@ -200,7 +202,7 @@
                 NSDictionary *userInfo = notification.request.content.userInfo;
                 if (!userInfo)
                     continue;
-                NSString * userKey = [userInfo objectForKey:kNotificationKey];
+                NSString * userKey = [userInfo objectForKey:QMUserNotificationKey];
                 if (!userKey)
                     continue;
                 if ([userKey isEqualToString:key])
@@ -219,7 +221,7 @@
             NSDictionary *userInfo = [notification userInfo];
             if (!userInfo)
                 continue;
-            NSString * userKey = [userInfo objectForKey:kNotificationKey];
+            NSString * userKey = [userInfo objectForKey:QMUserNotificationKey];
             if (!userKey)
                 continue;
             if ([userKey isEqualToString:key])
@@ -243,7 +245,7 @@
     {
         return;
     }
-    NSString * key = [userInfo objectForKey:kNotificationKey];
+    NSString * key = [userInfo objectForKey:QMUserNotificationKey];
     if (key)
     {
         [self notificationPresentedWithNotificationKey:key];
@@ -261,7 +263,7 @@
     {
         return;
     }
-    NSString * key = [userInfo objectForKey:kNotificationKey];
+    NSString * key = [userInfo objectForKey:QMUserNotificationKey];
     if (notification.activationType == NSUserNotificationActivationTypeContentsClicked) {
         [self notificationContentClickedWithNotificationKey:key];
     } else if (notification.activationType == NSUserNotificationActivationTypeActionButtonClicked) {
@@ -283,7 +285,7 @@
     {
         return;
     }
-    NSString * key = [userInfo objectForKey:kNotificationKey];
+    NSString * key = [userInfo objectForKey:QMUserNotificationKey];
     if (key)
     {
         id obj = [_delegateDict objectForKey:key];
@@ -351,7 +353,7 @@
 
 - (void)userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void(^)(void))completionHandler API_AVAILABLE(macos(10.14)) {
     
-    NSString *key = [response.notification.request.content.userInfo objectForKey:kNotificationKey];
+    NSString *key = [response.notification.request.content.userInfo objectForKey:QMUserNotificationKey];
         if ([response.actionIdentifier isEqualToString:UNNotificationDefaultActionIdentifier]) {
             [self notificationContentClickedWithNotificationKey:key];
         } else if ([response.actionIdentifier isEqualToString:UNNotificationDismissActionIdentifier]) {
@@ -368,7 +370,7 @@
         
         NSMutableDictionary *dict = [response.notification.request.content.userInfo mutableCopy];
         if (dict && response.actionIdentifier) {
-            [dict setObject:response.actionIdentifier forKey:@"ACTION_ID"];
+            [dict setObject:response.actionIdentifier forKey:QMUserNotificationActionIdKey];
         }
         notification.userInfo = dict;
         

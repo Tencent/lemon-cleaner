@@ -14,13 +14,14 @@
 #import "LMAppSandboxHelper.h"
 #import <QMCoreFunction/McCoreFunction.h>
 #import "QMFilterItem.h"
+#import <QMCoreFunction/QMSafeMutableArray.h>
 
 @interface QMCacheEnumerator()
 
 @property (nonatomic, strong) NSDictionary *installBundleDic;
 @property (nonatomic, strong) NSMutableArray *libCacheArr;
 @property (nonatomic, strong) NSMutableArray *containerCacheArr;
-@property (nonatomic, strong) NSMutableArray *tempCacheArr;
+@property (nonatomic, strong) QMSafeMutableArray *tempCacheArr;
 
 @end
 
@@ -65,11 +66,11 @@
         if ([path isEqualToString:@"File"]) {
             continue;
         }
-        NSString *componet = [path lastPathComponent];
-        if (![componet containsString:@"."]) {
+        NSString *component = [path lastPathComponent];
+        if (![component containsString:@"."]) {
             [removeArr addObject:path];
         }
-        if ([componet containsString:@"Extension"]) {
+        if ([component containsString:@"Extension"]) {
             [removeArr addObject:path];
         }
     }
@@ -94,11 +95,11 @@
         if ([path isEqualToString:@"File"]) {
             continue;
         }
-        NSString *componet = [path lastPathComponent];
-        if (![componet containsString:@"."]) {
+        NSString *component = [path lastPathComponent];
+        if (![component containsString:@"."]) {
             [removeArr addObject:path];
         }
-        if ([componet containsString:@"Extension"]) {
+        if ([component containsString:@"Extension"]) {
             [removeArr addObject:path];
         }
     }
@@ -112,14 +113,15 @@
         NSString *libsystemString = libsystemItem.value;
         actionItem = [self getCacheActionItemWithPath:@"SystemTempDir" andScanFilters:libsystemString type:kXMLKeySpecial];
         filterParse = [[QMFilterParse alloc] initFilterDict:fileterDic];
-        self.tempCacheArr = [[NSMutableArray alloc] initWithArray:[filterParse enumeratorAtFilePath:actionItem]];
+        self.tempCacheArr = [[QMSafeMutableArray alloc] initWithArray:[filterParse enumeratorAtFilePath:actionItem]];
         removeArr = [NSMutableArray new];
-        for (NSString *path in self.tempCacheArr) {
-            NSString *componet = [path lastPathComponent];
-            if (![componet containsString:@"."]) {
+        NSArray *tempCacheArr_copy = self.tempCacheArr.copy;
+        for (NSString *path in tempCacheArr_copy) {
+            NSString *component = [path lastPathComponent];
+            if (![component containsString:@"."]) {
                 [removeArr addObject:path];
             }
-            if ([componet containsString:@"Extension"]) {
+            if ([component containsString:@"Extension"]) {
                 [removeArr addObject:path];
             }
         }
@@ -350,7 +352,8 @@
         return nil;
     }
     NSString *retPath = nil;
-    for (NSString *path in self.tempCacheArr) {
+    NSArray *tempCacheArr_copy = self.tempCacheArr.copy;
+    for (NSString *path in tempCacheArr_copy) {
         NSString *lastPathComponent = [path lastPathComponent];//可能是bundleid 也有可能是软件名 1
         if ([lastPathComponent isEqualToString:bundleId]) {
             retPath = path;

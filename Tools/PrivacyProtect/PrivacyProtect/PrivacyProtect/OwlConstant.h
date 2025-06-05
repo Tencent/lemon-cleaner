@@ -27,6 +27,10 @@ typedef NS_ENUM(NSInteger, OwlProtectType){
     OwlProtectAudio = 1,
     OwlProtectVedioAndAudio = 2, // 废弃，不可能同时出现
     OwlProtectSystemAudio = 3,
+    OwlProtectScreen = 4,
+    
+    OwlProtectScreenshotForReporter = 40,
+    OwlProtectScreenRecordingForReporter = 41,
 };
 
 typedef NS_ENUM(NSUInteger, Owl2LogUserAction) {
@@ -39,16 +43,25 @@ typedef NS_ENUM(NSUInteger, Owl2LogUserAction) {
     Owl2LogUserActionPrevent, // 阻止
 };
 
-typedef NS_ENUM(NSUInteger, Owl2LogAppAction) {
-    Owl2LogAppActionNone = 0,
-    Owl2LogAppActionStart = 1, // 开始
-    Owl2LogAppActionStop = 2, // 结束
+typedef NS_ENUM(NSUInteger, Owl2LogThirdAppAction) {
+    Owl2LogThirdAppActionNone = 0,
+    Owl2LogThirdAppActionStart = 1, // 开始
+    Owl2LogThirdAppActionStop = 2, // 结束
+    
+    Owl2LogThirdAppActionStartForScreenshot = 10, // 开始截屏
+    Owl2LogThirdAppActionStartForScreenRecording = 11, // 开始录屏
+    Owl2LogThirdAppActionStopForScreenshot = 20, // 结束截屏
+    Owl2LogThirdAppActionStopForScreenRecording = 21, // 结束录屏
 };
 
 typedef NS_ENUM(NSUInteger, Owl2LogHardware) {
     Owl2LogHardwareVedio = OwlProtectVedio,
     Owl2LogHardwareAudio = OwlProtectAudio,
     Owl2LogHardwareSystemAudio = OwlProtectSystemAudio,
+    Owl2LogHardwareScreen = OwlProtectScreen,
+    
+    Owl2LogHardwareScreenshotForReporter = OwlProtectScreenshotForReporter,
+    Owl2LogHardwareScreenRecordingForReporter = OwlProtectScreenRecordingForReporter,
 };
 
 /*****************************************************
@@ -67,17 +80,21 @@ typedef NS_ENUM(NSUInteger, Owl2LogHardware) {
 #define OwlIdentifier                  @"identifier"
 #define OwlAppIcon                     @"appIcon"
 #define OwlAppleApp                    @"appleApp"
+#define OwlAppIconPath                 @"appIconPath" // 数据库里用的
 
 #define OwlWatchCamera                 @"watchCamera"
 #define OwlWatchAudio                  @"watchAudio"
 #define OwlWatchSpeaker                @"watchSpeaker"
+#define OwlWatchScreen                 @"watchScreen"
 
 #define OwlUUID                        @"uuid"
 #define OwlTime                        @"time"
-#define OwlAppIconPath                 @"appIconPath"
 #define OwlUserAction                  @"userAction"
 #define OwlAppAction                   @"appAction"
 #define OwlHardware                    @"hardware"
+
+#define Owl2AppItemKey                 @"Owl2AppItemKey"
+#define Owl2ParentAppItemKey           @"Owl2ParentAppItemKey"
 
 /*****************************************************
  the constant string of main app process communication
@@ -106,5 +123,7 @@ typedef NS_ENUM(NSUInteger, Owl2LogHardware) {
 
 
 #define AppleIBookIdentifier @"com.apple.iBooksX"
+
+#define QMRetStrIfEmpty(obj) ((obj) ? (obj) : @"")
 
 #endif /* OwlConstant_h */

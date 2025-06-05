@@ -23,6 +23,7 @@
 #import "QMDataConst.h"
 #import <Foundation/Foundation.h>
 #import <QMCoreFunction/LanguageHelper.h>
+#import <QMCoreFunction/QMCoreFunctionDef.h>
 #import <QMUICommon/SharedPrefrenceManager.h>
 #import "PreferenceWindowController.h"
 #import "PreferenceViewController.h"
@@ -950,16 +951,7 @@ extern "C" int CmcGetCurrentAppVersion(char *version, int version_size, char *bu
     }
     
     - (IBAction)feedback:(id)sender {
-        
-        if ([LanguageHelper getCurrentSystemLanguageType] != SystemLanguageTypeChinese) {
-            [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"https://www.facebook.com/groups/2270176446528228/"]];
-            return;
-        }
-#ifndef APPSTORE_VERSION
-        [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"https://support.qq.com/products/36664"]];
-#else
-        [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"https://support.qq.com/products/52728"]];
-#endif
+        [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:QMFeedbackURL]];
     }
     
     -(IBAction)asPrefrecesSet:(id)sender{

@@ -7,10 +7,13 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import "LMBaseLineSegmentedControl.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface LMBaseLineSegmentedCell : NSSegmentedCell
+
+- (void)updateCellRedPointInfo:(NSDictionary *)redPointDict;
 
 @end
 

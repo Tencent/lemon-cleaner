@@ -26,8 +26,11 @@
 #import "LMAboutWindow.h"
 #import <LemonFileManager/NSObject+LMDataCheck.h>
 #import <PrivacyProtect/PrivacyProtect.h>
+#import <QMCoreFunction/QMCoreFunctionDef.h>
 
 #define MONITOR_OPNE_LEMON_505      @"MONITOR_OPNE_LEMON_505" // 505活动入口标记
+
+#define NORMAL_VIEW_HEIGHT      470
 
 static const CGFloat kTopPadding = 10;
 
@@ -104,7 +107,7 @@ static const CGFloat kTopPadding = 10;
 
 - (void)loadView
 {
-    NSRect rect = NSMakeRect(0, 0, 340, 444); //不包括箭头
+    NSRect rect = NSMakeRect(0, 0, 340, NORMAL_VIEW_HEIGHT); //不包括箭头
     if ([Owl2Manager sharedManager].showOneClickGuideView) {
         // 展示隐私保护‘一键开启’引导视图
         rect.size.height += 54;
@@ -147,6 +150,11 @@ static const CGFloat kTopPadding = 10;
         [_segmentedControl setLabel:item.label forSegment:idx];
         [_segmentedControl setWidth:width forSegment:idx];
 
+        // 系统功能页要加红点
+        if ([item.label isEqualToString:NSLocalizedString(@"系统功能", nil)]) {
+            NSDictionary *dict = @{item.label: @"kLemonMonitorDidClickedSystemFunctionTab"};
+            [(LMBaseLineSegmentedControl *)_segmentedControl updateRedPointInfo:dict];
+        }
     }];
     
     if (self.tabItems.count > 0) {
@@ -218,7 +226,7 @@ static const CGFloat kTopPadding = 10;
 - (void)__updateWindowFrameWithShowOwlGuideState {
     float currentViewH = self.view.frame.size.height;
     
-    NSRect normalViewFrame = NSMakeRect(0, 0, 340, 444); //不包括箭头
+    NSRect normalViewFrame = NSMakeRect(0, 0, 340, NORMAL_VIEW_HEIGHT); //不包括箭头
     if ([Owl2Manager sharedManager].showOneClickGuideView) {
         // 展示隐私保护‘一键开启’引导视图
         normalViewFrame.size.height += 54;
@@ -604,17 +612,8 @@ static const CGFloat kTopPadding = 10;
 
 - (void) onLaunchFeebBack
 {
-    NSLog(@"onLaunchFeebBack enter.");
-    if ([LanguageHelper getCurrentSystemLanguageType] != SystemLanguageTypeChinese) {
-        [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"https://www.facebook.com/groups/2270176446528228/"]];
-        return;
-    }
-    #ifndef APPSTORE_VERSION
-        [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"https://support.qq.com/products/36664"]];
-    #else
-        [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"https://support.qq.com/products/52728"]];
-    #endif
-    
+    NSLog(@"onLaunchFeebBack enter.");    
+    [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:QMFeedbackURL]];
     
     [self notifyDimissPopover];
 }
@@ -743,7 +742,11 @@ static const CGFloat kTopPadding = 10;
         isTrashSizeWatchEnable = YES;
     }
     
-    if([SharedPrefrenceManager getBool:K_IS_WATCHING_VEDIO] || [SharedPrefrenceManager getBool:K_IS_WATCHING_AUDIO] || [SharedPrefrenceManager getBool:IS_ENABLE_TRASH_WATCH] || isTrashSizeWatchEnable)
+    if([SharedPrefrenceManager getBool:K_IS_WATCHING_VEDIO] ||
+       [SharedPrefrenceManager getBool:K_IS_WATCHING_AUDIO] ||
+       [SharedPrefrenceManager getBool:K_IS_WATCHING_SCREEN] ||
+       [SharedPrefrenceManager getBool:IS_ENABLE_TRASH_WATCH] ||
+       isTrashSizeWatchEnable)
     {
         NSAlert *alert = [[NSAlert alloc] init];
         alert.alertStyle = NSAlertStyleInformational;
@@ -795,22 +798,5 @@ static const CGFloat kTopPadding = 10;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    BOOL bNeedUpdate = NO;
-    
-    //    NSView* containerView_1 = [[NSView alloc] init];
-    //    [self.view addSubview:containerView_1];
-    //    [containerView_1 mas_makeConstraints:^(MASConstraintMaker *make) {
-    //        make.width.equalTo(self.view.mas_width);
-    //        make.height.equalTo(@28);
-    //        make.top.equalTo(containerView_1.mas_top).offset(4);
-    //    }];
-    //
-    //    NSTextField* textUpdate = [NSTextField labelWithStringCompat:@"检查更新"];
-    //    [containerView_1 addSubview:textUpdate];
-    //    [textUpdate mas_makeConstraints:^(MASConstraintMaker *make) {
-    //        make.centerY.equalTo(containerView_1);
-    //        make.left.equalTo(containerView_1.mas_left).offset(21);
-    //    }];
 }
 @end

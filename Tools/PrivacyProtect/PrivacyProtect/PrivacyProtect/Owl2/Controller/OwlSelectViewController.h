@@ -10,7 +10,7 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface OwlSelectViewController : QMBaseViewController
-@property (nonatomic, strong) NSMutableArray *wlModelArray;
+
 - (instancetype)initWithFrame:(NSRect)frame;
 - (void)reloadData;
 @end

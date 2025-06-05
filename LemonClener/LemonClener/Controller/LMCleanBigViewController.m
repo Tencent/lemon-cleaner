@@ -116,6 +116,11 @@ static NSString * const kLemonFileMoveIntroduceVCDidAppear = @"kLemonFileMoveInt
 }
 
 #pragma mark -- 生命周期回调
+-(void)viewWillAppear{
+    [super viewWillAppear];
+    // fix 返回按钮title不显示
+    [self.backBtn displayIfNeeded];
+}
 
 -(void)viewDidAppear{
     [super viewDidAppear];

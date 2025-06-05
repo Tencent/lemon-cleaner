@@ -16,21 +16,19 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)loadDB;
 - (void)closeDB;
 
-- (void)setWatchVedioToDB:(BOOL)state;
-- (void)setWatchAudioToDB:(BOOL)state;
+- (void)updateAllWatch;
 - (void)addAppWhiteItemToDB:(NSDictionary*)dic;
 - (void)removeAppWhiteItemToDB:(NSDictionary*)dic;
-- (void)addLogItem:(NSString*)log appName:(NSString*)appName; // 废弃
 - (void)addLogItemWithUuid:(NSString *)uuid
                    appName:(NSString *)appName
                    appPath:(NSString *)appPath
-                 appAction:(Owl2LogAppAction)appAction
+                 appAction:(Owl2LogThirdAppAction)appAction
                 userAction:(Owl2LogUserAction)userAction
                   hardware:(Owl2LogHardware)hardware;
 - (void)updateLogItemWithUuid:(NSString *)uuid
                       appName:(NSString *)appName
                       appPath:(NSString *)appPath
-                    appAction:(Owl2LogAppAction)appAction
+                    appAction:(Owl2LogThirdAppAction)appAction
                    userAction:(Owl2LogUserAction)userAction
                      hardware:(Owl2LogHardware)hardware;
 

@@ -14,6 +14,7 @@
 #import "AVMonitor.h"
 #import "utilities.h"
 #include <sys/sysctl.h>
+#import <QMCoreFunction/LMReferenceDefines.h>
 
 #define kLemonUseAVMonitorNotification 0
 
@@ -54,13 +55,16 @@ typedef NS_ENUM(NSUInteger, LMControlCenterLogStatusType) {
 @interface AVMonitor ()
 
 @property (nonatomic, copy) NSArray *lastPrivacyResult;
-@property (nonatomic, copy) NSDate *lastPrivacyResultDate;
+@property (nonatomic) NSDate *lastPrivacyResultDate;
 
 @property (nonatomic, copy) NSArray<LMControlCenterLogStatus *> *lastSystemAudioResult; //上次系统音频隐私状态
 @property (nonatomic, copy) NSArray<LMControlCenterLogStatus *> *lastCameraResult; //上次摄像头隐私状态
 @property (nonatomic, copy) NSArray<LMControlCenterLogStatus *> *lastMicResult; //上次麦克风隐私状态
 @property (nonatomic) AVCaptureDevice *activeCamera;
 @property (nonatomic) AVCaptureDevice *activeMic;
+
+@property (nonatomic) NSDate *lastScreenEventDate;
+@property (nonatomic) NSDate *lastScreenEventEndDate;
 
 @end
 
@@ -97,6 +101,7 @@ typedef NS_ENUM(NSUInteger, LMControlCenterLogStatusType) {
         self.logMonitor = [[LogMonitor alloc] init];
         self.audio13logMonitor = [[LogMonitor alloc] init];
         self.controlCenterLogMonitor = [[LogMonitor alloc] init];
+        self.screenLogMonitor = [[LogMonitor alloc] init];
         
         //init audio attributions
         self.audioAttributions = [NSMutableArray array];
@@ -278,6 +283,8 @@ typedef NS_ENUM(NSUInteger, LMControlCenterLogStatusType) {
 {
     //dbg msg
     NSLog(@"starting log monitor for AV events");
+
+    [self monitor14Screen];
     
     if (@available(macOS 13.0, *)) {
         // 13 以上使用控制中心日志
@@ -292,6 +299,87 @@ typedef NS_ENUM(NSUInteger, LMControlCenterLogStatusType) {
         [self monitorSystemStatus];
     }
     return;
+}
+
+- (void)monitor14Screen
+{
+    NSPredicate *sender = [NSPredicate predicateWithFormat:@"sender == 'replayd' OR sender == 'screencapture' OR sender == 'ScreenCaptureKit' OR sender == 'AVFCapture' OR sender == 'ReplayKit'"];
+    [self.screenLogMonitor start:sender level:Log_Level_Default callback:^(OSLogEvent *logEvent) {
+        
+        __auto_type handleEvent = ^(BOOL isScreenShot, BOOL isFinish) {
+            
+            Client *client = [Client new];
+            Event *event = [[Event alloc] init:client device:nil deviceType:LMDevice_Screen state:NSControlStateValueOn];
+            
+            client.pid = logEvent.processIdentifier;
+            client.path = valueForStringItem(getProcessPath(client.pid.intValue));
+            if ([client.path hasSuffix:@"sbin/screencapture"]) { //系统自带截图工具使用父进程信息更准确
+                pid_t ppid = getParentProcessID(client.pid.intValue);
+                if (ppid > 0) {
+                    client.pid = @(ppid);
+                    client.path = valueForStringItem(getProcessPath(ppid));
+                }
+            }
+            client.processBundleID = GUIApplicationBundleIdentifierForPid(client.pid.intValue);
+            
+            if (isFinish) {
+                event.state = NSControlStateValueOff;
+                client.pid = @(0);
+            } else {
+                client.name = valueForStringItem(getProcessName(client.path));
+            }
+            
+            if (isScreenShot) {
+                event.deviceExtra = 1;
+            }
+            
+            if (self.eventCallback) {
+                self.eventCallback(event);
+            }
+        };
+        
+        NSString *message = logEvent.composedMessage;
+        if (!self.lastScreenEventDate || -[self.lastScreenEventDate timeIntervalSinceNow] > 1) {
+            if ([message containsString:@"SLSHWCaptureDesktopProxying_block_invoke"] ||
+                [message isEqualTo:@"Capturing image"]) { //系统截图
+                self.lastScreenEventDate = [NSDate date];
+                handleEvent(YES, NO);
+            } else if ([message containsString:@"[RPDaemonProxy proxyCoreGraphicsWithMethodType:"]) {
+                self.lastScreenEventDate = [NSDate date];
+                handleEvent(YES, NO);
+            }
+            else if ([message containsString:@"[SCStreamManager registerStream:]"]) {
+                self.lastScreenEventDate = [NSDate date];
+                handleEvent(NO, NO);
+            } else if ([message containsString:@"[AVCaptureSession_Tundra addInput:]"] &&
+                       [message containsString:@"AVCaptureScreenInput"]) {
+                self.lastScreenEventDate = [NSDate date];
+                handleEvent(NO, NO);
+            }
+        }
+        if (!self.lastScreenEventEndDate || -[self.lastScreenEventEndDate timeIntervalSinceNow] > 1) {
+            if ([message containsString:@"[SCStreamManager deregisterStream:]"] ||
+                [message containsString:@"[AVCaptureSession_Tundra removeInput:]"] ||
+                [message containsString:@"Recording stop requested at"]) {
+                self.lastScreenEventEndDate = [NSDate date];
+                handleEvent(NO, YES);
+            }
+        }
+    }];
+}
+
+// 用户手动阻止生成结束事件
+- (void)killScreenCaptureAppWithBundleID:(NSString *)bundleID
+{
+    Client *client = [Client new];
+    Event *event = [[Event alloc] init:client device:nil deviceType:LMDevice_Screen state:NSControlStateValueOff];
+    
+    client.pid = @(0);
+    client.processBundleID = bundleID;
+    
+    if (self.eventCallback) {
+        self.eventCallback(event);
+    }
 }
 
 - (void)startControlCenterLogMonitor
@@ -316,18 +404,21 @@ typedef NS_ENUM(NSUInteger, LMControlCenterLogStatusType) {
                 }
             }
             if (result) {
-                self.lastPrivacyResult = result;
-                if (self.lastPrivacyResultDate && -[self.lastPrivacyResultDate timeIntervalSinceNow] < 1) { //后续消息延迟1秒消费
-                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                        if (-[self.lastPrivacyResultDate timeIntervalSinceNow] > 1) {
-                            self.lastPrivacyResultDate = [NSDate date];
-                            [self _consumeResult:self.lastPrivacyResult];
-                        }
-                    });
-                } else {
-                    self.lastPrivacyResultDate = [NSDate date];
-                    [self _consumeResult:self.lastPrivacyResult];
-                }
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    self.lastPrivacyResult = result;
+                    //后续消息延迟1秒消费
+                    if (self.lastPrivacyResultDate && -[self.lastPrivacyResultDate timeIntervalSinceNow] < 1) {
+                        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                            if (-[self.lastPrivacyResultDate timeIntervalSinceNow] > 1) {
+                                self.lastPrivacyResultDate = [NSDate date];
+                                [self _consumeResult:[self.lastPrivacyResult copy]]; //直接使用最新数据，丢弃一秒内的，消除权限变化抖动
+                            }
+                        });
+                    } else {
+                        self.lastPrivacyResultDate = [NSDate date];
+                        [self _consumeResult:[self.lastPrivacyResult copy]];
+                    }
+                });
             }
         }];
     }
@@ -377,7 +468,8 @@ typedef NS_ENUM(NSUInteger, LMControlCenterLogStatusType) {
         }
         lastResult = self.lastMicResult;
         self.lastMicResult = currentResult;
-    } else {
+    }
+    else {
         return;
     }
     
@@ -432,12 +524,15 @@ typedef NS_ENUM(NSUInteger, LMControlCenterLogStatusType) {
     
     Event *event = nil;
     if (type == LMControlCenterLogStatusTypeSystemAudio) {
-        event = [[Event alloc] init:client device:nil deviceType:Device_SystemAudio state:state];
+        event = [[Event alloc] init:client device:nil deviceType:LMDevice_SystemAudio state:state];
     } else if (type == LMControlCenterLogStatusTypeCamera) {
-        event = [[Event alloc] init:client device:self.activeCamera deviceType:Device_Camera state:state];
+        event = [[Event alloc] init:client device:self.activeCamera deviceType:LMDevice_Camera state:state];
     } else if (type == LMControlCenterLogStatusTypeMicrophone) {
-        event = [[Event alloc] init:client device:self.activeMic deviceType:Device_Microphone state:state];
-    } else {
+        event = [[Event alloc] init:client device:self.activeMic deviceType:LMDevice_Microphone state:state];
+    } else if (type == LMControlCenterLogStatusTypeScreen) {
+        event = [[Event alloc] init:client device:nil deviceType:LMDevice_Screen state:state];
+    }
+    else {
         return;
     }
 
@@ -479,9 +574,13 @@ typedef NS_ENUM(NSUInteger, LMControlCenterLogStatusType) {
         status.displayName = [[log substringWithRange:[match rangeAtIndex:2]] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
         status.name = [log substringWithRange:[match rangeAtIndex:3]];
         
-        if (status.type == LMControlCenterLogStatusTypeSystemAudio ||
-            status.type == LMControlCenterLogStatusTypeCamera ||
-            status.type == LMControlCenterLogStatusTypeMicrophone) {
+        NSArray *caredTypes = @[
+            @(LMControlCenterLogStatusTypeSystemAudio),
+            @(LMControlCenterLogStatusTypeCamera),
+            @(LMControlCenterLogStatusTypeMicrophone),
+//            @(LMControlCenterLogStatusTypeScreen),
+        ];
+        if ([caredTypes containsObject:@(status.type)]) {
             [result addObject:status];
         }
     }
@@ -520,9 +619,13 @@ typedef NS_ENUM(NSUInteger, LMControlCenterLogStatusType) {
         
         status.name = [log substringWithRange:[match rangeAtIndex:2]];
         
-        if (status.type == LMControlCenterLogStatusTypeSystemAudio ||
-            status.type == LMControlCenterLogStatusTypeCamera ||
-            status.type == LMControlCenterLogStatusTypeMicrophone) {
+        NSArray *caredTypes = @[
+            @(LMControlCenterLogStatusTypeSystemAudio),
+            @(LMControlCenterLogStatusTypeCamera),
+            @(LMControlCenterLogStatusTypeMicrophone),
+//            @(LMControlCenterLogStatusTypeScreen),
+        ];
+        if ([caredTypes containsObject:@(status.type)]) {
             [result addObject:status];
         }
     }
@@ -810,7 +913,7 @@ typedef NS_ENUM(NSUInteger, LMControlCenterLogStatusType) {
             
             //init event
             // process (client) and device are nil
-            event = [[Event alloc] init:nil device:nil deviceType:Device_Microphone state:NSControlStateValueOff];
+            event = [[Event alloc] init:nil device:nil deviceType:LMDevice_Microphone state:NSControlStateValueOff];
             
             //handle event
             [self handleEvent:event];
@@ -850,7 +953,7 @@ typedef NS_ENUM(NSUInteger, LMControlCenterLogStatusType) {
                     
                     //init event
                     // with client and (active) mic
-                    event = [[Event alloc] init:client device:activeMic deviceType:Device_Microphone state:NSControlStateValueOn];
+                    event = [[Event alloc] init:client device:activeMic deviceType:LMDevice_Microphone state:NSControlStateValueOn];
                     
                     //handle event
                     [self handleEvent:event];
@@ -862,7 +965,7 @@ typedef NS_ENUM(NSUInteger, LMControlCenterLogStatusType) {
                 {
                     //init event
                     // devivce is nil
-                    event = [[Event alloc] init:client device:nil deviceType:Device_Microphone state:NSControlStateValueOn];
+                    event = [[Event alloc] init:client device:nil deviceType:LMDevice_Microphone state:NSControlStateValueOn];
                     
                     //handle event
                     [self handleEvent:event];
@@ -893,7 +996,7 @@ typedef NS_ENUM(NSUInteger, LMControlCenterLogStatusType) {
             
             //init event
             // process (client) and device are nil
-            event = [[Event alloc] init:nil device:nil deviceType:Device_Camera state:NSControlStateValueOff];
+            event = [[Event alloc] init:nil device:nil deviceType:LMDevice_Camera state:NSControlStateValueOff];
             
             //handle event
             [self handleEvent:event];
@@ -941,7 +1044,7 @@ typedef NS_ENUM(NSUInteger, LMControlCenterLogStatusType) {
                     
                     //init event
                     // with client and (active) camera
-                    event = [[Event alloc] init:client device:activeCamera deviceType:Device_Camera state:NSControlStateValueOn];
+                    event = [[Event alloc] init:client device:activeCamera deviceType:LMDevice_Camera state:NSControlStateValueOn];
                     
                     //handle event
                     [self handleEvent:event];
@@ -953,7 +1056,7 @@ typedef NS_ENUM(NSUInteger, LMControlCenterLogStatusType) {
                 {
                     //init event
                     // devivce is nil
-                    event = [[Event alloc] init:client device:nil deviceType:Device_Camera state:NSControlStateValueOn];
+                    event = [[Event alloc] init:client device:nil deviceType:LMDevice_Camera state:NSControlStateValueOn];
                     
                     //handle event
                     [self handleEvent:event];
@@ -1042,7 +1145,7 @@ typedef NS_ENUM(NSUInteger, LMControlCenterLogStatusType) {
                         
                         //init event
                         // process (client) and device are nil
-                        Event *event = [[Event alloc] init:nil device:device deviceType:Device_Microphone state:NSControlStateValueOff];
+                        Event *event = [[Event alloc] init:nil device:device deviceType:LMDevice_Microphone state:NSControlStateValueOff];
                         
                         //handle event
                         [self handleEvent:event];
@@ -1075,7 +1178,7 @@ typedef NS_ENUM(NSUInteger, LMControlCenterLogStatusType) {
                             client.path = valueForStringItem(getProcessPath(client.pid.intValue));
                             client.name = valueForStringItem(getProcessName(client.path));
                         }
-                        Event *event = [[Event alloc] init:client device:device deviceType:Device_Microphone state:NSControlStateValueOn];
+                        Event *event = [[Event alloc] init:client device:device deviceType:LMDevice_Microphone state:NSControlStateValueOn];
                         [self handleEvent:event];
                     });
                 }
@@ -1145,8 +1248,12 @@ bail:
     
     //block
     // invoked when video changes
+    @weakify(device);
     CMIOObjectPropertyListenerBlock listenerBlock = ^(UInt32 inNumberAddresses, const CMIOObjectPropertyAddress addresses[])
     {
+        @strongify(device);
+        if (!device) return;
+        
         //state
         NSInteger state = -1;
     
@@ -1192,7 +1299,7 @@ bail:
                             client.path = valueForStringItem(getProcessPath(client.pid.intValue));
                             client.name = valueForStringItem(getProcessName(client.path));
                         }
-                        Event *event = [[Event alloc] init:client device:device deviceType:Device_Camera state:NSControlStateValueOn];
+                        Event *event = [[Event alloc] init:client device:device deviceType:LMDevice_Camera state:NSControlStateValueOn];
                         [self handleEvent:event];
                     }
 
@@ -1209,7 +1316,7 @@ bail:
                     
                     if (@available(macOS 13.0, *)) { //13以上直接使用控制中心日志
                     } else {
-                        Event *event = [[Event alloc] init:nil device:device deviceType:Device_Camera state:NSControlStateValueOff];
+                        Event *event = [[Event alloc] init:nil device:device deviceType:LMDevice_Camera state:NSControlStateValueOff];
                         [self handleEvent:event];
                     }
                 });
@@ -1611,7 +1718,7 @@ bail:
         {
             //mic
             // check last mic off device
-            if( (Device_Microphone == event.deviceType) &&
+            if( (LMDevice_Microphone == event.deviceType) &&
                 (nil != self.lastMicOff) &&
                 (YES != [self.builtInMic.uniqueID isEqualToString:self.lastMicOff.uniqueID]) )
             {
@@ -1627,7 +1734,7 @@ bail:
             
             //camera
             // check last camera off device
-            if( (Device_Camera == event.deviceType) &&
+            if( (LMDevice_Camera == event.deviceType) &&
                 (nil != self.lastCameraOff) &&
                 (YES != [self.builtInCamera.uniqueID isEqualToString:self.lastCameraOff.uniqueID]) )
             {
@@ -1768,7 +1875,7 @@ bail:
     title = [NSMutableString string];
 
     //set device type
-    (Device_Camera == event.deviceType) ? [title appendString:@"📸"] : [title appendFormat:@"🎙️"];
+    (LMDevice_Camera == event.deviceType) ? [title appendString:@"📸"] : [title appendFormat:@"🎙️"];
     
     //set status
     (NSControlStateValueOn == event.state) ? [title appendString:NSLocalizedString(@" Became Active!",@" Became Active!")] : [title appendString:NSLocalizedString(@" Became Inactive.", @" Became Inactive.")];
@@ -1870,7 +1977,7 @@ bail:
     {
         //add device
         [args appendString:@"-device "];
-        (Device_Camera == event.deviceType) ? [args appendString:@"camera"] : [args appendString:@"microphone"];
+        (LMDevice_Camera == event.deviceType) ? [args appendString:@"camera"] : [args appendString:@"microphone"];
         
         //add event
         [args appendString:@" -event "];
@@ -1908,6 +2015,7 @@ bail:
     [self.logMonitor stop];
     [self.audio13logMonitor stop];
     [self.controlCenterLogMonitor stop];
+    [self.screenLogMonitor stop];
     
     //dbg msg
     NSLog(@"stopping audio monitor(s)");

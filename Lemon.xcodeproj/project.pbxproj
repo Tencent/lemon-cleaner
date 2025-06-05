@@ -2120,21 +2120,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		2240B7BE6852FAE36FAD5FAA /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Lemonas/Pods-Lemonas-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		3BED47C800C2F555CF507D79 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -2191,7 +2176,6 @@
 				792CFB20233366FD00B364D6 /* LMBaseLineSegmentedCell.m in Sources */,
 				BC7FBE3D2268193300D025CF /* LMSplashMenuBarViewController.m in Sources */,
 				B7BDBCFF2DB7727500FB5ADF /* NSUserNotification+QMExtensions.m in Sources */,
-				2F7D4CC0219ABBAD008D59E0 /* LMVersionHelper.m in Sources */,
 				D4F1DF80219C4344000CDA07 /* PreferenceViewController.m in Sources */,
 				B7A82D9E2D71921B00036DEE /* LemonDNCServier.m in Sources */,
 				BC76D79222783AEE001AE456 /* MasLoginItemManager.m in Sources */,

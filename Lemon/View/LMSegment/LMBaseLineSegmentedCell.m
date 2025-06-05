@@ -16,6 +16,12 @@
 static CGFloat const kSelectedLineWidth = 1.5; // 选中线条宽度
 static CGFloat const kDivisionLineWidth = 1; // 底部分割线
 
+@interface LMBaseLineSegmentedCell ()
+
+@property(nonatomic, strong) NSDictionary* __redPointDict;
+
+@end
+
 @implementation LMBaseLineSegmentedCell
 
 
@@ -58,6 +64,8 @@ static CGFloat const kDivisionLineWidth = 1; // 底部分割线
     [label drawInRect:drawRect withAttributes:attributes];
     
     if(segment == self.selectedSegment){
+        [self __saveSegmentSelectedState:label];    // 如果选中过，有红点以后不要再显示
+        
         NSRect labelRect = [label boundingRectWithSize:frame.size options:0 attributes:attributes];
         
         CGFloat lineOriginY = 0;
@@ -76,6 +84,12 @@ static CGFloat const kDivisionLineWidth = 1; // 底部分割线
         [line stroke];
     }
     
+    // 判断是否显示红点
+    if ([self __needShowRedPoint:label]) {
+        NSImage * image = [NSImage imageNamed:@"redpoint"];
+        [image drawInRect:NSMakeRect(NSMaxX(frame)-15, NSMinY(frame)+10, 10, 10)];
+    }
+    
 }
 
 - (void)drawWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
@@ -86,4 +100,30 @@ static CGFloat const kDivisionLineWidth = 1; // 底部分割线
     
     [super drawInteriorWithFrame:cellFrame inView:controlView];
 }
+
+
+- (void)updateCellRedPointInfo:(NSDictionary *)redPointDict {
+    self.__redPointDict = redPointDict;
+}
+
+- (BOOL)__needShowRedPoint:(NSString *)title {
+    if ([title isKindOfClass:NSString.class]) {
+        NSString *key = self.__redPointDict[title];
+        if (key && ![[NSUserDefaults standardUserDefaults] boolForKey:key]) {
+            return YES;
+        }
+    }
+    return NO;
+}
+
+- (void)__saveSegmentSelectedState:(NSString *)title {
+    if ([title isKindOfClass:NSString.class]) {
+        NSString *key = self.__redPointDict[title];
+        if (key && ![[NSUserDefaults standardUserDefaults] boolForKey:key]) {
+            [[NSUserDefaults standardUserDefaults] setBool:YES forKey:key];
+        }
+    }
+}
+
+
 @end

@@ -7,28 +7,14 @@
 
 #import "Owl2Manager+Guide.h"
 
-static NSString * const kOwl2ManagerOneClickGuideViewClosedKey = @"kOwl2ManagerOneClickGuideViewClosedKey";
-static NSString * const kOwl2ManagerOneClickGuideViewClickedKey = @"kOwl2ManagerOneClickGuideViewClickedKey";
-static NSString * const kOwl2ManagerIsPreviouslyEnabledKey = @"kOwl2ManagerIsPreviouslyEnabledKey";
+static NSString * const kOwl2ManagerOneClickGuideViewClosedKey = @"kOwl2ManagerOneClickGuideViewClosedKey_5.1.15";
+static NSString * const kOwl2ManagerOneClickGuideViewClickedKey = @"kOwl2ManagerOneClickGuideViewClickedKey_5.1.15";
 
 @implementation Owl2Manager (Guide)
 @dynamic oneClickGuideViewClosed;
 @dynamic oneClickGuideViewClicked;
-@dynamic isPreviouslyEnabled;
 
 - (BOOL)showOneClickGuideView {
-    if (self.isWatchAudio) {
-        return NO;
-    }
-    
-    if (self.isWatchVideo) {
-        return NO;
-    }
-    
-    if (self.isPreviouslyEnabled) {
-        // 设置过开启
-        return NO;
-    }
     
     if (self.oneClickGuideViewClosed) {
         // 主动点了关闭
@@ -37,6 +23,11 @@ static NSString * const kOwl2ManagerIsPreviouslyEnabledKey = @"kOwl2ManagerIsPre
     
     if (self.oneClickGuideViewClicked) {
         // 主动点了‘一键开启’
+        return NO;
+    }
+    
+    // 3个都开启
+    if (self.isWatchAudio && self.isWatchVideo && self.isWatchScreen) {
         return NO;
     }
     
@@ -59,12 +50,5 @@ static NSString * const kOwl2ManagerIsPreviouslyEnabledKey = @"kOwl2ManagerIsPre
     [[NSUserDefaults standardUserDefaults] setBool:oneClickGuideViewClicked forKey:kOwl2ManagerOneClickGuideViewClickedKey];
 }
 
-- (BOOL)isPreviouslyEnabled {
-    return [[NSUserDefaults standardUserDefaults] boolForKey:kOwl2ManagerIsPreviouslyEnabledKey];
-}
-
-- (void)setIsPreviouslyEnabled:(BOOL)isPreviouslyEnabled {
-    [[NSUserDefaults standardUserDefaults] setBool:isPreviouslyEnabled forKey:kOwl2ManagerIsPreviouslyEnabledKey];
-}
 
 @end

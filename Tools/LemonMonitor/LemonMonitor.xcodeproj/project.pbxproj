@@ -20,6 +20,7 @@
 		85433828167A400ADBC4F9A9 /* Pods_LemonMonitor.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5867102A50C1CF6F106E2FB8 /* Pods_LemonMonitor.framework */; };
 		8B5499D728A3562A00B55BB8 /* LMHoverButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B5499D328A3562A00B55BB8 /* LMHoverButton.m */; };
 		8B5499D828A3562A00B55BB8 /* LMAboutWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B5499D628A3562A00B55BB8 /* LMAboutWindow.m */; };
+		B76D5C582DE7F3D900E6D3DC /* DynamicConfig in Resources */ = {isa = PBXBuildFile; fileRef = B76D5C572DE7F3D900E6D3DC /* DynamicConfig */; };
 		B7A82D2A2D6DBB8600036DEE /* LMBaseLineSegmentedControl.m in Sources */ = {isa = PBXBuildFile; fileRef = B7A82D292D6DBB8600036DEE /* LMBaseLineSegmentedControl.m */; };
 		B7A82D2B2D6DBB8600036DEE /* LMBaseLineSegmentedCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B7A82D272D6DBB8600036DEE /* LMBaseLineSegmentedCell.m */; };
 		B7A82D6E2D703A3900036DEE /* NSDate+LMCalendar.m in Sources */ = {isa = PBXBuildFile; fileRef = B7A82D6D2D703A3900036DEE /* NSDate+LMCalendar.m */; };
@@ -578,6 +579,8 @@
 		D46FAA0621008BD100CF8E0F /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				B76D5C572DE7F3D900E6D3DC /* DynamicConfig */,
+				B76D5C532DE7F17B00E6D3DC /* DynamicConfig.json */,
 				84BA8E7921758EA70066B794 /* uiresources.xcassets */,
 				F81F2F59224C753A0023C1D7 /* Localizable.strings */,
 			);
@@ -737,6 +740,7 @@
 				F81F2F57224C753A0023C1D7 /* Localizable.strings in Resources */,
 				DE4EF2DA27352D46005649F4 /* LMVisibleViewController.xib in Resources */,
 				7952E49F23FD12D20058C48C /* LMTrashSizeCheckWindowController.xib in Resources */,
+				B76D5C582DE7F3D900E6D3DC /* DynamicConfig in Resources */,
 				B8F11079196257B000D29FFC /* MainMenu.xib in Resources */,
 				84BA8E7A21758EA70066B794 /* uiresources.xcassets in Resources */,
 			);

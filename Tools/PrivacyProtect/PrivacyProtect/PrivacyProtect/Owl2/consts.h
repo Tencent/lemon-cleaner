@@ -247,7 +247,14 @@
 #define NOTIFICATION_DELIVER 2
 
 //av devices
-typedef enum {Device_Camera, Device_Microphone, Device_AudioAndVideo, Device_SystemAudio} AVDevice;
+
+typedef enum : NSInteger {
+    LMDevice_Camera,
+    LMDevice_Microphone,
+    LMDevice_AudioAndVideo,
+    LMDevice_SystemAudio,
+    LMDevice_Screen,
+} LMDeviceType;
 
 //updates
 typedef enum {Update_Error, Update_None, Update_NotSupported, Update_Available} UpdateStatus;

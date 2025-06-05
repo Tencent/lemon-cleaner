@@ -559,7 +559,7 @@
         _myStatusType &= ~tag;
         
         // 容错处理，至少拷贝选择一项
-        if ((_myStatusType & ~STATUS_TYPE_BOOTSHOW) == 0)
+        if ((_myStatusType & ~STATUS_TYPE_BOOTSHOW & ~STATUS_TYPE_USE & ~STATUS_TYPE_GLOBAL) == 0)
         {
             [self.tfMonitorWarningTips setHidden:NO];
             _myStatusType |= tag;

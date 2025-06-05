@@ -30,6 +30,7 @@
 #import <QMUICommon/FullDiskAccessPermissionViewController.h>
 #import <LemonSpaceAnalyse/McSpaceAnalyseWndController.h>
 #import <LemonClener/LemonVCModel.h>
+#import <QMCoreFunction/QMCoreFunctionDef.h>
 
 #define LEMON_SPACE_ENTER_REPORT_TWO          12002 //磁盘入口2
 
@@ -132,21 +133,7 @@
 
 -(void)communityBtn {
     
-    if([LanguageHelper getCurrentSystemLanguageType] != SystemLanguageTypeChinese){
-        [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"https://www.facebook.com/groups/2270176446528228/"]];
-        return;
-    }
-    
-    //app版本号
-    NSDictionary *infoDictionary = [[NSBundle mainBundle] infoDictionary];
-    NSString *app_Version = [infoDictionary objectForKey:@"CFBundleShortVersionString"];
-    //系统版本号
-    NSOperatingSystemVersion osVersion = [[NSProcessInfo processInfo] operatingSystemVersion];
-    NSString *os_Version = [NSString stringWithFormat:@"%ld.%ld.%ld",osVersion.majorVersion,osVersion.minorVersion,osVersion.patchVersion];
-
-    NSString *URLStr = [NSString stringWithFormat:@"https://txc.qq.com/products/36664?clientVersion=%@&os=macOS&osVersion=%@",app_Version,os_Version];
-
-    [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:URLStr]];
+    [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:QMFeedbackURL]];
 }
 
 -(void)initView{
@@ -242,13 +229,7 @@
 }
 
 - (IBAction)gotoMacqqCom:(id)sender {
-    
-    if([LanguageHelper getCurrentSystemLanguageType] != SystemLanguageTypeChinese){
-        [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"https://www.facebook.com/groups/2270176446528228/"]];
-        return;
-    }
-     [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"https://support.qq.com/products/36664"]];
-    return;
+    [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:QMFeedbackURL]];
 }
 
 -(CGPoint)getCenterPoint{
@@ -276,16 +257,7 @@
         NSDictionary *userInfo = noti.userInfo;
         NSString *className = userInfo[EXPERIENCE_TOOL_CLASS_NAME];
         if ([className isEqualToString:MORE_FUNCTION]) {
-            
-            if ([LanguageHelper getCurrentSystemLanguageType] != SystemLanguageTypeChinese) {
-                [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"https://www.facebook.com/groups/2270176446528228/"]];
-                return;
-            }
-#ifndef APPSTORE_VERSION
-            [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"https://support.qq.com/products/36664"]];
-#else
-            [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"https://support.qq.com/products/52728"]];
-#endif
+            [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:QMFeedbackURL]];
             return;
         }
         NSString *language = [LanguageHelper getCurrentUserLanguage];
@@ -342,17 +314,7 @@
             }
         }
         if ([className isEqualToString:MORE_FUNCTION] || className == nil) {
-            
-            if ([LanguageHelper getCurrentSystemLanguageType] != SystemLanguageTypeChinese) {
-                [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"https://www.facebook.com/groups/2270176446528228/"]];
-                return;
-            }
-#ifndef APPSTORE_VERSION
-            [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"https://support.qq.com/products/36664"]];
-#else
-            [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"https://support.qq.com/products/52728"]];
-#endif
-
+            [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:QMFeedbackURL]];
             return;
         } else if ([className isEqualToString:LEMON_LAB] || className == nil) {
             
