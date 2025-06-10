@@ -527,13 +527,13 @@
 }
 
 - (void)startTimer{
-    if(nil == self.scanCheckTimer){
-        dispatch_async(dispatch_get_main_queue(), ^{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if(nil == self.scanCheckTimer){
             self.scanCheckTimer = [NSTimer timerWithTimeInterval:1 target:self selector:@selector(scanCheck) userInfo:nil repeats:YES];
             [[NSRunLoop currentRunLoop] addTimer:self.scanCheckTimer forMode:NSRunLoopCommonModes];
             [self.scanCheckTimer fire];
-        });
-    }
+        }
+    });
 }
 
 -(void)stopTimer{
@@ -807,6 +807,8 @@
 
 -(void)dealloc{
     NSLog(@"Super Dealloc _______________________ ，%@",[self className]);
+    [self.scanCheckTimer invalidate];
+    self.scanCheckTimer = nil;
 }
 
 - (NSString *)getMD5WithPathArray:(NSArray *)array {

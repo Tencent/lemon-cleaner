@@ -12,6 +12,7 @@
 
 #import "McCoreFunction.h"
 #import "McCoreFunctionCommon.h"
+#import "QMCoreFunctionDef.h"
 #import "NSSavePanel+QMTemporaryRepair.h"
 #import "McFileEvent.h"
 #import "McProcessInfo.h"

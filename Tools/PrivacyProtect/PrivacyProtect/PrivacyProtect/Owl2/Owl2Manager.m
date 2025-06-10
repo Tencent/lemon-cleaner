@@ -17,21 +17,17 @@
 #import "Owl2Manager+Guide.h"
 #import <QMCoreFunction/QMSafeMutableDictionary.h>
 #import <QMCoreFunction/QMSafeMutableArray.h>
+#import "Owl2LogProcessItem.h"
 
-static NSString * kAppName(NSBundle *bundle) {
-    NSString *appName = nil;
-    appName = [bundle localizedInfoDictionary][@"CFBundleDisplayName"];
-    if (!appName) {
-        appName = [bundle localizedInfoDictionary][@"CFBundleName"];
-    }
-    if (!appName) {
-        appName = [bundle infoDictionary][@"CFBundleName"];
-    }
-    if (!appName) {
-        appName = [bundle infoDictionary][@"CFBundleExecutable"];
-    }
-    return appName;
-}
+#define PPCheckScreenShotFrameWindowTimeInterval 0.5
+
+@import OSLog;
+
+os_log_t logHandle = nil;
+
+NSNotificationName const OwlWhiteListChangeNotication = @"OwlWhiteListChangeNotication";
+
+NSNotificationName const OwlLogChangeNotication = @"OwlLogChangeNotication";
 
 @interface Owl2Manager () <NSUserNotificationCenterDelegate>
 
@@ -39,6 +35,11 @@ static NSString * kAppName(NSBundle *bundle) {
 @property (nonatomic, strong) NSMutableArray *notificationDetailArray;
 @property (nonatomic, strong) AVMonitor *avMonitor;
 @property (nonatomic) BOOL isAudioDeviceActive;
+@property (nonatomic) NSMutableDictionary<NSString *, NSDate *> *appEventTimeDict;
+
+@property (nonatomic) NSMutableArray *screenShotEventArray;
+@property (nonatomic) NSTimer *screenShotTimer;
+@property (nonatomic) NSMutableArray *dispatchedScreenCaptureEventArray;
 
 @end
 
@@ -60,19 +61,18 @@ typedef void (^OwlCompleteBlock)(void);
 {
     self = [super init];
     if (self) {
-        _wlArray = [[NSMutableArray alloc] init];
+        _wlDic = [[QMSafeMutableDictionary alloc] init];
         _logArray = [[QMSafeMutableArray alloc] init];
         _notificationDetailArray = [[NSMutableArray alloc] init];
-        _owlVedioItemDic = [[NSMutableDictionary alloc] init];
+        _owlVideoItemDic = [[NSMutableDictionary alloc] init];
         _owlAudioItemDic = [[NSMutableDictionary alloc] init];
         _owlSystemAudioItemDic = [[NSMutableDictionary alloc] init];
-        _isWatchAudio = NO;
-        _isWatchVideo = NO;
-        _isFetchDataFinish = NO;
-        _isWantShowOwlWindow = NO;
-        _notificationCount = 0;
-        _allApps = [self getAllAppInfoWithIndexArray:nil];
+        _owlScreenItemDic = [[NSMutableDictionary alloc] init];
+        _owlScreenItemArray = [NSMutableArray new];  //用来延迟判断是截图还是录屏
+        _screenShotEventArray = [NSMutableArray new]; //用来等待蒙层消失之后发截屏通知
+        _dispatchedScreenCaptureEventArray = [NSMutableArray new]; //用来处理截屏和录屏的通知冲突，优先展示录屏
         self.notificationInsertLogList = [[QMSafeMutableDictionary alloc] init];
+        self.appEventTimeDict = [NSMutableDictionary new];
         
         _avMonitor = [[AVMonitor alloc] init];
         __weak typeof(self) weakSelf = self;
@@ -82,8 +82,6 @@ typedef void (^OwlCompleteBlock)(void);
                    [weakSelf processEvent:event];
                } @catch (NSException *exception) {
                    NSLog(@"%@", exception);
-               } @finally {
-
                }
            });
         };
@@ -93,7 +91,7 @@ typedef void (^OwlCompleteBlock)(void);
 }
 
 
-- (NSMutableArray*)getAllAppInfoWithIndexArray:(NSArray*)indexArray
+- (NSArray<Owl2AppItem *> *)getAllAppInfo
 {
     NSMutableArray *allAppArray = [[NSMutableArray alloc] init];
     NSFileManager *fm = [NSFileManager defaultManager];
@@ -106,54 +104,8 @@ typedef void (^OwlCompleteBlock)(void);
                     continue;
                 }
                 NSString *path = [appsPath stringByAppendingPathComponent:name];
-                NSBundle *bubble = [NSBundle bundleWithPath:path];
-                //NSLog(@"info: %@", [bubble infoDictionary]);
-                NSString *icon = NSImageNameBonjour;
-                if ([[[bubble infoDictionary] allKeys] containsObject:@"CFBundleIconFile"]) {
-                    icon = [[bubble infoDictionary] objectForKey:@"CFBundleIconFile"];
-                    icon = [[bubble resourcePath] stringByAppendingPathComponent:icon];
-                    if ([[icon pathExtension] isEqualToString:@""]) {
-                        icon = [icon stringByAppendingPathExtension:@"icns"];
-                    }
-                }
-                NSString *appName = kAppName(bubble);
-                if (!appName) {
-                    continue;
-                }
-                NSString *identifier = nil;
-                if ([[[bubble infoDictionary] allKeys] containsObject:@"CFBundleIdentifier"]) {
-                    identifier = [[bubble infoDictionary] objectForKey:@"CFBundleIdentifier"];
-                }
-                if (!identifier) {
-                    continue;
-                }
-                
-                if (!path) {
-                    continue;
-                }
-                NSString *executName = nil;
-                if ([[[bubble infoDictionary] allKeys] containsObject:@"CFBundleExecutable"]) {
-                    executName = [[bubble infoDictionary] objectForKey:@"CFBundleExecutable"];
-                }
-                if (!executName) {
-                    continue;
-                }
-                NSMutableDictionary *appDic = [[NSMutableDictionary alloc] init];
-                [appDic setObject:icon forKey:OwlAppIcon];
-                [appDic setObject:executName forKey:OwlExecutableName];
-                [appDic setObject:path forKey:OwlBubblePath];
-                [appDic setObject:identifier forKey:OwlIdentifier];
-                [appDic setObject:appName forKey:OwlAppName];
-                [appDic setObject:[NSNumber numberWithBool:NO] forKey:@"isSelected"];
-                if ([identifier hasPrefix:@"com.apple"]) {
-                    [appDic setObject:[NSNumber numberWithBool:YES] forKey:OwlAppleApp];
-                } else {
-                    [appDic setObject:[NSNumber numberWithBool:NO] forKey:OwlAppleApp];
-                }
-                if (indexArray) {
-                    [appDic setObject:[NSNumber numberWithInt:(int)indexArray.count] forKey:@"itemIndex"];
-                }
-                [allAppArray addObject:appDic];
+                Owl2AppItem *appItem = [[Owl2AppItem alloc] initWithAppPath:path];
+                [allAppArray addObject:appItem];
             }
         }
     };
@@ -163,18 +115,12 @@ typedef void (^OwlCompleteBlock)(void);
     NSString *userAppsPath = NSSearchPathForDirectoriesInDomains(NSApplicationDirectory, NSLocalDomainMask, YES)[0];
     block(userAppsPath);
     
-    return allAppArray;
+    return allAppArray.copy;
 }
 
 - (void)setWatchVedio:(BOOL)state toDb:(BOOL)toDB
 {
     NSLog(@"setWatchVedio: %d, %d", _isWatchVideo, state);
-    if (state) {
-        // 设置过开启
-        dispatch_async(dispatch_get_main_queue(), ^{
-            self.isPreviouslyEnabled = YES;
-        });
-    }
     if (state != _isWatchVideo) {
         _isWatchVideo = state;
         if (toDB) {
@@ -184,7 +130,7 @@ typedef void (^OwlCompleteBlock)(void);
                 } else {
                     [self.avMonitor unwatchAllVideoDevice];
                 }
-                [self setWatchVedioToDB:state];
+                [self updateAllWatch];
             });
         }
     }
@@ -193,12 +139,6 @@ typedef void (^OwlCompleteBlock)(void);
 - (void)setWatchAudio:(BOOL)state toDb:(BOOL)toDB
 {
     NSLog(@"setWatchAudio: %d, %d", _isWatchAudio, state);
-    if (state) {
-        // 设置过开启
-        dispatch_async(dispatch_get_main_queue(), ^{
-            self.isPreviouslyEnabled = YES;
-        });
-    }
     if (state != _isWatchAudio) {
         _isWatchAudio = state;
         if (toDB) {
@@ -208,80 +148,53 @@ typedef void (^OwlCompleteBlock)(void);
                 } else {
                     [self.avMonitor unwatchAllAudioDevice];
                 }
-                [self setWatchAudioToDB:state];
+                [self updateAllWatch];
             });
         }
     }
 }
 
-- (void)addAppWhiteItem:(NSDictionary*)dic
-{
-    // 临时补丁，仅是可执行文件不允许添加到白名单
-    if (![dic objectForKey:OwlIdentifier]) {
-        return;
-    }
-    NSLog(@"QMPIPE_CMD_OWL_DATA addAppWhiteItem: %@", dic);
-    NSMutableDictionary *mutableDic;
-    if ([dic isKindOfClass:NSMutableDictionary.class]) {
-        mutableDic = (NSMutableDictionary *)dic;
-    } else {
-        mutableDic = dic.mutableCopy;
-    }
-    
-    NSDictionary *existingDic = nil;
-    for (NSDictionary *subDic in self.wlArray) {
-        if ([[subDic objectForKey:OwlIdentifier] isEqualToString:[dic objectForKey:OwlIdentifier]]) {
-            // 将旧的白名单获取与新的白名单合并
-            NSNumber *watchCam = subDic[OwlWatchCamera];
-            NSNumber *watchMic = subDic[OwlWatchAudio];
-            NSNumber *watchSpeaker = subDic[OwlWatchSpeaker];
-            
-            NSNumber *new_watchCam = mutableDic[OwlWatchCamera];
-            NSNumber *new_watchMic = mutableDic[OwlWatchAudio];
-            NSNumber *new_watchSpeaker = mutableDic[OwlWatchSpeaker];
-            
-            if (!new_watchCam && watchCam) {
-                [mutableDic setObject:watchCam forKey:OwlWatchCamera];
-            }
-            if (!new_watchMic && watchMic) {
-                [mutableDic setObject:watchMic forKey:OwlWatchAudio];
-            }
-            if (!new_watchSpeaker && watchSpeaker) {
-                [mutableDic setObject:watchSpeaker forKey:OwlWatchSpeaker];
-            }
-   
-            existingDic = subDic;
-            break;
+- (void)setWatchScreen:(BOOL)state toDb:(BOOL)toDB {
+    NSLog(@"setWatchScreen: %d, %d", _isWatchScreen, state);
+    if (state != _isWatchScreen) {
+        _isWatchScreen = state;
+        if (toDB) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self updateAllWatch];
+            });
         }
     }
-    if (existingDic) {
-        // 移除旧的
-        [self.wlArray removeObject:existingDic];
+}
+
+- (void)addWhiteWithAppItem:(Owl2AppItem *)appItem {
+    // 临时补丁，仅是可执行文件不允许添加到白名单
+    if (![appItem.identifier isKindOfClass:NSString.class]) {
+        return;
     }
-    [self.wlArray addObject:mutableDic];
-    [self addAppWhiteItemToDB:mutableDic];
+    if (appItem.identifier.length == 0) {
+        return;
+    }
+    
+    Owl2AppItem *oldAppItem = [self.wlDic objectForKey:appItem.identifier];
+    if (oldAppItem) {
+        [oldAppItem mergeWithAnother:appItem];
+    } else {
+        oldAppItem = appItem;
+    }
+    // 更新白名单
+    [self.wlDic setObject:oldAppItem forKey:oldAppItem.identifier];
+    [self addAppWhiteItemToDB:oldAppItem.toDictionary];
     [[NSNotificationCenter defaultCenter] postNotificationName:OwlWhiteListChangeNotication object:nil];
 }
 
-- (void)removeAppWhiteItemIndex:(NSInteger)index
-{
-    if (self.wlArray.count < index) {
+- (void)removeAppWhiteItemWithIdentifier:(NSString *)identifier {
+    if (![identifier isKindOfClass:NSString.class]) {
         return;
     }
-    NSDictionary *dic = [self.wlArray objectAtIndex:index];
-    [self.wlArray removeObjectAtIndex:index];
+    Owl2AppItem *oldAppItem = [self.wlDic objectForKey:identifier];
+    [self.wlDic removeObjectForKey:identifier];
     [[NSNotificationCenter defaultCenter] postNotificationName:OwlWhiteListChangeNotication object:nil];
-    [self removeAppWhiteItemToDB:dic];
-}
-
-- (void)replaceAppWhiteItemIndex:(NSInteger)index
-{
-    if (self.wlArray.count < index) {
-        return;
-    }
-    NSDictionary *dic = [self.wlArray objectAtIndex:index];
-//    [self removeAppWhiteItemToDB:dic];
-    [self addAppWhiteItemToDB:dic];
+    [self removeAppWhiteItemToDB:oldAppItem.toDictionary];
 }
 
 - (void)loadOwlDataFromMonitor{
@@ -291,14 +204,20 @@ typedef void (^OwlCompleteBlock)(void);
 #pragma mark protect controll
 - (void)startOwlProtect
 {
-    _wlArray = [[NSMutableArray alloc] init];
+    _wlDic = [[QMSafeMutableDictionary alloc] init];
     _logArray = [[NSMutableArray alloc] init];
     _isFetchDataFinish = NO;
-    NSLog(@"startOwlProtect begin: %d, %d", _isWatchVideo, _isWatchAudio);
+    NSLog(@"startOwlProtect begin: %d, %d, %d", _isWatchVideo, _isWatchAudio, _isWatchScreen);
     
     [self closeDB];
     [self loadDB];
-    [_wlArray addObjectsFromArray:[self getWhiteList]];
+    NSArray *wlList = [self getWhiteList];
+    for (NSDictionary *appDic in wlList) {
+        Owl2AppItem *item = [[Owl2AppItem alloc] initWithDic:appDic];
+        if ([item.identifier isKindOfClass:NSString.class]) {
+            [self.wlDic setObject:item forKey:item.identifier];
+        }
+    }
     [self.avMonitor start];
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         if (self.isWatchVideo) {
@@ -309,7 +228,7 @@ typedef void (^OwlCompleteBlock)(void);
         }
     });
     self.isFetchDataFinish = YES;
-    NSLog(@"startOwlProtect end: %d, %d", _isWatchVideo, _isWatchAudio);
+    NSLog(@"startOwlProtect end: %d, %d, %d", _isWatchVideo, _isWatchAudio, _isWatchScreen);
 }
 
 - (void)stopOwlProtect
@@ -319,6 +238,7 @@ typedef void (^OwlCompleteBlock)(void);
     [self.avMonitor unwatchAllVideoDevice];
     self.isWatchAudio = NO;
     self.isWatchVideo = NO;
+    self.isWatchScreen = NO;
     [self.avMonitor stop];
 }
 
@@ -378,163 +298,22 @@ typedef void (^OwlCompleteBlock)(void);
     return YES;
 }
 
-- (NSMutableDictionary *)getAppInfoWithPath:(NSString*)appPath appName:(NSString*)name
-{
-    //NSLog(@"getAppInfoWithPath appPath = %@, appNam = %@", appPath, name);
-    NSString *path = [appPath stringByAppendingPathComponent:name];
-    //[identifier hasPrefix:@"com.apple."]
-    //可能已经被删除
-    NSFileManager *fm = [NSFileManager defaultManager];
-    if (![fm fileExistsAtPath:path]){
-        return nil;
-    }
-    NSBundle *bubble = [NSBundle bundleWithPath:path];
-    if (!bubble) {
-        return nil;
-    }
-    //NSLog(@"info: %@", [bubble infoDictionary]);
-    NSString *icon = @"";
-    if ([[[bubble infoDictionary] allKeys] containsObject:@"CFBundleIconFile"]) {
-        icon = [[bubble infoDictionary] objectForKey:@"CFBundleIconFile"];
-        icon = [[bubble resourcePath] stringByAppendingPathComponent:icon];
-        if ([[icon pathExtension] isEqualToString:@""]) {
-            icon = [icon stringByAppendingPathExtension:@"icns"];
-        }
-    }
-    NSString *appName = kAppName(bubble);
-    if (!appName) {
-        NSLog(@"getAppInfoWithPath appPath = %@, appNam = %@", path, appName);
-        return nil;
-    }
-    NSMutableDictionary *appDic = [[NSMutableDictionary alloc] initWithCapacity:9];
-    [appDic setObject:appName forKey:OwlAppName];
-    NSString *identifier = nil;
-    if ([[[bubble infoDictionary] allKeys] containsObject:@"CFBundleIdentifier"]) {
-        identifier = [[bubble infoDictionary] objectForKey:@"CFBundleIdentifier"];
-    }
-    if (identifier) {
-        [appDic setObject:identifier forKey:OwlIdentifier];
-    } else {
-        NSLog(@"getAppInfoWithPath identifier is nil");
-        return nil;
-    }
-    NSString *executableName = nil;
-    if ([[[bubble infoDictionary] allKeys] containsObject:@"CFBundleExecutable"]) {
-        executableName = [[bubble infoDictionary] objectForKey:@"CFBundleExecutable"];
-    }
-    if (executableName) {
-        [appDic setObject:executableName forKey:OwlExecutableName];
-    } else {
-        NSLog(@"getAppInfoWithPath executableName is nil");
-        return nil;
-    }
-    [appDic setObject:path forKey:OwlBubblePath];
-    [appDic setObject:icon forKey:OwlAppIcon];
-    NSNumber *appleApp;
-    if ([identifier hasPrefix:@"com.apple"]) {
-        appleApp = [NSNumber numberWithBool:YES];
-    } else {
-        appleApp = [NSNumber numberWithBool:NO];
-    }
-    [appDic setObject:appleApp forKey:OwlAppleApp];
-    
-    return appDic;
-}
-
-
-#pragma mark owl camera device watch
-- (void)watchTimerRepeat
-{
-    OwlCompleteBlock complete = ^{
-        
-    };
-    [self doOwlProcResultWithDeviceState:1 complete: complete];
-}
-
-- (void)processVedioEndItems
-{
-    NSLog(@"%s, owlVedioItemDic: %@", __FUNCTION__, self.owlVedioItemDic);
-    NSArray *appNames = [self.owlVedioItemDic allKeys];
-    NSMutableArray *endArray = [[NSMutableArray alloc] init];
-    for (NSString *appName in appNames) {
-        NSDictionary *item = [self.owlVedioItemDic objectForKey:appName];
-        int deviceType = [item[OWL_DEVICE_TYPE] intValue];
-        int count = [[item objectForKey:OWL_PROC_DELTA] intValue];
-        
-        if (deviceType == OwlProtectVedio) {
-            if (count > 0) {
-                NSMutableDictionary *endDic = [NSMutableDictionary dictionaryWithDictionary:item];
-                [endDic setObject:@(-1) forKey:OWL_PROC_DELTA];
-                [endArray addObject:endDic];
-            }
-        }
-    }
-    if (endArray.count > 0) {
-        [self analyseDeviceInfoForNotificationWithArray:endArray];
-        for (NSDictionary *dic in endArray) {
-            NSString *appName = dic[OWL_PROC_NAME];
-            [self.owlVedioItemDic removeObjectForKey:appName];
-        }
-    }
-    if ([self.owlVedioItemDic allKeys].count > 0){
-        NSLog(@"processVedioEndItems has some error: %@", self.owlVedioItemDic);
-        [self.owlVedioItemDic removeAllObjects];
-    }
-}
-
-- (void)processAudioEndItems
-{
-    NSLog(@"%s, owlItemDic: %@", __FUNCTION__, self.owlAudioItemDic);
-    NSArray *appNames = [self.owlAudioItemDic allKeys];
-    NSMutableArray *endArray = [[NSMutableArray alloc] init];
-    for (NSString *appName in appNames) {
-        NSDictionary *item = [self.owlAudioItemDic objectForKey:appName];
-        int deviceType = [item[OWL_DEVICE_TYPE] intValue];
-        int count = [[item objectForKey:OWL_PROC_DELTA] intValue];
-        
-        if (deviceType == OwlProtectAudio) {
-            if (count > 0) {
-                NSMutableDictionary *endDic = [NSMutableDictionary dictionaryWithDictionary:item];
-                [endDic setObject:@(-1) forKey:OWL_PROC_DELTA];
-                [endArray addObject:endDic];
-            }
-        }
-    }
-    if (endArray.count > 0) {
-        [self analyseDeviceInfoForNotificationWithArray:endArray];
-        for (NSDictionary *dic in endArray) {
-            NSString *appName = dic[OWL_PROC_NAME];
-            [self.owlAudioItemDic removeObjectForKey:appName];
-        }
-    }
-    if ([self.owlAudioItemDic allKeys].count > 0){
-        NSLog(@"processVedioEndItems has some error: %@", self.owlAudioItemDic);
-        [self.owlAudioItemDic removeAllObjects];
-    }
-}
+#pragma mark -
 
 - (void)processEvent:(Event *)event
 {
-    if (event.deviceType != Device_SystemAudio && ![event.device.manufacturer containsString:@"Apple"]) {
+    if (event.deviceType != LMDevice_SystemAudio && event.deviceType != LMDevice_Screen && ![event.device.manufacturer containsString:@"Apple"]) {
         return;
     }
-    AVDevice device = event.deviceType;
-    NSControlStateValue state = event.state;
+    LMDeviceType deviceType = event.deviceType;
     Client *client = event.client;
 
     NSMutableArray *resArray = [NSMutableArray array];
-    if (Device_Microphone == device) {
+    if (LMDevice_Microphone == deviceType) {
         if (client.pid.intValue > 0) {
-            //信息完整，开启，与单个关闭
+            //信息完整，开启
             NSMutableDictionary *dicItem = [[NSMutableDictionary alloc] init];
-            
-            dicItem[OWL_PROC_ID] = [NSNumber numberWithInt:client.pid.intValue];
-            dicItem[OWL_PROC_NAME] = [NSString stringWithUTF8String:client.name.UTF8String];
-            dicItem[OWL_PROC_PATH] = [NSString stringWithUTF8String:client.path.UTF8String];
-            dicItem[OWL_DEVICE_TYPE] = [NSNumber numberWithInt:device];
-            dicItem[OWL_DEVICE_NAME] = event.device.localizedName;
-            dicItem[OWL_BUNDLE_ID] = client.processBundleID;
-            dicItem[OWL_PROC_DELTA] = @(state == NSControlStateValueOn ? 1 : -1);
+            [self _setDictItem:dicItem event:event];
             
             [resArray addObject:dicItem];
             [self.owlAudioItemDic setObject:dicItem forKey:dicItem[OWL_PROC_ID]];
@@ -544,87 +323,28 @@ typedef void (^OwlCompleteBlock)(void);
             
             [self analyseDeviceInfoForNotificationWithArray:resArray];
             NSLog(@"!!!! mic %@ %@", dicItem[OWL_PROC_NAME], dicItem[OWL_PROC_DELTA]);
-        } else if (client.processBundleID) { //如果无 pid 且有 bundleID 说明用户单独阻止，进行单独配对
-            
-            for (NSString *key in self.owlAudioItemDic) {
-                NSMutableDictionary *dicItem = self.owlAudioItemDic[key];
-                if ([dicItem isKindOfClass:[NSMutableDictionary class]]) {
-                    if ([dicItem[OWL_BUNDLE_ID] isEqualToString:client.processBundleID]) {
-                        dicItem[OWL_PROC_DELTA] = @(-1);
-                        NSLog(@"!!!! mic %@ %@", dicItem[OWL_PROC_NAME], dicItem[OWL_PROC_DELTA]);
-                        [resArray addObject:dicItem];
-                    }
-                }
-            }
-            [self analyseDeviceInfoForNotificationWithArray:resArray];
         } else {
-            for (NSString *key in self.owlAudioItemDic) {
-                NSMutableDictionary *dicItem = self.owlAudioItemDic[key];
-                if ([dicItem isKindOfClass:[NSMutableDictionary class]]) {
-                    dicItem[OWL_PROC_DELTA] = @(-1);
-                    NSLog(@"!!!! mic %@ %@", dicItem[OWL_PROC_NAME], dicItem[OWL_PROC_DELTA]);
-                    [resArray addObject:dicItem];
-                }
-            }
-
-            [self analyseDeviceInfoForNotificationWithArray:resArray];
+            [self _processDictItem:self.owlAudioItemDic offEvent:event];
         }
-    } else if (Device_Camera == device) {
+    } else if (LMDevice_Camera == deviceType) {
         if (client.pid.intValue > 0) {
-            //信息完整
             NSMutableDictionary *dicItem = [[NSMutableDictionary alloc] init];
-            
-            dicItem[OWL_PROC_ID] = [NSNumber numberWithInt:client.pid.intValue];
-            dicItem[OWL_PROC_NAME] = [NSString stringWithUTF8String:client.name.UTF8String];
-            dicItem[OWL_PROC_PATH] = [NSString stringWithUTF8String:client.path.UTF8String];
-            dicItem[OWL_DEVICE_TYPE] = [NSNumber numberWithInt:device];
-            dicItem[OWL_DEVICE_NAME] = event.device.localizedName;
-            dicItem[OWL_BUNDLE_ID] = client.processBundleID;
-            dicItem[OWL_PROC_DELTA] = @(state == NSControlStateValueOn ? 1 : -1);
+            [self _setDictItem:dicItem event:event];
             
             [resArray addObject:dicItem];
-            [self.owlVedioItemDic setObject:dicItem forKey:dicItem[OWL_PROC_ID]];
+            [self.owlVideoItemDic setObject:dicItem forKey:dicItem[OWL_PROC_ID]];
             [self.notificationDetailArray addObjectsFromArray:resArray];
             [self analyseDeviceInfoForNotificationWithArray:resArray];
             NSLog(@"!!!! video %@ %@", dicItem[OWL_PROC_NAME], dicItem[OWL_PROC_DELTA]);
             
-        }  else if (client.processBundleID) {
-            
-            for (NSString *key in self.owlVedioItemDic) {
-                NSMutableDictionary *dicItem = self.owlVedioItemDic[key];
-                if ([dicItem isKindOfClass:[NSMutableDictionary class]]) {
-                    if ([dicItem[OWL_BUNDLE_ID] isEqualToString:client.processBundleID]) {
-                        dicItem[OWL_PROC_DELTA] = @(-1);
-                        NSLog(@"!!!! camera %@ %@", dicItem[OWL_PROC_NAME], dicItem[OWL_PROC_DELTA]);
-                        [resArray addObject:dicItem];
-                    }
-                }
-            }
-            [self analyseDeviceInfoForNotificationWithArray:resArray];
+        } else {
+            [self _processDictItem:self.owlVideoItemDic offEvent:event];
         }
-        else {
-            for (NSString *key in self.owlVedioItemDic) {
-                NSMutableDictionary *dicItem = self.owlVedioItemDic[key];
-                if ([dicItem isKindOfClass:[NSMutableDictionary class]]) {
-                    dicItem[OWL_PROC_DELTA] = [NSNumber numberWithInt:-1];
-                    NSLog(@"!!!! camera %@ %@", dicItem[OWL_PROC_NAME], dicItem[OWL_PROC_DELTA]);
-                    [resArray addObject:dicItem];
-                }
-            }
-
-            [self analyseDeviceInfoForNotificationWithArray:resArray];
-        }
-    } else if (device == Device_SystemAudio) {
+    } else if (deviceType == LMDevice_SystemAudio) {
         
         if (client.pid.intValue > 0) {
             NSMutableDictionary *dicItem = [[NSMutableDictionary alloc] init];
-            
-            dicItem[OWL_PROC_ID] = [NSNumber numberWithInt:client.pid.intValue];
-            dicItem[OWL_PROC_NAME] = [NSString stringWithUTF8String:client.name.UTF8String];
-            dicItem[OWL_PROC_PATH] = [NSString stringWithUTF8String:client.path.UTF8String];
-            dicItem[OWL_DEVICE_TYPE] = [NSNumber numberWithInt:device];
-            dicItem[OWL_BUNDLE_ID] = client.processBundleID;
-            dicItem[OWL_PROC_DELTA] = @(state == NSControlStateValueOn ? 1 : -1);
+            [self _setDictItem:dicItem event:event];
             
             [resArray addObject:dicItem];
             [self.owlSystemAudioItemDic setObject:dicItem forKey:dicItem[OWL_PROC_ID]];
@@ -632,78 +352,236 @@ typedef void (^OwlCompleteBlock)(void);
             [self analyseDeviceInfoForNotificationWithArray:resArray];
             NSLog(@"!!!! system audio %@ %@", dicItem[OWL_PROC_NAME], dicItem[OWL_PROC_DELTA]);
             
-        } else if (client.processBundleID) {
-            
-            for (NSString *key in self.owlSystemAudioItemDic) {
-                NSMutableDictionary *dicItem = self.owlSystemAudioItemDic[key];
-                if ([dicItem isKindOfClass:[NSMutableDictionary class]]) {
-                    if ([dicItem[OWL_BUNDLE_ID] isEqualToString:client.processBundleID]) {
-                        dicItem[OWL_PROC_DELTA] = @(-1);
-                        NSLog(@"!!!! system audio %@ %@", dicItem[OWL_PROC_NAME], dicItem[OWL_PROC_DELTA]);
-                        [resArray addObject:dicItem];
-                    }
-                }
-            }
-            [self analyseDeviceInfoForNotificationWithArray:resArray];
+        } else {
+            [self _processDictItem:self.owlSystemAudioItemDic offEvent:event];
         }
-        else {
-            for (NSString *key in self.owlSystemAudioItemDic) {
-                NSMutableDictionary *dicItem = self.owlSystemAudioItemDic[key];
-                if ([dicItem isKindOfClass:[NSMutableDictionary class]]) {
-                    dicItem[OWL_PROC_DELTA] = @(-1);
-                    NSLog(@"!!!! system audio %@ %@", dicItem[OWL_PROC_NAME], dicItem[OWL_PROC_DELTA]);
-                    [resArray addObject:dicItem];
+    } else if (deviceType == LMDevice_Screen) {
+        
+        if (client.pid.intValue > 0) {
+            
+            NSMutableDictionary *dicItem = [[NSMutableDictionary alloc] init];
+            [self _setDictItem:dicItem event:event];
+            
+            if (event.deviceExtra) {
+                [self _consumeScreenItem:dicItem screenShot:YES]; //是截屏
+            } else {
+                [self.owlScreenItemArray addObject:dicItem];
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    if ([self.owlScreenItemArray containsObject:dicItem]) {
+                        [self.owlScreenItemArray removeObject:dicItem];
+                        [self _processScreenCaptureAndShotConflicts:event];
+                        [self _consumeScreenItem:dicItem screenShot:NO]; // 一秒后没有结束事件判断是录屏
+                    }
+                });
+            }
+            
+        } else { //收到结束事件
+            BOOL isScreenShot = NO;
+            NSDictionary *deleteItem = nil;
+            for (NSMutableDictionary *item in self.owlScreenItemArray) {
+                if ([item[OWL_BUNDLE_ID] isEqualToString:client.processBundleID]) { //说明一秒内结束
+                    isScreenShot = YES;
+                    deleteItem = item;
+                    [self _consumeScreenItem:item screenShot:YES]; //是截屏
+                    break;
                 }
             }
-            [self analyseDeviceInfoForNotificationWithArray:resArray];
+            
+            if (!isScreenShot) {
+                [self _processScreenCaptureAndShotConflicts:event];  //结束录屏加入时限标识，时限内不展示截图通知
+                [self _processDictItem:self.owlScreenItemDic offEvent:event];
+            } else {
+                [self.owlScreenItemArray removeObject:deleteItem];
+            }
         }
     }
 }
 
-- (void)doOwlProcResultWithDeviceState:(int)deviceState complete: (OwlCompleteBlock) complete{
-    //11.3及以上系统暂时屏蔽隐私防护功能入口
-#if DISABLED_PRIVACY_MAX1103
-    if (@available(macOS 11.3, *)) {
-        return;
-    }
-#endif
-    if (!self.isWatchVideo && !self.isWatchAudio) {
-        complete();
-        return;
-    }
-    int deviceType = [self getDeviceType];
-    
-    __weak typeof(self) weakSelf = self;
-    dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        NSArray *resArray = [[McCoreFunction shareCoreFuction] getOwlDeviceProcInfo:deviceType deviceState:deviceState];
-        NSLog(@"%s, resArray.count = %lu",__FUNCTION__,resArray.count);
-        //NSLog(@"doOwlProcResultWithDeviceState: resArray %@", resArray);
-        if (resArray.count == 0) {
-            complete();
-            return;
+- (void)_consumeScreenItem:(NSMutableDictionary *)dicItem screenShot:(BOOL)isScreenShot
+{
+    NSMutableArray *resArray = [NSMutableArray array];
+    [resArray addObject:dicItem];
+    if (isScreenShot) {
+        NSString *bundleID = dicItem[OWL_BUNDLE_ID];
+        NSDate *lastScreenShotDate = self.appEventTimeDict[bundleID];
+        self.appEventTimeDict[bundleID] = [NSDate date];
+        if (lastScreenShotDate && -[lastScreenShotDate timeIntervalSinceNow] < 5) {
+            return; //过滤连续截屏事件
         }
-        dispatch_async(dispatch_get_main_queue(), ^{
-            //dic in array contain the follow three key:
-            //OWL_PROC_ID/OWL_PROC_NAME/OWL_PROC_PATH/OWL_PROC_DELTA/OWL_DEVICE_TYPE
-            [weakSelf.notificationDetailArray addObjectsFromArray:resArray];
-            [weakSelf analyseDeviceInfoForNotificationWithArray:resArray];
-            complete();
-        });
+        dicItem[OWL_DEVICE_EXTRA] = @(isScreenShot);
+        [self _processScreenShotEvent:dicItem];
+    } else {
+        //录屏需要配对
+        [self.owlScreenItemDic setObject:dicItem forKey:dicItem[OWL_PROC_ID]];
+        [self.notificationDetailArray addObjectsFromArray:resArray];
+        [self analyseDeviceInfoForNotificationWithArray:resArray];
+        NSLog(@"screen event %@ %@", dicItem[OWL_PROC_NAME], dicItem[OWL_PROC_DELTA]);
+    }
+}
+
+- (void)_processScreenCaptureAndShotConflicts:(Event *)event
+{
+    // 录屏的时候同时有截屏的通知，过滤截屏的
+    [self.dispatchedScreenCaptureEventArray addObject:event];
+    // 屏蔽截图两秒钟
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self.dispatchedScreenCaptureEventArray removeObject:event];
     });
 }
 
-- (int)getDeviceType {
-    int deviceType = 0;
-    BOOL tempWatchingVedio = self.isWatchVideo;
-    BOOL tempWatchingAudio = self.isWatchAudio;
-    if (tempWatchingVedio && !tempWatchingAudio) {
-        deviceType = 1;
-    } else if (!tempWatchingVedio && tempWatchingAudio) {
-        deviceType = 2;
-    } else if (tempWatchingVedio && tempWatchingAudio) {
-        deviceType = 4;
+
+// 目标app截图蒙版消失后再出现截屏通知
+- (void)_processScreenShotEvent:(NSDictionary *)dictItem
+{
+    if (!dictItem) return;
+    NSLog(@"screenshot event incoming %@", dictItem[OWL_PROC_NAME]);
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        pid_t pid = [dictItem[OWL_PROC_ID] intValue];
+        NSDictionary *frameWindow = [self _getScreenShotFrameWindowWithPid:pid];
+        if (!frameWindow) { //没有蒙版直接发通知
+            [self _dispathScreenShotEvent:dictItem];
+            NSLog(@"screenshot event no frame window %@", dictItem[OWL_PROC_NAME]);
+        } else {
+            if (!self.screenShotTimer) {
+                self.screenShotTimer = [NSTimer scheduledTimerWithTimeInterval:PPCheckScreenShotFrameWindowTimeInterval target:self selector:@selector(_checkScreenShotFrameWindowDisappear) userInfo:nil repeats:YES];
+            }
+            [self.screenShotEventArray addObject:dictItem];
+        }
+    });
+}
+
+- (void)_checkScreenShotFrameWindowDisappear
+{
+    NSMutableArray *updatedArray = [NSMutableArray new];
+    for (NSMutableDictionary *item in [self.screenShotEventArray copy]) {
+        NSString *frameCountKey = @"__frame_count";
+        pid_t pid = [item[OWL_PROC_ID] intValue];
+        int count = [item[frameCountKey] intValue];
+        count++;
+        item[frameCountKey] = @(count);
+        NSDictionary *frameWindow = [self _getScreenShotFrameWindowWithPid:pid];
+        if (frameWindow) {
+            if (count > 3600/PPCheckScreenShotFrameWindowTimeInterval) {//1小时超时
+                // 丢弃通知
+                NSLog(@"screenshot event frame window exist over time %@ %@", item[OWL_PROC_NAME], item[frameCountKey]);
+            } else {
+                [updatedArray addObject:item];
+                NSLog(@"screenshot event frame window still exist %@ %@", item[OWL_PROC_NAME], item[frameCountKey]);
+            }
+        } else {
+            item[frameCountKey] = nil;
+            [self _dispathScreenShotEvent:item];
+            NSLog(@"screenshot event frame window disappear %@", item[OWL_PROC_NAME]);
+        }
     }
-    return deviceType;
+    if (updatedArray.count <= 0) {
+        [self.screenShotTimer invalidate];
+        self.screenShotTimer = nil;
+    }
+    self.screenShotEventArray = updatedArray;
+    NSLog(@"screenshot event array count %ld", updatedArray.count);
+}
+
+- (void)_dispathScreenShotEvent:(NSDictionary *)item
+{
+    //截屏通知之前两秒内有录屏的，不发送截屏的
+    for (Event *event in [self.dispatchedScreenCaptureEventArray copy]) {
+        if ([event.client.processBundleID isEqualToString:item[OWL_BUNDLE_ID]]) {
+            return;
+        }
+    }
+    [self.notificationDetailArray addObjectsFromArray:@[item]];
+    [self analyseDeviceInfoForNotificationWithArray:@[item]];
+}
+
+// 获取截图蒙层窗口，根据大小和无name进行猜测判断
+- (NSDictionary *)_getScreenShotFrameWindowWithPid:(pid_t)pid
+{
+    NSArray *windowList = [self _getCurrentWindows];
+    for (NSDictionary *window in windowList) {
+        pid_t windowPid = [window[(id)kCGWindowOwnerPID] intValue];
+        CFDictionaryRef boundsDict = (__bridge CFDictionaryRef)(window[(id)kCGWindowBounds]);
+        CGRect bounds = CGRectZero;
+        CGRectMakeWithDictionaryRepresentation(boundsDict, &bounds);
+        CGRect mainBounds = [NSScreen mainScreen].frame;
+        NSString *name = window[(id)kCGWindowName];
+        if (windowPid == pid && CGSizeEqualToSize(bounds.size, mainBounds.size) && name.length == 0) {
+            return window;
+        }
+    }
+    return nil;
+}
+
+- (NSArray<NSDictionary*> *)_getCurrentWindows {
+    CFArrayRef windowList = CGWindowListCopyWindowInfo(
+        kCGWindowListOptionOnScreenOnly | kCGWindowListExcludeDesktopElements,
+        kCGNullWindowID
+    );
+    NSArray *array = (__bridge NSArray *)(windowList);
+    NSMutableArray *result = [NSMutableArray new];
+    for (NSDictionary *dict in array) {
+        NSInteger windowLevel = [dict[(id)kCGWindowLayer] integerValue];
+        if (windowLevel != kCGStatusWindowLevel && windowLevel != kCGDockWindowLevel) {
+            [result addObject:dict];
+        }
+    }
+    CFBridgingRelease(windowList);
+    return result;
+}
+
+- (void)_processDictItem:(NSMutableDictionary *)dict offEvent:(Event *)event
+{
+    Client *client = event.client;
+    NSMutableArray *resArray = [NSMutableArray array];
+    //如果无 pid 且有 bundleID 说明用户单独阻止，进行单独配对
+    if (client.processBundleID) {
+        [self _matchDictItem:dict event:event resArray:resArray];
+        [self analyseDeviceInfoForNotificationWithArray:resArray];
+    }
+    else {
+        [self _matchAllDictItem:dict resArray:resArray];
+        [self analyseDeviceInfoForNotificationWithArray:resArray];
+    }
+}
+
+- (void)_setDictItem:(NSMutableDictionary *)dict event:(Event *)event
+{
+    NSControlStateValue state = event.state;
+    Client *client = event.client;
+    dict[OWL_PROC_ID] = client.pid;
+    dict[OWL_PROC_NAME] = client.name;
+    dict[OWL_PROC_PATH] = client.path;
+    dict[OWL_DEVICE_TYPE] = @(event.deviceType);
+    dict[OWL_DEVICE_NAME] = event.device.localizedName;
+    dict[OWL_BUNDLE_ID] = client.processBundleID;
+    dict[OWL_PROC_DELTA] = @(state == NSControlStateValueOn ? 1 : -1);
+}
+
+- (void)_matchDictItem:(NSDictionary *)dict event:(Event *)event resArray:(NSMutableArray *)resArray;
+{
+    Client *client = event.client;
+    for (NSString *key in dict) {
+        NSMutableDictionary *dicItem = dict[key];
+        if ([dicItem isKindOfClass:[NSMutableDictionary class]]) {
+            if ([dicItem[OWL_BUNDLE_ID] isEqualToString:client.processBundleID]) {
+                dicItem[OWL_PROC_DELTA] = @(-1);
+                NSLog(@"!!!! deviceType:%@ %@ %@", dicItem[OWL_DEVICE_TYPE], dicItem[OWL_PROC_NAME], dicItem[OWL_PROC_DELTA]);
+                [resArray addObject:dicItem];
+            }
+        }
+    }
+}
+
+- (void)_matchAllDictItem:(NSDictionary *)dict resArray:(NSMutableArray *)resArray;
+{
+    for (NSString *key in dict) {
+        NSMutableDictionary *dicItem = dict[key];
+        if ([dicItem isKindOfClass:[NSMutableDictionary class]]) {
+            dicItem[OWL_PROC_DELTA] = @(-1);
+            NSLog(@"!!!! deviceType:%@ %@ %@", dicItem[OWL_DEVICE_TYPE], dicItem[OWL_PROC_NAME], dicItem[OWL_PROC_DELTA]);
+            [resArray addObject:dicItem];
+        }
+    }
 }
 
 - (NSString *)_audioName
@@ -715,6 +593,14 @@ typedef void (^OwlCompleteBlock)(void);
 {
     return [self.avMonitor.builtInCamera.manufacturer stringByAppendingString:self.avMonitor.builtInCamera.localizedName];
 }
+
+- (void)killAppWithDictItem:(NSDictionary *)dictItem;
+{
+    if ([dictItem[OWL_DEVICE_TYPE] intValue] == LMDevice_Screen) {
+        [self.avMonitor killScreenCaptureAppWithBundleID:dictItem[OWL_BUNDLE_ID]];
+    }
+}
+
 
 @end
 

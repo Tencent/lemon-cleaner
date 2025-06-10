@@ -129,7 +129,7 @@
 - (NSTextField *)tipTF {
     if (!_tipTF) {
         _tipTF = [LMViewHelper createNormalLabel:12 fontColor:[LMAppThemeHelper getTitleColor]];
-        _tipTF.stringValue = NSLocalizedString(@"开启保护，防止隐私设备异常使用", nil);
+        _tipTF.stringValue = NSLocalizedString(@"升级守护，全场景保护设备隐私", nil);
         _tipTF.maximumNumberOfLines = 1;
         if([LanguageHelper getCurrentSystemLanguageType] == SystemLanguageTypeEnglish){
             _tipTF.maximumNumberOfLines = 2;

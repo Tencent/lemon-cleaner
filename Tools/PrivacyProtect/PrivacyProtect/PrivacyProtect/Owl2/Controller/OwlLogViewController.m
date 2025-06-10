@@ -91,13 +91,21 @@
         
         [self.labelTime mas_makeConstraints:^(MASConstraintMaker *make) {
             make.centerY.equalTo(self);
-            make.left.equalTo(self.mas_left).offset(180);
+            if([LanguageHelper getCurrentSystemLanguageType] == SystemLanguageTypeEnglish){
+                make.left.equalTo(self.mas_left).offset(165);
+            } else {
+                make.left.equalTo(self.mas_left).offset(180);
+            }
             make.width.equalTo(@140);
         }];
         
         [self.labelEvent mas_makeConstraints:^(MASConstraintMaker *make) {
             make.centerY.equalTo(self);
-            make.left.equalTo(self.mas_left).offset(350);
+            if([LanguageHelper getCurrentSystemLanguageType] == SystemLanguageTypeEnglish){
+                make.left.equalTo(self.mas_left).offset(335);
+            } else {
+                make.left.equalTo(self.mas_left).offset(350);
+            }
             make.right.lessThanOrEqualTo(self.labelOperation.mas_left).offset(-4);
         }];
         
@@ -148,6 +156,7 @@
         [tableView setSelectionHighlightStyle:NSTableViewSelectionHighlightStyleRegular];
         [tableView setAutoresizesSubviews:YES];
         tableView.headerView = nil;
+        tableView.intercellSpacing = NSMakeSize(0, 0);
         if (@available(macOS 11.0, *)) {
             tableView.style = NSTableViewStyleFullWidth;
         }
@@ -203,7 +212,7 @@
         tfTitle.bordered = NO;
         tfTitle.editable = NO;
         tfTitle.backgroundColor = [NSColor clearColor];
-        tfTitle.stringValue = NSLocalizedStringFromTableInBundle(@"OwlLogViewController_initWithFrame_tfTitle_1", nil, [NSBundle bundleForClass:[self class]], @"");
+        tfTitle.stringValue = LMLocalizedSelfBundleString(@"监控日志", nil);
         tfTitle.font = [NSFontHelper getMediumSystemFont:16];
         tfTitle.textColor = [LMAppThemeHelper getTitleColor];
         [contentView addSubview:tfTitle];
@@ -219,7 +228,7 @@
         labelProcess.alignment = NSTextAlignmentLeft;
         labelProcess.bordered = NO;
         labelProcess.editable = NO;
-        labelProcess.stringValue = NSLocalizedStringFromTableInBundle(@"软件进程", nil, [NSBundle bundleForClass:[self class]], nil);
+        labelProcess.stringValue = LMLocalizedSelfBundleString(@"软件进程", nil);
         labelProcess.backgroundColor = [NSColor clearColor];
         labelProcess.font = [NSFontHelper getMediumSystemFont:12];
         labelProcess.textColor = [LMAppThemeHelper getSecondTextColor];
@@ -229,7 +238,7 @@
         labelTime.alignment = NSTextAlignmentLeft;
         labelTime.bordered = NO;
         labelTime.editable = NO;
-        labelTime.stringValue = NSLocalizedStringFromTableInBundle(@"OwlLogViewController_initWithFrame_labelTime_2", nil, [NSBundle bundleForClass:[self class]], @"");
+        labelTime.stringValue = LMLocalizedSelfBundleString(@"时间", nil);
         labelTime.backgroundColor = [NSColor clearColor];
         labelTime.font = [NSFontHelper getMediumSystemFont:12];
         labelTime.textColor = [LMAppThemeHelper getSecondTextColor];
@@ -239,7 +248,7 @@
         labelEvent.alignment = NSTextAlignmentLeft;
         labelEvent.bordered = NO;
         labelEvent.editable = NO;
-        labelEvent.stringValue = NSLocalizedStringFromTableInBundle(@"OwlLogViewController_initWithFrame_labelEvent_3", nil, [NSBundle bundleForClass:[self class]], @"");
+        labelEvent.stringValue = LMLocalizedSelfBundleString(@"事件", nil);
         labelEvent.backgroundColor = [NSColor clearColor];
         labelEvent.font = [NSFontHelper getMediumSystemFont:12];
         labelEvent.textColor = [LMAppThemeHelper getSecondTextColor];
@@ -249,7 +258,7 @@
         labelOperation.alignment = NSTextAlignmentLeft;
         labelOperation.bordered = NO;
         labelOperation.editable = NO;
-        labelOperation.stringValue = NSLocalizedStringFromTableInBundle(@"操作记录", nil, [NSBundle bundleForClass:[self class]], nil);
+        labelOperation.stringValue = LMLocalizedSelfBundleString(@"操作记录", nil);
         labelOperation.backgroundColor = [NSColor clearColor];
         labelOperation.font = [NSFontHelper getMediumSystemFont:12];
         labelOperation.textColor = [LMAppThemeHelper getSecondTextColor];
@@ -272,7 +281,11 @@
         [labelTime mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(@(52));
             if (@available(macOS 11.0, *)) {
-                make.left.equalTo(@(180+5));
+                if([LanguageHelper getCurrentSystemLanguageType] == SystemLanguageTypeEnglish){
+                    make.left.equalTo(@(165+5));
+                } else {
+                    make.left.equalTo(@(180+5));
+                }
             } else {
                 make.left.equalTo(@180);
             }
@@ -281,7 +294,11 @@
         [labelEvent mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(@(52));
             if (@available(macOS 11.0, *)) {
-                make.left.equalTo(@(350+5));
+                if([LanguageHelper getCurrentSystemLanguageType] == SystemLanguageTypeEnglish){
+                    make.left.equalTo(@(335+5));
+                } else {
+                    make.left.equalTo(@(350+5));
+                }
             } else {
                 make.left.equalTo(@(350));
             }
@@ -386,7 +403,7 @@
     
     NSString *appActionStr = @"";
     switch (appAction.intValue) {
-        case Owl2LogAppActionStart:
+        case Owl2LogThirdAppActionStart:
             if (hardware.intValue == Owl2LogHardwareSystemAudio) {
                 appActionStr = @"开始录制";
             } else {
@@ -394,14 +411,22 @@
             }
             
             break;
-        case Owl2LogAppActionStop:
+        case Owl2LogThirdAppActionStartForScreenshot:
+            appActionStr = @"已截取";
+            break;
+        case Owl2LogThirdAppActionStartForScreenRecording:
+            appActionStr = @"开始录制";
+            break;
+        case Owl2LogThirdAppActionStop:
             if (hardware.intValue == Owl2LogHardwareSystemAudio) {
                 appActionStr = @"结束录制";
             } else {
                 appActionStr = @"停止使用";
             }
             break;
-        case Owl2LogAppActionNone:
+        case Owl2LogThirdAppActionStopForScreenRecording:
+            appActionStr = @"结束录制";
+            break;
         default:
             break;
     }
@@ -417,30 +442,35 @@
         case Owl2LogHardwareSystemAudio:
             hardwareStr = @"扬声器音频";
             break;
+        case Owl2LogHardwareScreen:
+            hardwareStr = @"屏幕内容";
+            break;
         default:
             break;
     }
     
     NSString *eventStr = [NSString stringWithFormat:@"%@%@", appActionStr, hardwareStr];
-    view.labelEvent.stringValue = NSLocalizedStringFromTableInBundle(eventStr, nil, [NSBundle bundleForClass:[self class]], nil);;
+    view.labelEvent.stringValue = LMLocalizedSelfBundleString(eventStr, nil);;
     
     NSString *userActionStr = @"";
     switch (userAction.intValue) {
         case Owl2LogUserActionAllow:
-            userActionStr = NSLocalizedStringFromTableInBundle(@"本次允许", nil, [NSBundle bundleForClass:[self class]], nil);
+            userActionStr = LMLocalizedSelfBundleString(@"本次允许", nil);
             break;
         case Owl2LogUserActionDefaultAllow: // 20s自动消失
         case Owl2LogUserActionClose:
         case Owl2LogUserActionContent:
-            if (appAction.intValue == Owl2LogAppActionStart) {
-                userActionStr = NSLocalizedStringFromTableInBundle(@"默认允许", nil, [NSBundle bundleForClass:[self class]], nil);
+            if (appAction.intValue == Owl2LogThirdAppActionStart ||
+                appAction.intValue == Owl2LogThirdAppActionStartForScreenRecording ||
+                appAction.intValue == Owl2LogThirdAppActionStartForScreenshot) {
+                userActionStr = LMLocalizedSelfBundleString(@"默认允许", nil);
             }
             break;
         case Owl2LogUserActionAlwaysAllowed:
-            userActionStr = NSLocalizedStringFromTableInBundle(@"永久允许", nil, [NSBundle bundleForClass:[self class]], nil);
+            userActionStr = LMLocalizedSelfBundleString(@"永久允许", nil);
             break;
         case Owl2LogUserActionPrevent:
-            userActionStr = NSLocalizedStringFromTableInBundle(@"阻止", nil, [NSBundle bundleForClass:[self class]], nil);
+            userActionStr = LMLocalizedSelfBundleString(@"阻止", nil);
             break;
         case Owl2LogUserActionNone:
         default:

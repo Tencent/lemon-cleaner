@@ -31,7 +31,21 @@
     if ([aView isKindOfClass:[CategoryCellView class]] ||[aView isKindOfClass:[SubCategoryCellView class]])
     {
         BigCleanParaentCellView * tableCell = (BigCleanParaentCellView *)aView;
-        [tableCell setFrameSize:NSMakeSize(self.frame.size.width - tableCell.frame.origin.x, tableCell.frame.size.height)];
+        
+        // 使用masonry。直接设置frame，滚动的时候会闪sizeLabel，理论上应该是兼容11
+        float left = tableCell.frame.origin.x;
+        float width = self.frame.size.width - left;
+        float height = tableCell.frame.size.height;
+        if (@available(macOS 12.0, *)) {
+            [tableCell mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.left.mas_equalTo(left);
+                make.width.mas_equalTo(width);
+                make.height.mas_equalTo(height);
+                make.centerY.equalTo(self);
+            }];
+        } else {
+            [tableCell setFrameSize:NSMakeSize(width, height)];
+        }
     }
     if ([aView isKindOfClass:[NSButton class]])
     {

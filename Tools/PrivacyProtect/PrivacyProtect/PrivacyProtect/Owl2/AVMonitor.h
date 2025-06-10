@@ -30,6 +30,7 @@ typedef void (^AVMonitorEventBlock)(Event* event);
 @property(nonatomic, retain) LogMonitor* audio13logMonitor;
 
 @property(nonatomic, retain) LogMonitor* controlCenterLogMonitor;
+@property(nonatomic, retain) LogMonitor* screenLogMonitor;
 
 //event callback
 @property(nonatomic, copy) AVMonitorEventBlock eventCallback;
@@ -92,6 +93,8 @@ typedef void (^AVMonitorEventBlock)(Event* event);
 
 //enumerate active devices
 -(NSMutableArray*)enumerateActiveDevices;
+
+- (void)killScreenCaptureAppWithBundleID:(NSString *)bundleID;
 
 //stop
 -(void)stop;

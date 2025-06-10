@@ -16,18 +16,31 @@
 		52289FA72D9BD561006FF54E /* Owl2Manager+Database.h in Headers */ = {isa = PBXBuildFile; fileRef = 52289FA42D9BD561006FF54E /* Owl2Manager+Database.h */; };
 		52289FC02D9D4A8B006FF54E /* Owl2Manager+Notification.m in Sources */ = {isa = PBXBuildFile; fileRef = 52289FBF2D9D4A8B006FF54E /* Owl2Manager+Notification.m */; };
 		52289FC12D9D4A8B006FF54E /* Owl2Manager+Notification.h in Headers */ = {isa = PBXBuildFile; fileRef = 52289FBE2D9D4A8B006FF54E /* Owl2Manager+Notification.h */; };
+		52FDDEDC2DD2EDB000EFDD73 /* PrivacyProtect-Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = 52FDDEDB2DD2EDB000EFDD73 /* PrivacyProtect-Prefix.pch */; };
 		B71E86032DB22F3E000DB7C0 /* Owl2Manager+Guide.h in Headers */ = {isa = PBXBuildFile; fileRef = B71E86012DB22F3E000DB7C0 /* Owl2Manager+Guide.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B71E86042DB22F3E000DB7C0 /* Owl2Manager+Guide.m in Sources */ = {isa = PBXBuildFile; fileRef = B71E86022DB22F3E000DB7C0 /* Owl2Manager+Guide.m */; };
+		B77131BE2DE5D9D20074302E /* NSAlert+OwlExtend.h in Headers */ = {isa = PBXBuildFile; fileRef = B77131BC2DE5D9D20074302E /* NSAlert+OwlExtend.h */; };
+		B77131BF2DE5D9D20074302E /* NSAlert+OwlExtend.m in Sources */ = {isa = PBXBuildFile; fileRef = B77131BD2DE5D9D20074302E /* NSAlert+OwlExtend.m */; };
+		B77E9C0F2DD31F050050712D /* Owl2AppItem.m in Sources */ = {isa = PBXBuildFile; fileRef = B77E9C0E2DD31F050050712D /* Owl2AppItem.m */; };
+		B77E9C102DD31F050050712D /* Owl2AppItem.h in Headers */ = {isa = PBXBuildFile; fileRef = B77E9C0D2DD31F050050712D /* Owl2AppItem.h */; };
+		B77E9C132DD31F620050712D /* Owl2LogProcessItem.m in Sources */ = {isa = PBXBuildFile; fileRef = B77E9C122DD31F620050712D /* Owl2LogProcessItem.m */; };
+		B77E9C142DD31F620050712D /* Owl2LogProcessItem.h in Headers */ = {isa = PBXBuildFile; fileRef = B77E9C112DD31F620050712D /* Owl2LogProcessItem.h */; };
+		B78CE37E2DD329EE00043976 /* Owl2NotificationItem.m in Sources */ = {isa = PBXBuildFile; fileRef = B78CE37D2DD329EE00043976 /* Owl2NotificationItem.m */; };
+		B78CE37F2DD329EE00043976 /* Owl2NotificationItem.h in Headers */ = {isa = PBXBuildFile; fileRef = B78CE37C2DD329EE00043976 /* Owl2NotificationItem.h */; };
+		B795DBF22DDD7AC5005A0C2E /* Owl2DeviceProtectionSwitchView.m in Sources */ = {isa = PBXBuildFile; fileRef = B795DBF12DDD7AC5005A0C2E /* Owl2DeviceProtectionSwitchView.m */; };
+		B795DBF32DDD7AC5005A0C2E /* Owl2DeviceProtectionSwitchView.h in Headers */ = {isa = PBXBuildFile; fileRef = B795DBF02DDD7AC5005A0C2E /* Owl2DeviceProtectionSwitchView.h */; };
 		B7AE642F2DB8896C006F128C /* OwlSelectViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B7AE642E2DB8896C006F128C /* OwlSelectViewController.m */; };
 		B7AE64302DB8896C006F128C /* OwlSelectViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = B7AE642D2DB8896C006F128C /* OwlSelectViewController.h */; };
 		B7BDBD022DB77C1B00FB5ADF /* NSUserNotification+QMExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = B7BDBD012DB77C1B00FB5ADF /* NSUserNotification+QMExtensions.m */; };
 		B7BDBD032DB77C1B00FB5ADF /* NSUserNotification+QMExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = B7BDBD002DB77C1B00FB5ADF /* NSUserNotification+QMExtensions.h */; };
 		B7BDBD242DB851CF00FB5ADF /* Owl2Manager+LocaFile.m in Sources */ = {isa = PBXBuildFile; fileRef = B7BDBD232DB851CF00FB5ADF /* Owl2Manager+LocaFile.m */; };
 		B7BDBD252DB851CF00FB5ADF /* Owl2Manager+LocaFile.h in Headers */ = {isa = PBXBuildFile; fileRef = B7BDBD222DB851CF00FB5ADF /* Owl2Manager+LocaFile.h */; };
+		B7D5A8A72DD5A49800635656 /* Owl2SelectAppItem.m in Sources */ = {isa = PBXBuildFile; fileRef = B7D5A8A62DD5A49800635656 /* Owl2SelectAppItem.m */; };
+		B7D5A8A82DD5A49800635656 /* Owl2SelectAppItem.h in Headers */ = {isa = PBXBuildFile; fileRef = B7D5A8A52DD5A49800635656 /* Owl2SelectAppItem.h */; };
 		B7D8F5572DB5E2AF00D5D00E /* OwlNotificationPermissionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B7D8F5562DB5E2AF00D5D00E /* OwlNotificationPermissionViewController.m */; };
 		B7D8F5582DB5E2AF00D5D00E /* OwlNotificationPermissionViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = B7D8F5552DB5E2AF00D5D00E /* OwlNotificationPermissionViewController.h */; };
 		B7FCD2412C2AB88D00351D31 /* QMUserNotificationCenter.h in Headers */ = {isa = PBXBuildFile; fileRef = D49FA51B21DDA626004A416E /* QMUserNotificationCenter.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		C056A793D8556494C303D17F /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
+		C056A793D8556494C303D17F /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		C4B3172B26458232006FC154 /* AVMonitor.h in Headers */ = {isa = PBXBuildFile; fileRef = C4B3172226458232006FC154 /* AVMonitor.h */; };
 		C4B3172C26458232006FC154 /* Client.h in Headers */ = {isa = PBXBuildFile; fileRef = C4B3172326458232006FC154 /* Client.h */; };
 		C4B3172D26458232006FC154 /* utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = C4B3172426458232006FC154 /* utilities.h */; };
@@ -39,16 +52,7 @@
 		C4B3173326458232006FC154 /* consts.h in Headers */ = {isa = PBXBuildFile; fileRef = C4B3172A26458232006FC154 /* consts.h */; };
 		D49FA45221DDA0F2004A416E /* PrivacyProtect.h in Headers */ = {isa = PBXBuildFile; fileRef = D49FA45021DDA0F2004A416E /* PrivacyProtect.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D49FA4F821DDA5D9004A416E /* owlAsset.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D49FA4D421DDA5D9004A416E /* owlAsset.xcassets */; };
-		D49FA4F921DDA5D9004A416E /* OwlManager.h in Headers */ = {isa = PBXBuildFile; fileRef = D49FA4D621DDA5D9004A416E /* OwlManager.h */; };
 		D49FA4FA21DDA5D9004A416E /* OwlConstant.h in Headers */ = {isa = PBXBuildFile; fileRef = D49FA4D721DDA5D9004A416E /* OwlConstant.h */; };
-		D49FA4FB21DDA5D9004A416E /* CameraDeviceModel.m in Sources */ = {isa = PBXBuildFile; fileRef = D49FA4D921DDA5D9004A416E /* CameraDeviceModel.m */; };
-		D49FA4FC21DDA5D9004A416E /* AudioDeviceModel.h in Headers */ = {isa = PBXBuildFile; fileRef = D49FA4DA21DDA5D9004A416E /* AudioDeviceModel.h */; };
-		D49FA4FD21DDA5D9004A416E /* CameraObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = D49FA4DB21DDA5D9004A416E /* CameraObserver.m */; };
-		D49FA4FE21DDA5D9004A416E /* AudioObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = D49FA4DC21DDA5D9004A416E /* AudioObserver.m */; };
-		D49FA4FF21DDA5D9004A416E /* CameraObserver.h in Headers */ = {isa = PBXBuildFile; fileRef = D49FA4DD21DDA5D9004A416E /* CameraObserver.h */; };
-		D49FA50021DDA5D9004A416E /* AudioDeviceModel.m in Sources */ = {isa = PBXBuildFile; fileRef = D49FA4DE21DDA5D9004A416E /* AudioDeviceModel.m */; };
-		D49FA50121DDA5D9004A416E /* CameraDeviceModel.h in Headers */ = {isa = PBXBuildFile; fileRef = D49FA4DF21DDA5D9004A416E /* CameraDeviceModel.h */; };
-		D49FA50221DDA5D9004A416E /* AudioObserver.h in Headers */ = {isa = PBXBuildFile; fileRef = D49FA4E021DDA5D9004A416E /* AudioObserver.h */; };
 		D49FA50321DDA5D9004A416E /* OwlLogViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D49FA4E221DDA5D9004A416E /* OwlLogViewController.m */; };
 		D49FA50521DDA5D9004A416E /* OwlTableRowView.m in Sources */ = {isa = PBXBuildFile; fileRef = D49FA4E421DDA5D9004A416E /* OwlTableRowView.m */; };
 		D49FA50821DDA5D9004A416E /* OwlWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = D49FA4E721DDA5D9004A416E /* OwlWindowController.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -59,7 +63,6 @@
 		D49FA51421DDA5D9004A416E /* OwlViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D49FA4F321DDA5D9004A416E /* OwlViewController.m */; };
 		D49FA51521DDA5D9004A416E /* OwlWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = D49FA4F421DDA5D9004A416E /* OwlWindowController.m */; };
 		D49FA51721DDA5D9004A416E /* OwlWhiteListViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = D49FA4F621DDA5D9004A416E /* OwlWhiteListViewController.h */; };
-		D49FA51821DDA5D9004A416E /* OwlManager.m in Sources */ = {isa = PBXBuildFile; fileRef = D49FA4F721DDA5D9004A416E /* OwlManager.m */; };
 		D49FA52421DDA73D004A416E /* QMMobileConnNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = D49FA51A21DDA626004A416E /* QMMobileConnNotification.m */; };
 		D49FA52521DDA73D004A416E /* QMUserNotificationCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = D49FA51C21DDA626004A416E /* QMUserNotificationCenter.m */; };
 		D4ACC033221D76C500DF0B7B /* LemonDaemonConst.h in Headers */ = {isa = PBXBuildFile; fileRef = D4ACC032221D76C500DF0B7B /* LemonDaemonConst.h */; };
@@ -71,7 +74,6 @@
 /* Begin PBXFileReference section */
 		2A2853E72DCAF8F7004DD03D /* OwlListPlaceHolderView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OwlListPlaceHolderView.h; sourceTree = "<group>"; };
 		2A2853E82DCAF8F7004DD03D /* OwlListPlaceHolderView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OwlListPlaceHolderView.m; sourceTree = "<group>"; };
-		2B49085CBE495C20218CD17C /* Pods_PrivacyProtect.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PrivacyProtect.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		339CCC672D97D95D00F8C67A /* Owl2Manager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Owl2Manager.h; sourceTree = "<group>"; };
 		339CCC682D97D95D00F8C67A /* Owl2Manager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Owl2Manager.m; sourceTree = "<group>"; };
 		36273651694F1319C6620B60 /* Pods_PrivacyProtect.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PrivacyProtect.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -79,19 +81,31 @@
 		52289FA52D9BD561006FF54E /* Owl2Manager+Database.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "Owl2Manager+Database.m"; sourceTree = "<group>"; };
 		52289FBE2D9D4A8B006FF54E /* Owl2Manager+Notification.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Owl2Manager+Notification.h"; sourceTree = "<group>"; };
 		52289FBF2D9D4A8B006FF54E /* Owl2Manager+Notification.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "Owl2Manager+Notification.m"; sourceTree = "<group>"; };
+		52FDDEDB2DD2EDB000EFDD73 /* PrivacyProtect-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PrivacyProtect-Prefix.pch"; sourceTree = "<group>"; };
 		84ABFFA76FCAA860B1D880C4 /* Pods-PrivacyProtect.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PrivacyProtect.debug.xcconfig"; path = "../../Pods/Target Support Files/Pods-PrivacyProtect/Pods-PrivacyProtect.debug.xcconfig"; sourceTree = "<group>"; };
 		B3B01B25E9CCD907438AA8D3 /* Pods-PrivacyProtect.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PrivacyProtect.release.xcconfig"; path = "../../Pods/Target Support Files/Pods-PrivacyProtect/Pods-PrivacyProtect.release.xcconfig"; sourceTree = "<group>"; };
 		B71E86012DB22F3E000DB7C0 /* Owl2Manager+Guide.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Owl2Manager+Guide.h"; sourceTree = "<group>"; };
 		B71E86022DB22F3E000DB7C0 /* Owl2Manager+Guide.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "Owl2Manager+Guide.m"; sourceTree = "<group>"; };
+		B77131BC2DE5D9D20074302E /* NSAlert+OwlExtend.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSAlert+OwlExtend.h"; sourceTree = "<group>"; };
+		B77131BD2DE5D9D20074302E /* NSAlert+OwlExtend.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSAlert+OwlExtend.m"; sourceTree = "<group>"; };
+		B77E9C0D2DD31F050050712D /* Owl2AppItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Owl2AppItem.h; sourceTree = "<group>"; };
+		B77E9C0E2DD31F050050712D /* Owl2AppItem.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Owl2AppItem.m; sourceTree = "<group>"; };
+		B77E9C112DD31F620050712D /* Owl2LogProcessItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Owl2LogProcessItem.h; sourceTree = "<group>"; };
+		B77E9C122DD31F620050712D /* Owl2LogProcessItem.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Owl2LogProcessItem.m; sourceTree = "<group>"; };
+		B78CE37C2DD329EE00043976 /* Owl2NotificationItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Owl2NotificationItem.h; sourceTree = "<group>"; };
+		B78CE37D2DD329EE00043976 /* Owl2NotificationItem.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Owl2NotificationItem.m; sourceTree = "<group>"; };
+		B795DBF02DDD7AC5005A0C2E /* Owl2DeviceProtectionSwitchView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Owl2DeviceProtectionSwitchView.h; sourceTree = "<group>"; };
+		B795DBF12DDD7AC5005A0C2E /* Owl2DeviceProtectionSwitchView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Owl2DeviceProtectionSwitchView.m; sourceTree = "<group>"; };
 		B7AE642D2DB8896C006F128C /* OwlSelectViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OwlSelectViewController.h; sourceTree = "<group>"; };
 		B7AE642E2DB8896C006F128C /* OwlSelectViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OwlSelectViewController.m; sourceTree = "<group>"; };
 		B7BDBD002DB77C1B00FB5ADF /* NSUserNotification+QMExtensions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSUserNotification+QMExtensions.h"; sourceTree = "<group>"; };
 		B7BDBD012DB77C1B00FB5ADF /* NSUserNotification+QMExtensions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSUserNotification+QMExtensions.m"; sourceTree = "<group>"; };
 		B7BDBD222DB851CF00FB5ADF /* Owl2Manager+LocaFile.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Owl2Manager+LocaFile.h"; sourceTree = "<group>"; };
 		B7BDBD232DB851CF00FB5ADF /* Owl2Manager+LocaFile.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "Owl2Manager+LocaFile.m"; sourceTree = "<group>"; };
+		B7D5A8A52DD5A49800635656 /* Owl2SelectAppItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Owl2SelectAppItem.h; sourceTree = "<group>"; };
+		B7D5A8A62DD5A49800635656 /* Owl2SelectAppItem.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Owl2SelectAppItem.m; sourceTree = "<group>"; };
 		B7D8F5552DB5E2AF00D5D00E /* OwlNotificationPermissionViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OwlNotificationPermissionViewController.h; sourceTree = "<group>"; };
 		B7D8F5562DB5E2AF00D5D00E /* OwlNotificationPermissionViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OwlNotificationPermissionViewController.m; sourceTree = "<group>"; };
-		C2131997E6EEEBA7C9A71607 /* Pods-PrivacyProtect.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PrivacyProtect.release.xcconfig"; path = "../../Pods/Target Support Files/Pods-PrivacyProtect/Pods-PrivacyProtect.release.xcconfig"; sourceTree = "<group>"; };
 		C4B3172226458232006FC154 /* AVMonitor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AVMonitor.h; sourceTree = "<group>"; };
 		C4B3172326458232006FC154 /* Client.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Client.h; sourceTree = "<group>"; };
 		C4B3172426458232006FC154 /* utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utilities.h; sourceTree = "<group>"; };
@@ -105,16 +119,7 @@
 		D49FA45021DDA0F2004A416E /* PrivacyProtect.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrivacyProtect.h; sourceTree = "<group>"; };
 		D49FA45121DDA0F2004A416E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D49FA4D421DDA5D9004A416E /* owlAsset.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = owlAsset.xcassets; sourceTree = "<group>"; };
-		D49FA4D621DDA5D9004A416E /* OwlManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OwlManager.h; sourceTree = "<group>"; };
 		D49FA4D721DDA5D9004A416E /* OwlConstant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OwlConstant.h; sourceTree = "<group>"; };
-		D49FA4D921DDA5D9004A416E /* CameraDeviceModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CameraDeviceModel.m; sourceTree = "<group>"; };
-		D49FA4DA21DDA5D9004A416E /* AudioDeviceModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioDeviceModel.h; sourceTree = "<group>"; };
-		D49FA4DB21DDA5D9004A416E /* CameraObserver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CameraObserver.m; sourceTree = "<group>"; };
-		D49FA4DC21DDA5D9004A416E /* AudioObserver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioObserver.m; sourceTree = "<group>"; };
-		D49FA4DD21DDA5D9004A416E /* CameraObserver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CameraObserver.h; sourceTree = "<group>"; };
-		D49FA4DE21DDA5D9004A416E /* AudioDeviceModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioDeviceModel.m; sourceTree = "<group>"; };
-		D49FA4DF21DDA5D9004A416E /* CameraDeviceModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CameraDeviceModel.h; sourceTree = "<group>"; };
-		D49FA4E021DDA5D9004A416E /* AudioObserver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioObserver.h; sourceTree = "<group>"; };
 		D49FA4E221DDA5D9004A416E /* OwlLogViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OwlLogViewController.m; sourceTree = "<group>"; };
 		D49FA4E421DDA5D9004A416E /* OwlTableRowView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OwlTableRowView.m; sourceTree = "<group>"; };
 		D49FA4E721DDA5D9004A416E /* OwlWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OwlWindowController.h; sourceTree = "<group>"; };
@@ -125,7 +130,6 @@
 		D49FA4F321DDA5D9004A416E /* OwlViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OwlViewController.m; sourceTree = "<group>"; };
 		D49FA4F421DDA5D9004A416E /* OwlWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OwlWindowController.m; sourceTree = "<group>"; };
 		D49FA4F621DDA5D9004A416E /* OwlWhiteListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OwlWhiteListViewController.h; sourceTree = "<group>"; };
-		D49FA4F721DDA5D9004A416E /* OwlManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OwlManager.m; sourceTree = "<group>"; };
 		D49FA51921DDA626004A416E /* QMMobileConnNotification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMMobileConnNotification.h; sourceTree = "<group>"; };
 		D49FA51A21DDA626004A416E /* QMMobileConnNotification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMMobileConnNotification.m; sourceTree = "<group>"; };
 		D49FA51B21DDA626004A416E /* QMUserNotificationCenter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMUserNotificationCenter.h; sourceTree = "<group>"; };
@@ -142,7 +146,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C056A793D8556494C303D17F /* BuildFile in Frameworks */,
+				C056A793D8556494C303D17F /* (null) in Frameworks */,
 				1163F6B30B6FB82202ADD85C /* Pods_PrivacyProtect.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -167,9 +171,38 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		B77E9C022DD31D0D0050712D /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				B77E9C112DD31F620050712D /* Owl2LogProcessItem.h */,
+				B77E9C122DD31F620050712D /* Owl2LogProcessItem.m */,
+				B77E9C0D2DD31F050050712D /* Owl2AppItem.h */,
+				B77E9C0E2DD31F050050712D /* Owl2AppItem.m */,
+				B7D5A8A52DD5A49800635656 /* Owl2SelectAppItem.h */,
+				B7D5A8A62DD5A49800635656 /* Owl2SelectAppItem.m */,
+				B78CE37C2DD329EE00043976 /* Owl2NotificationItem.h */,
+				B78CE37D2DD329EE00043976 /* Owl2NotificationItem.m */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		B795DBED2DDD78C1005A0C2E /* View */ = {
+			isa = PBXGroup;
+			children = (
+				B795DBF02DDD7AC5005A0C2E /* Owl2DeviceProtectionSwitchView.h */,
+				B795DBF12DDD7AC5005A0C2E /* Owl2DeviceProtectionSwitchView.m */,
+				B77131BC2DE5D9D20074302E /* NSAlert+OwlExtend.h */,
+				B77131BD2DE5D9D20074302E /* NSAlert+OwlExtend.m */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
 		C4B3172126458232006FC154 /* Owl2 */ = {
 			isa = PBXGroup;
 			children = (
+				B795DBED2DDD78C1005A0C2E /* View */,
+				D49FA4E121DDA5D9004A416E /* Controller */,
+				B77E9C022DD31D0D0050712D /* Model */,
 				C4B3172226458232006FC154 /* AVMonitor.h */,
 				C4B3172726458232006FC154 /* AVMonitor.m */,
 				C4B3172326458232006FC154 /* Client.h */,
@@ -220,6 +253,7 @@
 				D49FA51D21DDA626004A416E /* MobileNotification */,
 				D49FA45021DDA0F2004A416E /* PrivacyProtect.h */,
 				D4ACC032221D76C500DF0B7B /* LemonDaemonConst.h */,
+				52FDDEDB2DD2EDB000EFDD73 /* PrivacyProtect-Prefix.pch */,
 				D49FA45121DDA0F2004A416E /* Info.plist */,
 				F87C5AD62243340A00619DCE /* Resources */,
 			);
@@ -229,38 +263,11 @@
 		D49FA4D321DDA5D9004A416E /* PrivacyProtect */ = {
 			isa = PBXGroup;
 			children = (
-				D49FA4D521DDA5D9004A416E /* Owl */,
+				D49FA4D721DDA5D9004A416E /* OwlConstant.h */,
 				C4B3172126458232006FC154 /* Owl2 */,
 				D49FA4D421DDA5D9004A416E /* owlAsset.xcassets */,
 			);
 			path = PrivacyProtect;
-			sourceTree = "<group>";
-		};
-		D49FA4D521DDA5D9004A416E /* Owl */ = {
-			isa = PBXGroup;
-			children = (
-				D49FA4D621DDA5D9004A416E /* OwlManager.h */,
-				D49FA4F721DDA5D9004A416E /* OwlManager.m */,
-				D49FA4D721DDA5D9004A416E /* OwlConstant.h */,
-				D49FA4D821DDA5D9004A416E /* Observer */,
-				D49FA4E121DDA5D9004A416E /* Controller */,
-			);
-			path = Owl;
-			sourceTree = "<group>";
-		};
-		D49FA4D821DDA5D9004A416E /* Observer */ = {
-			isa = PBXGroup;
-			children = (
-				D49FA4DA21DDA5D9004A416E /* AudioDeviceModel.h */,
-				D49FA4DE21DDA5D9004A416E /* AudioDeviceModel.m */,
-				D49FA4E021DDA5D9004A416E /* AudioObserver.h */,
-				D49FA4DC21DDA5D9004A416E /* AudioObserver.m */,
-				D49FA4DF21DDA5D9004A416E /* CameraDeviceModel.h */,
-				D49FA4D921DDA5D9004A416E /* CameraDeviceModel.m */,
-				D49FA4DD21DDA5D9004A416E /* CameraObserver.h */,
-				D49FA4DB21DDA5D9004A416E /* CameraObserver.m */,
-			);
-			path = Observer;
 			sourceTree = "<group>";
 		};
 		D49FA4E121DDA5D9004A416E /* Controller */ = {
@@ -316,33 +323,35 @@
 			buildActionMask = 2147483647;
 			files = (
 				C4B3172D26458232006FC154 /* utilities.h in Headers */,
+				B77E9C102DD31F050050712D /* Owl2AppItem.h in Headers */,
 				B7BDBD252DB851CF00FB5ADF /* Owl2Manager+LocaFile.h in Headers */,
 				D49FA50821DDA5D9004A416E /* OwlWindowController.h in Headers */,
 				2A2853E92DCAF8F7004DD03D /* OwlListPlaceHolderView.h in Headers */,
 				339CCC6A2D97D95D00F8C67A /* Owl2Manager.h in Headers */,
+				B77E9C142DD31F620050712D /* Owl2LogProcessItem.h in Headers */,
+				B77131BE2DE5D9D20074302E /* NSAlert+OwlExtend.h in Headers */,
 				B71E86032DB22F3E000DB7C0 /* Owl2Manager+Guide.h in Headers */,
 				B7FCD2412C2AB88D00351D31 /* QMUserNotificationCenter.h in Headers */,
 				D49FA50921DDA5D9004A416E /* OwlViewController.h in Headers */,
 				C4B3172C26458232006FC154 /* Client.h in Headers */,
 				D4ACC033221D76C500DF0B7B /* LemonDaemonConst.h in Headers */,
+				52FDDEDC2DD2EDB000EFDD73 /* PrivacyProtect-Prefix.pch in Headers */,
 				52289FC12D9D4A8B006FF54E /* Owl2Manager+Notification.h in Headers */,
-				D49FA4F921DDA5D9004A416E /* OwlManager.h in Headers */,
 				C4B3173126458232006FC154 /* LogMonitor.h in Headers */,
 				52289FA72D9BD561006FF54E /* Owl2Manager+Database.h in Headers */,
 				D49FA4FA21DDA5D9004A416E /* OwlConstant.h in Headers */,
 				D5F5FA78264A377200A499BE /* Event.h in Headers */,
+				B795DBF32DDD7AC5005A0C2E /* Owl2DeviceProtectionSwitchView.h in Headers */,
 				C4B3172B26458232006FC154 /* AVMonitor.h in Headers */,
 				B7D8F5582DB5E2AF00D5D00E /* OwlNotificationPermissionViewController.h in Headers */,
 				C4B3173326458232006FC154 /* consts.h in Headers */,
 				D49FA45221DDA0F2004A416E /* PrivacyProtect.h in Headers */,
-				D49FA50221DDA5D9004A416E /* AudioObserver.h in Headers */,
+				B78CE37F2DD329EE00043976 /* Owl2NotificationItem.h in Headers */,
 				D49FA51721DDA5D9004A416E /* OwlWhiteListViewController.h in Headers */,
 				D49FA50E21DDA5D9004A416E /* OwlTableRowView.h in Headers */,
-				D49FA50121DDA5D9004A416E /* CameraDeviceModel.h in Headers */,
+				B7D5A8A82DD5A49800635656 /* Owl2SelectAppItem.h in Headers */,
 				B7AE64302DB8896C006F128C /* OwlSelectViewController.h in Headers */,
-				D49FA4FC21DDA5D9004A416E /* AudioDeviceModel.h in Headers */,
 				B7BDBD032DB77C1B00FB5ADF /* NSUserNotification+QMExtensions.h in Headers */,
-				D49FA4FF21DDA5D9004A416E /* CameraObserver.h in Headers */,
 				D49FA51121DDA5D9004A416E /* OwlLogViewController.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -380,6 +389,7 @@
 				TargetAttributes = {
 					D49FA44C21DDA0F2004A416E = {
 						CreatedOnToolsVersion = 9.3;
+						LastSwiftMigration = 1620;
 					};
 				};
 			};
@@ -442,26 +452,27 @@
 				D49FA52421DDA73D004A416E /* QMMobileConnNotification.m in Sources */,
 				B7AE642F2DB8896C006F128C /* OwlSelectViewController.m in Sources */,
 				D49FA52521DDA73D004A416E /* QMUserNotificationCenter.m in Sources */,
+				B77131BF2DE5D9D20074302E /* NSAlert+OwlExtend.m in Sources */,
+				B77E9C0F2DD31F050050712D /* Owl2AppItem.m in Sources */,
 				D49FA51521DDA5D9004A416E /* OwlWindowController.m in Sources */,
 				D49FA50321DDA5D9004A416E /* OwlLogViewController.m in Sources */,
+				B77E9C132DD31F620050712D /* Owl2LogProcessItem.m in Sources */,
 				B7BDBD242DB851CF00FB5ADF /* Owl2Manager+LocaFile.m in Sources */,
-				D49FA50021DDA5D9004A416E /* AudioDeviceModel.m in Sources */,
 				52289FA62D9BD561006FF54E /* Owl2Manager+Database.m in Sources */,
 				C4B3172E26458232006FC154 /* LogMonitor.m in Sources */,
 				B7BDBD022DB77C1B00FB5ADF /* NSUserNotification+QMExtensions.m in Sources */,
 				C4B3173226458232006FC154 /* utilities.m in Sources */,
 				C4B3172F26458232006FC154 /* Client.m in Sources */,
 				52289FC02D9D4A8B006FF54E /* Owl2Manager+Notification.m in Sources */,
-				D49FA51821DDA5D9004A416E /* OwlManager.m in Sources */,
 				D49FA51421DDA5D9004A416E /* OwlViewController.m in Sources */,
 				339CCC692D97D95D00F8C67A /* Owl2Manager.m in Sources */,
 				D5F5FA79264A377200A499BE /* Event.m in Sources */,
 				D49FA50C21DDA5D9004A416E /* OwlWhiteListViewController.m in Sources */,
-				D49FA4FE21DDA5D9004A416E /* AudioObserver.m in Sources */,
 				2A2853EA2DCAF8F7004DD03D /* OwlListPlaceHolderView.m in Sources */,
+				B78CE37E2DD329EE00043976 /* Owl2NotificationItem.m in Sources */,
 				B71E86042DB22F3E000DB7C0 /* Owl2Manager+Guide.m in Sources */,
-				D49FA4FD21DDA5D9004A416E /* CameraObserver.m in Sources */,
-				D49FA4FB21DDA5D9004A416E /* CameraDeviceModel.m in Sources */,
+				B7D5A8A72DD5A49800635656 /* Owl2SelectAppItem.m in Sources */,
+				B795DBF22DDD7AC5005A0C2E /* Owl2DeviceProtectionSwitchView.m in Sources */,
 				D49FA50521DDA5D9004A416E /* OwlTableRowView.m in Sources */,
 				B7D8F5572DB5E2AF00D5D00E /* OwlNotificationPermissionViewController.m in Sources */,
 				C4B3173026458232006FC154 /* AVMonitor.m in Sources */,
@@ -604,6 +615,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 84ABFFA76FCAA860B1D880C4 /* Pods-PrivacyProtect.debug.xcconfig */;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Developer ID Application: Tencent Technology (Shenzhen) Company Limited (88L2Q4487U)";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
@@ -612,6 +624,7 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_VERSION = A;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/PrivacyProtect/PrivacyProtect-Prefix.pch";
 				INFOPLIST_FILE = PrivacyProtect/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -624,6 +637,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.tencent.PrivacyProtect;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 6.0;
 			};
 			name = Debug;
 		};
@@ -631,6 +646,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = B3B01B25E9CCD907438AA8D3 /* Pods-PrivacyProtect.release.xcconfig */;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Developer ID Application: Tencent Technology (Shenzhen) Company Limited (88L2Q4487U)";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
@@ -639,6 +655,7 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_VERSION = A;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/PrivacyProtect/PrivacyProtect-Prefix.pch";
 				INFOPLIST_FILE = PrivacyProtect/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -650,6 +667,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.tencent.PrivacyProtect;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 6.0;
 			};
 			name = Release;
 		};

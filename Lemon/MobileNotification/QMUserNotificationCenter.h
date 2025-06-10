@@ -17,6 +17,9 @@ typedef NS_ENUM(NSUInteger, QMUNCNotificationAction) {
     QMUNCNotificationActionDismissed,
 };
 
+extern NSString * const QMUserNotificationKey;
+extern NSString * const QMUserNotificationActionIdKey;
+
 // UNNotificationAction中Identifier映射NSUserNotification中的actionButtonTitle
 #define UNNotificationActionButtonDidBlock @"UNNotificationActionButtonDidBlock"
 // UNNotificationAction中Identifier映射NSUserNotification中的otherButtonTitle

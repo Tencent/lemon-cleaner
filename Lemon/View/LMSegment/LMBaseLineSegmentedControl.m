@@ -40,4 +40,9 @@
     }
 }
 
+- (void)updateRedPointInfo:(NSDictionary *)redPointDict {
+    LMBaseLineSegmentedCell * __cell = self.cell;
+    [__cell updateCellRedPointInfo:redPointDict];
+}
+
 @end

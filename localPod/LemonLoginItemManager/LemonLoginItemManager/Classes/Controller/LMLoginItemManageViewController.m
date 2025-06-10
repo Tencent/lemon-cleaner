@@ -28,6 +28,7 @@
 #import <QMUICommon/NSFontHelper.h>
 #import <QMCoreFunction/NSAttributedString+Extension.h>
 #import <QMCoreFunction/LanguageHelper.h>
+#import <QMCoreFunction/QMCoreFunctionDef.h>
 
 #define LMLocalizedString(key,className)  NSLocalizedStringFromTableInBundle(key, nil, [NSBundle bundleForClass:className], @"");
 
@@ -609,7 +610,7 @@ typedef enum {
     if(!self.feedBackLabel.stringValue || [self.feedBackLabel.stringValue isEqualToString:@""]) {
         [self.feedBackLabel setAllowsEditingTextAttributes: YES];
         [self.feedBackLabel setSelectable: YES];
-        NSURL* url = [NSURL URLWithString:@"https://support.qq.com/products/36664"];
+        NSURL* url = [NSURL URLWithString:QMFeedbackURL];
         NSMutableAttributedString* string = [[NSMutableAttributedString alloc] init];
         NSMutableAttributedString *attrString1 = [[NSMutableAttributedString alloc] initWithString:@"若有遗漏，请点此"];
         [attrString1 addAttribute:NSForegroundColorAttributeName value:[NSColor colorWithHex:0x94979B] range:NSMakeRange(0, attrString1.length)];

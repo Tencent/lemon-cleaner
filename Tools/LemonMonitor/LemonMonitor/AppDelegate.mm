@@ -104,7 +104,6 @@
     {
         [QMEarlyWarning sharedInstance];
     }
-            
     [self addObserver];
     [self loadMonitorNotification];
     //先stat一次内存，方便首次show出进程信息时进程的内存准确
@@ -274,24 +273,7 @@
                                                                    forKey:@"LemonResearchNotification"];
 #ifndef APPSTORE_VERSION
     //设备保护
-//    [[NSDistributedNotificationCenter defaultCenter] addObserver:self selector:@selector(tellMonitorStopOwlProtect) name:kTellMonitorStopOwlProtect object:nil];
-//    [[NSDistributedNotificationCenter defaultCenter] addObserver:self selector:@selector(tellMonitorStartOwlProtect) name:kTellMonitorStartOwlProtect object:nil];
-//    if ([[OwlManager shareInstance] isLemonRunning]) {
-//        //先读取一次数据
-//        [[OwlManager shareInstance] loadDB];
-//    } else {
     [[Owl2Manager sharedManager] startOwlProtect];
-//    }
-    
-    // 监控隐私
-//    [[NSDistributedNotificationCenter defaultCenter] addObserver:self
-//                                                        selector:@selector(receivedVedioStateChanged:)
-//                                                            name:OwlWatchVedioStateChange
-//                                                          object:nil];
-//    [[NSDistributedNotificationCenter defaultCenter] addObserver:self
-//                                                        selector:@selector(receivedAudioStateChanged:)
-//                                                            name:OwlWatchAudioStateChange
-//                                                          object:nil];
 #endif
 }
 
@@ -307,16 +289,6 @@
     [[Owl2Manager sharedManager] startOwlProtect];
 }
 
--(void)receivedVedioStateChanged:(NSNotification *)notification
-{
-    BOOL state = [[notification.userInfo objectForKey:@"state"] boolValue];
-    [[Owl2Manager sharedManager] setWatchVedio:state toDb:NO];
-}
--(void)receivedAudioStateChanged:(NSNotification *)notification
-{
-    BOOL state = [[notification.userInfo objectForKey:@"state"] boolValue];
-    [[Owl2Manager sharedManager] setWatchAudio:state toDb:NO];
-}
 #endif
 
 - (NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication *)sender{

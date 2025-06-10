@@ -28,7 +28,9 @@
 #import <sys/socket.h>
 #import <net/if_dl.h>
 #import <ifaddrs.h>
+
 #import "OwlConstant.h"
+#import "Owl2AppItem.h"
 
 /* GLOBALS */
 
@@ -1641,6 +1643,17 @@ pid_t GUIApplicationPidForBundleIdentifier(NSString *name) {
     return 0;
 }
 
+NSString * GUIApplicationBundleIdentifierForPid(pid_t pid) {
+    NSWorkspace *ws = [NSWorkspace sharedWorkspace];
+    
+    for (NSRunningApplication *app in ws.runningApplications) {
+        if (app.processIdentifier == pid) {
+            return app.bundleIdentifier;
+        }
+    }
+    return nil;
+}
+
 
 NSString *getMACAddress(void) {
     static NSString *cachedMACAddress = nil;
@@ -1701,11 +1714,32 @@ NSString *getMACAddress(void) {
 }
 
 
-NSImage *getAppImage(NSDictionary *appDic, NSString *identifier) {
-    NSString *appPath = [appDic objectForKey:OwlBubblePath];
-    if ([appDic[OwlIdentifier] isEqualToString:identifier] && [appPath isKindOfClass:NSString.class]) {
+NSImage *getAppImage(Owl2AppItem *appItem, NSString *identifier) {
+    if (identifier.length == 0 || !appItem) {
+        return nil;
+    }
+    NSString *appPath = appItem.appPath;
+    if ([appItem.identifier isEqualToString:identifier] && [appPath isKindOfClass:NSString.class]) {
         NSImage *image = [[NSWorkspace sharedWorkspace] iconForFile:appPath];
         return image;
     }
     return nil;
+}
+
+pid_t getParentProcessID(pid_t pid) {
+    // 初始化 sysctl 查询参数
+    int mib[4] = { CTL_KERN, KERN_PROC, KERN_PROC_PID, pid };
+    struct kinfo_proc info;
+    size_t len = sizeof(info);
+    
+    // 执行 sysctl 查询
+    if (sysctl(mib, 4, &info, &len, NULL, 0) == -1) {
+        perror("sysctl");
+        return -1;
+    }
+    
+    // 提取父进程信息
+    pid_t ppid = info.kp_eproc.e_ppid;
+    
+    return ppid;
 }

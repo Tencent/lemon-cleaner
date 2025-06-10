@@ -25,7 +25,8 @@
 #import "OwlListPlaceHolderView.h"
 #import "utilities.h"
 #import "OwlConstant.h"
-
+#import "Owl2SelectAppItem.h"
+#import "NSAlert+OwlExtend.h"
 
 @interface OwlSelectCellView : NSView
 
@@ -99,7 +100,7 @@
         
         [self.labelAppType mas_makeConstraints:^(MASConstraintMaker *make) {
             make.centerY.equalTo(self);
-            make.left.equalTo(self.mas_left).offset(408);
+            make.left.equalTo(self.mas_left).offset(550);
         }];
     }
     return self;
@@ -115,7 +116,8 @@
     NSTableView *tableView;
     QMStaticField *tfSelected;
 }
-@property (nonatomic, strong) NSMutableArray *appArray;
+@property (nonatomic, copy) NSArray<Owl2AppItem *> *appArray;
+@property (nonatomic, strong) NSMutableArray *wlModelArray;
 @property (weak) NSView *bLineview;
 @property(weak) MMScroller *scroller;
 @property (nonatomic, strong) OwlListPlaceHolderView *listPlaceHolderView;
@@ -141,7 +143,7 @@
         NSRect scrollViewRect = NSMakeRect(0, 52, frame.size.width, frame.size.height - 80 - 52);
         
         // list 为空占位图 “暂无可添加应用”
-        self.listPlaceHolderView = [[OwlListPlaceHolderView alloc] initWithTitle:NSLocalizedStringFromTableInBundle(@"暂无可添加应用", nil, [NSBundle bundleForClass:[self class]], nil)];
+        self.listPlaceHolderView = [[OwlListPlaceHolderView alloc] initWithTitle:LMLocalizedSelfBundleString(@"暂无可添加应用", nil)];
         self.listPlaceHolderView.frame = scrollViewRect;
         [contentView addSubview:self.listPlaceHolderView];
         
@@ -154,6 +156,7 @@
         [tableView setSelectionHighlightStyle:NSTableViewSelectionHighlightStyleRegular];
         [tableView setAutoresizesSubviews:YES];
         tableView.headerView = nil;
+        tableView.intercellSpacing = NSMakeSize(0, 0);
         if (@available(macOS 11.0, *)) {
             tableView.style = NSTableViewStyleFullWidth;
         }
@@ -173,11 +176,11 @@
         [tableView setBackgroundColor:[LMAppThemeHelper getMainBgColor]];
         
         NSTableColumn *timeColumn = [[NSTableColumn alloc] initWithIdentifier:@"owlSelectCellView"];
-        timeColumn.width = frame.size.width;
         //[timeColumn.headerCell setStringValue:@"时间"];
         [timeColumn.headerCell setFont:[NSFontHelper getMediumSystemFont:12]];
         [timeColumn.headerCell setTextColor:[LMAppThemeHelper getSecondTextColor]];
         [timeColumn.headerCell setAlignment:NSTextAlignmentCenter];
+        timeColumn.width = scrollView.frame.size.width;
         [tableView addTableColumn:timeColumn];
 
         tableView.frame = NSMakeRect(0, 0, scrollView.frame.size.width, scrollView.frame.size.height);
@@ -189,7 +192,7 @@
         tfTitle.bordered = NO;
         tfTitle.editable = NO;
         tfTitle.backgroundColor = [NSColor clearColor];
-        tfTitle.stringValue = NSLocalizedStringFromTableInBundle(@"应用列表", nil, [NSBundle bundleForClass:[self class]], nil);
+        tfTitle.stringValue = LMLocalizedSelfBundleString(@"应用列表", nil);
         tfTitle.font = [NSFontHelper getMediumSystemFont:16];
         tfTitle.textColor = [LMAppThemeHelper getTitleColor];
         [contentView addSubview:tfTitle];
@@ -205,7 +208,7 @@
         labelProcess.alignment = NSTextAlignmentLeft;
         labelProcess.bordered = NO;
         labelProcess.editable = NO;
-        labelProcess.stringValue = NSLocalizedStringFromTableInBundle(@"软件进程", nil, [NSBundle bundleForClass:[self class]], nil);
+        labelProcess.stringValue = LMLocalizedSelfBundleString(@"软件进程", nil);
         labelProcess.backgroundColor = [NSColor clearColor];
         labelProcess.font = [NSFontHelper getMediumSystemFont:12];
         labelProcess.textColor = [LMAppThemeHelper getSecondTextColor];
@@ -215,7 +218,7 @@
         labelAppType.alignment = NSTextAlignmentLeft;
         labelAppType.bordered = NO;
         labelAppType.editable = NO;
-        labelAppType.stringValue = NSLocalizedStringFromTableInBundle(@"应用类型", nil, [NSBundle bundleForClass:[self class]], nil);
+        labelAppType.stringValue = LMLocalizedSelfBundleString(@"应用类型", nil);
         labelAppType.backgroundColor = [NSColor clearColor];
         labelAppType.font = [NSFontHelper getMediumSystemFont:12];
         labelAppType.textColor = [LMAppThemeHelper getSecondTextColor];
@@ -242,9 +245,9 @@
         [labelAppType mas_makeConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(@(52));
             if (@available(macOS 11.0, *)) {
-                make.left.equalTo(@(408+5));
+                make.left.equalTo(@(550+5));
             } else {
-                make.left.equalTo(@(408));
+                make.left.equalTo(@(550));
             }
         }];
         
@@ -270,12 +273,12 @@
 - (void)setupBottomView {
     
     LMBorderButton *cancelBtn = [[LMBorderButton alloc] init];
-    cancelBtn.title = NSLocalizedStringFromTableInBundle(@"取消", nil, [NSBundle bundleForClass:[self class]], @"");
+    cancelBtn.title = LMLocalizedSelfBundleString(@"取消", nil);
     cancelBtn.target = self;
     cancelBtn.action = @selector(cancelBtnClicked:);
     cancelBtn.font = [NSFontHelper getRegularSystemFont:12];
     
-    NSButton *addBtn = [LMViewHelper createSmallGreenButton:12 title:NSLocalizedStringFromTableInBundle(@"添加应用", nil, [NSBundle bundleForClass:[self class]], nil)];
+    NSButton *addBtn = [LMViewHelper createSmallGreenButton:12 title:LMLocalizedSelfBundleString(@"添加应用", nil)];
     addBtn.wantsLayer = YES;
     addBtn.layer.cornerRadius = 2;
     addBtn.target = self;
@@ -303,7 +306,13 @@
 
 - (void)loadData {
     _wlModelArray = [[NSMutableArray alloc] init];
-    _appArray = [[Owl2Manager sharedManager] getAllAppInfoWithIndexArray:nil];
+    NSArray *appList = [[Owl2Manager sharedManager] getAllAppInfo];
+    NSMutableArray *muAppArray = [[NSMutableArray alloc] initWithCapacity:appList.count];
+    for (Owl2AppItem *item in appList) {
+        Owl2SelectAppItem *selectAppItem = [[Owl2SelectAppItem alloc] initWithAppItem:item];
+        [muAppArray addObject:selectAppItem];
+    }
+    self.appArray = muAppArray.copy;
     [self reloadData];
 }
 
@@ -327,15 +336,23 @@
 - (void)addAppBtnClicked:(NSButton *)btn{
     NSLog(@"%s _wlModelArray: %lu", __FUNCTION__, (unsigned long)_wlModelArray.count);
     NSString *strApps = @"";
-    for (NSDictionary *appDic in self.wlModelArray) {
-        BOOL isSelected = [[appDic objectForKey:@"isSelected"] boolValue];
+    for (Owl2SelectAppItem *appItem in self.wlModelArray) {
+        BOOL isSelected = appItem.isSelected;
         if (isSelected) {
-            [[Owl2Manager sharedManager] addAppWhiteItem:appDic];
+            [appItem enableAllWatchSwitch];
+            [[Owl2Manager sharedManager] addWhiteWithAppItem:appItem];
             if ([strApps length] > 0) {
-                strApps = [[strApps stringByAppendingString:@"|"] stringByAppendingString:[appDic objectForKey:OwlAppName]];
+                strApps = [[strApps stringByAppendingString:@"|"] stringByAppendingString:appItem.name?:@""];
             } else {
-                strApps = [strApps stringByAppendingString:[appDic objectForKey:OwlAppName]];
+                strApps = [strApps stringByAppendingString:appItem.name?:@""];
             }
+        }
+    }
+    if ([strApps length] > 0) {
+        if (@available(macOS 15.0, *)) {
+            // nothing
+        } else {
+            [NSAlert owl_showScreenPrivacyProtection];
         }
     }
     [self.view.window close];
@@ -360,12 +377,12 @@
     view.identifier = idenifier;
     
     // 勾选状态
-    NSMutableDictionary *appDic = self.wlModelArray[row];
-    view.selectCheckBox.state = [[appDic objectForKey:@"isSelected"] boolValue];
+    Owl2SelectAppItem *item = self.wlModelArray[row];
+    view.selectCheckBox.state = item.isSelected;
     @weakify(self);
     view.selectedBlock = ^(BOOL isSelected) {
         @strongify(self);
-        [appDic setObject:@(isSelected) forKey:@"isSelected"];
+        item.isSelected = isSelected;
         [self updateSelectLabel];
     };
     
@@ -376,7 +393,7 @@
         view.iconImageView.image = image;
     };
     
-    NSString *iconPath = [appDic valueForKey:OwlAppIcon];
+    NSString *iconPath = item.iconPath;
     NSFileManager *fm = [NSFileManager defaultManager];
     if (iconPath && [iconPath length] > 0 && [fm fileExistsAtPath:iconPath]) {
         NSImage * iconImage = nil;
@@ -388,7 +405,7 @@
         }
     } else {
         NSImage *image = nil;
-        NSString *appPath = [appDic valueForKey:OwlBubblePath];
+        NSString *appPath = item.appPath;
         if ([appPath isKindOfClass:NSString.class]) {
             image = [[NSWorkspace sharedWorkspace] iconForFile:appPath];
         }
@@ -406,17 +423,17 @@
     // 特殊处理，在MacOS 15以上 图书应用的/System/Applications/Books.app/Contents/Resources/AppIcon.icns
     // 是一张纯黑图片
     if (@available(macOS 15.0, *)) {
-        NSImage *image = getAppImage(appDic, AppleIBookIdentifier);
+        NSImage *image = getAppImage(item, AppleIBookIdentifier);
         if (image) {
             setupIconBlock(image);
         }
     }
     
-    view.labelProcess.stringValue = [appDic objectForKey:OwlAppName] ?:@"";
-    if ([[appDic objectForKey:OwlAppleApp] boolValue]) {
-        view.labelAppType.stringValue = NSLocalizedStringFromTableInBundle(@"系统应用", nil, [NSBundle bundleForClass:[self class]], nil);
+    view.labelProcess.stringValue = item.name ?: @"";
+    if (item.sysApp) {
+        view.labelAppType.stringValue = LMLocalizedSelfBundleString(@"系统应用", nil);
     } else {
-        view.labelAppType.stringValue = NSLocalizedStringFromTableInBundle(@"第三方应用", nil, [NSBundle bundleForClass:[self class]], nil);
+        view.labelAppType.stringValue = LMLocalizedSelfBundleString(@"第三方应用", nil);
     }
     return view;
 }
@@ -444,25 +461,16 @@
 
 - (void)reloadData{
     [_wlModelArray removeAllObjects];
-    for (NSMutableDictionary *appDic in self.appArray) {
-        [appDic setObject:[NSNumber numberWithBool:NO] forKey:@"isSelected"];
-        [appDic setObject:[NSNumber numberWithBool:YES] forKey:OwlWatchCamera];
-        [appDic setObject:[NSNumber numberWithBool:YES] forKey:OwlWatchAudio];
-        [appDic setObject:[NSNumber numberWithBool:YES] forKey:OwlWatchSpeaker];
-        NSString *identifier = [appDic objectForKey:OwlIdentifier];
-        BOOL isExist = NO;
-        for (NSDictionary *item in [Owl2Manager sharedManager].wlArray) {
-            if ([[item objectForKey:OwlIdentifier] isEqualToString:identifier]) {
-                isExist = YES;
-                break;
+    NSDictionary *wlDic = [Owl2Manager sharedManager].wlDic.copy;
+    for (Owl2SelectAppItem *item in self.appArray) {
+        if ([item.identifier isKindOfClass:NSString.class]) {
+            Owl2AppItem *oldAppItem = wlDic[item.identifier];
+            if (oldAppItem) {
+                continue;
+            } else {
+                [_wlModelArray addObject:item];
             }
         }
-        if (isExist) {
-            continue;
-        }
-        
-        // 这个写法！！！
-        [_wlModelArray addObject:appDic.mutableCopy];
     }
     [self updateSelectLabel];
     
@@ -475,12 +483,12 @@
 - (void)updateSelectLabel{
     int selectCount = 0;
     
-    for (NSDictionary *appDic in self.wlModelArray) {
-        if ([[appDic objectForKey:@"isSelected"] boolValue]) {
+    for (Owl2SelectAppItem *appItem in self.wlModelArray) {
+        if (appItem.isSelected) {
             selectCount++;
         }
     }
-    NSString *strCount = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"OwlSelectViewController_updateSelectLabel_NSString_1", nil, [NSBundle bundleForClass:[self class]], @""), selectCount];
+    NSString *strCount = [NSString stringWithFormat:LMLocalizedSelfBundleString(@"已勾选 %d 款", nil), selectCount];
     NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc]initWithString:strCount];
     NSRange range = [strCount rangeOfString:[NSString stringWithFormat:@" %d ", selectCount]];
     

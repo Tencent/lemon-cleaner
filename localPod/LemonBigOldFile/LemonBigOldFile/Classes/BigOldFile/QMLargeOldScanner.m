@@ -227,7 +227,9 @@
 //        [_contentArray addObject:item];
         
         QMLargeOldItem * largeOldItem = [[QMLargeOldItem alloc] initWithFileItem:item];
-        [_contentArray addObject:largeOldItem];
+        if (largeOldItem) {     // 加一层判断。 bugly 上出现 insert nil 到数组问题
+            [_contentArray addObject:largeOldItem];
+        }
     }
     return _isStop;
 }

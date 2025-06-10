@@ -12,6 +12,7 @@
 #import "QMUICommon/LMRectangleButton.h"
 #import <QMUICommon/NSFontHelper.h>
 #import <QMCoreFunction/LanguageHelper.h>
+#import <QMCoreFunction/QMCoreFunctionDef.h>
 #import <QMUICommon/LMViewHelper.h>
 #import <StoreKit/StoreKit.h>
 #import "RatingUtils.h"
@@ -204,16 +205,7 @@
 
 -(void)onOkButtonClicked{
     [self.view.window close];
-    if ([LanguageHelper getCurrentSystemLanguageType] != SystemLanguageTypeChinese) {
-        [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"https://www.facebook.com/groups/2270176446528228/"]];
-        return;
-    }
-#ifndef APPSTORE_VERSION
-    [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"https://support.qq.com/products/36664"]];
-#else
-    [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:@"https://support.qq.com/products/52728"]];
-#endif
-    
+    [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:QMFeedbackURL]];
 }
 
 -(void)onCancelButtonClicked{

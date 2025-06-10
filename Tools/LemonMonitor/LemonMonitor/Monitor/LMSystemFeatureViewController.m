@@ -57,9 +57,11 @@ static NSString * const kPidKey = @"pid";
     
     NSImageView *_imageCamera;
     NSImageView *_imageMicrophone;
+    NSImageView *_imageScreen;
     NSTextField *_privacyCameraLabel;
     NSTextField *_privacyMicrophoneLabel;
-    
+    NSTextField *_privacyScreenLabel;
+
     NSView *_divideView;
 
 }
@@ -109,6 +111,7 @@ static NSString * const kPidKey = @"pid";
     [super viewWillAppear];
     [self updateVedioState];
     [self updateAudioState];
+    [self updateScreenState];
     [self updateOneClickGuideView];
 }
 
@@ -129,32 +132,33 @@ static NSString * const kPidKey = @"pid";
 -(void)updateVedioState
 {
 #ifndef APPSTORE_VERSION
-    BOOL isWatchVedio = [[Owl2Manager sharedManager] isWatchVideo];
-    NSLog(@"receivedVedioStateChanged isWatchVedio=%d\n", isWatchVedio);
-    //LMSystemFeatureViewController_updateAudioState__privacyMicrophoneLabel__not_work
-    if (isWatchVedio)
-    {
-        [_imageCamera setImage:[myBundle imageForResource:@"lemon_camera_down"]];
-    }
-    else
-    {
-        [_imageCamera setImage:[myBundle imageForResource:@"lemon_camera_normal"]];
-    }
-    
-    if ( isWatchVedio)
-    {
-        _privacyCameraLabel.stringValue = NSLocalizedString(@"监控中", nil);
-        _privacyCameraLabel.textColor = [NSColor colorWithHex:0x1A83F7];
-    }
-    else
-    {
-        _privacyCameraLabel.stringValue = NSLocalizedString(@"去开启", nil);
-        _privacyCameraLabel.textColor = [NSColor colorWithHex:0x1A83F7];
-    }
     if ([self isMacOS11_3]) {
         _privacyCameraLabel.stringValue = NSLocalizedString(@"暂不支持11.3系统", nil);
         _privacyCameraLabel.textColor = [NSColor colorWithHex:0x94979b];
         [_imageCamera setImage:[myBundle imageForResource:@"lemon_camera_normal"]];
+    } else {
+        BOOL isWatchVedio = [[Owl2Manager sharedManager] isWatchVideo];
+        NSLog(@"receivedVedioStateChanged isWatchVedio=%d\n", isWatchVedio);
+        //LMSystemFeatureViewController_updateAudioState__privacyMicrophoneLabel__not_work
+        if (isWatchVedio)
+        {
+            [_imageCamera setImage:[myBundle imageForResource:@"lemon_camera_down"]];
+        }
+        else
+        {
+            [_imageCamera setImage:[myBundle imageForResource:@"lemon_camera_normal"]];
+        }
+        
+        if ( isWatchVedio)
+        {
+            _privacyCameraLabel.stringValue = NSLocalizedString(@"监控中", nil);
+            _privacyCameraLabel.textColor = [NSColor colorWithHex:0x94979b];
+        }
+        else
+        {
+            _privacyCameraLabel.stringValue = NSLocalizedString(@"去开启", nil);
+            _privacyCameraLabel.textColor = [NSColor colorWithHex:0x1A83F7];
+        }
     }
 #endif
 }
@@ -162,33 +166,65 @@ static NSString * const kPidKey = @"pid";
 -(void)updateAudioState
 {
 #ifndef APPSTORE_VERSION
-    BOOL isWatchAudio = [[Owl2Manager sharedManager] isWatchAudio];
-    NSLog(@"receivedAudioStateChanged isWatchAudio=%d\n", isWatchAudio);
-    if (isWatchAudio)
-    {
-        [_imageMicrophone setImage:[myBundle imageForResource:@"lemon_microphone"]];
-    }
-    else
-    {
-        [_imageMicrophone setImage:[myBundle imageForResource:@"lemon_microphone_gray"]];
-    }
-    
-    if (isWatchAudio)
-    {
-        _privacyMicrophoneLabel.stringValue = NSLocalizedString(@"监控中", nil);
-        _privacyMicrophoneLabel.textColor = [NSColor colorWithHex:0x1A83F7];
-    }
-    else
-    {
-        _privacyMicrophoneLabel.stringValue = NSLocalizedString(@"去开启", nil);
-        _privacyMicrophoneLabel.textColor = [NSColor colorWithHex:0x1A83F7];
-    }
     if ([self isMacOS11_3]) {
         _privacyMicrophoneLabel.stringValue = NSLocalizedString(@"正在研究，请等更新", nil);
         _privacyMicrophoneLabel.textColor = [NSColor colorWithHex:0x94979b];
         [_imageMicrophone setImage:[myBundle imageForResource:@"lemon_microphone_gray"]];
+    } else {
+        BOOL isWatchAudio = [[Owl2Manager sharedManager] isWatchAudio];
+        NSLog(@"receivedAudioStateChanged isWatchAudio=%d\n", isWatchAudio);
+        if (isWatchAudio)
+        {
+            [_imageMicrophone setImage:[myBundle imageForResource:@"lemon_microphone"]];
+        }
+        else
+        {
+            [_imageMicrophone setImage:[myBundle imageForResource:@"lemon_microphone_gray"]];
+        }
+        
+        if (isWatchAudio)
+        {
+            _privacyMicrophoneLabel.stringValue = NSLocalizedString(@"监控中", nil);
+            _privacyMicrophoneLabel.textColor = [NSColor colorWithHex:0x94979b];
+        }
+        else
+        {
+            _privacyMicrophoneLabel.stringValue = NSLocalizedString(@"去开启", nil);
+            _privacyMicrophoneLabel.textColor = [NSColor colorWithHex:0x1A83F7];
+        }
     }
+#endif
+}
 
+- (void)updateScreenState {
+#ifndef APPSTORE_VERSION
+    if ([self isMacOS11_3]) {
+        _privacyScreenLabel.stringValue = NSLocalizedString(@"正在研究，请等更新", nil);
+        _privacyScreenLabel.textColor = [NSColor colorWithHex:0x94979b];
+        [_imageScreen setImage:[myBundle imageForResource:@"lemon_screen_gray"]];
+    } else {
+        BOOL isWatchScreen = [[Owl2Manager sharedManager] isWatchScreen];
+        NSLog(@"receivedScreenStateChanged isWatchScreen=%d\n", isWatchScreen);
+        if (isWatchScreen)
+        {
+            [_imageScreen setImage:[myBundle imageForResource:@"lemon_screen"]];
+        }
+        else
+        {
+            [_imageScreen setImage:[myBundle imageForResource:@"lemon_screen_gray"]];
+        }
+        
+        if (isWatchScreen)
+        {
+            _privacyScreenLabel.stringValue = NSLocalizedString(@"监控中", nil);
+            _privacyScreenLabel.textColor = [NSColor colorWithHex:0x94979b];
+        }
+        else
+        {
+            _privacyScreenLabel.stringValue = NSLocalizedString(@"去开启", nil);
+            _privacyScreenLabel.textColor = [NSColor colorWithHex:0x1A83F7];
+        }
+    }
 #endif
 }
 
@@ -232,15 +268,6 @@ static NSString * const kPidKey = @"pid";
                                              selector:@selector(receivedFanCpuInfoChanged:)
                                                  name:kFanCpuInfoNotification
                                                object:nil];
-    //    [[NSNotificationCenter defaultCenter] addObserver:self
-    //                                             selector:@selector(receivedVedioStateChanged:)
-    //                                                 name:OwlWatchVedioStateChange
-    //                                               object:nil];
-    //
-    //    [[NSNotificationCenter defaultCenter] addObserver:self
-    //                                             selector:@selector(receivedAudioStateChanged:)
-    //                                                 name:OwlWatchAudioStateChange
-    //                                               object:nil];
 }
 
 - (void)stopMonitor
@@ -261,13 +288,6 @@ static NSString * const kPidKey = @"pid";
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                  name:kDiskInfoNotification
                                                object:nil];
-    //    [[NSNotificationCenter defaultCenter] removeObserver:self
-    //                                                    name:OwlWatchVedioStateChange
-    //                                                  object:nil];
-    //
-    //    [[NSNotificationCenter defaultCenter] removeObserver:self
-    //                                                    name:OwlWatchAudioStateChange
-    //                                                  object:nil];
 }
 
 -(void)initDiskInfo{
@@ -491,7 +511,6 @@ static NSString * const kPidKey = @"pid";
     imageMicrophone.imageScaling = NSImageScaleProportionallyDown;
     _imageMicrophone = imageMicrophone;
     [owlContainerView addSubview:imageMicrophone];
-    _imageMicrophone = imageMicrophone;
     
     NSTextField *microphoneLabel = [LMViewHelper createNormalLabel:12 fontColor:[LMAppThemeHelper getTitleColor]];
     [owlContainerView addSubview:microphoneLabel];
@@ -501,6 +520,22 @@ static NSString * const kPidKey = @"pid";
     _privacyMicrophoneLabel = microhoneStateLabel;
 
     [owlContainerView addSubview:microhoneStateLabel];
+    
+    // 屏幕
+    NSImageView* imageScreen = [LMViewHelper createNormalImageView];
+    imageScreen.imageScaling = NSImageScaleProportionallyDown;
+    _imageScreen = imageScreen;
+    [owlContainerView addSubview:imageScreen];
+    
+    NSTextField *screenLabel = [LMViewHelper createNormalLabel:12 fontColor:[LMAppThemeHelper getTitleColor]];
+    [owlContainerView addSubview:screenLabel];
+    screenLabel.stringValue = NSLocalizedString(@"屏幕信息保护", nil);
+    
+    NSTextField *screenStateLabel = [LMViewHelper createNormalLabel:12 fontColor:[NSColor colorWithHex:0x94979b]];
+    _privacyScreenLabel = screenStateLabel;
+
+    [owlContainerView addSubview:screenStateLabel];
+    
     
     // '一键开启'引导
     if ([Owl2Manager sharedManager].showOneClickGuideView) {
@@ -526,7 +561,7 @@ static NSString * const kPidKey = @"pid";
     }
     
     [owlContainerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.height.equalTo(@71);
+        make.height.equalTo(@105);
         make.bottom.equalTo(self.view);
         make.width.equalTo(self.view).offset(-26);
         make.centerX.equalTo(self.view);
@@ -567,6 +602,22 @@ static NSString * const kPidKey = @"pid";
         make.centerY.equalTo(imageMicrophone);
     }];
     
+    [imageScreen mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(imageMicrophone);
+        make.top.equalTo(imageMicrophone.mas_bottom).offset(12);
+        make.width.equalTo(@32);
+        make.height.equalTo(@20);
+    }];
+    
+    [screenLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(imageScreen.mas_right).offset(3);
+        make.centerY.equalTo(imageScreen);
+    }];
+    
+    [screenStateLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.equalTo(owlContainerView).offset(-7); //container -13
+        make.centerY.equalTo(imageScreen);
+    }];
 }
 
 

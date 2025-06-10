@@ -149,7 +149,7 @@
 - (NSTextField *)titleTF {
     if (!_titleTF) {
         _titleTF = [LMViewHelper createNormalLabel:14 fontColor:[LMAppThemeHelper getTitleColor]];
-        _titleTF.stringValue = NSLocalizedStringFromTableInBundle(@"请开启通知提醒权限", nil, [NSBundle bundleForClass:[self class]], nil);
+        _titleTF.stringValue = LMLocalizedSelfBundleString(@"请开启通知提醒权限", nil);
     }
     return _titleTF;
 }
@@ -163,7 +163,7 @@
         _descTF.drawsBackground = NO;
         _descTF.font = [NSFontHelper getLightSystemFont:14];
         _descTF.textColor = [LMAppThemeHelper getTitleColor];
-        _descTF.stringValue = NSLocalizedStringFromTableInBundle(@"若存在摄像头、麦克风或扬声器等隐私设备被调用情况，将发送通知告知隐私保护的情况", nil, [NSBundle bundleForClass:[self class]], nil);
+        _descTF.stringValue = LMLocalizedSelfBundleString(@"若存在摄像头、麦克风或扬声器等隐私设备被调用情况，将发送通知告知隐私保护的情况", nil);
     }
     return _descTF;
 }
@@ -176,7 +176,7 @@
         _stepTF.drawsBackground = NO;
         _stepTF.font = [NSFontHelper getLightSystemFont:14];
         _stepTF.textColor = [NSColor colorWithHex:0x94979B];
-        _stepTF.stringValue = NSLocalizedStringFromTableInBundle(@"步骤：\n【系统设置】——【通知】——【应用程序通知】——开启【LemonMonitor】", nil, [NSBundle bundleForClass:[self class]], nil);
+        _stepTF.stringValue = LMLocalizedSelfBundleString(@"步骤：\n【系统设置】——【通知】——【应用程序通知】——开启【LemonMonitor】", nil);
     }
     return _stepTF;
 }
@@ -194,7 +194,7 @@
 - (NSButton *)cancelBtn {
     if (!_cancelBtn) {
         _cancelBtn = [[LMBorderButton alloc] init];
-        _cancelBtn.title = NSLocalizedStringFromTableInBundle(@"取消", nil, [NSBundle bundleForClass:[self class]], @"");
+        _cancelBtn.title = LMLocalizedSelfBundleString(@"取消", nil);
         _cancelBtn.target = self;
         _cancelBtn.action = @selector(cancelBtnClicked:);
         _cancelBtn.font = [NSFontHelper getRegularSystemFont:12];
@@ -204,7 +204,7 @@
 
 - (NSButton *)goSettingBtn {
     if (!_goSettingBtn) {
-        _goSettingBtn = [LMViewHelper createSmallGreenButton:12 title:NSLocalizedStringFromTableInBundle(@"前往设置", nil, [NSBundle bundleForClass:[self class]], nil)];
+        _goSettingBtn = [LMViewHelper createSmallGreenButton:12 title:LMLocalizedSelfBundleString(@"前往设置", nil)];
         _goSettingBtn.wantsLayer = YES;
         _goSettingBtn.layer.cornerRadius = 2;
         _goSettingBtn.target = self;

@@ -17,8 +17,9 @@ typedef NS_ENUM(NSUInteger, LemonDNCRestartType) {
 };
 
 #define LemonDNCRestartUserInfoReasonKey @"reason" // LemonDNCRestartReason 在userInfo中的key值
-typedef NS_ENUM(NSUInteger, LemonDNCRestartReason) {
-    LemonDNCRestartReasonFullDiskAccess = 1, // 完全磁盘访问权限
+typedef NS_OPTIONS(NSUInteger, LemonDNCRestartReason) {
+    LemonDNCRestartReasonFullDiskAccess = 1 << 0, // 完全磁盘访问权限
+    LemonDNCRestartReasonMonitorHasUpdated = 1 << 1, // monitor有更新
 };
 
 #endif /* LemonDNCDefine_h */

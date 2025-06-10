@@ -18,8 +18,6 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) BOOL oneClickGuideViewClosed;
 // ‘一键开启’ 被用户点击过
 @property (nonatomic) BOOL oneClickGuideViewClicked;
-// 曾经开启过 ‘隐私保护’
-@property (nonatomic) BOOL isPreviouslyEnabled;
 
 @end
 

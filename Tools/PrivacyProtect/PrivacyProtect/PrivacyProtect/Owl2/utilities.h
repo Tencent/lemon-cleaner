@@ -12,6 +12,7 @@
 
 #import <AppKit/AppKit.h>
 #import <Foundation/Foundation.h>
+@class Owl2AppItem;
 
 /* FUNCTIONS */
 
@@ -134,8 +135,12 @@ BOOL hasAdminPrivileges(void);
 BOOL DNDState(void);
 
 pid_t GUIApplicationPidForBundleIdentifier(NSString *name);
+NSString * GUIApplicationBundleIdentifierForPid(pid_t pid);
 
 NSString *getMACAddress(void);
 
-NSImage *getAppImage(NSDictionary *appDic, NSString *identifier);
+NSImage *getAppImage(Owl2AppItem *appItem, NSString *identifier);
+
+pid_t getParentProcessID(pid_t pid);
+
 #endif

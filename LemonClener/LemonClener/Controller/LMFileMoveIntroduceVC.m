@@ -73,7 +73,7 @@
     NSMutableParagraphStyle *textParagraphEg = [[NSMutableParagraphStyle alloc] init];
     [textParagraphEg setLineSpacing:4.0];
     NSDictionary *attrDicEg = [NSDictionary dictionaryWithObjectsAndKeys:textParagraphEg,NSParagraphStyleAttributeName, nil];
-    NSAttributedString *attrStringEg = [[NSAttributedString alloc] initWithString:NSLocalizedStringFromTableInBundle(@"例如聊天过程接收的视频、图片、文档等内容，一键整理转移到外设、云盘等，帮助你更好的释放磁盘空间。", nil, [NSBundle bundleForClass:[self class]], @"") attributes:attrDicEg];
+    NSAttributedString *attrStringEg = [[NSAttributedString alloc] initWithString:LMLocalizedSelfBundleString(@"例如聊天过程接收的视频、图片、文档等内容，一键整理转移到外设、云盘等，帮助你更好的释放磁盘空间。", nil) attributes:attrDicEg];
     [self.egField setAttributedStringValue:attrStringEg];
     [self.egField mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(self.descFiled.mas_bottom).offset(8);
