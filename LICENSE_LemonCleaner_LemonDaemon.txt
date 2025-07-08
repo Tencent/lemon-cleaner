@@ -1,6 +1,6 @@
 Tencent is pleased to support the open source community by making Lemon Cleaner available. 
 
-Copyright (C) 2022 THL A29 Limited, a Tencent company.  All rights reserved. The below software in this distribution may have been modified by THL A29 Limited ("Tencent Modifications"). All Tencent Modifications are Copyright (C) 2022 THL A29 Limited.
+Copyright (C) 2022 Tencent.  All rights reserved. The below software in this distribution may have been modified by Tencent ("Tencent Modifications"). All Tencent Modifications are Copyright (C) 2022 Tencent.
 
 The files in LemonDaemon module is licensed under the GNU General Public License, version 2 except for the third-party components listed below.
 
@@ -353,7 +353,7 @@ Other dependencies and licenses:
 
 
 Open Source Software Licensed under the GNU General Public License, version 2:
-The below software in this distribution may have been modified by THL A29 Limited ("Tencent Modifications"). All Tencent Modifications are Copyright (C) 2022 THL A29 Limited.
+The below software in this distribution may have been modified by Tencent ("Tencent Modifications"). All Tencent Modifications are Copyright (C) 2022 Tencent.
 --------------------------------------------------------------------
 1. smc-voltmeter
 Copyright (c) 2012 Hendrik Holtmann
