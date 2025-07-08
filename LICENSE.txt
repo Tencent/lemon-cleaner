@@ -1,6 +1,6 @@
 Tencent is pleased to support the open source community by making Lemon Cleaner available. 
 
-Copyright (C) 2022 THL A29 Limited, a Tencent company.  All rights reserved.
+Copyright (C) 2022 Tencent.  All rights reserved.
 
 The files in modules Lemon Monitor and Lemon Cleaner is licensed under the GNU General Public License, version 3 except for the third-party components listed below.
 
