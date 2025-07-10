@@ -72,4 +72,23 @@ typedef enum {
 #define kQMPrivacyLicenseLink       @"https://docs.qq.com/doc/p/14c9c888a06a856dd3945a4ed50a1f22be92020f?dver=2.1.27135941&pub=1&u=213b091f14ba4c878602e45174f03ad9"
 #define kQMServiceLicenseLink       @"https://docs.qq.com/doc/p/2f38b736932904b5dc268ec3e1400dc750511da0"
 
+/// 清理大类
+typedef NS_ENUM(NSInteger, LemonCleanerCategory) {
+    LemonCleanerCategory_System = 1,        // 系统垃圾
+    LemonCleanerCategory_App = 2,           // 应用垃圾
+    LemonCleanerCategory_Browser = 3        // 上网垃圾
+};
+
+/// 应用垃圾里面的子项 （有需要的就放进来）
+typedef NS_ENUM(NSInteger, LemonCleanerAppCategory) {
+    LemonCleanerAppCategory_WeChat = 20002,    // 微信
+};
+
+/// 微信里面的子项 （有需要的就放进来）
+typedef NS_ENUM(NSInteger, LemonCleanerWeChatCategory) {
+    LemonCleanerWeChatCategory_AudioFile = 200027,    // 语音文件
+};
+
+
+
 #endif

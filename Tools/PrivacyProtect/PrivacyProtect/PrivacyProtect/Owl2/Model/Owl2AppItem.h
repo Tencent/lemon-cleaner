@@ -21,6 +21,8 @@ NS_ASSUME_NONNULL_BEGIN
     BOOL _isWatchAudio;
     BOOL _isWatchCamera;
     BOOL _isWatchSpeaker;
+    BOOL _isWatchScreen;
+    BOOL _isWatchAutomatic;
 }
 
 // 后缀.app 或者 .appex
@@ -46,6 +48,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly) BOOL isWatchCamera;
 @property (nonatomic, readonly) BOOL isWatchSpeaker;
 @property (nonatomic, readonly) BOOL isWatchScreen;
+@property (nonatomic, readonly) BOOL isWatchAutomatic;
 
 // 同步更新白名单缓存中的数据
 - (void)syncUpdateWL:(NSDictionary *)dic;

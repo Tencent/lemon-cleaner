@@ -16,6 +16,7 @@
 #import "LMCleanerDataCenter.h"
 #import "QMCacheEnumerator.h"
 #import <QMUICommon/SharedPrefrenceManager.h>
+#import "QMCleanUtils.h"
 
 #define IS_NOT_FIRST_SCAN_INTELIGENT      @"is_not_first_scan_inteligent"
 #define IS_NOT_FIRST_SCAN_ADNROID_STUIDO  @"is_not_first_scan_android_studio"
@@ -110,6 +111,7 @@
     {
         _errLoopCount = 0;
         m_categoryDictOrigin = [parseManager categoryItemDict];
+        [self __checkIfUserDidInstalledWechat4:m_categoryDictOrigin];
         m_categoryDict = [[NSDictionary alloc] initWithDictionary:m_categoryDictOrigin copyItems:YES];
         NSMutableArray *array = [NSMutableArray arrayWithArray:m_categoryDict.allValues];
         [array sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
@@ -121,6 +123,54 @@
         // 解析完毕
         [[NSNotificationCenter defaultCenter] postNotificationName:kQMCleanXMLItemParseEnd
                                                             object:array];
+    }
+}
+
+/// 判断用户电脑上是否安装了微信4，安装微信4显示语言文件暂时不知道文件存放位置，产品需求暂不显示
+- (void)__checkIfUserDidInstalledWechat4:(NSDictionary *)dic {
+    
+    // 如果没有安装微信4，按原来的展示
+    BOOL userInstalledWeChat4 = [QMCleanUtils isCurrentUserInstalledWeChat4];
+    if (!userInstalledWeChat4) {
+        return;
+    }
+    
+    NSArray * subCategoryItems = [NSMutableArray array];
+    for (QMCategoryItem * item in dic.allValues) {
+        if (item.categoryID.integerValue == LemonCleanerCategory_App) {       // 应用垃圾
+            subCategoryItems = item.m_categorySubItemArray;
+            break;
+        }
+    }
+    
+    if (0 == subCategoryItems.count) {
+        return;
+    }
+    
+    QMCategorySubItem * weChatItem = nil;
+    for (QMCategorySubItem * item in subCategoryItems) {
+        if (item.subCategoryID.integerValue == LemonCleanerAppCategory_WeChat) {    // 微信
+            weChatItem = item;
+            break;
+        }
+    }
+    
+    if (!weChatItem) {
+        return;
+    }
+    
+    QMActionItem * audioFileItem = nil;
+    NSMutableArray * wechatActionItems = [NSMutableArray arrayWithArray:weChatItem.m_actionItemArray];
+    for (QMActionItem * item in wechatActionItems) {
+        if (item.actionID.integerValue == LemonCleanerWeChatCategory_AudioFile) {    // 语音文件
+            audioFileItem = item;
+            break;
+        }
+    }
+    
+    if (audioFileItem) {
+        [wechatActionItems removeObject:audioFileItem];
+        weChatItem.m_actionItemArray = wechatActionItems;
     }
 }
 

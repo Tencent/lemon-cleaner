@@ -24,6 +24,7 @@
 #import <QMUICommon/LMTitleButton.h>
 #import "owl2deviceprotectionswitchview.h"
 #import "NSAlert+OwlExtend.h"
+#import "Owl2Manager+Guide.h"
 
 @interface OwlBorderView : NSView
 
@@ -57,6 +58,8 @@
 @property (nonatomic, strong) Owl2DeviceProtectionSwitchView *audioSwitchView;
 
 @property (nonatomic, strong) Owl2DeviceProtectionSwitchView *screenSwitchView;
+
+@property (nonatomic, strong) Owl2DeviceProtectionSwitchView *automaticSwitchView;
 
 @end
 
@@ -138,22 +141,49 @@
     Owl2Manager *owl2Manager = [Owl2Manager sharedManager];
     
     if (!owl2Manager.isWatchAudio) {
-        self.audioSwitchView.config.on = YES;
-        [self owl2DeviceProtectionSwitchValueDidChange:self.audioSwitchView.config];
-        [self.audioSwitchView updateUI];
+        [self onClickAudio:YES];
     }
     
     if (!owl2Manager.isWatchVideo) {
-        self.videoSwitchView.config.on = YES;
-        [self owl2DeviceProtectionSwitchValueDidChange:self.videoSwitchView.config];
-        [self.videoSwitchView updateUI];
+        [self onClickVideo:YES];
     }
     
     if (!owl2Manager.isWatchScreen) {
-        self.screenSwitchView.config.on = YES;
-        [self owl2DeviceProtectionSwitchValueDidChange:self.screenSwitchView.config];
-        [self.screenSwitchView updateUI];
+        [self onClickScreen:YES];
     }
+    
+    if (!owl2Manager.isWatchAutomatic) {
+        [self onClickAutomatic:YES];
+    }
+}
+
+- (void)onClickVideo:(BOOL)state {
+    self.videoSwitchView.config.on = state;
+    [self owl2DeviceProtectionSwitchValueDidChange:self.videoSwitchView.config];
+    [self.videoSwitchView updateUI];
+}
+
+- (void)onClickAudio:(BOOL)state {
+    self.audioSwitchView.config.on = state;
+    [self owl2DeviceProtectionSwitchValueDidChange:self.audioSwitchView.config];
+    [self.audioSwitchView updateUI];
+}
+
+- (void)onClickScreen:(BOOL)state {
+    self.screenSwitchView.config.on = state;
+    [self owl2DeviceProtectionSwitchValueDidChange:self.screenSwitchView.config];
+    [self.screenSwitchView updateUI];
+}
+
+- (void)onClickAutomatic:(BOOL)state {
+    // 如果用户展示的是OWLShowGuideViewType_Special，然后手动点击自动糊的switch开关来开启，则也要去掉guideview，所以当手动开启automatic的时候，设置下oneClickGuideViewClicked
+    if ([Owl2Manager.sharedManager guideViewShowType] == OWLShowGuideViewType_Special && state) {
+        [Owl2Manager sharedManager].oneClickGuideViewClicked = YES;
+    }
+    
+    self.automaticSwitchView.config.on = state;
+    [self owl2DeviceProtectionSwitchValueDidChange:self.automaticSwitchView.config];
+    [self.automaticSwitchView updateUI];
 }
 
 - (void)whiteListChange:(NSNotification*)no{
@@ -214,6 +244,7 @@
     [self.ccView addSubview:self.videoSwitchView];
     [self.ccView addSubview:self.audioSwitchView];
     [self.ccView addSubview:self.screenSwitchView];
+    [self.ccView addSubview:self.automaticSwitchView];
     
     self.bottomBgView = [[OwlContentView alloc] init];
     [self.ccView addSubview:self.bottomBgView];
@@ -282,23 +313,28 @@
     }];
     [self.videoSwitchView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(labelTitle.mas_bottom).offset(33);
-        make.left.mas_equalTo(52);
-        make.size.mas_equalTo(NSMakeSize(220, 220));
+        make.left.mas_equalTo(54);
+        make.size.mas_equalTo(NSMakeSize(330, 94));
     }];
     [self.audioSwitchView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(labelTitle.mas_bottom).offset(33);
-        make.centerX.mas_equalTo(0);
-        make.size.mas_equalTo(NSMakeSize(220, 220));
+        make.top.equalTo(self.videoSwitchView);
+        make.right.mas_equalTo(-54);
+        make.size.mas_equalTo(NSMakeSize(330, 94));
     }];
     [self.screenSwitchView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(labelTitle.mas_bottom).offset(33);
-        make.right.mas_equalTo(-52);
-        make.size.mas_equalTo(NSMakeSize(220, 220));
+        make.top.mas_equalTo(self.videoSwitchView.mas_bottom).offset(12);
+        make.left.mas_equalTo(54);
+        make.size.mas_equalTo(NSMakeSize(330, 94));
+    }];
+    [self.automaticSwitchView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.screenSwitchView);
+        make.right.mas_equalTo(-54);
+        make.size.mas_equalTo(NSMakeSize(330, 94));
     }];
     [self.bottomBgView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.equalTo(self.videoSwitchView.mas_bottom).offset(60);
         make.bottom.equalTo(self.ccView);
         make.left.right.equalTo(self.ccView);
+        make.size.height.mas_equalTo(58);
     }];
     [logBtn mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerY.equalTo(self.bottomBgView);
@@ -490,6 +526,12 @@
             [NSAlert owl_showScreenPrivacyProtection];
         }
     }
+    else if (config.type == Owl2DPSwitchTypeWatchAutomatic) {
+        [self showNotificationPermissionViewWithConfig:config cacheSwitchState:owl2Manager.isWatchAutomatic];
+        
+        [[Owl2Manager sharedManager] setWatchAutomatic:config.on toDb:YES];
+        [[NSUserDefaults standardUserDefaults] setBool:config.on forKey:K_IS_WATCHING_AUTOMATIC];
+    }
 }
 
 - (void)showNotificationPermissionViewWithConfig:(Owl2DeviceProtectionSwitchConfig *)config cacheSwitchState:(BOOL)state {
@@ -511,7 +553,6 @@
         config.on = [[Owl2Manager sharedManager] isWatchAudio];
         _audioSwitchView = [[Owl2DeviceProtectionSwitchView alloc] initWithFrame:NSMakeRect(0, 0, 220, 220) config:config];
         _audioSwitchView.delegate = self;
-        _audioSwitchView.layer = [self switchViewLayer];
     }
     return _audioSwitchView;
 }
@@ -525,9 +566,8 @@
         config.title = LMLocalizedSelfBundleString(@"摄像头保护", nil);
         config.desc = LMLocalizedSelfBundleString(@"软件调用摄像头时提示", nil);
         config.on = [[Owl2Manager sharedManager] isWatchVideo];
-        _videoSwitchView = [[Owl2DeviceProtectionSwitchView alloc] initWithFrame:NSMakeRect(0, 0, 220, 220) config:config];
+        _videoSwitchView = [[Owl2DeviceProtectionSwitchView alloc] initWithFrame:NSMakeRect(0, 0, 330, 94) config:config];
         _videoSwitchView.delegate = self;
-        _videoSwitchView.layer = [self switchViewLayer];
     }
     return _videoSwitchView;
 }
@@ -538,22 +578,28 @@
         config.type = Owl2DPSwitchTypeWatchScreen;
         config.imageNameOn = @"owl_screen_nomal";
         config.imageNameOff = @"owl_screen_disable";
-        config.title = LMLocalizedSelfBundleString(@"屏幕保护", nil);
+        config.title = LMLocalizedSelfBundleString(@"屏幕信息保护", nil);
         config.desc = LMLocalizedSelfBundleString(@"软件截取或录制屏幕信息时提示", nil);
         config.on =  [[Owl2Manager sharedManager] isWatchScreen];
-        _screenSwitchView = [[Owl2DeviceProtectionSwitchView alloc] initWithFrame:NSMakeRect(0, 0, 220, 220) config:config];
+        _screenSwitchView = [[Owl2DeviceProtectionSwitchView alloc] initWithFrame:NSMakeRect(0, 0, 330, 94) config:config];
         _screenSwitchView.delegate = self;
-        _screenSwitchView.layer = [self switchViewLayer];
     }
     return _screenSwitchView;
 }
 
-- (CALayer *)switchViewLayer {
-    CALayer *borderLayer = [[CALayer alloc] init];
-    borderLayer.borderColor = [NSColor colorWithWhite:0.94 alpha:1].CGColor;
-    borderLayer.borderWidth = 0;
-    borderLayer.cornerRadius = 4;
-    return borderLayer;
+- (Owl2DeviceProtectionSwitchView *)automaticSwitchView {
+    if (!_automaticSwitchView) {
+        Owl2DeviceProtectionSwitchConfig *config = [Owl2DeviceProtectionSwitchConfig new];
+        config.type = Owl2DPSwitchTypeWatchAutomatic;
+        config.imageNameOn = @"owl_automatic_normal";
+        config.imageNameOff = @"owl_automatic_disable";
+        config.title = LMLocalizedSelfBundleString(@"自动操作提示", nil);
+        config.desc = LMLocalizedSelfBundleString(@"自动化接口被调用时提示，接口可操作电脑和访问隐私数据", nil);
+        config.on =  [[Owl2Manager sharedManager] isWatchAutomatic];
+        _automaticSwitchView = [[Owl2DeviceProtectionSwitchView alloc] initWithFrame:NSMakeRect(0, 0, 330, 94) config:config];
+        _automaticSwitchView.delegate = self;
+    }
+    return _automaticSwitchView;
 }
 
 @end

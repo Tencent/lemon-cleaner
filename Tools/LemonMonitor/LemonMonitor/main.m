@@ -2,7 +2,7 @@
 //  main.m
 //  LemonMonitor
 //
-
+//  Created by tanhao on 14-7-1.
 //  Copyright (c) 2014年 Tencent. All rights reserved.
 //
 
@@ -10,65 +10,11 @@
 #include "LemonMonitroHelpParams.h"
 #import "LemonDaemonConst.h"
 #import "TrashCheckMonitor.h"
+#import "LMUtilFunc.h"
 #import <QMUICommon/SharedPrefrenceManager.h>
 #import <QMCoreFunction/QMShellExcuteHelper.h>
 
 CFAbsoluteTime g_startTime = 0;
-
-void redirctNSlog()
-{
-    NSLog(@"redirctNSlog ...");
-    NSString *logPath;
-    NSString *logName = [[[NSBundle mainBundle] executablePath] lastPathComponent];
-    
-    // do not redirect in test mode
-    //if ([[[NSBundle mainBundle] executablePath] containsString:@"/Library"])
-    //    return;
-    
-    NSString *rootLogPath = [NSString stringWithFormat:@"/Library/Logs/%@", logName];
-    rootLogPath = [rootLogPath stringByAppendingPathExtension:@"log"];
-    
-    if (getuid() == 0)
-    {
-        // root
-        logPath = rootLogPath;
-    }
-    else
-    {
-        // user
-        logPath = [NSHomeDirectory() stringByAppendingPathComponent:rootLogPath];
-    }
-    
-    // clean log file
-    NSFileManager *fileMgr = [NSFileManager defaultManager];
-    if (![fileMgr fileExistsAtPath:logPath]) {
-        [fileMgr createFileAtPath:logPath contents:[NSData data] attributes:nil];
-    }
-    
-    id handle = [NSFileHandle fileHandleForWritingAtPath:logPath];
-    
-    NSDictionary *fileAttributes = [fileMgr attributesOfItemAtPath:logPath error:nil];
-    BOOL isLeastSevenDays = NO;
-    if (fileAttributes) {
-        NSDate *date = [fileAttributes objectForKey:NSFileCreationDate];
-        NSTimeInterval createTimeInterval = [date timeIntervalSince1970];
-        NSTimeInterval todayTimeInterval = [[NSDate date] timeIntervalSince1970];
-        if ((todayTimeInterval - createTimeInterval) <= 7 * 24 * 3600) {
-            isLeastSevenDays = YES;
-        }else{
-            [fileMgr createFileAtPath:logPath contents:[NSData data] attributes:nil];
-            handle = [NSFileHandle fileHandleForWritingAtPath:logPath];
-        }
-    }
-    if (isLeastSevenDays) {
-        [handle seekToEndOfFile];
-    }
-    
-    if (handle != nil)
-    {
-        dup2([handle fileDescriptor], STDERR_FILENO);
-    }
-}
 
 BOOL isAppRunningBundleId(NSString *bundelId){
     NSArray *runnings= [NSRunningApplication runningApplicationsWithBundleIdentifier:bundelId];
@@ -86,7 +32,6 @@ Boolean trashCheck(){
         NSLog(@"%s, trash watch app disable", __FUNCTION__);
         return false;
     }
-    NSLog(@"%s appTrashItems is \n %@", __FUNCTION__,  [appTrashItems componentsJoinedByString:@",  "]);
     
     if ([appTrashItems count] > 0) {
         NSLog(@"[TrashDel__trashCheck_from Monitor] postnotification: changed apps: %@", [appTrashItems componentsJoinedByString:@","]);
@@ -106,8 +51,6 @@ Boolean trashCheck(){
         NSLog(@" %s can't get new apps", kTrashChanged_cstr);
         return false;
     }
-    // sleep 100ms,保证日志写完.
-    usleep(100 *1000);
 }
 
 void trashSizeCheck(){

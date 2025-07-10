@@ -12,4 +12,7 @@
 
 +(NSInteger)getAppSizeByPath:(NSString *)path andFileType:(NSString *)type;
 
+// maxSize 单位为MB
++ (void)redirectLogToFileAtPath:(NSString *)path forDays:(NSInteger)persistDays maxSize:(unsigned long long)maxSize;
+
 @end

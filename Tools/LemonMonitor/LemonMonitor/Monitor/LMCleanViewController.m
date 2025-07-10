@@ -1168,7 +1168,7 @@
             }
             processInfos = head5Processes;
             
-            NSArray *memoryInfo = [processInfos map:^id(McProcessInfoData *data, NSUInteger index) {
+            NSArray *memoryInfo = [processInfos filteredMappedArray:^id(McProcessInfoData *data, NSUInteger index) {
                 NSRunningApplication *runningApp = [NSRunningApplication runningApplicationWithProcessIdentifier:data.pid];
                 LMMemoryItem *item = [[LMMemoryItem alloc] init];
                 item.icon = runningApp.icon ?: [[NSWorkspace sharedWorkspace] iconForFile:data.pExecutePath];

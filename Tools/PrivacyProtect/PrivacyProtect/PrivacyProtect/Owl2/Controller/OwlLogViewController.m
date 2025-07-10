@@ -406,10 +406,11 @@
         case Owl2LogThirdAppActionStart:
             if (hardware.intValue == Owl2LogHardwareSystemAudio) {
                 appActionStr = @"开始录制";
+            } else if (hardware.intValue == Owl2LogHardwareAutomation) {
+                appActionStr = @"自动操作";
             } else {
                 appActionStr = @"正在使用";
             }
-            
             break;
         case Owl2LogThirdAppActionStartForScreenshot:
             appActionStr = @"已截取";
@@ -445,6 +446,8 @@
         case Owl2LogHardwareScreen:
             hardwareStr = @"屏幕内容";
             break;
+        case Owl2LogHardwareAutomation:
+            hardwareStr = @"电脑";
         default:
             break;
     }

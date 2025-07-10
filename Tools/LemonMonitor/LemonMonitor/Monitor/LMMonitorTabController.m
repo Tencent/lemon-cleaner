@@ -30,7 +30,7 @@
 
 #define MONITOR_OPNE_LEMON_505      @"MONITOR_OPNE_LEMON_505" // 505活动入口标记
 
-#define NORMAL_VIEW_HEIGHT      470
+#define NORMAL_VIEW_HEIGHT      500
 
 static const CGFloat kTopPadding = 10;
 
@@ -108,7 +108,7 @@ static const CGFloat kTopPadding = 10;
 - (void)loadView
 {
     NSRect rect = NSMakeRect(0, 0, 340, NORMAL_VIEW_HEIGHT); //不包括箭头
-    if ([Owl2Manager sharedManager].showOneClickGuideView) {
+    if ([[Owl2Manager sharedManager] guideViewShowType] != OWLShowGuideViewType_None) {
         // 展示隐私保护‘一键开启’引导视图
         rect.size.height += 54;
     }
@@ -152,7 +152,7 @@ static const CGFloat kTopPadding = 10;
 
         // 系统功能页要加红点
         if ([item.label isEqualToString:NSLocalizedString(@"系统功能", nil)]) {
-            NSDictionary *dict = @{item.label: @"kLemonMonitorDidClickedSystemFunctionTab"};
+            NSDictionary *dict = @{item.label: @"kLemonMonitorDidClickedSystemFunctionTabForAutomatic"};
             [(LMBaseLineSegmentedControl *)_segmentedControl updateRedPointInfo:dict];
         }
     }];
@@ -227,7 +227,7 @@ static const CGFloat kTopPadding = 10;
     float currentViewH = self.view.frame.size.height;
     
     NSRect normalViewFrame = NSMakeRect(0, 0, 340, NORMAL_VIEW_HEIGHT); //不包括箭头
-    if ([Owl2Manager sharedManager].showOneClickGuideView) {
+    if ([[Owl2Manager sharedManager] guideViewShowType] != OWLShowGuideViewType_None) {
         // 展示隐私保护‘一键开启’引导视图
         normalViewFrame.size.height += 54;
     }

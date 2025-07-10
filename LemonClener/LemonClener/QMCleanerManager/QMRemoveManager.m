@@ -17,6 +17,7 @@
     int cleanedItemCount;
 }
 @property(nonatomic, strong) NSString *allShellString;
+@property(strong) NSDictionary *xcodeRuntimeListInfo;
 @end
 
 @implementation QMRemoveManager
@@ -133,10 +134,71 @@
         }
         else
         {
+            [self __checkIfNeedRemoveXcodeRuntimeSimulator:array];
+            
             [coreFunction cleanItemAtPath:nil array:array removeType:removeType];
         }
     }
 }
+
+- (void)__checkIfNeedRemoveXcodeRuntimeSimulator:(NSArray *)array {
+    for (NSString * path in array) {
+        if (![[NSFileManager defaultManager] fileExistsAtPath:path]) {
+            continue;
+        }
+        if (![path containsString:@"Library/Developer/CoreSimulator/Profiles/Runtimes/iOS"]) {
+            continue;
+        }
+        NSString * fileName = path.lastPathComponent.stringByDeletingPathExtension;
+        for (NSString * key in self.xcodeRuntimeListInfo.allKeys) {
+            if ([key.lowercaseString hasPrefix:fileName.lowercaseString]) {
+                NSString * value = [self.xcodeRuntimeListInfo objectForKey:key];
+                NSLog(@"[XR] alue : %@",value);
+                NSString * result = [QMShellExcuteHelper excuteCmd:[NSString stringWithFormat:@"xcrun simctl runtime delete \"%@\"",value]];
+                NSLog(@"[XR] result : %@", result);
+            }
+        }
+    }
+}
+
+- (void)__updateXcodeRuntimeListInfo {
+    NSString * runtimeList = [QMShellExcuteHelper excuteCmd:@"xcrun simctl runtime list"];
+    self.xcodeRuntimeListInfo = [self __parseRuntimeListOutput:runtimeList];
+    NSLog(@"[XR] Runtime List Info : %@", self.xcodeRuntimeListInfo);
+}
+
+- (NSDictionary *)__parseRuntimeListOutput:(NSString *)output {
+    NSMutableDictionary *resultDict = [NSMutableDictionary dictionary];
+    __block BOOL isIOSSection = NO;
+    
+    [output enumerateLinesUsingBlock:^(NSString *line, BOOL *stop) {
+        if ([line containsString:@"-- iOS --"]) {
+            isIOSSection = YES;
+            return;
+        }
+        else if ([line hasPrefix:@"--"]) {
+            isIOSSection = NO;
+            return;
+        }
+        
+        // 只处理iOS区域内的有效行
+        if (isIOSSection && [line hasPrefix:@"iOS"]) {
+            NSArray *mainComponents = [line componentsSeparatedByString:@" - "];
+            if (mainComponents.count >= 2) {
+                NSString *version = [mainComponents[0] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+                NSString *uuidPart = mainComponents[1];
+                NSArray *uuidComponents = [uuidPart componentsSeparatedByString:@" "];
+                if (uuidComponents.count > 0) {
+                    NSString *uuid = uuidComponents[0];
+                    [resultDict setObject:uuid forKey:version];
+                }
+            }
+        }
+    }];
+    
+    return [resultDict copy];
+}
+
 
 // 检查删除ResultItem是否警告
 - (BOOL)checkWarnResultItem:(QMResultItem *)resultItem
@@ -668,6 +730,9 @@
 
 - (BOOL)startCleaner:(NSMutableDictionary *)resultDict actionSource:(QMCleanerActionSource)source
 {
+    // 每次清理时，更新最新的xcode runtime list，后面有需要删除的话，可以直接用
+    [self __updateXcodeRuntimeListInfo];
+    
     __weak QMRemoveManager *weakSelf = self;
     NSLog(@"%p, %p, startCleaner", self, self.class);
     [QMRemoveManager getInstance];

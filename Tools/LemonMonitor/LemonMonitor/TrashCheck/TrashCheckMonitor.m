@@ -130,20 +130,33 @@
 - (NSArray *)getNewTashApps {
     NSLog(@"%s", __FUNCTION__);
     NSArray *oldTrashApps = [self getOldTrashApps];  //写在 ~/Library/Application Support/com.tencent.Lemon/trashLog
-    
     NSArray *curTrashApps = [self getTrashApps];
     [self saveTrashApps:curTrashApps];
-    //oldTrashApps为nil, 代表应用刚启动第一次检测，所以直接返回nil
+    // 初次启动
+    // oldTrashApps为nil, 代表应用刚启动第一次检测，所以直接返回nil
     // oldTrashApps为大小为0的array，代表上一次检测垃圾桶里没有app
     if (!oldTrashApps) {
         NSLog(@"%s oldTrash is nil, stop scan", __FUNCTION__);
         return nil;
-    }else{
-        NSLog(@"%s oldTrash Apps is \n %@", __FUNCTION__,  [oldTrashApps componentsJoinedByString:@",  "]);
-        if(curTrashApps){
-            NSLog(@"%s nowTrash Apps is \n %@", __FUNCTION__,  [curTrashApps componentsJoinedByString:@",  "]);
+    }
+    
+    // 无新增
+    if (curTrashApps.count == 0) {
+        return nil;
+    }
+    
+    // 有值无变化
+    if (oldTrashApps && curTrashApps) {
+        NSSet *oldTrashAppsSet = [NSSet setWithArray:oldTrashApps];
+        NSSet *curTrashAppsSet = [NSSet setWithArray:curTrashApps];
+        if ([oldTrashAppsSet isEqualToSet:curTrashAppsSet]) {
+            return nil;
         }
     }
+
+    NSLog(@"%s oldTrash Apps is \n %@", __FUNCTION__,  [oldTrashApps componentsJoinedByString:@",  "]);
+    NSLog(@"%s nowTrash Apps is \n %@", __FUNCTION__,  [curTrashApps componentsJoinedByString:@",  "]);
+    
     NSMutableArray *newApps = [[NSMutableArray alloc] init];
     
     NSMutableArray<NSString*> *oldTrashContainsApps = [NSMutableArray array];

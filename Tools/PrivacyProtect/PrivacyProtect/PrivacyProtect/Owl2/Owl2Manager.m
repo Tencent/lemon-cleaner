@@ -34,6 +34,7 @@ NSNotificationName const OwlLogChangeNotication = @"OwlLogChangeNotication";
 @property (nonatomic, strong) NSThread *owlIOThread;
 @property (nonatomic, strong) NSMutableArray *notificationDetailArray;
 @property (nonatomic, strong) AVMonitor *avMonitor;
+@property (nonatomic) BOOL avMonitorIsRunning;
 @property (nonatomic) BOOL isAudioDeviceActive;
 @property (nonatomic) NSMutableDictionary<NSString *, NSDate *> *appEventTimeDict;
 
@@ -73,6 +74,9 @@ typedef void (^OwlCompleteBlock)(void);
         _dispatchedScreenCaptureEventArray = [NSMutableArray new]; //用来处理截屏和录屏的通知冲突，优先展示录屏
         self.notificationInsertLogList = [[QMSafeMutableDictionary alloc] init];
         self.appEventTimeDict = [NSMutableDictionary new];
+        
+        // 初始化用户是否显示过老的guideview横幅
+        [self initCurrentUserDidShowGuideInOldVersionCached];
         
         _avMonitor = [[AVMonitor alloc] init];
         __weak typeof(self) weakSelf = self;
@@ -125,14 +129,10 @@ typedef void (^OwlCompleteBlock)(void);
         _isWatchVideo = state;
         if (toDB) {
             dispatch_async(dispatch_get_main_queue(), ^{
-                if (state) {
-                    [self.avMonitor watchAllVideoDevice];
-                } else {
-                    [self.avMonitor unwatchAllVideoDevice];
-                }
                 [self updateAllWatch];
             });
         }
+        [self someFeatureSwitchValueDidChange];
     }
 }
 
@@ -143,14 +143,10 @@ typedef void (^OwlCompleteBlock)(void);
         _isWatchAudio = state;
         if (toDB) {
             dispatch_async(dispatch_get_main_queue(), ^{
-                if (state) {
-                    [self.avMonitor watchAllAudioDevice];
-                } else {
-                    [self.avMonitor unwatchAllAudioDevice];
-                }
                 [self updateAllWatch];
             });
         }
+        [self someFeatureSwitchValueDidChange];
     }
 }
 
@@ -163,6 +159,20 @@ typedef void (^OwlCompleteBlock)(void);
                 [self updateAllWatch];
             });
         }
+        [self someFeatureSwitchValueDidChange];
+    }
+}
+
+- (void)setWatchAutomatic:(BOOL)state toDb:(BOOL)toDB {
+    NSLog(@"setWatchAutomatic: %d, %d", _isWatchAutomatic, state);
+    if (state != _isWatchAutomatic) {
+        _isWatchAutomatic = state;
+        if (toDB) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self updateAllWatch];
+            });
+        }
+        [self someFeatureSwitchValueDidChange];
     }
 }
 
@@ -207,7 +217,7 @@ typedef void (^OwlCompleteBlock)(void);
     _wlDic = [[QMSafeMutableDictionary alloc] init];
     _logArray = [[NSMutableArray alloc] init];
     _isFetchDataFinish = NO;
-    NSLog(@"startOwlProtect begin: %d, %d, %d", _isWatchVideo, _isWatchAudio, _isWatchScreen);
+    NSLog(@"startOwlProtect begin: %d, %d, %d, %d", _isWatchVideo, _isWatchAudio, _isWatchScreen, _isWatchAutomatic);
     
     [self closeDB];
     [self loadDB];
@@ -218,27 +228,65 @@ typedef void (^OwlCompleteBlock)(void);
             [self.wlDic setObject:item forKey:item.identifier];
         }
     }
-    [self.avMonitor start];
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        if (self.isWatchVideo) {
-            [self.avMonitor watchAllVideoDevice];
-        }
-        if (self.isWatchAudio) {
-            [self.avMonitor watchAllAudioDevice];
-        }
-    });
+    if (self.isWatchAudio || self.isWatchVideo || self.isWatchScreen || self.isWatchAutomatic) {
+        [self starAvMonitor];
+    }
     self.isFetchDataFinish = YES;
-    NSLog(@"startOwlProtect end: %d, %d, %d", _isWatchVideo, _isWatchAudio, _isWatchScreen);
+    NSLog(@"startOwlProtect end: %d, %d, %d, %d", _isWatchVideo, _isWatchAudio, _isWatchScreen, _isWatchAutomatic);
 }
 
 - (void)stopOwlProtect
 {
     [self closeDB];
-    [self.avMonitor unwatchAllAudioDevice];
-    [self.avMonitor unwatchAllVideoDevice];
     self.isWatchAudio = NO;
     self.isWatchVideo = NO;
     self.isWatchScreen = NO;
+    self.isWatchAutomatic = NO;
+    [self stopAvMonitor];
+}
+
+- (void)someFeatureSwitchValueDidChange {
+    dispatch_block_t block = ^{
+        if (self.isWatchAudio || self.isWatchVideo || self.isWatchScreen || self.isWatchAutomatic) {
+            [self starAvMonitor];
+        } else {
+            [self stopAvMonitor];
+        }
+    };
+    
+    if ([[NSThread currentThread] isMainThread]) {
+        block();
+    } else {
+        dispatch_async(dispatch_get_main_queue(), block);
+    }
+}
+
+- (void)starAvMonitor {
+    if (!self.avMonitorIsRunning) {
+        self.avMonitorIsRunning = YES;
+        [self.avMonitor start];
+    }
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        self.isWatchVideo ? [self.avMonitor watchAllVideoDevice] : [self.avMonitor unwatchAllVideoDevice];
+        self.isWatchAudio ? [self.avMonitor watchAllAudioDevice] : [self.avMonitor unwatchAllAudioDevice];
+        self.isWatchScreen ? [self.avMonitor watchAllScreen] : [self.avMonitor unwatchAllScreen];
+        self.isWatchAutomatic ? [self.avMonitor watchAutomatic] : [self.avMonitor unwatchAutomatic];
+        if (self.isWatchScreen || self.isWatchAutomatic) {
+            [self.avMonitor watchFrontMostWindow];
+        } else if (!self.isWatchScreen && !self.isWatchAutomatic){
+            [self.avMonitor unwatchFrontMostWindow];
+        }
+    });
+}
+
+- (void)stopAvMonitor {
+    if (!self.avMonitorIsRunning) return;
+    self.avMonitorIsRunning = NO;
+    [self.avMonitor unwatchAllAudioDevice];
+    [self.avMonitor unwatchAllVideoDevice];
+    [self.avMonitor unwatchAllScreen];
+    [self.avMonitor unwatchAutomatic];
+    [self.avMonitor unwatchFrontMostWindow];
     [self.avMonitor stop];
 }
 
@@ -302,9 +350,12 @@ typedef void (^OwlCompleteBlock)(void);
 
 - (void)processEvent:(Event *)event
 {
-    if (event.deviceType != LMDevice_SystemAudio && event.deviceType != LMDevice_Screen && ![event.device.manufacturer containsString:@"Apple"]) {
-        return;
+    if (event.deviceType == LMDevice_Camera || event.deviceType == LMDevice_Microphone) {
+        if (![event.device.manufacturer containsString:@"Apple"]) {
+            return;
+        }
     }
+
     LMDeviceType deviceType = event.deviceType;
     Client *client = event.client;
 
@@ -394,6 +445,11 @@ typedef void (^OwlCompleteBlock)(void);
                 [self.owlScreenItemArray removeObject:deleteItem];
             }
         }
+    } else if (LMDevice_Automatic == deviceType) {
+        NSMutableDictionary *dicItem = [[NSMutableDictionary alloc] init];
+        [self _setDictItem:dicItem event:event];
+        [self.notificationDetailArray addObjectsFromArray:@[dicItem]];
+        [self analyseDeviceInfoForNotificationWithArray:@[dicItem]];
     }
 }
 
@@ -555,6 +611,9 @@ typedef void (^OwlCompleteBlock)(void);
     dict[OWL_DEVICE_NAME] = event.device.localizedName;
     dict[OWL_BUNDLE_ID] = client.processBundleID;
     dict[OWL_PROC_DELTA] = @(state == NSControlStateValueOn ? 1 : -1);
+    dict[OWL_TARGET_PROC_ID] = client.targetPid;
+    dict[OWL_TARGET_PROC_NAME] = client.targetName ?: @"";
+    dict[OWL_TARGET_PROC_PATH] = client.targetPath ?: @"";
 }
 
 - (void)_matchDictItem:(NSDictionary *)dict event:(Event *)event resArray:(NSMutableArray *)resArray;
@@ -601,6 +660,9 @@ typedef void (^OwlCompleteBlock)(void);
     }
 }
 
+- (NSString *)frontMostAppBundleId {
+    return self.avMonitor.currentFrontMostAppBundleId;
+}
 
 @end
 

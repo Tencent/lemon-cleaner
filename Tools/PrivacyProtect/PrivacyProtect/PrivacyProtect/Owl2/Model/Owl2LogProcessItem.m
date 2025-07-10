@@ -208,6 +208,10 @@ static NSString * const kSuffixAppex = @".appex/";
         if (self.convenient_mainAppItem.isWatchScreen) {
             return YES;
         }
+    } else if (self.convenient_hardware == Owl2LogHardwareAutomation) {
+        if (self.convenient_mainAppItem.isWatchAutomatic) {
+            return YES;
+        }
     }
     return NO;
 }

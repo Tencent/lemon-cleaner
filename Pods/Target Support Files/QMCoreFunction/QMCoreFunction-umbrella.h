@@ -20,6 +20,8 @@
 #import "QMDisk.h"
 #import "CutBinary.h"
 #import "McFunCleanFile.h"
+#import "LMLoopTrigger.h"
+#import "LMLoopTriggerCallbackObject.h"
 #import "LMKeychain.h"
 #import "LanguageHelper.h"
 #import "NSBundle+LMLanguage.h"

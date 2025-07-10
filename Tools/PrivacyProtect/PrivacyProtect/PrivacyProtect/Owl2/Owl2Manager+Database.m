@@ -11,7 +11,7 @@
 
 #define kTableBackUp(name) [NSString stringWithFormat:@"%@_backup", name]
 
-static NSInteger kDatabaseVersion = 2;
+static NSInteger kDatabaseVersion = 3;
 
 @implementation Owl2Manager (Database)
 
@@ -31,7 +31,7 @@ static NSInteger kDatabaseVersion = 2;
 
 - (void)createProfileTable
 {
-    BOOL result = [db executeUpdate:[NSString stringWithFormat:@"CREATE TABLE IF NOT EXISTS %@ (id integer PRIMARY KEY AUTOINCREMENT, %@ integer DEFAULT 0, %@ integer DEFAULT 0, %@ integer DEFAULT 0);", OwlProcProfileTable, OwlWatchCamera, OwlWatchAudio, OwlWatchScreen]];
+    BOOL result = [db executeUpdate:[NSString stringWithFormat:@"CREATE TABLE IF NOT EXISTS %@ (id integer PRIMARY KEY AUTOINCREMENT, %@ integer DEFAULT 0, %@ integer DEFAULT 0, %@ integer DEFAULT 0, %@ integer DEFAULT 0);", OwlProcProfileTable, OwlWatchCamera, OwlWatchAudio, OwlWatchScreen, OwlWatchAutomatic]];
     if (result)
     {
         
@@ -65,7 +65,7 @@ static NSInteger kDatabaseVersion = 2;
 
 - (void)createWhiteAppTable
 {
-    NSString *strSQL = [NSString stringWithFormat:@"CREATE TABLE IF NOT EXISTS %@ (%@ text NOT NULL, %@ text NOT NULL, %@ text NOT NULL, %@ text PRIMARY KEY NOT NULL, %@ text NOT NULL, %@ integer NOT NULL, %@ integer NOT NULL, %@ integer NOT NULL, %@ integer NOT NULL, %@ integer NOT NULL);", OwlAppWhiteTable, OwlAppName, OwlExecutableName, OwlBubblePath, OwlIdentifier, OwlAppIcon, OwlAppleApp, OwlWatchCamera, OwlWatchAudio, OwlWatchSpeaker, OwlWatchScreen];
+    NSString *strSQL = [NSString stringWithFormat:@"CREATE TABLE IF NOT EXISTS %@ (%@ text NOT NULL, %@ text NOT NULL, %@ text NOT NULL, %@ text PRIMARY KEY NOT NULL, %@ text NOT NULL, %@ integer NOT NULL, %@ integer NOT NULL, %@ integer NOT NULL, %@ integer NOT NULL, %@ integer NOT NULL, %@ integer NOT NULL);", OwlAppWhiteTable, OwlAppName, OwlExecutableName, OwlBubblePath, OwlIdentifier, OwlAppIcon, OwlAppleApp, OwlWatchCamera, OwlWatchAudio, OwlWatchSpeaker, OwlWatchScreen, OwlWatchAutomatic];
     BOOL result = [db executeUpdate:strSQL];
     if (result)
     {
@@ -160,14 +160,15 @@ static NSInteger kDatabaseVersion = 2;
                     self.isWatchVideo = [resultProfile intForColumn:OwlWatchCamera];
                     self.isWatchAudio = [resultProfile intForColumn:OwlWatchAudio];
                     self.isWatchScreen = [resultProfile intForColumn:OwlWatchScreen];
+                    self.isWatchAutomatic = [resultProfile intForColumn:OwlWatchAutomatic];
                 }
                 iprofile++;
             }
             //兼容历史数据，删除多余的row
             if (iprofile > 1) {
                 [db executeUpdate:[NSString stringWithFormat:@"delete from %@", OwlProcProfileTable]];
-                NSString *strSQL = [NSString stringWithFormat:@"INSERT INTO %@ (%@,%@,%@,%@) VALUES  (?,?,?,?);", OwlProcProfileTable, @"id", OwlWatchCamera, OwlWatchAudio, OwlWatchScreen];
-                [db executeUpdate:strSQL, @(1), @(self.isWatchVideo), @(self.isWatchAudio), @(self.isWatchScreen)];
+                NSString *strSQL = [NSString stringWithFormat:@"INSERT INTO %@ (%@,%@,%@,%@,%@) VALUES  (?,?,?,?,?);", OwlProcProfileTable, @"id", OwlWatchCamera, OwlWatchAudio, OwlWatchScreen, OwlWatchAutomatic];
+                [db executeUpdate:strSQL, @(1), @(self.isWatchVideo), @(self.isWatchAudio), @(self.isWatchScreen), @(self.isWatchAutomatic)];
             }
             if ([db hadError]) {
                 NSLog(@"Error %d: %@", [db lastErrorCode], [db lastErrorMessage]);
@@ -228,6 +229,13 @@ static NSInteger kDatabaseVersion = 2;
             }
         }
             break;
+        case 2:
+        {
+            result = [self updateToVerson_3];
+            if (result) {
+                [self insertCurrentVersionWithChangeLog:@"1.开关新增'自动操作'字段 ；2.白名单新增'自动操作'字段"];
+            }
+        }
         default:
             break;
     }
@@ -291,6 +299,25 @@ static NSInteger kDatabaseVersion = 2;
     return [self upgradeDatabaseTable:OwlAppWhiteTable tableNotExists:^{
         [self createWhiteAppTable];
     } newColumn:OwlWatchScreen dataType:@"integer NOT NULL" fixedValue:@(0)];
+}
+
+- (BOOL)updateToVerson_3 {
+    BOOL result_Profile = [self updateProcProfileTable_3];
+    BOOL result_White = [self updateAppWhiteTable_3];
+    return result_Profile && result_White;
+}
+
+- (BOOL)updateProcProfileTable_3 {
+    return [self upgradeDatabaseTable:OwlProcProfileTable tableNotExists:^{
+        [self createProfileTable];
+    } newColumn:OwlWatchAutomatic dataType:@"integer DEFAULT 0" fixedValue:@(0)];
+}
+
+- (BOOL)updateAppWhiteTable_3 {
+    
+    return [self upgradeDatabaseTable:OwlAppWhiteTable tableNotExists:^{
+        [self createWhiteAppTable];
+    } newColumn:OwlWatchAutomatic dataType:@"integer NOT NULL" fixedValue:@(0)];
 }
 
 // 新增一个字段的固定写法
@@ -541,13 +568,13 @@ static NSInteger kDatabaseVersion = 2;
 }
 
 - (void)updateAllWatch {
-    NSString *strSQL = [NSString stringWithFormat:@"REPLACE INTO %@ (%@,%@,%@,%@) VALUES  (?,?,?,?);", OwlProcProfileTable, @"id", OwlWatchCamera, OwlWatchAudio, OwlWatchScreen];
-    [db executeUpdate:strSQL, @(1), @(self.isWatchVideo), @(self.isWatchAudio), @(self.isWatchScreen)];
+    NSString *strSQL = [NSString stringWithFormat:@"REPLACE INTO %@ (%@,%@,%@,%@,%@) VALUES  (?,?,?,?,?);", OwlProcProfileTable, @"id", OwlWatchCamera, OwlWatchAudio, OwlWatchScreen, OwlWatchAutomatic];
+    [db executeUpdate:strSQL, @(1), @(self.isWatchVideo), @(self.isWatchAudio), @(self.isWatchScreen), @(self.isWatchAutomatic)];
 }
 
 - (void)addAppWhiteItemToDB:(NSDictionary*)dic
 {
-    NSString *strSQL = [NSString stringWithFormat:@"REPLACE INTO %@ (%@,%@,%@,%@,%@,%@,%@,%@,%@,%@) VALUES  (?,?,?,?,?,?,?,?,?,?);", OwlAppWhiteTable, OwlAppName, OwlExecutableName, OwlBubblePath, OwlIdentifier, OwlAppIcon, OwlAppleApp, OwlWatchCamera, OwlWatchAudio, OwlWatchSpeaker, OwlWatchScreen];
+    NSString *strSQL = [NSString stringWithFormat:@"REPLACE INTO %@ (%@,%@,%@,%@,%@,%@,%@,%@,%@,%@,%@) VALUES  (?,?,?,?,?,?,?,?,?,?,?);", OwlAppWhiteTable, OwlAppName, OwlExecutableName, OwlBubblePath, OwlIdentifier, OwlAppIcon, OwlAppleApp, OwlWatchCamera, OwlWatchAudio, OwlWatchSpeaker, OwlWatchScreen, OwlWatchAutomatic];
     NSString *appName= dic[OwlAppName]?:@"";
     NSString *executableName= dic[OwlExecutableName]?:@"";
     NSString *bubblePath= dic[OwlBubblePath]?:@"";
@@ -558,8 +585,9 @@ static NSInteger kDatabaseVersion = 2;
     NSNumber *watchMic= dic[OwlWatchAudio]?:@NO;
     NSNumber *watchSpeaker= dic[OwlWatchSpeaker]?:@NO;
     NSNumber *watchScreen= dic[OwlWatchScreen]?:@NO;
+    NSNumber *watchAutomatic= dic[OwlWatchAutomatic]?:@NO;
     
-    BOOL success = [db executeUpdate:strSQL,appName,executableName,bubblePath,identifier,appIcon,appleApp,watchCam,watchMic,watchSpeaker, watchScreen];
+    BOOL success = [db executeUpdate:strSQL,appName,executableName,bubblePath,identifier,appIcon,appleApp,watchCam,watchMic,watchSpeaker, watchScreen, watchAutomatic];
     if (!success) {
         NSLog(@"addAppWhiteItemToDB: %@", [db lastErrorMessage]);
     } else {
@@ -592,6 +620,7 @@ static NSInteger kDatabaseVersion = 2;
         NSInteger watchAudio = [results intForColumn:OwlWatchAudio];
         NSInteger watchSpeaker = [results intForColumn:OwlWatchSpeaker];
         NSInteger watchScreen = [results intForColumn:OwlWatchScreen];
+        NSInteger watchAutomatic = [results intForColumn:OwlWatchAutomatic];
         
         // 将数据添加到字典中
         if (appName) [rowDictionary setObject:appName forKey:OwlAppName];
@@ -604,6 +633,7 @@ static NSInteger kDatabaseVersion = 2;
         [rowDictionary setObject:@(watchAudio) forKey:OwlWatchAudio];
         [rowDictionary setObject:@(watchSpeaker) forKey:OwlWatchSpeaker];
         [rowDictionary setObject:@(watchScreen) forKey:OwlWatchScreen];
+        [rowDictionary setObject:@(watchAutomatic) forKey:OwlWatchAutomatic];
         
         // 将字典添加到数组中
         [resultsArray addObject:rowDictionary];

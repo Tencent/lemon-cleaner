@@ -90,6 +90,8 @@
 #import "QMBubbleViewTypes.h"
 #import "QMBubbleWindow.h"
 #import "QMCheckboxButton.h"
+#import "QMHoverProtocol.h"
+#import "QMHoverStackView.h"
 #import "LMBigLoadingView.h"
 #import "QMLoadingView.h"
 #import "QMMoveOutlineView.h"

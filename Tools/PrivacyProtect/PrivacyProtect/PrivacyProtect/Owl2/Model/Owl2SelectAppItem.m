@@ -12,15 +12,17 @@
 - (instancetype)initWithAppItem:(Owl2AppItem *)appItem {
     self = [super init];
     if (self) {
-         _name           = appItem.name;
-         _executableName = appItem.executableName;
-         _iconPath       = appItem.iconPath;
-         _identifier     = appItem.identifier;
-         _appPath        = appItem.appPath;
-         _sysApp         = appItem.sysApp;
-         _isWatchAudio   = appItem.isWatchAudio;
-         _isWatchCamera  = appItem.isWatchCamera;
-         _isWatchSpeaker = appItem.isWatchSpeaker;
+        _name             = appItem.name;
+        _executableName   = appItem.executableName;
+        _iconPath         = appItem.iconPath;
+        _identifier       = appItem.identifier;
+        _appPath          = appItem.appPath;
+        _sysApp           = appItem.sysApp;
+        _isWatchAudio     = appItem.isWatchAudio;
+        _isWatchCamera    = appItem.isWatchCamera;
+        _isWatchSpeaker   = appItem.isWatchSpeaker;
+        _isWatchScreen    = appItem.isWatchScreen;
+        _isWatchAutomatic = appItem.isWatchAutomatic;
     }
     return self;
 }

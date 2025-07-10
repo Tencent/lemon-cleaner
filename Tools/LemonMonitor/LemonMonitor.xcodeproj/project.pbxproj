@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		02448250C136D1BA83A700A8 /* Pods_LemonMonitor.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F2A84A8EFAA857D1C173D896 /* Pods_LemonMonitor.framework */; };
 		18FD67BA2248825C00036012 /* LMMonitorTrashManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 18FD67B92248825C00036012 /* LMMonitorTrashManager.m */; };
+		2A7A8E912E161F9C0056956F /* LMPPSmallComponentView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A7A8E902E161F9C0056956F /* LMPPSmallComponentView.m */; };
 		7952E49E23FD12D20058C48C /* LMTrashSizeCheckWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7952E49C23FD12D20058C48C /* LMTrashSizeCheckWindowController.m */; };
 		7952E49F23FD12D20058C48C /* LMTrashSizeCheckWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7952E49D23FD12D20058C48C /* LMTrashSizeCheckWindowController.xib */; };
 		797D5CCF2364774D000DC4BE /* LMHardWareDataUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 797D5CCE2364774D000DC4BE /* LMHardWareDataUtil.m */; };
@@ -21,6 +22,7 @@
 		8B5499D728A3562A00B55BB8 /* LMHoverButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B5499D328A3562A00B55BB8 /* LMHoverButton.m */; };
 		8B5499D828A3562A00B55BB8 /* LMAboutWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B5499D628A3562A00B55BB8 /* LMAboutWindow.m */; };
 		B76D5C582DE7F3D900E6D3DC /* DynamicConfig in Resources */ = {isa = PBXBuildFile; fileRef = B76D5C572DE7F3D900E6D3DC /* DynamicConfig */; };
+		B7A745852DF9ABA20097CD3D /* LMUtilFunc.m in Sources */ = {isa = PBXBuildFile; fileRef = B7A745842DF9ABA20097CD3D /* LMUtilFunc.m */; };
 		B7A82D2A2D6DBB8600036DEE /* LMBaseLineSegmentedControl.m in Sources */ = {isa = PBXBuildFile; fileRef = B7A82D292D6DBB8600036DEE /* LMBaseLineSegmentedControl.m */; };
 		B7A82D2B2D6DBB8600036DEE /* LMBaseLineSegmentedCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B7A82D272D6DBB8600036DEE /* LMBaseLineSegmentedCell.m */; };
 		B7A82D6E2D703A3900036DEE /* NSDate+LMCalendar.m in Sources */ = {isa = PBXBuildFile; fileRef = B7A82D6D2D703A3900036DEE /* NSDate+LMCalendar.m */; };
@@ -142,6 +144,8 @@
 		18B5A2EB224DD1310076A1E3 /* QMDataConst.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = QMDataConst.h; path = ../../../Lemon/QMDataConst.h; sourceTree = "<group>"; };
 		18FD67B82248825C00036012 /* LMMonitorTrashManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LMMonitorTrashManager.h; sourceTree = "<group>"; };
 		18FD67B92248825C00036012 /* LMMonitorTrashManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LMMonitorTrashManager.m; sourceTree = "<group>"; };
+		2A7A8E8F2E161F9C0056956F /* LMPPSmallComponentView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LMPPSmallComponentView.h; sourceTree = "<group>"; };
+		2A7A8E902E161F9C0056956F /* LMPPSmallComponentView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LMPPSmallComponentView.m; sourceTree = "<group>"; };
 		2F6E0B7721CA3763009B4875 /* SocketCommunicationKeyWord.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SocketCommunicationKeyWord.h; path = ../../LemonDaemon/LemonDaemonActivator/SocketCommunicationKeyWord.h; sourceTree = "<group>"; };
 		2FAE179F5D5E36229D7AE5D8 /* Pods-LemonMonitor.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LemonMonitor.debug.xcconfig"; path = "../../Pods/Target Support Files/Pods-LemonMonitor/Pods-LemonMonitor.debug.xcconfig"; sourceTree = "<group>"; };
 		47D7AC3330517E6E138F5D82 /* Pods-LemonMonitor.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LemonMonitor.release.xcconfig"; path = "../../Pods/Target Support Files/Pods-LemonMonitor/Pods-LemonMonitor.release.xcconfig"; sourceTree = "<group>"; };
@@ -161,6 +165,9 @@
 		8B5499D428A3562A00B55BB8 /* LMAboutWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMAboutWindow.h; sourceTree = "<group>"; };
 		8B5499D528A3562A00B55BB8 /* LMHoverButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMHoverButton.h; sourceTree = "<group>"; };
 		8B5499D628A3562A00B55BB8 /* LMAboutWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMAboutWindow.m; sourceTree = "<group>"; };
+		8DC815ACEF43BB4681E209AE /* Pods_LemonMonitor.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_LemonMonitor.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B7A745832DF9ABA20097CD3D /* LMUtilFunc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LMUtilFunc.h; sourceTree = "<group>"; };
+		B7A745842DF9ABA20097CD3D /* LMUtilFunc.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LMUtilFunc.m; sourceTree = "<group>"; };
 		B7A82D262D6DBB8600036DEE /* LMBaseLineSegmentedCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = LMBaseLineSegmentedCell.h; path = ../../Lemon/View/LMSegment/LMBaseLineSegmentedCell.h; sourceTree = SOURCE_ROOT; };
 		B7A82D272D6DBB8600036DEE /* LMBaseLineSegmentedCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = LMBaseLineSegmentedCell.m; path = ../../Lemon/View/LMSegment/LMBaseLineSegmentedCell.m; sourceTree = SOURCE_ROOT; };
 		B7A82D282D6DBB8600036DEE /* LMBaseLineSegmentedControl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = LMBaseLineSegmentedControl.h; path = ../../Lemon/View/LMSegment/LMBaseLineSegmentedControl.h; sourceTree = SOURCE_ROOT; };
@@ -297,6 +304,8 @@
 				797D5CCE2364774D000DC4BE /* LMHardWareDataUtil.m */,
 				B7A82D6C2D703A3900036DEE /* NSDate+LMCalendar.h */,
 				B7A82D6D2D703A3900036DEE /* NSDate+LMCalendar.m */,
+				B7A745832DF9ABA20097CD3D /* LMUtilFunc.h */,
+				B7A745842DF9ABA20097CD3D /* LMUtilFunc.m */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -361,6 +370,8 @@
 				B7D8F53C2DB23CA500D5D00E /* LMPPOneClickGuideView.m */,
 				B7D8F5472DB25B6600D5D00E /* LMPPOneClickGuideBgView.h */,
 				B7D8F5482DB25B6600D5D00E /* LMPPOneClickGuideBgView.m */,
+				2A7A8E8F2E161F9C0056956F /* LMPPSmallComponentView.h */,
+				2A7A8E902E161F9C0056956F /* LMPPSmallComponentView.m */,
 			);
 			path = PirvacyProtect;
 			sourceTree = "<group>";
@@ -819,6 +830,7 @@
 				B7D8F53D2DB23CA500D5D00E /* LMPPOneClickGuideView.m in Sources */,
 				797D5CCF2364774D000DC4BE /* LMHardWareDataUtil.m in Sources */,
 				DE27949D26A038BE007B4443 /* LMUpdatePopoverRootView.m in Sources */,
+				2A7A8E912E161F9C0056956F /* LMPPSmallComponentView.m in Sources */,
 				BCF3875221EEEDD90031A2FD /* LMSystemFeatureViewController.m in Sources */,
 				B8F110581962572100D29FFC /* AppDelegate.mm in Sources */,
 				BC89F8A522759B7200983314 /* QMStatusMonitorView.m in Sources */,
@@ -838,6 +850,7 @@
 				BCC2838F21F02D070026CC09 /* LMMonitorPoppverController.m in Sources */,
 				7952E49E23FD12D20058C48C /* LMTrashSizeCheckWindowController.m in Sources */,
 				BC89F8A622759B7200983314 /* QMStatusTextField.m in Sources */,
+				B7A745852DF9ABA20097CD3D /* LMUtilFunc.m in Sources */,
 				79A96341236A84F000DB0B1D /* TrashCheckMonitor.m in Sources */,
 				BC89F8A822759B7200983314 /* QMDragEffectView.m in Sources */,
 				B8F110511962572100D29FFC /* main.m in Sources */,

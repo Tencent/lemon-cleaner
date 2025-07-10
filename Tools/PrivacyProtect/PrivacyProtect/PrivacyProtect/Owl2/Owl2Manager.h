@@ -11,7 +11,6 @@
 
 extern NSNotificationName const OwlWhiteListChangeNotication;
 extern NSNotificationName const OwlLogChangeNotication;
-extern NSNotificationName const OwlShowWindowNotication;
 
 @interface Owl2Manager : NSObject {
     NSString *dbPath;
@@ -24,6 +23,7 @@ extern NSNotificationName const OwlShowWindowNotication;
 @property (nonatomic, assign) BOOL isWatchVideo;
 @property (nonatomic, assign) BOOL isWatchAudio;
 @property (nonatomic, assign) BOOL isWatchScreen;
+@property (nonatomic, assign) BOOL isWatchAutomatic;
 @property (nonatomic, assign) BOOL isFetchDataFinish;
 
 //protected
@@ -33,6 +33,10 @@ extern NSNotificationName const OwlShowWindowNotication;
 @property (nonatomic, strong) NSMutableDictionary *owlSystemAudioItemDic;
 @property (nonatomic, strong) NSMutableArray *owlScreenItemArray;
 @property (nonatomic, strong) NSMutableDictionary *owlScreenItemDic;
+
+// 用户是否之前显示过guide，结果缓存到实例变量中，避免重复访问磁盘影响性能
+@property (nonatomic) BOOL currentUserDidShowGuideInOldVersionCached;
+
 
 + (Owl2Manager *)sharedManager;
 
@@ -46,6 +50,7 @@ extern NSNotificationName const OwlShowWindowNotication;
 - (void)setWatchVedio:(BOOL)state toDb:(BOOL)toDB;
 - (void)setWatchAudio:(BOOL)state toDb:(BOOL)toDB;
 - (void)setWatchScreen:(BOOL)state toDb:(BOOL)toDB;
+- (void)setWatchAutomatic:(BOOL)state toDb:(BOOL)toDB;
 - (void)loadOwlDataFromMonitor;
 - (void)addWhiteWithAppItem:(Owl2AppItem *)appItem;
 - (void)removeAppWhiteItemWithIdentifier:(NSString *)identifier;
@@ -53,5 +58,8 @@ extern NSNotificationName const OwlShowWindowNotication;
 
 // 为通知创建
 @property (nonatomic, strong) NSMutableDictionary *notificationInsertLogList;
+
+// 可能为空，根据日志来更新
+- (NSString *)frontMostAppBundleId;
 
 @end

@@ -14,6 +14,7 @@
 #import "McMonitorFuction.h"
 #import "McStatInfoConst.h"
 #import "QMSampleStorage.h"
+#import "LMReferenceDefines.h"
 
 #define STATUS_TYPE_LOGO (1 << 0)
 #define STATUS_TYPE_MEM  (1 << 1)
@@ -38,6 +39,9 @@
     QMSampleStorage *storage;
 }
 @property int processSamplerLifeCounter;
+// 串行队列
+@property (nonatomic, strong) dispatch_queue_t loopQueue;
+
 @end
 
 @implementation McStatMonitor
@@ -51,6 +55,13 @@
         // 创建对象，用于线程调用
         m_monitorFunction = [[McMonitorFuction alloc] init];
         isExistBattery = [McStatInfoHelp checkBatteryExist];
+        
+        self.loopQueue = dispatch_queue_create("com.tecent.lemonmonitor.loopgetdataqueue", DISPATCH_QUEUE_SERIAL);
+
+        // 首次立即执行, 后续定时执行
+        dispatch_async(self.loopQueue, ^{
+            [self _collectAndSendSystemInfo];
+        });
         [self _loopStatData];
     }
     
@@ -77,46 +88,50 @@
 
 - (void)_loopStatData
 {
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),^
-                   {
-                       while (1)
-                       {
-                           @autoreleasepool
-                           {
-                               if (!self->escThread)
-                               {
-                                   [self networkInfo];
-                                   if ((self.trayType & STATUS_TYPE_MEM) || (self.isTrayPageOpen)) {
-                                       [self memoryInfo];
-                                   }
-                                   if ((self.trayType & STATUS_TYPE_FAN) || (self.isTrayPageOpen)) {
-                                       [self fanInfo];
-                                   }
-                                   if ((self.trayType & STATUS_TYPE_CPU) || (self.isTrayPageOpen)) {
-                                       [self cpuInfo];
-                                   }
-                                   if ((self.trayType & STATUS_TYPE_DISK) || (self.isTrayPageOpen)) {
-                                       [self diskInfo];
-                                   }
-                                   if ((self.trayType & STATUS_TYPE_TEP) || (self.isTrayPageOpen)) {
-                                       [self tempInfo];
-                                   }
-                                   if ((self.trayType & STATUS_TYPE_GPU) || (self.isTrayPageOpen)) {
-                                       [self gpuInfo];
-                                   }
-                                   //                                   [self batteryStateInfo];
-                                   if (self.processSamplerOn) {
-                                       self.processSamplerLifeCounter -= 1;
-                                       [self->storage sample];
-                                   }
-                                   dispatch_async(dispatch_get_main_queue(), ^{
-                                       [self sendStatInfoNotification];
-                                   });
-                               }
-                               usleep(1000 * 1000 * self->refreshInterval);
-                           }
-                       }
-                   });
+    @weakify(self);
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(self->refreshInterval * NSEC_PER_SEC)), self.loopQueue, ^{
+        @strongify(self);
+        @autoreleasepool {
+            [self _collectAndSendSystemInfo];
+        }
+        [self _loopStatData];
+    });
+}
+
+- (void)_collectAndSendSystemInfo
+{
+    if (!self->escThread)
+    {
+        [self networkInfo];
+        if ((self.trayType & STATUS_TYPE_MEM) || (self.isTrayPageOpen)) {
+            [self memoryInfo];
+        }
+#ifndef APPSTORE_VERSION
+        if ((self.trayType & STATUS_TYPE_FAN) || (self.isTrayPageOpen)) {
+            [self fanInfo];
+        }
+#endif
+        if ((self.trayType & STATUS_TYPE_CPU) || (self.isTrayPageOpen)) {
+            [self cpuInfo];
+        }
+        if ((self.trayType & STATUS_TYPE_DISK) || (self.isTrayPageOpen)) {
+            [self diskInfo];
+        }
+#ifndef APPSTORE_VERSION
+        if ((self.trayType & STATUS_TYPE_TEP) || (self.isTrayPageOpen)) {
+            [self tempInfo];
+        }
+#endif
+        if ((self.trayType & STATUS_TYPE_GPU) || (self.isTrayPageOpen)) {
+            [self gpuInfo];
+        }
+        //                                   [self batteryStateInfo];
+        if (self.processSamplerOn) {
+            self.processSamplerLifeCounter -= 1;
+            [self->storage sample];
+        }
+        [self sendStatInfoNotification];
+    }
 }
 
 - (void)startRunMonitor

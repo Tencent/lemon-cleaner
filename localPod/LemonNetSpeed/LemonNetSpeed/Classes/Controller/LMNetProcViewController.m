@@ -200,12 +200,13 @@ static NSString * const kPidKey = @"pid";
 }
 
 - (void)receivedNetworkInfoChanged:(NSNotification *)notification {
-    NSArray *flowSpeedArray = nil;
-//    if (popover.networkViewController.isWindowVisible) {
-    if (YES) {
+    dispatch_async(dispatch_get_main_queue(), ^{
         NSArray *processInfo = [[McStatMonitor shareMonitor].processInfo filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"upSpeed > 0 OR downSpeed > 0"]];
-        flowSpeedArray = [processInfo map:^id(McProcessInfoData *obj, NSUInteger index) {
+        NSArray *flowSpeedArray = [processInfo filteredMappedArray:^id(McProcessInfoData *obj, NSUInteger index) {
             NSRunningApplication *runningApp = [NSRunningApplication runningApplicationWithProcessIdentifier:obj.pid];
+            if (!runningApp) {
+                return nil;
+            }
             return [LMNetProcViewController
                     networkInfoItemWithPid:[NSString stringWithFormat:@"%d", obj.pid]
                     name:runningApp.localizedName ?: obj.pName
@@ -213,8 +214,7 @@ static NSString * const kPidKey = @"pid";
                     upSpeed: @(obj.upSpeed)
                     downSpeed: @(obj.downSpeed)];
         }];
-    }
-    dispatch_async(dispatch_get_main_queue(), ^{
+        
         float upSpeed = [[notification.object objectForKey:@"UpSpeed"] floatValue];
         float downSpeed = [[notification.object objectForKey:@"DownSpeed"] floatValue];
         self.upSpeed = upSpeed;

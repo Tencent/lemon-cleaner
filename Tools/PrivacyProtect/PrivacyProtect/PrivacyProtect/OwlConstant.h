@@ -22,12 +22,26 @@ static int OwlElementLeft = 24;
 static CGFloat kOwlNPWindowWidth = 610;
 static CGFloat kOwlNPWindowHeight = 510;
 
+#ifdef __MAC_11_0
+#define kOwlLeftRightMarginForTableCell 6
+#else
+#define kOwlLeftRightMarginForTableCell 0
+#endif
+
+
+#define kOwlTitleViewHeight 28 // 标题高度
+#define kOwlTopViewHeight 40 // 顶部高度
+#define kOwlBottomViewHeight 56 // 底部高度
+
+#define kOwlHorizontalTextSpacing 6 // 文本水平间距
+
 typedef NS_ENUM(NSInteger, OwlProtectType){
     OwlProtectVedio = 0,
     OwlProtectAudio = 1,
     OwlProtectVedioAndAudio = 2, // 废弃，不可能同时出现
     OwlProtectSystemAudio = 3,
     OwlProtectScreen = 4,
+    OwlProtectAutomation = 5,
     
     OwlProtectScreenshotForReporter = 40,
     OwlProtectScreenRecordingForReporter = 41,
@@ -59,6 +73,7 @@ typedef NS_ENUM(NSUInteger, Owl2LogHardware) {
     Owl2LogHardwareAudio = OwlProtectAudio,
     Owl2LogHardwareSystemAudio = OwlProtectSystemAudio,
     Owl2LogHardwareScreen = OwlProtectScreen,
+    Owl2LogHardwareAutomation = OwlProtectAutomation,
     
     Owl2LogHardwareScreenshotForReporter = OwlProtectScreenshotForReporter,
     Owl2LogHardwareScreenRecordingForReporter = OwlProtectScreenRecordingForReporter,
@@ -86,6 +101,7 @@ typedef NS_ENUM(NSUInteger, Owl2LogHardware) {
 #define OwlWatchAudio                  @"watchAudio"
 #define OwlWatchSpeaker                @"watchSpeaker"
 #define OwlWatchScreen                 @"watchScreen"
+#define OwlWatchAutomatic              @"watchAutomatic"
 
 #define OwlUUID                        @"uuid"
 #define OwlTime                        @"time"

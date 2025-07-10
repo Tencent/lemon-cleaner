@@ -21,5 +21,9 @@
 
 // 一键开启
 - (void)oneClick;
+- (void)onClickVideo:(BOOL)state;
+- (void)onClickAudio:(BOOL)state;
+- (void)onClickScreen:(BOOL)state;
+- (void)onClickAutomatic:(BOOL)state;
 
 @end

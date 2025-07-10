@@ -57,6 +57,7 @@ static NSString * kAppName(NSBundle *bundle) {
         _isWatchCamera = [dic[OwlWatchCamera] boolValue];
         _isWatchSpeaker = [dic[OwlWatchSpeaker] boolValue];
         _isWatchScreen = [dic[OwlWatchScreen] boolValue];
+        _isWatchAutomatic = [dic[OwlWatchAutomatic] boolValue];
         [self addNotificationObserver];
     }
     return self;
@@ -74,6 +75,7 @@ static NSString * kAppName(NSBundle *bundle) {
     [muDic setObject:@(self.isWatchCamera) forKey:OwlWatchCamera];
     [muDic setObject:@(self.isWatchSpeaker) forKey:OwlWatchSpeaker];
     [muDic setObject:@(self.isWatchScreen) forKey:OwlWatchScreen];
+    [muDic setObject:@(self.isWatchAutomatic) forKey:OwlWatchAutomatic];
     return muDic.copy;
 }
 
@@ -126,6 +128,7 @@ static NSString * kAppName(NSBundle *bundle) {
     _isWatchCamera = appItem.isWatchCamera;
     _isWatchSpeaker = appItem.isWatchSpeaker;
     _isWatchScreen = appItem.isWatchScreen;
+    _isWatchAutomatic = appItem.isWatchAutomatic;
 }
 
 - (void)setWatchValue:(BOOL)value forHardware:(Owl2LogHardware)hardware {
@@ -143,6 +146,10 @@ static NSString * kAppName(NSBundle *bundle) {
         case Owl2LogHardwareScreen:
             _isWatchScreen = value;
             break;
+        case Owl2LogHardwareAutomation:
+            _isWatchAutomatic = value;
+            break;
+            
         default:
             break;
     }
@@ -178,6 +185,10 @@ static NSString * kAppName(NSBundle *bundle) {
     if ([another.watchModifyRecords[@(Owl2LogHardwareScreen)] boolValue]) {
         _isWatchScreen = another.isWatchScreen;
     }
+    
+    if ([another.watchModifyRecords[@(Owl2LogHardwareAutomation)] boolValue]) {
+        _isWatchAutomatic = another.isWatchAutomatic;
+    }
 }
 
 - (void)enableAllWatchSwitch {
@@ -185,6 +196,7 @@ static NSString * kAppName(NSBundle *bundle) {
     [self setWatchValue:YES forHardware:Owl2LogHardwareVedio];
     [self setWatchValue:YES forHardware:Owl2LogHardwareSystemAudio];
     [self setWatchValue:YES forHardware:Owl2LogHardwareScreen];
+    [self setWatchValue:YES forHardware:Owl2LogHardwareAutomation];
 }
 
 #pragma mark - getter

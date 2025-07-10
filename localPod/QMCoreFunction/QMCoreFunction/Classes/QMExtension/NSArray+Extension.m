@@ -39,12 +39,14 @@
 
 @implementation NSArray (Map)
 
-- (NSMutableArray *)map:(id(^)(id obj, NSUInteger index))block
+- (NSMutableArray *)filteredMappedArray:(id(^)(id obj, NSUInteger index))block
 {
     NSMutableArray *result = [NSMutableArray arrayWithCapacity:self.count];
     [self enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-        id ret = block(obj, idx) ?: [NSNull null];
-        [result addObject:ret];
+        id ret = block(obj, idx);
+        if (ret) {
+            [result addObject:ret];
+        }
     }];
     return result;
 }

@@ -249,11 +249,14 @@
 //av devices
 
 typedef enum : NSInteger {
-    LMDevice_Camera,
+    LMDevice_Camera = 0,
     LMDevice_Microphone,
     LMDevice_AudioAndVideo,
     LMDevice_SystemAudio,
     LMDevice_Screen,
+    LMDevice_Automatic,
+
+    LMDevice_FrontMostWindow = 100,
 } LMDeviceType;
 
 //updates

@@ -63,7 +63,7 @@
     [self.tipTF mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(self.tipImageView.mas_right).offset(8);
         make.centerY.mas_equalTo(0);
-        make.width.mas_equalTo(180);
+        make.width.mas_equalTo(210);
     }];
     
     // 自右布局
@@ -93,7 +93,6 @@
 
 - (void)oneClickButtonClicked:(LMTitleButton *)btn {
     NSLog(@"oneClickButton is clicked");
-    [Owl2Manager sharedManager].oneClickGuideViewClicked = YES;
     self.hidden = YES;
     if (self.oneClickBlock) self.oneClickBlock();
 }
@@ -130,6 +129,9 @@
     if (!_tipTF) {
         _tipTF = [LMViewHelper createNormalLabel:12 fontColor:[LMAppThemeHelper getTitleColor]];
         _tipTF.stringValue = NSLocalizedString(@"升级守护，全场景保护设备隐私", nil);
+        if ([Owl2Manager.sharedManager guideViewShowType] == OWLShowGuideViewType_Special) {  // 之前已经展示过，则只提示新特性
+            _tipTF.stringValue = NSLocalizedString(@"新增自动操作提示，监控电脑不明使用", nil);
+        }
         _tipTF.maximumNumberOfLines = 1;
         if([LanguageHelper getCurrentSystemLanguageType] == SystemLanguageTypeEnglish){
             _tipTF.maximumNumberOfLines = 2;
@@ -148,7 +150,11 @@
             NSFontAttributeName: [NSFont systemFontOfSize:12 weight:NSFontWeightRegular],
             NSForegroundColorAttributeName: [NSColor colorWithHex:0x1A83F7]
         };
-        NSAttributedString *attributedTitle = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"一键开启", nil) attributes:attributes];
+        NSString *title = NSLocalizedString(@"一键开启", nil);
+        if ([Owl2Manager.sharedManager guideViewShowType] == OWLShowGuideViewType_Special) {  // 之前已经展示过，则只提示新特性
+            title = NSLocalizedString(@"开启", nil);
+        }
+        NSAttributedString *attributedTitle = [[NSAttributedString alloc] initWithString:title attributes:attributes];
         [_oneClickButton setAttributedTitle:attributedTitle];
 
         // 添加按钮点击事件

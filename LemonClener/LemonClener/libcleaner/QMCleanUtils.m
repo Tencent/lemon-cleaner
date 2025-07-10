@@ -14,6 +14,19 @@
 
 #define MINBLOCK 4096
 
+#define     p_WeChat_BundleId     @"com.tencent.xinWeChat"
+/// 微信新老版本都有的路径
+#define     p_WeChat_Common_Path_1    @"~/Library/Containers/com.tencent.xinWeChat/Data/Library/Preferences/com.tencent.xinWeChat.plist"
+#define     p_WeChat_Common_Path_2    @"~/Library/Containers/com.tencent.xinWeChat/Data/Library/Caches/Matrix/AppReboot/AppReboot.dat"
+/// 微信老版本特有的路径
+#define     p_WeChat_V3_Path_1    @"~/Library/Containers/com.tencent.xinWeChat/Data/Library/Caches/com.tencent.xinWeChat/Cache.db"
+#define     p_WeChat_V3_Path_2    @"~/Library/Containers/com.tencent.xinWeChat/Data/Library/HTTPStorages/com.tencent.xinWeChat/httpstorages.sqlite"
+/// 微信新版本特有的路径
+#define     p_WeChat_V4_Path_1    @"~/Library/Containers/com.tencent.xinWeChat/Data/Documents/app_data/lock/lock.ini"
+#define     p_WeChat_V4_Path_2    @"~/Library/Containers/com.tencent.xinWeChat/Data/Documents/xwechat_files/all_users/config/global_config.crc"
+/// 微信4缓存路径必定包含的字符串片段
+#define     p_WeChat_V4_Parts_Of_Protect_Data_Path    @"/Library/Containers/com.tencent.xinWeChat/Data/Documents/xwechat_files"
+
 #pragma mark - for performance
 
 time_t getFileCreationTime(const char *path) {
@@ -324,6 +337,82 @@ static NSMutableDictionary * m_cachePathDict = nil;
     {
         return nil;
     }
+}
+
+#pragma mark - 判断区分用户电脑上是否安装过老版本（3）、或者只有新版本（4），或者3和4的 缓存都有
+
++ (LMWeChatLocalCacheType)getUserLocalWeChatCachesType {
+    BOOL hasWeChatCaches = NO;
+    NSString * commonPath1 = [p_WeChat_Common_Path_1 stringByExpandingTildeInPath];
+    NSString * commonPath2 = [p_WeChat_Common_Path_2 stringByExpandingTildeInPath];
+    if ([NSFileManager.defaultManager fileExistsAtPath:commonPath1] ||
+        [NSFileManager.defaultManager fileExistsAtPath:commonPath2]) {
+        hasWeChatCaches = YES;
+    }
+
+    // 老版本特有
+    NSString *v3Path1 = [p_WeChat_V3_Path_1 stringByExpandingTildeInPath];
+    NSString *v3Path2 = [p_WeChat_V3_Path_2 stringByExpandingTildeInPath];
+    
+    BOOL hasV3Caches = NO;
+    if ([NSFileManager.defaultManager fileExistsAtPath:v3Path1] ||
+        [NSFileManager.defaultManager fileExistsAtPath:v3Path2]) {
+        hasV3Caches = YES;
+    }
+
+    // 4以上版本特有
+    NSString *v4Path1 = [p_WeChat_V4_Path_1 stringByExpandingTildeInPath];
+    NSString *v4Path2 = [p_WeChat_V4_Path_2 stringByExpandingTildeInPath];
+    
+    BOOL hasV4Caches = NO;
+    if ([NSFileManager.defaultManager fileExistsAtPath:v4Path1] ||
+        [NSFileManager.defaultManager fileExistsAtPath:v4Path2]) {
+        hasV4Caches = YES;
+    }
+    
+    if (!hasWeChatCaches) {
+        return LMWeChatCacheType_None;
+    }
+    if (hasV3Caches && hasV4Caches) {
+        return LMWeChatCacheType_Both;
+    }
+    return hasV4Caches ? LMWeChatCacheType_V4 : LMWeChatCacheType_Old;
+}
+
++ (BOOL)isWeChat4FromPath:(NSString *)path {
+    path = [path stringByExpandingTildeInPath];
+    if ([path containsString:p_WeChat_V4_Parts_Of_Protect_Data_Path]) {
+        return YES;
+    }
+    return NO;
+}
+
++ (BOOL)isCurrentUserInstalledWeChat4 {
+    // 获取微信Bundle ID
+    NSString *weChatBundleID = p_WeChat_BundleId;
+
+    // 获取微信版本号
+    NSBundle *weChatBundle = [NSBundle bundleWithIdentifier:weChatBundleID];
+    
+    // 没有安装
+    if (!weChatBundle) {
+        return NO;
+    }
+    
+    NSString *versionString = [weChatBundle objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
+    NSLog(@"wechat version : %@", versionString);
+    
+    // 解析版本号
+    NSArray *versionComponents = [versionString componentsSeparatedByString:@"."];
+    if (versionComponents.count < 3) {
+        NSLog(@"version format invalide : %@", versionString);
+        return NO;
+    }
+    
+    // 转换为数值比较
+    NSInteger major = [versionComponents[0] integerValue];
+    
+    return (major >= 4);
 }
 
 @end

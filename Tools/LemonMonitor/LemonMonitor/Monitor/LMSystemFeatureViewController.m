@@ -31,6 +31,7 @@
 #import "LMHardWareDataUtil.h"
 #import <PrivacyProtect/Owl2Manager.h>
 #import "LMPPOneClickGuideView.h"
+#import "LMPPSmallComponentView.h"
 
 static const NSUInteger kMaxCount = 5;
 static NSString * const kImageKey = @"image";
@@ -54,14 +55,6 @@ static NSString * const kPidKey = @"pid";
     NSTextField *_cpuTemperatureText;
     NSTextField *_diskUsageText;
 
-    
-    NSImageView *_imageCamera;
-    NSImageView *_imageMicrophone;
-    NSImageView *_imageScreen;
-    NSTextField *_privacyCameraLabel;
-    NSTextField *_privacyMicrophoneLabel;
-    NSTextField *_privacyScreenLabel;
-
     NSView *_divideView;
 
 }
@@ -70,6 +63,11 @@ static NSString * const kPidKey = @"pid";
 @property (nonatomic, weak) NSTextField *diskSizeLabel;
 @property (nonatomic, strong) NSString *mainDiskName;
 @property (nonatomic, strong) LMPPOneClickGuideView *guideView;
+
+@property (nonatomic, strong) LMPPSmallComponentView * cameraComponentView;
+@property (nonatomic, strong) LMPPSmallComponentView * audioComponentView;
+@property (nonatomic, strong) LMPPSmallComponentView * screenComponentView;
+@property (nonatomic, strong) LMPPSmallComponentView * automaticComponentView;
 
 @end
 
@@ -112,6 +110,7 @@ static NSString * const kPidKey = @"pid";
     [self updateVedioState];
     [self updateAudioState];
     [self updateScreenState];
+    [self updateAutomaticState];
     [self updateOneClickGuideView];
 }
 
@@ -122,111 +121,47 @@ static NSString * const kPidKey = @"pid";
 }
 
 - (void)updateOneClickGuideView {
-    if ([Owl2Manager sharedManager].showOneClickGuideView) {
-        // 引导开启隐私保护浮条曝光
-    } else {
-        self.guideView.hidden = YES;
+    OWLShowGuideViewType showType = [[Owl2Manager sharedManager] guideViewShowType];
+    switch (showType) {
+        case OWLShowGuideViewType_None:
+            self.guideView.hidden = YES;
+            break;
+        case OWLShowGuideViewType_Normal:
+            // 引导开启隐私保护浮条曝光
+            break;
+        case OWLShowGuideViewType_Special:
+            // 引导开启隐私保护浮条曝光
+            break;
+
+        default:
+            break;
     }
 }
 
--(void)updateVedioState
-{
+- (void)updateVedioState {
 #ifndef APPSTORE_VERSION
-    if ([self isMacOS11_3]) {
-        _privacyCameraLabel.stringValue = NSLocalizedString(@"暂不支持11.3系统", nil);
-        _privacyCameraLabel.textColor = [NSColor colorWithHex:0x94979b];
-        [_imageCamera setImage:[myBundle imageForResource:@"lemon_camera_normal"]];
-    } else {
-        BOOL isWatchVedio = [[Owl2Manager sharedManager] isWatchVideo];
-        NSLog(@"receivedVedioStateChanged isWatchVedio=%d\n", isWatchVedio);
-        //LMSystemFeatureViewController_updateAudioState__privacyMicrophoneLabel__not_work
-        if (isWatchVedio)
-        {
-            [_imageCamera setImage:[myBundle imageForResource:@"lemon_camera_down"]];
-        }
-        else
-        {
-            [_imageCamera setImage:[myBundle imageForResource:@"lemon_camera_normal"]];
-        }
-        
-        if ( isWatchVedio)
-        {
-            _privacyCameraLabel.stringValue = NSLocalizedString(@"监控中", nil);
-            _privacyCameraLabel.textColor = [NSColor colorWithHex:0x94979b];
-        }
-        else
-        {
-            _privacyCameraLabel.stringValue = NSLocalizedString(@"去开启", nil);
-            _privacyCameraLabel.textColor = [NSColor colorWithHex:0x1A83F7];
-        }
-    }
+    [self.cameraComponentView updateUI];
 #endif
 }
 
--(void)updateAudioState
-{
+-(void)updateAudioState {
 #ifndef APPSTORE_VERSION
-    if ([self isMacOS11_3]) {
-        _privacyMicrophoneLabel.stringValue = NSLocalizedString(@"正在研究，请等更新", nil);
-        _privacyMicrophoneLabel.textColor = [NSColor colorWithHex:0x94979b];
-        [_imageMicrophone setImage:[myBundle imageForResource:@"lemon_microphone_gray"]];
-    } else {
-        BOOL isWatchAudio = [[Owl2Manager sharedManager] isWatchAudio];
-        NSLog(@"receivedAudioStateChanged isWatchAudio=%d\n", isWatchAudio);
-        if (isWatchAudio)
-        {
-            [_imageMicrophone setImage:[myBundle imageForResource:@"lemon_microphone"]];
-        }
-        else
-        {
-            [_imageMicrophone setImage:[myBundle imageForResource:@"lemon_microphone_gray"]];
-        }
-        
-        if (isWatchAudio)
-        {
-            _privacyMicrophoneLabel.stringValue = NSLocalizedString(@"监控中", nil);
-            _privacyMicrophoneLabel.textColor = [NSColor colorWithHex:0x94979b];
-        }
-        else
-        {
-            _privacyMicrophoneLabel.stringValue = NSLocalizedString(@"去开启", nil);
-            _privacyMicrophoneLabel.textColor = [NSColor colorWithHex:0x1A83F7];
-        }
-    }
+    [self.audioComponentView updateUI];
 #endif
 }
 
 - (void)updateScreenState {
 #ifndef APPSTORE_VERSION
-    if ([self isMacOS11_3]) {
-        _privacyScreenLabel.stringValue = NSLocalizedString(@"正在研究，请等更新", nil);
-        _privacyScreenLabel.textColor = [NSColor colorWithHex:0x94979b];
-        [_imageScreen setImage:[myBundle imageForResource:@"lemon_screen_gray"]];
-    } else {
-        BOOL isWatchScreen = [[Owl2Manager sharedManager] isWatchScreen];
-        NSLog(@"receivedScreenStateChanged isWatchScreen=%d\n", isWatchScreen);
-        if (isWatchScreen)
-        {
-            [_imageScreen setImage:[myBundle imageForResource:@"lemon_screen"]];
-        }
-        else
-        {
-            [_imageScreen setImage:[myBundle imageForResource:@"lemon_screen_gray"]];
-        }
-        
-        if (isWatchScreen)
-        {
-            _privacyScreenLabel.stringValue = NSLocalizedString(@"监控中", nil);
-            _privacyScreenLabel.textColor = [NSColor colorWithHex:0x94979b];
-        }
-        else
-        {
-            _privacyScreenLabel.stringValue = NSLocalizedString(@"去开启", nil);
-            _privacyScreenLabel.textColor = [NSColor colorWithHex:0x1A83F7];
-        }
-    }
+    [self.screenComponentView updateUI];
 #endif
 }
+
+- (void)updateAutomaticState {
+#ifndef APPSTORE_VERSION
+    [self.automaticComponentView updateUI];
+#endif
+}
+
 
 - (void)loadView{
     myBundle = [NSBundle bundleForClass:[self class]];
@@ -485,67 +420,87 @@ static NSString * const kPidKey = @"pid";
 {
     ClickableView *owlContainerView = [[ClickableView alloc]init];
     [self.view addSubview:owlContainerView];
-    //11.3及以上系统暂时屏蔽隐私防护功能入口
-    if (![self isMacOS11_3]) {
-        NSClickGestureRecognizer *recognizer = [[NSClickGestureRecognizer alloc]init];
-        recognizer.target = self;
-        recognizer.action = @selector(clickOwlView);
-        [owlContainerView addGestureRecognizer:recognizer];
-    }
-    // 摄像头
-    NSImageView* imageCamera = [LMViewHelper createNormalImageView];
-    imageCamera.imageScaling = NSImageScaleProportionallyDown;
-    _imageCamera = imageCamera;
-    [owlContainerView addSubview:imageCamera];
 
-    NSTextField *cameraLabel = [LMViewHelper createNormalLabel:12 fontColor:[LMAppThemeHelper getTitleColor]];
-    [owlContainerView addSubview:cameraLabel];
-    cameraLabel.stringValue = NSLocalizedString(@"摄像头隐私保护", nil);
-    
-    NSTextField *cameraStateLabel = [LMViewHelper createNormalLabel:12 fontColor:[NSColor colorWithHex:0x94979b]];
-    _privacyCameraLabel = cameraStateLabel;
-    [owlContainerView addSubview:cameraStateLabel];
-    
-    // 麦克风
-    NSImageView* imageMicrophone = [LMViewHelper createNormalImageView];
-    imageMicrophone.imageScaling = NSImageScaleProportionallyDown;
-    _imageMicrophone = imageMicrophone;
-    [owlContainerView addSubview:imageMicrophone];
-    
-    NSTextField *microphoneLabel = [LMViewHelper createNormalLabel:12 fontColor:[LMAppThemeHelper getTitleColor]];
-    [owlContainerView addSubview:microphoneLabel];
-    microphoneLabel.stringValue = NSLocalizedString(@"系统音频隐私保护", nil);
-    
-    NSTextField *microhoneStateLabel = [LMViewHelper createNormalLabel:12 fontColor:[NSColor colorWithHex:0x94979b]];
-    _privacyMicrophoneLabel = microhoneStateLabel;
+    @weakify(self);
+    self.cameraComponentView = [[LMPPSmallComponentView alloc] initWithType:LMPPComponentType_Video
+                                                                      title:NSLocalizedString(@"摄像头隐私保护", nil)
+                                                                 enableImage:[myBundle imageForResource:@"lemon_camera_down"]
+                                                                disableImage:[myBundle imageForResource:@"lemon_camera_normal"]];
+    self.cameraComponentView.onClickSwitchHandler = ^(BOOL on) {
+        @strongify(self);
+        [self clickOwlView];
+        [self.owlController onClickVideo:on];
+    };
+    self.cameraComponentView.onClickBackgroundHandler = ^{
+        @strongify(self);
+        [self clickOwlView];
+    };
+    [owlContainerView addSubview:self.cameraComponentView];
 
-    [owlContainerView addSubview:microhoneStateLabel];
     
-    // 屏幕
-    NSImageView* imageScreen = [LMViewHelper createNormalImageView];
-    imageScreen.imageScaling = NSImageScaleProportionallyDown;
-    _imageScreen = imageScreen;
-    [owlContainerView addSubview:imageScreen];
+    self.audioComponentView = [[LMPPSmallComponentView alloc] initWithType:LMPPComponentType_Audio
+                                                                    title:NSLocalizedString(@"系统音频隐私保护", nil)
+                                                                 enableImage:[myBundle imageForResource:@"lemon_microphone"]
+                                                                disableImage:[myBundle imageForResource:@"lemon_microphone_gray"]];
+    self.audioComponentView.onClickSwitchHandler = ^(BOOL on) {
+        @strongify(self);
+        [self clickOwlView];
+        [self.owlController onClickAudio:on];
+    };
+    self.audioComponentView.onClickBackgroundHandler = ^{
+        @strongify(self);
+        [self clickOwlView];
+    };
+    [owlContainerView addSubview:self.audioComponentView];
     
-    NSTextField *screenLabel = [LMViewHelper createNormalLabel:12 fontColor:[LMAppThemeHelper getTitleColor]];
-    [owlContainerView addSubview:screenLabel];
-    screenLabel.stringValue = NSLocalizedString(@"屏幕信息保护", nil);
     
-    NSTextField *screenStateLabel = [LMViewHelper createNormalLabel:12 fontColor:[NSColor colorWithHex:0x94979b]];
-    _privacyScreenLabel = screenStateLabel;
-
-    [owlContainerView addSubview:screenStateLabel];
+    self.screenComponentView = [[LMPPSmallComponentView alloc] initWithType:LMPPComponentType_Screen
+                                                                     title:NSLocalizedString(@"屏幕信息保护", nil)
+                                                               enableImage:[myBundle imageForResource:@"lemon_screen"]
+                                                              disableImage:[myBundle imageForResource:@"lemon_screen_gray"]];
+    self.screenComponentView.onClickSwitchHandler = ^(BOOL on) {
+        @strongify(self);
+        [self clickOwlView];
+        [self.owlController onClickScreen:on];
+    };
+    self.screenComponentView.onClickBackgroundHandler = ^{
+        @strongify(self);
+        [self clickOwlView];
+    };
+    [owlContainerView addSubview:self.screenComponentView];
     
+    
+    
+    self.automaticComponentView = [[LMPPSmallComponentView alloc] initWithType:LMPPComponentType_Automatic
+                                                                     title:NSLocalizedString(@"自动操作提示", nil)
+                                                               enableImage:[myBundle imageForResource:@"lemon_automatic"]
+                                                              disableImage:[myBundle imageForResource:@"lemon_automatic_gray"]];
+    self.automaticComponentView.onClickSwitchHandler = ^(BOOL on) {
+        @strongify(self);
+        [self clickOwlView];
+        [self.owlController onClickAutomatic:on];
+    };
+    self.automaticComponentView.onClickBackgroundHandler = ^{
+        @strongify(self);
+        [self clickOwlView];
+    };
+    [owlContainerView addSubview:self.automaticComponentView];
     
     // '一键开启'引导
-    if ([Owl2Manager sharedManager].showOneClickGuideView) {
+    if ([[Owl2Manager sharedManager] guideViewShowType] != OWLShowGuideViewType_None) {
         LMPPOneClickGuideView *guideView = [LMPPOneClickGuideView new];
         self.guideView = guideView;
         @weakify(self);
         guideView.oneClickBlock = ^{
             @strongify(self);
             [self clickOwlView]; // 展示隐私保护主页
-            [self.owlController oneClick]; // 再一键开启
+            if ([[Owl2Manager sharedManager] guideViewShowType] == OWLShowGuideViewType_Normal) {
+                [self.owlController oneClick]; // 再一键开启
+            } else if ([[Owl2Manager sharedManager] guideViewShowType] == OWLShowGuideViewType_Special) {
+                [self.owlController onClickAutomatic:YES];  // 只开启自动操作
+            }
+            
+            [Owl2Manager sharedManager].oneClickGuideViewClicked = YES;
         };
         [self.view addSubview:guideView];
         [guideView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -559,64 +514,33 @@ static NSString * const kPidKey = @"pid";
             }
         }];
     }
-    
+
     [owlContainerView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.height.equalTo(@105);
+        make.height.equalTo(@135);
         make.bottom.equalTo(self.view);
         make.width.equalTo(self.view).offset(-26);
         make.centerX.equalTo(self.view);
     }];
-    
-    
-    [imageCamera mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(owlContainerView);
-        make.top.equalTo(owlContainerView.mas_top);
-        make.width.equalTo(@32);
-        make.height.equalTo(@32);
+
+    [self.cameraComponentView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(owlContainerView).mas_offset(0);
+        make.left.mas_offset(1);
+        make.size.mas_equalTo(NSMakeSize(150, 62));
     }];
-    
-    [cameraLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(imageCamera.mas_right).offset(3);
-        make.centerY.equalTo(imageCamera);
+    [self.audioComponentView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.equalTo(self.cameraComponentView);
+        make.right.mas_offset(-1);
+        make.size.mas_equalTo(NSMakeSize(150, 62));
     }];
-    
-    [cameraStateLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.equalTo(owlContainerView).offset(-7); //container -13
-        make.centerY.equalTo(imageCamera);
+    [self.screenComponentView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.equalTo(self.cameraComponentView.mas_bottom).offset(6);
+        make.left.mas_offset(1);
+        make.size.mas_equalTo(NSMakeSize(150, 62));
     }];
-    
-    [imageMicrophone mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(imageCamera);
-        make.top.equalTo(imageCamera.mas_bottom).offset(7);
-        make.width.equalTo(@32);
-        make.height.equalTo(@20);
-    }];
-    
-    [microphoneLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(imageMicrophone.mas_right).offset(3);
-        make.centerY.equalTo(imageMicrophone);
-    }];
-    
-    [microhoneStateLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.equalTo(owlContainerView).offset(-7); //container -13
-        make.centerY.equalTo(imageMicrophone);
-    }];
-    
-    [imageScreen mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(imageMicrophone);
-        make.top.equalTo(imageMicrophone.mas_bottom).offset(12);
-        make.width.equalTo(@32);
-        make.height.equalTo(@20);
-    }];
-    
-    [screenLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.left.equalTo(imageScreen.mas_right).offset(3);
-        make.centerY.equalTo(imageScreen);
-    }];
-    
-    [screenStateLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.right.equalTo(owlContainerView).offset(-7); //container -13
-        make.centerY.equalTo(imageScreen);
+    [self.automaticComponentView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.equalTo(self.screenComponentView);
+        make.right.mas_offset(-1);
+        make.size.mas_equalTo(NSMakeSize(150, 62));
     }];
 }
 

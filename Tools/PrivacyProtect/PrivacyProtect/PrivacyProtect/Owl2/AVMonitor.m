@@ -17,6 +17,7 @@
 #import <QMCoreFunction/LMReferenceDefines.h>
 
 #define kLemonUseAVMonitorNotification 0
+#define kSend_Automatic_Event_Min_Interval  60  // 同一个应用控制另一个pid，最小通知间隔，已和产品确认
 
 extern os_log_t logHandle;
 
@@ -51,7 +52,6 @@ typedef NS_ENUM(NSUInteger, LMControlCenterLogStatusType) {
 @end
 
 
-
 @interface AVMonitor ()
 
 @property (nonatomic, copy) NSArray *lastPrivacyResult;
@@ -65,6 +65,9 @@ typedef NS_ENUM(NSUInteger, LMControlCenterLogStatusType) {
 
 @property (nonatomic) NSDate *lastScreenEventDate;
 @property (nonatomic) NSDate *lastScreenEventEndDate;
+
+// 记录 之前发生过的自动糊提示事件 {bundleid_targetpid:date} ,60秒内同一个bundleid 和 接受者 只提示一次
+@property (nonatomic, strong) NSMutableDictionary * happenedAutomaticEventInfo;
 
 @end
 
@@ -98,10 +101,11 @@ typedef NS_ENUM(NSUInteger, LMControlCenterLogStatusType) {
     if(nil != self)
     {
         //init log monitor
-        self.logMonitor = [[LogMonitor alloc] init];
-        self.audio13logMonitor = [[LogMonitor alloc] init];
-        self.controlCenterLogMonitor = [[LogMonitor alloc] init];
-        self.screenLogMonitor = [[LogMonitor alloc] init];
+        self.logMonitor = [[LogMonitor alloc] init]; // 旧版 audio video
+//        self.audio12logMonitor = [[LogMonitor alloc] init]; // 12系统 audio
+        self.controlCenterLogMonitor = [[LogMonitor alloc] init]; // 新版控制中心
+//        self.screenLogMonitor = [[LogMonitor alloc] init];
+//        self.frontMostWindowLogMonitor = [[LogMonitor alloc] init];
         
         //init audio attributions
         self.audioAttributions = [NSMutableArray array];
@@ -170,9 +174,17 @@ typedef NS_ENUM(NSUInteger, LMControlCenterLogStatusType) {
     //dbg msg
     NSLog(@"starting AV monitoring");
 
-    //start log monitor
-    [self startLogMonitor];
-    [self startControlCenterLogMonitor];
+    if (@available(macOS 13.0, *)) {
+        [self startControlCenterLogMonitor];
+    } else if (@available(macOS 12.0, *)) {
+        //previous versions of macOS
+        // use predicate: "subsystem=='com.apple.SystemStatus'"
+        [self monitor12VideoIntel];
+        // [self monitor12Audio]; // 减少消耗迁移到独立开关控制
+    } else {
+        //11 系统使用老方法
+        [self monitorSystemStatus];
+    }
     
     //dbg msg
     NSLog(@"registering for device connection/disconnection notifications");
@@ -195,6 +207,14 @@ typedef NS_ENUM(NSUInteger, LMControlCenterLogStatusType) {
         //start (device) monitor
         [self watchAudioDevice:audioDevice];
     }
+    if (@available(macOS 13.0, *)) {
+        // nothing
+    } else if (@available(macOS 12.0, *)) {
+        if (!self.audio12logMonitor) {
+            self.audio12logMonitor = [[LogMonitor alloc] init];
+        }
+        [self monitor12Audio];
+    }
 }
 - (void)watchAllVideoDevice
 {
@@ -205,6 +225,31 @@ typedef NS_ENUM(NSUInteger, LMControlCenterLogStatusType) {
         [self watchVideoDevice:videoDevice];
     }
 }
+
+- (void)watchAllScreen {
+    if (@available(macOS 15.0, *)) {
+        if (!self.screenLogMonitor) {
+            self.screenLogMonitor = [[LogMonitor alloc] init];
+        }
+        [self monitor15Screen];
+    }
+}
+
+- (void)watchAutomatic {
+    if (!self.automaticLogMonitor) {
+        self.automaticLogMonitor = [[LogMonitor alloc] init];
+        self.happenedAutomaticEventInfo = [NSMutableDictionary dictionary];
+    }
+    [self monitorAutomatic];
+}
+
+- (void)watchFrontMostWindow {
+    if (!self.frontMostWindowLogMonitor) {
+        self.frontMostWindowLogMonitor = [[LogMonitor alloc] init];
+    }
+    [self monitorFrontMostWindow];
+}
+
 - (void)unwatchAllAudioDevice
 {
     //watch all input audio (mic) devices
@@ -212,6 +257,13 @@ typedef NS_ENUM(NSUInteger, LMControlCenterLogStatusType) {
     {
         //start (device) monitor
         [self unwatchAudioDevice:audioDevice];
+    }
+    
+    if (@available(macOS 13.0, *)) {
+        // nothing
+    } else if (@available(macOS 12.0, *)) {
+        [self.audio12logMonitor stop];
+        self.audio12logMonitor = nil;
     }
 }
 - (void)unwatchAllVideoDevice
@@ -221,6 +273,27 @@ typedef NS_ENUM(NSUInteger, LMControlCenterLogStatusType) {
     {
         //start (device) monitor
         [self unwatchVideoDevice:videoDevice];
+    }
+}
+
+- (void)unwatchAllScreen {
+    if (@available(macOS 15.0, *)) {
+        [self.screenLogMonitor stop];
+        self.screenLogMonitor = nil;
+    }
+}
+
+- (void)unwatchAutomatic {
+    if (self.automaticLogMonitor) {
+        [self.automaticLogMonitor stop];
+        self.automaticLogMonitor = nil;
+    }
+}
+
+- (void)unwatchFrontMostWindow {
+    if (self.frontMostWindowLogMonitor) {
+        [self.frontMostWindowLogMonitor stop];
+        self.frontMostWindowLogMonitor = nil;
     }
 }
 
@@ -278,30 +351,130 @@ typedef NS_ENUM(NSUInteger, LMControlCenterLogStatusType) {
     return;
 }
 
-//log monitor
--(void)startLogMonitor
-{
-    //dbg msg
-    NSLog(@"starting log monitor for AV events");
+- (void)monitorAutomatic {
+    // 创建日志监控谓词，过滤TCC权限请求日志
+    NSPredicate *tccPredicate = [NSPredicate predicateWithFormat:@"subsystem == 'com.apple.TCC' AND message CONTAINS 'TCCAccessRequestIndirect: TCCAccessRequestIndirect with pid'"];
+    @weakify(self);
+    [self.automaticLogMonitor start:tccPredicate level:Log_Level_Default callback:^(OSLogEvent *logEvent) {
+        @strongify(self);
+        
+        NSString *message = logEvent.composedMessage;
+                
+        // 解析被调用方PID（日志中的pid值）
+        NSInteger targetPid = 0;
+        NSError *error = nil;
+        NSRegularExpression *pidRegex = [NSRegularExpression regularExpressionWithPattern:@"pid (\\d+)"
+                                                                                 options:0
+                                                                                   error:&error];
+        if (!pidRegex) {
+            NSLog(@"automatic monitor regex error: %@", error);
+            return;
+        }
+        NSTextCheckingResult *pidMatch = [pidRegex firstMatchInString:message
+                                                              options:0
+                                                                range:NSMakeRange(0, message.length)];
+        if (pidMatch && pidMatch.numberOfRanges > 1) {
+            targetPid = [[message substringWithRange:[pidMatch rangeAtIndex:1]] integerValue];
+        }
 
-    [self monitor14Screen];
-    
-    if (@available(macOS 13.0, *)) {
-        // 13 以上使用控制中心日志
-    }
-    else if (@available(macOS 12.0, *)) {
-        //previous versions of macOS
-        // use predicate: "subsystem=='com.apple.SystemStatus'"
-        [self monitor12VideoIntel];
-        [self monitor12Audio];
-    }
-    else {  //11 系统使用老方法
-        [self monitorSystemStatus];
-    }
-    return;
+        // 解析调用方Bundle ID
+        NSString *callerBundleID = nil;
+        NSRegularExpression *bundleRegex = [NSRegularExpression regularExpressionWithPattern:@"kTCCCodeIdentityIdentifier = \"([^\"]+)\""
+                                                                                    options:0
+                                                                                      error:nil];
+        NSTextCheckingResult *bundleMatch = [bundleRegex firstMatchInString:message
+                                                                   options:0
+                                                                     range:NSMakeRange(0, message.length)];
+        if (bundleMatch && bundleMatch.numberOfRanges > 1) {
+            callerBundleID = [message substringWithRange:[bundleMatch rangeAtIndex:1]];
+        }
+
+        // 构建事件对象
+        if (!callerBundleID || [callerBundleID.lowercaseString hasPrefix:@"com.apple."] || targetPid <= 0) {
+            return;
+        }
+        Client *client = [Client new];
+        Event *event = [[Event alloc] init:client device:nil deviceType:LMDevice_Automatic state:NSControlStateValueOn];
+        
+        // 调用方
+        client.processBundleID = callerBundleID;
+        pid_t callerPid = GUIApplicationPidForBundleIdentifier(callerBundleID);
+        if (callerPid <= 0) {
+            return;
+        }
+        client.pid = @(callerPid);
+        client.path = valueForStringItem(getProcessPath((pid_t)callerPid));
+        client.name = valueForStringItem(getProcessName(client.path));
+        
+        // 被调用方
+        client.targetPid = @(targetPid);
+        client.targetPath = valueForStringItem(getProcessPath((pid_t)targetPid));
+        client.targetName = valueForStringItem(getProcessName(client.targetPath));
+            
+        // 防多次调用
+        BOOL canShow = YES;
+        NSString * savedKey = [NSString stringWithFormat:@"%@_%ld",callerBundleID,targetPid];
+        if ([self.happenedAutomaticEventInfo.allKeys containsObject:savedKey]) {
+            NSDate *lastShowDate = [self.happenedAutomaticEventInfo objectForKey:savedKey];
+            if (NSDate.date.timeIntervalSince1970 - lastShowDate.timeIntervalSince1970 < kSend_Automatic_Event_Min_Interval) {
+                canShow = NO;
+            }
+        }
+            
+        // 触发回调
+        if (canShow && self.eventCallback) {
+            NSLog(@"automatic message: %@",message);
+            [self.happenedAutomaticEventInfo setObject:NSDate.date forKey:savedKey];
+            self.eventCallback(event);
+        }
+    }];
 }
 
-- (void)monitor14Screen
+- (void)monitorFrontMostWindow {
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:
+        @"(subsystem == 'com.apple.runningboard' AND composedMessage CONTAINS 'frontmost' AND composedMessage CONTAINS 'osservice<com.apple.coreservices.launchservicesd>') "
+        "OR (composedMessage CONTAINS 'TCCAccessRequestIndirect' AND composedMessage CONTAINS 'Frontmost')"
+    ];
+    
+    // 启动日志监控
+    @weakify(self);
+    [self.frontMostWindowLogMonitor start:predicate level:Log_Level_Default callback:^(OSLogEvent *logEvent) {
+        @strongify(self);
+        NSString *message = logEvent.composedMessage;
+        // 提取目标 bundle ID
+        NSString *targetBundleID = [self __extractBundleIDFromEventMessage:message];
+        if (!targetBundleID) {
+            return;
+        }
+        NSLog(@"current most front app: %@", targetBundleID);
+        self.currentFrontMostAppBundleId = targetBundleID;
+    }];
+}
+
+- (NSString *)__extractBundleIDFromEventMessage:(NSString *)message {
+    // 兼容两种日志格式的正则模式
+    NSString *pattern = @"(?:app<application\\.([\\w\\.]+)\\.\\d+\\.\\d+|osservice<([\\w\\.]+))";
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:pattern options:0 error:nil];
+    
+    NSTextCheckingResult *match = [regex firstMatchInString:message options:0 range:NSMakeRange(0, message.length)];
+    if (!match) return nil;
+    
+    // 优先检查 app 格式的捕获组
+    NSRange appRange = [match rangeAtIndex:1];
+    if (appRange.location != NSNotFound) {
+        return [message substringWithRange:appRange];
+    }
+    
+    // 检查 osservice 格式的捕获组
+    NSRange serviceRange = [match rangeAtIndex:2];
+    if (serviceRange.location != NSNotFound) {
+        return [message substringWithRange:serviceRange];
+    }
+    
+    return nil;
+}
+
+- (void)monitor15Screen
 {
     NSPredicate *sender = [NSPredicate predicateWithFormat:@"sender == 'replayd' OR sender == 'screencapture' OR sender == 'ScreenCaptureKit' OR sender == 'AVFCapture' OR sender == 'ReplayKit'"];
     [self.screenLogMonitor start:sender level:Log_Level_Default callback:^(OSLogEvent *logEvent) {
@@ -426,7 +599,7 @@ typedef NS_ENUM(NSUInteger, LMControlCenterLogStatusType) {
 
 - (void)_consumeResult:(NSArray *)result
 {
-    NSLog(@"_consumeResult %@", result);
+//    NSLog(@"_consumeResult %@", result);
     [self _processPrivacyStatusChange:result type:LMControlCenterLogStatusTypeCamera];
     [self _processPrivacyStatusChange:result type:LMControlCenterLogStatusTypeSystemAudio];
     [self _processPrivacyStatusChange:result type:LMControlCenterLogStatusTypeMicrophone];
@@ -657,7 +830,7 @@ typedef NS_ENUM(NSUInteger, LMControlCenterLogStatusType) {
 - (void)monitor12Audio
 {
     NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"pid:(\\d*)," options:0 error:nil];
-    [self.audio13logMonitor start:[NSPredicate predicateWithFormat:@"process == 'coreaudiod' && subsystem == 'com.apple.TCC' && category == 'access'"] level:Log_Level_Info callback:^(OSLogEvent *logEvent) {
+    [self.audio12logMonitor start:[NSPredicate predicateWithFormat:@"process == 'coreaudiod' && subsystem == 'com.apple.TCC' && category == 'access'"] level:Log_Level_Info callback:^(OSLogEvent *logEvent) {
         //tcc request
         if (YES == [logEvent.composedMessage containsString:@"function=TCCAccessRequest, service=kTCCServiceMicrophone"]) {
             NSLog(@"new tcc access msg: %@", logEvent.composedMessage);
@@ -1104,8 +1277,12 @@ typedef NS_ENUM(NSUInteger, LMControlCenterLogStatusType) {
     
     //block
     // invoked when audio changes
+    @weakify(device);
     AudioObjectPropertyListenerBlock listenerBlock = ^(UInt32 inNumberAddresses, const AudioObjectPropertyAddress *inAddresses)
     {
+        @strongify(device);
+        if (!device) return;
+        
         //state
         NSInteger state = -1;
 
@@ -2013,9 +2190,11 @@ bail:
 
     //stop log monitoring
     [self.logMonitor stop];
-    [self.audio13logMonitor stop];
+    [self.audio12logMonitor stop];
     [self.controlCenterLogMonitor stop];
     [self.screenLogMonitor stop];
+    [self.frontMostWindowLogMonitor stop];
+    [self.automaticLogMonitor stop];
     
     //dbg msg
     NSLog(@"stopping audio monitor(s)");

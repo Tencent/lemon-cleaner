@@ -29,6 +29,7 @@
 #import <QMUICommon/LMBorderButton.h>
 #import <QMUICommon/LMAppThemeHelper.h>
 #import <QMUICommon/LMCheckboxButton.h>
+#import <QMCoreFunction/LMAuthorizationManager.h>
 
 #define FILTER_BTN_COLOR_SEL    0x515151
 #define FILTER_BTN_COLOR_NO_SEL 0x94979b
@@ -924,7 +925,8 @@
         LMDuplicateCleanViewController *cleanProgressController = [[LMDuplicateCleanViewController alloc] init];
         self.view.window.contentViewController = cleanProgressController;
         windowController.itemManager.delegate = cleanProgressController;
-        [windowController.itemManager removeDuplicateItem:_resultArray toTrash:YES];
+        BOOL toTrash = [LMAuthorizationManager checkAuthorizationForFinder];
+        [windowController.itemManager removeDuplicateItem:_resultArray toTrash:toTrash];
     }
 }
 
