@@ -16,13 +16,13 @@
 
 NSNotificationName const Owl2WhiteListChangeNotication = @"OwlWhiteListChangeNotication";
 NSNotificationName const Owl2LogChangeNotication = @"OwlLogChangeNotication";
-NSNotificationName const Owl2ShowWindowNotication = @"OwlShowWindowNotication";
 
 NSNotificationName const kOwl2VedioNotification = @"kOwlVedioNotification";
 NSNotificationName const kOwl2AudioNotification = @"kOwlAudioNotification";
 NSNotificationName const kOwl2VedioAndAudioNotification = @"kOwlVedioAndAudioNotification";
 NSNotificationName const kOwl2SystemAudioNotification = @"kOwl2SystemAudioNotification";
 NSNotificationName const kOwl2ScreenNotification = @"kOwl2ScreenNotification";
+NSNotificationName const kOwl2AutomaticNotification = @"kOwl2AutomaticNotification";
 
 
 NSString * const kUNNotificationActionPreventButtonDidBlock = @"kUNNotificationActionPreventButtonDidBlock";
@@ -51,6 +51,8 @@ static NSString * const kSuffixAppex = @".appex/";
                                                                    forKey:kOwl2SystemAudioNotification];
     [[QMUserNotificationCenter defaultUserNotificationCenter] addDelegate:(id<NSUserNotificationCenterDelegate>)self
                                                                    forKey:kOwl2ScreenNotification];
+    [[QMUserNotificationCenter defaultUserNotificationCenter] addDelegate:(id<NSUserNotificationCenterDelegate>)self
+                                                                   forKey:kOwl2AutomaticNotification];
 }
 
 - (void)analyseDeviceInfoForNotificationWithArray:(NSArray<NSDictionary *>*)itemArray;
@@ -58,7 +60,7 @@ static NSString * const kSuffixAppex = @".appex/";
     NSLog(@"analyseDeviceInfoForNotificationWithArray:, %@", itemArray);
     
     // 未开启
-    if (!self.isWatchVideo && !self.isWatchAudio && !self.isWatchScreen) {
+    if (!self.isWatchVideo && !self.isWatchAudio && !self.isWatchScreen && !self.isWatchAutomatic) {
         return;
     }
     //过滤掉一次性音频会来多次数据的问题，此时为异常，丢弃音频数据
@@ -87,6 +89,7 @@ static NSString * const kSuffixAppex = @".appex/";
         if (![self startOrStopMatchWithProcessItem:processItem]) {
             continue;
         }
+        
         // 递送通知
         [self createAndDeliverNotificationWithProcessItem:processItem];
     }
@@ -129,9 +132,11 @@ static NSString * const kSuffixAppex = @".appex/";
     if ((processItem.convenient_hardware != Owl2LogHardwareVedio)
         && (processItem.convenient_hardware != Owl2LogHardwareAudio)
         && (processItem.convenient_hardware != Owl2LogHardwareSystemAudio)
-        && (processItem.convenient_hardware != Owl2LogHardwareScreen)) {
+        && (processItem.convenient_hardware != Owl2LogHardwareScreen)
+        && (processItem.convenient_hardware != Owl2LogHardwareAutomation)) {
         return NO;
     }
+    
     return YES;
 }
 
@@ -155,6 +160,9 @@ static NSString * const kSuffixAppex = @".appex/";
     if (processItem.convenient_hardware == Owl2LogHardwareScreen) {
         return self.isWatchScreen;
     }
+    if (processItem.convenient_hardware == Owl2LogHardwareAutomation) {
+        return self.isWatchAutomatic;
+    }
     return NO;
 }
 
@@ -171,6 +179,9 @@ static NSString * const kSuffixAppex = @".appex/";
     }
     if (processItem.convenient_hardware == Owl2LogHardwareScreen) {
         return [self __startOrStopMatchWithOwlItemDic:self.owlScreenItemDic processItem:processItem];
+    }
+    if (processItem.convenient_hardware == Owl2LogHardwareAutomation) {
+        return YES;
     }
     return NO;
 }
@@ -204,6 +215,7 @@ static NSString * const kSuffixAppex = @".appex/";
     return YES;
 }
 
+
 // 创建和投递通知
 - (void)createAndDeliverNotificationWithProcessItem:(Owl2LogProcessItem *)processItem {
     NSString *appName = processItem.convenient_name;
@@ -230,6 +242,9 @@ static NSString * const kSuffixAppex = @".appex/";
                 } else {
                     thirdAppActionStr = LMLocalizedSelfBundleString(@"开始录制", nil);
                 }
+                break;
+            case Owl2LogHardwareAutomation:
+                thirdAppActionStr = LMLocalizedSelfBundleString(@"正在自动操作电脑", nil);
                 break;
             default:
                 thirdAppActionStr = LMLocalizedSelfBundleString(@"开始使用", nil);
@@ -263,16 +278,21 @@ static NSString * const kSuffixAppex = @".appex/";
     if (deviceName.length > 25) {
         deviceName = [[deviceName substringToIndex:25] stringByAppendingString:@"..."];
     }
-    
+    NSString *notificationTitle = LMLocalizedSelfBundleString(@"隐私保护提示", nil);
     NSString *informativeText = nil;
-    if (isUnknowAppName) {
-        informativeText = [NSString stringWithFormat:@"%@ %@%@\n%@", appName, thirdAppActionStr, deviceName, LMLocalizedSelfBundleString(@"若需阻止请手动检查并关闭", nil)];
+    if (processItem.convenient_hardware != Owl2LogHardwareAutomation) {
+        if (isUnknowAppName) {
+            informativeText = [NSString stringWithFormat:@"%@ %@%@\n%@", appName, thirdAppActionStr, deviceName, LMLocalizedSelfBundleString(@"若需阻止请手动检查并关闭", nil)];
+        } else {
+            informativeText = [NSString stringWithFormat:@"%@ %@%@", appName, thirdAppActionStr, deviceName];
+        }
     } else {
-        informativeText = [NSString stringWithFormat:@"%@ %@%@", appName, thirdAppActionStr, deviceName];
+        notificationTitle = [NSString stringWithFormat:@"%@ %@", appName, thirdAppActionStr];
+        informativeText = LMLocalizedSelfBundleString(@"可能修改设置或访问隐私数据", nil);
     }
     
     NSUserNotification *notification = [[NSUserNotification alloc] init];
-    notification.title = NSLocalizedStringFromTableInBundle(@"隐私保护提示", nil, [NSBundle bundleForClass:[self class]], nil);
+    notification.title = notificationTitle;
     notification.informativeText = informativeText;
     notification.identifier = [NSString stringWithFormat:@"%@.TimeUpNotification type:%d count:%d time:%@", [[NSBundle mainBundle] bundleIdentifier], processItem.deviceType.intValue, self.notificationCount, [[NSDate date] description]];
     self.notificationCount++;
@@ -317,6 +337,8 @@ static NSString * const kSuffixAppex = @".appex/";
         notificationKey = kOwl2SystemAudioNotification;
     } else if (processItem.convenient_hardware == Owl2LogHardwareScreen) {
         notificationKey = kOwl2ScreenNotification;
+    } else if (processItem.convenient_hardware == Owl2LogHardwareAutomation) {
+        notificationKey = kOwl2AutomaticNotification;
     }
 
     if (!notificationKey) {
@@ -350,8 +372,9 @@ static NSString * const kSuffixAppex = @".appex/";
     BOOL isOwl2AudioNotification = [notifItem.notificationKey isEqualToString:kOwl2AudioNotification];
     BOOL isOwl2SystemAudioNotification = [notifItem.notificationKey isEqualToString:kOwl2SystemAudioNotification];
     BOOL isOwl2ScreenNotification = [notifItem.notificationKey isEqualToString:kOwl2ScreenNotification];
+    BOOL isOwl2AutomaticNotification = [notifItem.notificationKey isEqualToString:kOwl2AutomaticNotification];
     
-    if (!(isOwl2VedioNotification || isOwl2AudioNotification || isOwl2SystemAudioNotification || isOwl2ScreenNotification)) {
+    if (!(isOwl2VedioNotification || isOwl2AudioNotification || isOwl2SystemAudioNotification || isOwl2ScreenNotification || isOwl2AutomaticNotification)) {
         // 防止其它通知传过来
         return;
     }
@@ -403,8 +426,9 @@ static NSString * const kSuffixAppex = @".appex/";
     BOOL isOwl2AudioNotification = [notifItem.notificationKey isEqualToString:kOwl2AudioNotification];
     BOOL isOwl2SystemAudioNotification = [notifItem.notificationKey isEqualToString:kOwl2SystemAudioNotification];
     BOOL isOwl2ScreenNotification = [notifItem.notificationKey isEqualToString:kOwl2ScreenNotification];
+    BOOL isOwl2AutomaticNotification = [notifItem.notificationKey isEqualToString:kOwl2AutomaticNotification];
     
-    if (!(isOwl2VedioNotification || isOwl2AudioNotification || isOwl2SystemAudioNotification || isOwl2ScreenNotification)) {
+    if (!(isOwl2VedioNotification || isOwl2AudioNotification || isOwl2SystemAudioNotification || isOwl2ScreenNotification || isOwl2AutomaticNotification)) {
         // 防止其它通知传过来
         return;
     }
@@ -494,6 +518,7 @@ static NSString * const kSuffixAppex = @".appex/";
 
 // kill app
 - (void)killWithProcessItem:(Owl2LogProcessItem *)item completionHandler:(void(^)(BOOL prevent))handler {
+    if (!item) return;
     
     Owl2LogHardware hardware = item.convenient_hardware;
     
@@ -505,6 +530,7 @@ static NSString * const kSuffixAppex = @".appex/";
         @(Owl2LogHardwareAudio): @"App会被强制退出，以防继续使用麦克风",
         @(Owl2LogHardwareSystemAudio): @"App会被强制退出，以防继续使用扬声器",
         @(Owl2LogHardwareScreen): @"App会被强制退出，以防继续使用屏幕内容",
+        @(Owl2LogHardwareAutomation): @"App会被强制退出，以防继续自动操作电脑",
     };
     alert.messageText = QMRetStrIfEmpty(LMLocalizedSelfBundleString(copywriting[@(hardware)], nil));
     alert.informativeText = LMLocalizedSelfBundleString(@"确定要阻止吗？", nil);

@@ -8,7 +8,7 @@
 #define QMCoreFunctionDef_h
 
 #ifdef APPSTORE_VERSION
-#define kTXCProductId @"52728"
+#define kTXCProductId @"36664" // Lite和官网使用同一个，原Lite为52728
 #else
 #define kTXCProductId @"36664"
 #endif

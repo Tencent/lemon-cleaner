@@ -14,7 +14,6 @@
 @property (nonatomic, strong) NSWindowController *selectWindowController;
 - (instancetype)initWithFrame:(NSRect)frame;
 
-+ (NSTextField*)buildLabel:(NSString*)title font:(NSFont*)font color:(NSColor*)color;
 - (void)reloadWhiteList;
 
 @end

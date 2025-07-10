@@ -9,6 +9,7 @@
 #import "LMMonitorTrashManager.h"
 #import <LemonClener/QMLiteCleanerManager.h>
 #import <LemonClener/CleanerCantant.h>
+#import <QMCoreFunction/LMReferenceDefines.h>
 
 #define ScanInterval 60*60  //s :1hour
 
@@ -66,19 +67,23 @@
 - (void)onTrashScan
 {
     NSLog(@"monitor trashScan enter.");
-    
+    @weakify(self);
     dispatch_async(kQMDEFAULT_GLOBAL_QUEUE, ^{
-        [mTrashCleaningLock lock];
-        _trashPhase = TrashScaning;
+        @strongify(self);
+        if (!self) return;
+        [self->mTrashCleaningLock lock];
+        self.trashPhase = TrashScaning;
         [[QMLiteCleanerManager sharedManger] startScan];
         // 同步获取扫描完直接获取 垃圾size.
-        _trashSize = [[QMLiteCleanerManager sharedManger] resultSize];
-        _trashPhase = TrashScanEnd;
-         [mTrashCleaningLock unlock];
+        self->_trashSize = [[QMLiteCleanerManager sharedManger] resultSize];
+        self.trashPhase = TrashScanEnd;
+        [self->mTrashCleaningLock unlock];
         NSLog(@"monitor trash scan result size : is %ld", (long)_trashSize);
         dispatch_async(dispatch_get_main_queue(), ^{
-            if(_delegate){
-                [_delegate changeTrashViewState];
+            @strongify(self);
+            if (!self) return;
+            if(self.delegate){
+                [self.delegate changeTrashViewState];
             }
         });
     });
@@ -97,19 +102,21 @@
     if(_delegate){
         qmLiteCleanerManager.delegate = (LMCleanViewController *)_delegate;
     }
+    @weakify(self);
     dispatch_async(kQMDEFAULT_GLOBAL_QUEUE, ^{
-        [mTrashCleaningLock lock];
-        _trashPhase = TrashCleaning;
+        @strongify(self);
+        if (!self) return;
+        [self->mTrashCleaningLock lock];
+        self.trashPhase = TrashCleaning;
         
         [qmLiteCleanerManager startScan];
-        _trashSize = [qmLiteCleanerManager resultSize];
+        self->_trashSize = [qmLiteCleanerManager resultSize];
         [qmLiteCleanerManager startCleanWithActionSource:QMCleanerActionSourceMonitor];
         
-        mLastCleanTime = [[NSDate date] timeIntervalSince1970];
-        _trashSize = 0;
-        _trashPhase = TrashScanEnd;
-        [mTrashCleaningLock unlock];
-
+        self->mLastCleanTime = [[NSDate date] timeIntervalSince1970];
+        self->_trashSize = 0;
+        self.trashPhase = TrashScanEnd;
+        [self->mTrashCleaningLock unlock];
     });
 }
 

@@ -113,6 +113,9 @@
 #define OWL_DEVICE_NAME         @"OWL_DEVICE_NAME"
 #define OWL_BUNDLE_ID           @"OWL_BUNDLE_ID"
 #define OWL_DEVICE_EXTRA        @"OWL_DEVICE_EXTRA" //录屏类型的时候表示是否截屏
+#define OWL_TARGET_PROC_ID      @"OWL_TARGET_PROC_ID"      // 被控方
+#define OWL_TARGET_PROC_NAME    @"OWL_TARGET_PROC_NAME"
+#define OWL_TARGET_PROC_PATH    @"OWL_TARGET_PROC_PATH"
 
 #define VDCAssistantPath                @"/System/Library/Frameworks/CoreMediaIO.framework/Versions/A/Resources/VDC.plugin/Contents/Resources/VDCAssistant"
 //macOS11以下系统上的路径
@@ -167,6 +170,7 @@
 #define K_IS_WATCHING_VEDIO     @"is_watching_vedio"
 #define K_IS_WATCHING_AUDIO     @"is_watching_audio"
 #define K_IS_WATCHING_SCREEN    @"is_watching_screen"
+#define K_IS_WATCHING_AUTOMATIC    @"is_watching_automatic"
 
 //硬盘空间更新
 #define NOTIFICATION_UPDATE_DISK_INFO    @"diskInfoNotification"

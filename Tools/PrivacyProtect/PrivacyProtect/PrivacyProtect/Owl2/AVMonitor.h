@@ -26,11 +26,13 @@ typedef void (^AVMonitorEventBlock)(Event* event);
 //log monitor
 @property(nonatomic, retain)LogMonitor* logMonitor;
 
-// 原 logMonitor 没有监听macOS13系统上音频日志，补充监听
-@property(nonatomic, retain) LogMonitor* audio13logMonitor;
+// 原 logMonitor 没有监听macOS12系统上音频日志，补充监听
+@property(nonatomic, retain) LogMonitor* audio12logMonitor;
 
 @property(nonatomic, retain) LogMonitor* controlCenterLogMonitor;
 @property(nonatomic, retain) LogMonitor* screenLogMonitor;
+@property(nonatomic, retain) LogMonitor* frontMostWindowLogMonitor;   // frontmost window from windowserver
+@property(nonatomic, retain) LogMonitor* automaticLogMonitor;         // 自动化权限被使用
 
 //event callback
 @property(nonatomic, copy) AVMonitorEventBlock eventCallback;
@@ -80,6 +82,8 @@ typedef void (^AVMonitorEventBlock)(Event* event);
 //listener queue
 @property(nonatomic, retain)dispatch_queue_t eventQueue;
 
+// 当前窗口置顶获得焦点的应用bundleid
+@property (nonatomic, copy, nullable) NSString *currentFrontMostAppBundleId;
 
 
 /* METHODS */
@@ -88,8 +92,14 @@ typedef void (^AVMonitorEventBlock)(Event* event);
 -(void)start;
 - (void)watchAllAudioDevice;
 - (void)watchAllVideoDevice;
+- (void)watchAllScreen;
 - (void)unwatchAllAudioDevice;
 - (void)unwatchAllVideoDevice;
+- (void)unwatchAllScreen;
+- (void)watchAutomatic;
+- (void)unwatchAutomatic;
+- (void)watchFrontMostWindow;
+- (void)unwatchFrontMostWindow;
 
 //enumerate active devices
 -(NSMutableArray*)enumerateActiveDevices;

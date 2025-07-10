@@ -18,88 +18,75 @@
 @synthesize delegate;
 
 // 检查plist是否合法
-- (BOOL)checkBrokenPlistInfo:(NSString *)path
-{
-    //                struct stat *filestats = (struct stat *) malloc(sizeof(struct stat));
-    //
-    //                char *plist_entire = NULL;
-    //                const char * filePath = [curObj UTF8String];
-    //                FILE *iplist = NULL;
-    //                iplist = fopen(filePath, "rb");
-    //                stat(filePath, filestats);
-    //                plist_entire = (char *) malloc(sizeof(char) * (filestats->st_size + 1));
-    //                fread(plist_entire, sizeof(char), filestats->st_size, iplist);
-    //                fclose(iplist);
-    //                if (memcmp(plist_entire, "bplist00", 8)!= 0)
-    //                {
-    //
-    //                }
-    //                free(filestats);
-    //                free(plist_entire);
-    NSDictionary * dict = [[NSFileManager defaultManager] attributesOfItemAtPath:path
-                                                                          error:nil];
-    if ([[dict objectForKey:NSFileSize] unsignedLongLongValue] > 1024 * 1024 * 2)
-        return NO;
-    NSData *data = [NSData dataWithContentsOfFile:path
-                                          options:0
-                                            error:nil];
-    if (data)
-    {
-        NSPropertyListFormat format;
-        id plist = [NSPropertyListSerialization propertyListWithData:data
-                                                             options:NSPropertyListImmutable
-                                                              format:&format
-                                                               error:nil];
-        // insert code here...
-        if (!plist)
-        {
+- (BOOL)checkBrokenPlistInfo:(NSString *)path {
+    // 获取文件的属性
+    NSDictionary *dict = [[NSFileManager defaultManager] attributesOfItemAtPath:path error:nil];
+    
+    // 检查文件大小是否超过 2MB
+    if ([[dict objectForKey:NSFileSize] unsignedLongLongValue] > 1024 * 1024 * 2) {
+        return NO; // 文件太大，认为是有效的
+    }
+    
+    // 读取文件数据
+    NSData *data = [NSData dataWithContentsOfFile:path options:0 error:nil];
+    // 如果 data 为 nil，返回 YES（认为是损坏的）
+    if (!data) {
+        NSLog(@"File does not exist or cannot be read.");
+        return YES; // plist 文件无效
+    }
+    NSPropertyListFormat format;
+    NSError *error = nil;
+    
+    // 尝试解析 plist 数据
+    id plist = [NSPropertyListSerialization propertyListWithData:data
+                                                         options:NSPropertyListImmutable
+                                                          format:&format
+                                                           error:&error];
+    // 如果 plist 解析失败，返回 YES（认为是损坏的）
+    if (!plist) {
+        NSLog(@"Error parsing plist: %@", error.localizedDescription);
+        return YES; // plist 文件损坏
+    }
+    
+    return NO; // plist 文件有效
+}
+
+// 判断是否存在可执行文件
+// 查询plist文件中对应的Program 或者 ProgramArguments的第一个元素对应的地址是否存在可执行文件
+- (BOOL)checkBrokenRegister:(NSString *)path {
+    // 1. 读取 plist 文件
+    NSDictionary *dict = [NSDictionary dictionaryWithContentsOfFile:path];
+    if (!dict) {
+        NSLog(@"not open plist（%@）", path);
+        return YES;
+    }
+    
+    // 2. 检查 Program 键
+    NSString *executablePath = dict[@"Program"];
+    // 排除Program被配置了空字符串的情况
+    BOOL effectivePath = [executablePath isKindOfClass:NSString.class] && (executablePath.length > 0);
+    if (!effectivePath) {
+        // 3. 回退检查 ProgramArguments 的第一个元素
+        NSArray *programArguments = dict[@"ProgramArguments"];
+        if (programArguments.count == 0) {
+            NSLog(@"Error: Program and ProgramArguments does not contain executable Path(%@)", path);
             return YES;
         }
+        executablePath = programArguments[0];
     }
-//    NSDictionary * dict = [NSDictionary dictionaryWithContentsOfFile:path];
-//    NSArray * array = [NSArray arrayWithContentsOfFile:path];
-//    if (!dict && !array)
-//        return YES;
-    return NO;
-}
-
-- (BOOL)checkProgramExist:(NSString *)program
-{
-    if ([program hasPrefix:@"/"])
-    {
-        return [[NSFileManager defaultManager] fileExistsAtPath:program];
+    
+    if (![executablePath isKindOfClass:NSString.class]) {
+        // 非字符串
+        return YES;
     }
-    return NO;
-}
-
-// 根据Plist中ProgramArguments/Program字段判断程序是否存在
-- (BOOL)checkBrokenRegister:(NSString *)path
-{
-    NSMutableDictionary * dict = [NSMutableDictionary dictionaryWithContentsOfFile:path];
-    if (dict)
-    {
-        BOOL isBroken = YES;
-        NSArray * array = [dict objectForKey:@"ProgramArguments"];
-        if (array)
-        {
-            for (NSString * str in array)
-            {
-                if ([self checkProgramExist:str])
-                {
-                    isBroken = NO;
-                    break;
-                }
-            }
-        }
-        else
-        {
-            NSString * program = [dict objectForKey:@"Program"];
-            if (program && [self checkProgramExist:program])
-                isBroken = NO;
-        }
-        return isBroken;
-    }
-    return YES;
+    
+    // 4. 处理路径中的 ~ 符号
+    executablePath = [executablePath stringByExpandingTildeInPath];
+    
+    // 5. 验证文件可执行性
+    BOOL isExists = [[NSFileManager defaultManager] fileExistsAtPath:executablePath];
+    
+    return !isExists;
 }
 
 // 通过LaunchSever获取当前未用的启动项

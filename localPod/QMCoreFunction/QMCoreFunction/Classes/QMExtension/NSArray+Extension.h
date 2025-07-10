@@ -2,7 +2,7 @@
 //  NSArray+Extension.h
 //  QMCoreFunction
 //
-//  
+//  Created by TanHao on 13-10-31.
 //  Copyright (c) 2013年 Tencent. All rights reserved.
 //
 
@@ -14,5 +14,5 @@
 @end
 
 @interface NSArray (Map)
-- (NSMutableArray *)map:(id(^)(id obj, NSUInteger index))block;
+- (NSMutableArray *)filteredMappedArray:(id(^)(id obj, NSUInteger index))block;
 @end

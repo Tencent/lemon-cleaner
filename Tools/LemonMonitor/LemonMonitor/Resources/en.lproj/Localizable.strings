@@ -82,9 +82,14 @@
 "当前无网络" = "NO network";
 
 "去开启" = "Turn on";
+"未开启" = "Not enabled";
 "一键开启" = "Enable";
+"开启" = "Enable";
 "升级守护，全场景保护设备隐私" = "Full-Scenario Protection for Device Privacy";
+"新增自动操作提示，监控电脑不明使用" = "New auto-operation prompts to monitor unauthorized PC usage";
 "屏幕信息保护" = "Screen Privacy Protection";
+"自动操作提示" = "Automation Alert";
+
 
 "服务协议" = "Services Agreement";
 "隐私政策" = "Privacy Policy";

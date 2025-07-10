@@ -13,3 +13,9 @@
 @property (nonatomic, strong) NSColor *selectedColor;
 
 @end
+
+@interface OwlWLTableRowView : OwlTableRowView
+
+@property (nonatomic, assign) BOOL isExpand;
+
+@end

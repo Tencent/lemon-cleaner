@@ -16,6 +16,8 @@
 #import "NSColor+Extension.h"
 #import "NSString+Extension.h"
 #import "NSFont+Extension.h"
+#import <QMCoreFunction/LMAuthorizationManager.h>
+
 @interface LMRemoveViewController ()<BigFileWndEvent>
 
 @property (weak) IBOutlet NSTextField *titleLabel;
@@ -90,7 +92,8 @@
     [cleaningView setHidden:YES];
     [doneView setHidden:NO];
     
-    [self startRemoveResult:YES];
+    BOOL toTrash = [LMAuthorizationManager checkAuthorizationForFinder];
+    [self startRemoveResult:toTrash];
 }
 
 -(void)showDoneView {

@@ -12,10 +12,11 @@
 "允许" = "Allow";
 "阻止" = "Block";
 "关闭" = "Close";
-"App会被强制退出，以防继续使用摄像头" = "The App will be force stopped to prevent it from using the webcam";
-"App会被强制退出，以防继续使用麦克风" = "The App will be force stopped to prevent it from using the mic";
-"App会被强制退出，以防继续使用扬声器" = "The App will be force stopped to prevent it from using the speaker audio";
+"App会被强制退出，以防继续使用摄像头" = "Quit Apps to Prevent Webcam Access";
+"App会被强制退出，以防继续使用麦克风" = "Quit Apps to Prevent Mic Access";
+"App会被强制退出，以防继续使用扬声器" = "Quit Apps to Prevent Speaker Audio Access";
 "App会被强制退出，以防继续使用屏幕内容" = "Quit Apps to Prevent Screen Access";
+"App会被强制退出，以防继续自动操作电脑" = "Quit Apps to Prevent Computer Control";
 "确定要阻止吗？" = "Are you sure to block it？";
 "是否要始终允许（加入白名单）？" = "Always allow it to use your webcam and mic（add it to whitelist）?";
 "若始终允许，以后该进程使用时将不再提示" = "If always allow, you'll not get notifications when it access your webcam or mic";
@@ -32,21 +33,22 @@
 "截屏&录屏" = "Screenshot&Recording";
 "系统应用" = "Build-in app";
 "第三方应用" = "Third-party app";
-"摄像头和麦克风都取消信任会把app移出白名单。需要移除吗？" = "It will be removed from whitelist if you deny access to both webcam and mic. Are you sure to remove？";
+"都取消信任会把app移出白名单。需要移除吗？" = "It will be removed from whitelist if you deny access to all. Are you sure to remove？";
 "保留" = "Cancel";
 "添加" = "Add";
 "白名单" = "Whitelist";
-"应用程序" = "Name";
 "应用类型" = "Type";
-"允许权限类型" = "Allow access";
 "正在初始化数据..." = "Initializing...";
 
 "摄像头保护" = "Camera Access Alert";
-"系统音频保护" = "System Audio Access Alert";
+"系统音频保护" = "Audio Access Alert";
 "屏幕保护" = "Screen Access Alert";
+"屏幕信息保护" = "Screen Access Alert";
+"自动操作提示" = "Automation Alert";
+"自动化接口被调用时提示，接口可操作电脑和访问隐私数据" = "Notify on Automation APIs Request (May Control Computer or Access Private Data)";
 
 "软件调用摄像头时提示" = "Notify on Cam Access Request";
-"软件调用麦克风或录制音频时提示" = "Notify on Mic Access Request";
+"软件调用麦克风或录制音频时提示" = "Notify on Mic and System Audio Recording Access Request";
 "软件截取或录制屏幕信息时提示" = "Notify on Screen Recording Request";
 
 "监控日志" = "Activity log";
@@ -102,3 +104,14 @@
 
 "屏幕信息保护仅支持15.0及以上macOS版本，建议版本升级后继续开启。" = "Upgrade to macOS 15.0 or later to enable Screen Privacy Protection.
 ";
+
+"项" = " items";
+"自动操作" = "Automation";
+"允许权限管理" = "Manage A. P.";
+"权限类型" = "Permission Types";
+"已允许权限类型" = "Allowed Permissions";
+"自动操作电脑" = "Control Computer";
+"正在自动操作电脑" = " is controlling your computer";
+"可能修改设置或访问隐私数据" = "May modify settings or access private data";
+"开启" = "Enable";
+"未开启" = "Not enabled";

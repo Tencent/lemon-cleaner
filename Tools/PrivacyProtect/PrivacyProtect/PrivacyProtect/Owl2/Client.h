@@ -23,5 +23,10 @@
 
 @property(nonatomic, copy) NSString *processBundleID;
 
+// 被调用方
+@property(nonatomic, retain) NSNumber* targetPid;
+@property(nonatomic, copy) NSString* targetPath;
+@property(nonatomic, copy) NSString* targetName;
+
 @end
 

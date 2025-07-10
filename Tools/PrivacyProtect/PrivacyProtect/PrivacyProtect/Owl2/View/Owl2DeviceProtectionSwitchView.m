@@ -12,6 +12,7 @@
 #import <QMCoreFunction/NSColor+Extension.h>
 #import <QMUICommon/NSFontHelper.h>
 #import <QMCoreFunction/LMReferenceDefines.h>
+#import "Owl2Manager.h"
 
 @interface Owl2DeviceProtectionSwitchConfig ()
 
@@ -26,6 +27,7 @@
 
 @property (nonatomic, strong) NSImageView *imageView;
 
+@property (nonatomic, strong) NSStackView *stackView;
 @property (nonatomic, strong) NSTextField *titleLabel;
 
 @property (nonatomic, strong) NSTextField *descLabel;
@@ -44,37 +46,40 @@
         [self setupSubviewsLayout];
         self.switchBtn.on = self.config.on;
         [self updateUI];
-        
     }
     return self;
 }
 
 - (void)setupSubviews {
+    self.wantsLayer = YES;
+    self.layer.borderColor = [NSColor colorWithHex:0xE6E6E6].CGColor;
+    self.layer.borderWidth = 1;
+    self.layer.cornerRadius = 10;
+    
     [self addSubview:self.imageView];
-    [self addSubview:self.titleLabel];
-    [self addSubview:self.descLabel];
+    self.stackView = [NSStackView stackViewWithViews:@[self.titleLabel, self.descLabel]];
+    self.stackView.orientation = NSUserInterfaceLayoutOrientationVertical;
+    self.stackView.spacing = 7;
+    self.stackView.alignment = NSLayoutAttributeLeft;
+    [self addSubview:self.stackView];
     [self addSubview:self.switchBtn];
 }
 
 - (void)setupSubviewsLayout {
     [self.imageView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(20);
-        make.centerX.mas_equalTo(0);
-//        make.size.mas_equalTo(CGSizeMake(78, 78));
+        make.left.mas_equalTo(13);
+        make.centerY.mas_equalTo(0);
+        make.size.mas_equalTo(CGSizeMake(50, 50));
     }];
-    [self.titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.imageView.mas_bottom).offset(12);
-        make.centerX.mas_equalTo(0);
-    }];
-    [self.descLabel mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.titleLabel.mas_bottom).offset(2);
-        make.centerX.mas_equalTo(0);
+    [self.stackView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.centerY.mas_equalTo(0);
+        make.left.equalTo(self.imageView.mas_right).mas_equalTo(20);
+        make.width.mas_equalTo(200);
     }];
     [self.switchBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.mas_equalTo(self.descLabel.mas_bottom).offset(26);
-        make.centerX.mas_equalTo(0);
-        make.size.mas_equalTo(CGSizeMake(60, 28));
-//        make.bottom.mas_equalTo(self.mas_bottom).offset(-8);
+        make.centerY.mas_equalTo(0);
+        make.right.mas_equalTo(-13);
+        make.size.mas_equalTo(CGSizeMake(30, 14));
     }];
 }
 
@@ -89,6 +94,38 @@
 - (void)viewDidChangeEffectiveAppearance {
     [super viewDidChangeEffectiveAppearance];
     self.switchBtn.offFillColor = [LMAppThemeHelper getFixedMainBgColor];
+    [self __updateBackgroundBorderColor];
+}
+
+- (void)__updateBackgroundBorderColor {
+    self.layer.borderColor = [NSColor colorWithHex:0xE6E6E6].CGColor;
+    if (@available(macOS 10.14, *)) {
+        if([LMAppThemeHelper isDarkMode]){
+            self.layer.borderColor = [NSColor colorWithHex:0x9A9A9A alpha:0.2].CGColor;
+        }
+    }
+}
+
+#pragma mark - notifications
+
+- (void)onOwlWatchVideoChanged {
+    self.config.on = Owl2Manager.sharedManager.isWatchVideo;
+    [self updateUI];
+}
+
+- (void)onOwlWatchAudioChanged {
+    self.config.on = Owl2Manager.sharedManager.isWatchAudio;
+    [self updateUI];
+}
+
+- (void)onOwlWatchScreenChanged {
+    self.config.on = Owl2Manager.sharedManager.isWatchScreen;
+    [self updateUI];
+}
+
+- (void)onOwlWatchAutomaticChanged {
+    self.config.on = Owl2Manager.sharedManager.isWatchAutomatic;
+    [self updateUI];
 }
 
 #pragma mark - getter
@@ -153,7 +190,7 @@
     NSTextField *labelTitle = [[NSTextField alloc] init];
     labelTitle.stringValue = title;
     labelTitle.font = font;
-    labelTitle.alignment = NSTextAlignmentCenter;
+    labelTitle.alignment = NSTextAlignmentLeft;
     labelTitle.bordered = NO;
     labelTitle.editable = NO;
     labelTitle.textColor = color;

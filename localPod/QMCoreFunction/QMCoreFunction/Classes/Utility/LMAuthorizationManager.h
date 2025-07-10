@@ -35,6 +35,9 @@ typedef enum{
  */
 +(Boolean)checkAuthorizationForCreateAlbum;
 
+// 检查是否有Finder自动化权限
++ (BOOL)checkAuthorizationForFinder;
+
 /**
  打开自动化权限设置窗口
  
@@ -46,6 +49,17 @@ typedef enum{
  打开照片权限设置窗口
  */
 +(void)openPrivacyPhotoPreference;
+
+/**
+ 获取所有有自动化权限的应用
+ */
++ (NSDictionary<NSString *, NSArray<NSString *> *> *)getAllApplicationsWithAutomationPermission;
+
+/**
+ 获取所有有辅助功能权限的应用
+ */
++ (NSArray<NSDictionary *> *)getAllApplicationsWithAccessibilityPermission;
+
 @end
 
 

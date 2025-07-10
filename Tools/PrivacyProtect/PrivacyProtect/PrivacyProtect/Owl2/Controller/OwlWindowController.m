@@ -119,11 +119,34 @@
 }
 
 // 一键开启
-- (void)oneClick {
+
+- (OwlViewController *)owlVC {
     NSViewController *vc = self.window.contentViewController;
     if ([vc isKindOfClass:[OwlViewController class]]) {
-        [((OwlViewController*)vc) oneClick];
+        return (OwlViewController *)vc;
     }
+    return nil;
 }
+
+- (void)oneClick {
+    [[self owlVC] oneClick];
+}
+
+- (void)onClickVideo:(BOOL)state {
+    [[self owlVC] onClickVideo:state];
+}
+
+- (void)onClickAudio:(BOOL)state {
+    [[self owlVC] onClickAudio:state];
+}
+
+- (void)onClickScreen:(BOOL)state {
+    [[self owlVC] onClickScreen:state];
+}
+
+- (void)onClickAutomatic:(BOOL)state {
+    [[self owlVC] onClickAutomatic:state];
+}
+
 
 @end

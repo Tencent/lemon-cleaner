@@ -13,6 +13,7 @@ typedef NS_ENUM(NSUInteger, Owl2DPSwitchType) {
     Owl2DPSwitchTypeWatchVideo = 1,
     Owl2DPSwitchTypeWatchAudio = 2,
     Owl2DPSwitchTypeWatchScreen = 3,
+    Owl2DPSwitchTypeWatchAutomatic = 4,
 };
 
 @interface Owl2DeviceProtectionSwitchConfig : NSObject

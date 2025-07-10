@@ -158,6 +158,21 @@ static NSMutableDictionary * m_cachePathDict = nil;
 // 正则比较
 + (BOOL)assertRegex:(NSString*)regexString matchStr:(NSString *)str
 {
+    // 检查输入有效性
+    if (!regexString || !str) {
+        return NO;
+    }
+    
+    // 检查正则语法有效性
+    NSError *error = nil;
+    NSRegularExpression *checkRegex = [NSRegularExpression regularExpressionWithPattern:regexString
+                                                                               options:0
+                                                                                 error:&error];
+    if (error || !checkRegex) {
+        NSLog(@"invalid regexstring: %@, error: %@", regexString, error);
+        return NO;
+    }
+
     NSPredicate *regex = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", regexString];
     return [regex evaluateWithObject:str];
 }

@@ -40,6 +40,7 @@
 #import "LMTrashSizeCheckWindowController.h"
 #import "NSDate+LMCalendar.h"
 #import "LemonMonitorDNCServer.h"
+#import "LMUtilFunc.h"
 
 @interface AppDelegate () <NSUserNotificationCenterDelegate>
 {
@@ -113,6 +114,10 @@
     [self aFNetworkStatus];
     [self handerMonitorGlobal];
     [[LemonMonitorDNCServer sharedInstance] addServer];
+#ifndef DEBUG
+    // 处理日志异常和定时清理的逻辑
+    trackExceptionLogAndCleanIfNeeded();
+#endif
 }
 
 -(void)addObserver{

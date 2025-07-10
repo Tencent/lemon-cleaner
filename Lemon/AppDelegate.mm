@@ -49,6 +49,7 @@
 #import "LMAboutWindow.h"
 #import "LemonDNCClient.h"
 #import "LemonDNCServier.h"
+#import <QMCoreFunction/MdlsToolsHelper.h>
 
 #define IS_INIT_PREFRENCE_CONFIGURERATION @"is_init_prefrence_configureration"
 #define DOCK_ON_OFF_STATE @"dock_on_off_state"
@@ -992,34 +993,7 @@ extern "C" int CmcGetCurrentAppVersion(char *version, int version_size, char *bu
             logPath = [NSHomeDirectory() stringByAppendingPathComponent:rootLogPath];
         }
         // clean log file
-        NSFileManager *fileMgr = [NSFileManager defaultManager];
-        if (![fileMgr fileExistsAtPath:logPath]) {
-            [fileMgr createFileAtPath:logPath contents:[NSData data] attributes:nil];
-        }
-        
-        id handle = [NSFileHandle fileHandleForWritingAtPath:logPath];
-        
-        NSDictionary *fileAttributes = [fileMgr attributesOfItemAtPath:logPath error:nil];
-        BOOL isLeastSevenDays = NO;
-        if (fileAttributes) {
-            NSDate *date = [fileAttributes objectForKey:NSFileCreationDate];
-            NSTimeInterval createTimeInterval = [date timeIntervalSince1970];
-            NSTimeInterval todayTimeInterval = [[NSDate date] timeIntervalSince1970];
-            if ((todayTimeInterval - createTimeInterval) <= 7 * 24 * 3600) {
-                isLeastSevenDays = YES;
-            }else{
-                [fileMgr createFileAtPath:logPath contents:[NSData data] attributes:nil];
-                handle = [NSFileHandle fileHandleForWritingAtPath:logPath];
-            }
-        }
-        if (isLeastSevenDays) {
-            [handle seekToEndOfFile];
-        }
-        
-        if (handle != nil)
-        {
-            dup2([handle fileDescriptor], STDERR_FILENO);
-        }
+        [MdlsToolsHelper redirectLogToFileAtPath:logPath forDays:7 maxSize:100];
     }
     
     

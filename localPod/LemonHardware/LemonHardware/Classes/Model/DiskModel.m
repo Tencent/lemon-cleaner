@@ -70,12 +70,32 @@
 
 -(BOOL)readFromFile{
     NSString *fileName = [self getHardWareInfoPathByName:DISK_PLIST];
-//    NSLog(@"%s, fileName: %@", __FUNCTION__, fileName);
-    NSArray *diskArr = [[NSArray alloc] initWithContentsOfFile:fileName];
-    if ([diskArr count] == 0) {
-        NSLog(@"%s, disArr is nil", __FUNCTION__);
+    
+    NSError *error = nil;
+    NSData *data = [NSData dataWithContentsOfFile:fileName options:0 error:&error];
+    if (!data) {
+        NSLog(@"Failed to read file: %@, error: %@", fileName, error);
         return NO;
     }
+    
+    // 使用NSPropertyListSerialization解析
+    id propertyList = [NSPropertyListSerialization propertyListWithData:data options:NSPropertyListImmutable format:NULL error:&error];
+    if (!propertyList) {
+        NSLog(@"Failed to parse plist: %@", error);
+        return NO;
+    }
+    
+    // 检查解析结果是否为数组
+    if (![propertyList isKindOfClass:[NSArray class]]) {
+        NSLog(@"Plist root is not an array");
+        return NO;
+    }
+    NSArray *diskArr = (NSArray *)propertyList;
+    if ([diskArr count] == 0) {
+        NSLog(@"Empty diskArr");
+        return NO;
+    }
+
     NSDictionary *diskDic = [diskArr objectAtIndex:0];
     if (diskDic == nil) {
         NSLog(@"%s, diskDic is nil", __FUNCTION__);

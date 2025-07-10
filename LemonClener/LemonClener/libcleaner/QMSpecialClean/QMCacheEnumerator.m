@@ -280,6 +280,14 @@
                 [resultArr addObject:path];
                 continue;
             }
+            
+            // 以 “bundleid.”为前缀，比如 “com.tencent.Lemon.”
+            NSString *prefixAddPoint = [bundleId stringByAppendingString:@"."];
+            if (prefixAddPoint && [lastPathComponent hasPrefix:prefixAddPoint]) {
+                [resultArr addObject:path];
+                continue;
+            }
+            
             //2与4对比  ----- 文件尾缀与bundleid尾缀对比
             if (([lastPathExtention length] > 0)  &&[lastPathExtention isEqualToString:lastBundleExtention]) {
                 [resultArr addObject:path];

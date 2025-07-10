@@ -19,6 +19,47 @@
 #import "LMPlistHelper.h"
 #import "CmcFileAction.h"
 
+void redirectLogToFile(NSString *path, NSInteger persistDays, unsigned long long maxSize) {
+    
+    if (!path || persistDays <= 0 || maxSize <= 0) return;
+    
+    NSString *logPath = path;
+    id fileHandle = nil;
+    
+    NSFileManager *fileMgr = [NSFileManager defaultManager];
+    if (![fileMgr fileExistsAtPath:logPath]) {
+        [fileMgr createFileAtPath:logPath contents:[NSData data] attributes:nil];
+    } else {
+        NSDictionary *fileAttributes = [fileMgr attributesOfItemAtPath:logPath error:nil];
+        if (fileAttributes) {
+            unsigned long long fileSize = [fileAttributes fileSize];
+            NSDate *date = [fileAttributes fileCreationDate];
+            NSTimeInterval createTimeInterval = [date timeIntervalSince1970];
+            NSTimeInterval todayTimeInterval = [[NSDate date] timeIntervalSince1970];
+
+            // 日志文件大小限制
+            BOOL isFileSizeExceeded = fileSize > (maxSize * 1024 * 1024);
+            
+            // 日志创建时间限制
+            // createTimeInterval is 0，属于异常，重新创建文件也合理
+            BOOL isExpired = (todayTimeInterval - createTimeInterval) > (persistDays * 24 * 3600);
+
+            if (isFileSizeExceeded || isExpired) {
+                [fileMgr removeItemAtPath:logPath error:nil];
+                [fileMgr createFileAtPath:logPath contents:[NSData data] attributes:nil];
+            }
+        }
+    }
+    
+    fileHandle = [NSFileHandle fileHandleForWritingAtPath:logPath];
+    [fileHandle seekToEndOfFile];
+    if (fileHandle != nil)
+    {
+        dup2([fileHandle fileDescriptor], STDERR_FILENO);
+    }
+    [fileHandle closeFile];
+}
+
 void redirectNSLog(NSString *suffix, NSInteger persistDays){
     NSString *logName = [[[NSBundle mainBundle] executablePath] lastPathComponent];
     
@@ -44,33 +85,10 @@ void redirectNSLog(NSString *suffix, NSInteger persistDays){
     NSString *logfilePath = [rootPath stringByAppendingPathComponent:fileName];
    
     NSLog(@"%s to %@", __FUNCTION__, logfilePath);
+    // 较多使用QMCoreFunction时再引入
+    //[MdlsToolsHelper redirectLogToFileAtPath:logfilePath forDays:persistDays maxSize:100];
     // clean log file
- 
-    if (![fileMgr fileExistsAtPath:logfilePath]) {
-        [fileMgr createFileAtPath:logfilePath contents:[NSData data] attributes:nil];
-    }
-    
-    NSDictionary *fileAttributes = [fileMgr attributesOfItemAtPath:logfilePath error:nil];
-    if (fileAttributes) {
-        NSDate *date = [fileAttributes objectForKey:NSFileCreationDate];
-        NSTimeInterval createTimeInterval = [date timeIntervalSince1970];
-        NSTimeInterval todayTimeInterval = [[NSDate date] timeIntervalSince1970];
-        NSInteger persistTime  = persistDays * 24 * 3600;
-//        NSLog(@"%s, fileLifeInterval:%f, %@, persis:%ld, ", __FUNCTION__, (todayTimeInterval - createTimeInterval), logfilePath, persistTime);
-        if ((todayTimeInterval - createTimeInterval) > persistTime) {
-            [fileMgr createFileAtPath:logfilePath contents:[NSData data] attributes:nil];
-            NSLog(@"%s, fileLifeInterval:%f, newFile:%@", __FUNCTION__, (todayTimeInterval - createTimeInterval), logfilePath);
-        }
-    }
-    
-    id handle = [NSFileHandle fileHandleForWritingAtPath:logfilePath];
-    
-    [handle seekToEndOfFile];
-
-    if (handle != nil)
-    {
-        dup2([handle fileDescriptor], STDERR_FILENO);
-    }
+    redirectLogToFile(logfilePath, persistDays, 100);
 }
 
 void* bundleCopyCallBack()
