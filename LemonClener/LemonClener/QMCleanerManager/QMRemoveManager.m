@@ -161,7 +161,26 @@
     }
 }
 
+// 使用 NSWorkspace 通过 BundleId 检查 Xcode 安装状态，避免改名字或者装其他位置
+- (BOOL)__isXcodeInstalled {
+    NSString *xcodeBundleID = kAppXcodeBundleID;
+    NSURL *xcodeURL = [[NSWorkspace sharedWorkspace] URLForApplicationWithBundleIdentifier:xcodeBundleID];
+    return (xcodeURL != nil);
+}
+
 - (void)__updateXcodeRuntimeListInfo {
+    // 1. 检查 Xcode 是否安装
+    if (![self __isXcodeInstalled]) {
+        NSLog(@"[XR] Xcode not installed. Aborting runtime list update.");
+        return;
+    }
+    
+    // 2. 检查 xcrun 是否存在
+    if (![[NSFileManager defaultManager] fileExistsAtPath:kAppXcodeXcrunPath]) {
+        NSLog(@"[XR] Xcode not installed. Aborting runtime list update.");
+        return;
+    }
+    
     NSString * runtimeList = [QMShellExcuteHelper excuteCmd:@"xcrun simctl runtime list"];
     self.xcodeRuntimeListInfo = [self __parseRuntimeListOutput:runtimeList];
     NSLog(@"[XR] Runtime List Info : %@", self.xcodeRuntimeListInfo);
