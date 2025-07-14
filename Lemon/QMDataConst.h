@@ -89,6 +89,8 @@ typedef NS_ENUM(NSInteger, LemonCleanerWeChatCategory) {
     LemonCleanerWeChatCategory_AudioFile = 200027,    // 语音文件
 };
 
-
+/// Xcode 清理模拟器会使用到的命令
+#define     kAppXcodeBundleID       @"com.apple.dt.Xcode"
+#define     kAppXcodeXcrunPath      @"/usr/bin/xcrun"
 
 #endif
