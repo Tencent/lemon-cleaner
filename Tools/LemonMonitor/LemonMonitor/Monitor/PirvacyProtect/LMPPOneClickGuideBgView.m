@@ -23,7 +23,9 @@
 }
 
 - (void)updateLayer {
-    [self.layer addSublayer:self.gradientLayer];
+    if (!_gradientLayer.superlayer) {
+        [self.layer addSublayer:self.gradientLayer];
+    }
 }
 
 - (CAGradientLayer *)gradientLayer {

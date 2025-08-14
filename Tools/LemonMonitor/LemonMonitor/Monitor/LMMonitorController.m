@@ -34,6 +34,7 @@
 #import <QMCoreFunction/QMFullDiskAccessManager.h>
 #import <LemonHardware/DiskModel.h>
 #include <sys/sysctl.h>
+#import <QMCoreFunction/LMReferenceDefines.h>
 
 // 常量
 #import "QMDataConst.h"
@@ -228,7 +229,7 @@ enum
     [self setupViews];
     [self setupViewNotification];
     [self startTrashScan];
-    [self startTimerToUpdateDiskInfo];
+    [self updateDiskInfo];
 }
 
 
@@ -454,6 +455,7 @@ enum
     [[McStatMonitor shareMonitor] setTrayType:_statusInitType];
     _isShow = YES;
     [[McStatMonitor shareMonitor] startRunMonitor];
+    [self startTimerToUpdateDiskInfo];
 }
 
 
@@ -562,13 +564,31 @@ enum
 }
 
 -(void)startTimerToUpdateDiskInfo{
-    diskModel = [[DiskModel alloc]init];
-    [[NSTimer scheduledTimerWithTimeInterval:30 target:self selector:@selector(updateDiskInfo) userInfo:nil repeats:YES] fire];
+    [[NSTimer scheduledTimerWithTimeInterval:30 target:self selector:@selector(updateDiskInfoForTimer) userInfo:nil repeats:YES] fire];
 }
 
+- (void)updateDiskInfoForTimer {
+    McStatMonitor *monitor = [McStatMonitor shareMonitor];
+    if((monitor.trayType & STATUS_TYPE_DISK) || monitor.isTrayPageOpen) {
+        [self updateDiskInfo];
+    }
+}
+
+
 -(void)updateDiskInfo{
-    [diskModel.diskZoneArr removeAllObjects];
-    [diskModel getHardWareInfo];
+    if (!diskModel) {
+        diskModel = [[DiskModel alloc]init];
+    }
+    @weakify(self);
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        @strongify(self);
+        [self->diskModel.diskZoneArr removeAllObjects];
+        [self->diskModel getHardWareInfo];
+        [self __updateDiskInfo];
+    });
+}
+
+- (void)__updateDiskInfo {
     NSMutableDictionary *dict = [[NSMutableDictionary alloc]init];
     NSArray *diskInfo = diskModel.diskZoneArr;
     for (DiskZoneModel *zoneModel in diskInfo) {

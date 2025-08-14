@@ -236,6 +236,7 @@ static NSString * const kWeChat4PartsOfVideos = @"/msg/video";
     }
     // 在指定路径下找到指定命名的文件夹
     NSString *shellString = @"mdfind -onlyin \"%@\" 'kMDItemContentType == \"public.folder\" && kMDItemDisplayName == \"%@\"'";
+    NSString *shellStringEmptyName = @"mdfind -onlyin \"%@\" 'kMDItemContentType == \"public.folder\"'";
     // 统一使用find命令
     // 该命令找不到文件夹，暂时未使用
     // NSString *shellString = @"find \"%@\" -type d -name \"%@\"";
@@ -247,7 +248,13 @@ static NSString * const kWeChat4PartsOfVideos = @"/msg/video";
         }
         
         // 数量相对较少，此处均只有一个元素，可不用@autoreleasepool
-        NSString *cmd = [NSString stringWithFormat:shellString, path, currentKeyWord];
+        NSString *cmd = nil;
+        if (currentKeyWord.length > 0) {
+            cmd = [NSString stringWithFormat:shellString, path, currentKeyWord];
+        } else {
+            cmd = [NSString stringWithFormat:shellStringEmptyName, path];
+        }
+        
         NSString *retPath = [QMShellExcuteHelper excuteCmd:cmd];
         if ([retPath isKindOfClass:[NSNull class]]) {
             continue;

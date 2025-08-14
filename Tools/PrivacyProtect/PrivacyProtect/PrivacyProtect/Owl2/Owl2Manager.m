@@ -271,11 +271,6 @@ typedef void (^OwlCompleteBlock)(void);
         self.isWatchAudio ? [self.avMonitor watchAllAudioDevice] : [self.avMonitor unwatchAllAudioDevice];
         self.isWatchScreen ? [self.avMonitor watchAllScreen] : [self.avMonitor unwatchAllScreen];
         self.isWatchAutomatic ? [self.avMonitor watchAutomatic] : [self.avMonitor unwatchAutomatic];
-        if (self.isWatchScreen || self.isWatchAutomatic) {
-            [self.avMonitor watchFrontMostWindow];
-        } else if (!self.isWatchScreen && !self.isWatchAutomatic){
-            [self.avMonitor unwatchFrontMostWindow];
-        }
     });
 }
 
@@ -286,7 +281,6 @@ typedef void (^OwlCompleteBlock)(void);
     [self.avMonitor unwatchAllVideoDevice];
     [self.avMonitor unwatchAllScreen];
     [self.avMonitor unwatchAutomatic];
-    [self.avMonitor unwatchFrontMostWindow];
     [self.avMonitor stop];
 }
 
@@ -660,8 +654,8 @@ typedef void (^OwlCompleteBlock)(void);
     }
 }
 
-- (NSString *)frontMostAppBundleId {
-    return self.avMonitor.currentFrontMostAppBundleId;
+- (void)getFrontMostAppBundleIdWithCompletion:(void (^)(NSString *))completion {
+    [self.avMonitor updateFrontMostWindowWithCompletion:completion];
 }
 
 @end

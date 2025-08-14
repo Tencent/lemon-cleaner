@@ -85,8 +85,9 @@ io_service_t g_smartBattery = 0;
 
 -(void)writeInfoToFile{
     NSString *pathName = [self getHardWareInfoPathByName:BATT_PLIST];
-    pathName = [pathName stringByReplacingOccurrencesOfString:@" " withString:@"\\ "];
-    NSString *shellString = [NSString stringWithFormat:@"system_profiler SPPowerDataType -xml > %@", pathName];
+    NSString *tempPathName = [self getHardWareInfoTempPathByName:BATT_PLIST];
+    
+    NSString *shellString = [NSString stringWithFormat:@"system_profiler SPPowerDataType -xml > \"%@\" && mv \"%@\" \"%@\"", tempPathName, tempPathName, pathName];
     @try{
         [QMShellExcuteHelper excuteCmd:shellString];
     }

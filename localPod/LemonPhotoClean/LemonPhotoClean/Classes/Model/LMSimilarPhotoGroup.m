@@ -50,11 +50,11 @@
                 
                 [[McCoreFunction shareCoreFuction] cleanItemAtPath:item.path array:nil removeType:McCleanMoveTrashRoot];
 #else
-                [[NSWorkspace sharedWorkspace] performFileOperation:NSWorkspaceRecycleOperation
-                                                                            source:[item.path stringByDeletingLastPathComponent]
-                                                                       destination:@""
-                                                                             files:@[[item.path lastPathComponent]]
-                                                                               tag:nil];
+                NSArray *urls = @[[NSURL fileURLWithPath:item.path]];
+                [[NSWorkspace sharedWorkspace] recycleURLs:urls
+                                         completionHandler:^void(NSDictionary *newURLs, NSError *recycleError) {
+                    NSLog(@"exec recycleURLs error : %@", recycleError);
+                }];
 #endif
                 [self itemDeletedAtIndex:i];
             } else if (item.isSelected){

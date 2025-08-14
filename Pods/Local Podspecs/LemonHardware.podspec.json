@@ -26,7 +26,8 @@
     "LemonHardware/Classes/Controller/LemonHardwareWindowController.h",
     "LemonHardware/Classes/Model/DiskModel.h",
     "LemonHardware/Classes/Model/BaseModel.h",
-    "LemonHardware/Classes/Model/MachineModel.h"
+    "LemonHardware/Classes/Model/MachineModel.h",
+    "LemonHardware/Classes/Model/HardwareHeader.h"
   ],
   "dependencies": {
     "AFNetworking": [

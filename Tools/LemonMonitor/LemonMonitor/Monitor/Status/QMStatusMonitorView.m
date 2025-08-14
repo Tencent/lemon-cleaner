@@ -123,7 +123,7 @@
     NSView* containerDisk = [[NSView alloc] init];
 
 
-    NSTextField* DiskTextField = [NSTextField labelWithStringCompat:@"100%"];
+    NSTextField* DiskTextField = [NSTextField labelWithStringCompat:@"0%"];
     DiskTextField.font = [NSFont systemFontOfSize:11];
     [containerDisk addSubview:DiskTextField];
     [DiskTextField mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -242,14 +242,12 @@
     [upLoadSpeedIcon.image setTemplate:YES];
     [upLoadSpeedIcon mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(colNetContainerView.mas_left);
-        make.top.mas_equalTo(colNetContainerView.mas_top);
-        make.width.equalTo(@10);
-        make.height.equalTo(@12);
+        make.top.mas_equalTo(colNetContainerView.mas_top).offset(2.5);
     }];
     
     NSTextField* upLoadSpeedText = [NSTextField labelWithStringCompat:@"0"];
     upLoadSpeedText.attributedStringValue = [self getAttrStringFromNetSpeed:0];
-    upLoadSpeedText.font = [NSFont systemFontOfSize:11];
+    upLoadSpeedText.font = [NSFont systemFontOfSize:9];
     [colNetContainerView addSubview:upLoadSpeedText];
     [upLoadSpeedText mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(upLoadSpeedIcon.mas_right);
@@ -263,19 +261,16 @@
     [downLoadSpeedIcon.image setTemplate:YES];
     [downLoadSpeedIcon mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.mas_equalTo(colNetContainerView.mas_left);
-        make.bottom.mas_equalTo(colNetContainerView.mas_bottom);
-        make.width.equalTo(@10);
-        make.height.equalTo(@12);
+        make.bottom.mas_equalTo(colNetContainerView.mas_bottom).offset(-2);
     }];
     
     NSTextField* downLoadSpeedText = [NSTextField labelWithStringCompat:@"0"];
     downLoadSpeedText.attributedStringValue = [self getAttrStringFromNetSpeed:0];
-    downLoadSpeedText.font = [NSFont systemFontOfSize:11];
+    downLoadSpeedText.font = [NSFont systemFontOfSize:9];
     [colNetContainerView addSubview:downLoadSpeedText];
     [downLoadSpeedText mas_makeConstraints:^(MASConstraintMaker *make) {
         make.left.equalTo(downLoadSpeedIcon.mas_right);
-        make.centerY.equalTo(downLoadSpeedIcon);
-        //        make.bottom.mas_equalTo(colNetContainerView.mas_bottom).offset(-20);
+        make.bottom.mas_equalTo(downLoadSpeedIcon.mas_bottom).offset(1);
     }];
     
 

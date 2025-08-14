@@ -373,9 +373,6 @@
         view = [[OwlSelectCellView alloc] initWithFrame:NSMakeRect(0, 0, tableColumn.width, 32)];
         view.identifier = idenifier;
     }
-    view = [[OwlSelectCellView alloc] initWithFrame:NSMakeRect(0, 0, tableColumn.width, 32)];
-    view.identifier = idenifier;
-    
     // 勾选状态
     Owl2SelectAppItem *item = self.wlModelArray[row];
     view.selectCheckBox.state = item.isSelected;

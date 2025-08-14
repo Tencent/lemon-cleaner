@@ -59,7 +59,7 @@ extern NSNotificationName const OwlLogChangeNotication;
 // 为通知创建
 @property (nonatomic, strong) NSMutableDictionary *notificationInsertLogList;
 
-// 可能为空，根据日志来更新
-- (NSString *)frontMostAppBundleId;
+// 可能为空，异步使用离线日志获取。
+- (void)getFrontMostAppBundleIdWithCompletion:(void (^)(NSString *bundleId))completion;
 
 @end

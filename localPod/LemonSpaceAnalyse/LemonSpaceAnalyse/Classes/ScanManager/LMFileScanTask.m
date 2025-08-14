@@ -21,6 +21,7 @@
 #include <string.h>
 #include <stdbool.h>
 #import <QMCoreFunction/MdlsToolsHelper.h>
+#import <QMCoreFunction/NSFileManager+iCloudHelper.h>
 
 typedef struct val_attrs {
     uint32_t          length;
@@ -38,18 +39,40 @@ typedef struct val_attrs {
 
 @implementation LMFileScanTask
 
+
 - (id)initWithRootDirItem:(LMItem *)dirItem{
     
     self = [super init];
     if (self) {
         _dirItem = dirItem;
+        _skipICloudFiles = NO;
     }
     return self;
+}
+
+#pragma mark - iCloud文件检测
+
+/**
+ * 检查是否应该跳过该iCloud文件
+ * @param filePath 文件路径
+ * @return YES表示应该跳过，NO表示可以处理
+ */
+- (BOOL)shouldSkipICloudFile:(NSString *)filePath {
+    if (!self.skipICloudFiles) {
+        return NO;
+    }
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    if ([fileManager qm_isICloudFileAtPath:filePath]) {
+        // 只有已下载的iCloud文件才不跳过
+        return ![fileManager qm_isICloudFileDownloadedAtPath:filePath];
+    }
+    return NO;
 }
 
 -(void)starTaskWithBlock:(LMFileScanTaskBlock)block{
     LMItem *parentItem = [self dirItem];
     NSString *parentFullPath = [parentItem fullPath];
+    parentItem.specialFileExtensions = self.specialFileExtensions;
     
     if ([parentItem.fullPath hasSuffix:@"com.apple.metadata.mdworker"]) {
         return;
@@ -100,6 +123,7 @@ typedef struct val_attrs {
                     LMItem *fileItem = [[LMItem alloc] init];
 //                    fileItem.sizeInBytes = 0;
                     fileItem.parentDirectory = parentItem;
+                    fileItem.specialFileExtensions = self.specialFileExtensions;
                     
                     val_attrs_t    attrs = {0};
                     field = entry_start;
@@ -138,6 +162,12 @@ typedef struct val_attrs {
                         printf("Error in reading attributes for directory                                entry %d", attrs.error);
                         continue;
                     }
+                    
+                    // 检查是否应该跳过iCloud文件
+                    if ([self shouldSkipICloudFile:fileItem.fullPath]) {
+                        // 跳过未下载的iCloud文件，避免触发同步
+                        continue;
+                    }
                     if (attrs.returned.commonattr & ATTR_CMN_OBJTYPE) {
                         attrs.obj_type = *(fsobj_type_t *)field;
                         field += sizeof(fsobj_type_t);
@@ -158,10 +188,28 @@ typedef struct val_attrs {
                         }
                     }
                     if (fileItem.isDirectory == NO && (attrs.returned.fileattr & ATTR_FILE_ALLOCSIZE)) {
+                        NSFileManager *fileManager = [NSFileManager defaultManager];
+                        
+                        if ([fileManager qm_isICloudFileAtPath:fileItem.fullPath]) {
+                            // iCloud文件，使用安全方法获取大小，避免触发下载
+                            fileItem.sizeInBytes = [fileManager qm_safeFileSizeAtPath:fileItem.fullPath];
+                            field += sizeof(off_t); // 跳过field指针，不读取可能触发下载的数据
+                        } else {
+                            // 非iCloud文件，正常获取大小
                             attrs.fileSize = *(off_t *)field;
                             field += sizeof(off_t);
                             fileItem.sizeInBytes = attrs.fileSize;
+                        }
 //                        NSLog(@"%@==>%lld",fileItem.fullPath,fileItem.sizeInBytes);
+                    } else {
+                        NSString *pathExtension = [[fileItem.fullPath pathExtension] lowercaseString];
+                        if (pathExtension.length > 0 && [self.specialFileExtensions containsObject:pathExtension]) {
+                            NSMetadataItem *metadataItem = [[NSMetadataItem alloc] initWithURL:[NSURL fileURLWithPath:fileItem.fullPath]];
+                            fileItem.sizeInBytes = [[metadataItem valueForAttribute:NSMetadataItemFSSizeKey] unsignedLongLongValue];
+                            if (fileItem.sizeInBytes > 0) {
+                                fileItem.isDirectory = NO; // 元数据读取到size将其标记为文件而非目录
+                            }
+                        }
                     }
 
                     [[parentItem childItems] addObject:fileItem];

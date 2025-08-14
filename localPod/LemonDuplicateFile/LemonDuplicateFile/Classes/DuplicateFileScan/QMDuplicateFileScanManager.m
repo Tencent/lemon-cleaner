@@ -140,6 +140,9 @@ const float kDuplicateMaxSearchProgress = kDuplicateIndexFileProgress + kDuplica
                     [contentURL getResourceValue:&package forKey:NSURLIsPackageKey error:NULL];
 
                     NSString *resultPath = [contentURL path];
+                    if (!resultPath) {
+                        continue;
+                    }
                     // 过滤系统特殊目录 ,需要考虑 iCloud 的问题. 另外选择目录的时候 已经排除
                     for (NSString *excludePath in self->_excludeArray) {
                         if ([resultPath hasPrefix:excludePath] && ![LMiCloudPathHelper isICloudSubPath:path]) {

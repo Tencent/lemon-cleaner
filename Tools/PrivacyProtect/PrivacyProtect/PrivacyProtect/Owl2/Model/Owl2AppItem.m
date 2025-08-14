@@ -32,7 +32,7 @@ static NSString * kAppName(NSBundle *bundle) {
 @implementation Owl2AppItem
 
 - (void)dealloc{
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [[NSDistributedNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (instancetype)initWithAppPath:(NSString *)appPath {

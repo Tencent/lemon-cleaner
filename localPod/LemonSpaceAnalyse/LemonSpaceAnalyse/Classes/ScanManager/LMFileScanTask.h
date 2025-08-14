@@ -23,6 +23,8 @@ typedef void(^LMFileScanTaskBlock)(LMItem*);
 
 @property(retain, nonatomic) LMItem *dirItem;
 @property (nonatomic, weak) id<LMFileScanTaskDelegate> delegate;
+@property (nonatomic, assign) BOOL skipICloudFiles; // 是否跳过iCloud未下载文件
+@property (nonatomic, copy) NSSet<NSString *> *specialFileExtensions; // 尝试将如下后缀文件夹当作文件处理
 
 - (id)initWithRootDirItem:(LMItem *)dirItem;
 -(void)starTaskWithBlock:(LMFileScanTaskBlock)block;

@@ -58,8 +58,11 @@
 
 -(void)writeInfoToToFile{
     NSString *pathName = [self getHardWareInfoPathByName:DISK_PLIST];
-    pathName = [pathName stringByReplacingOccurrencesOfString:@" " withString:@"\\ "];
-    NSString *shellString = [NSString stringWithFormat:@"system_profiler SPStorageDataType -xml > %@", pathName];
+    NSString *tempPathName = [self getHardWareInfoTempPathByName:DISK_PLIST];
+    
+    // 先输出到临时文件，再原子性覆盖目标文件.确保多线程下文件安全
+    // mv 读取线程安全​​：其他线程要么看到旧文件，要么看到新文件，不会读到损坏的中间状态。
+    NSString *shellString = [NSString stringWithFormat:@"system_profiler SPStorageDataType -xml > \"%@\" && mv \"%@\" \"%@\"", tempPathName, tempPathName, pathName];
     @try{
         [QMShellExcuteHelper excuteCmd:shellString];
     }

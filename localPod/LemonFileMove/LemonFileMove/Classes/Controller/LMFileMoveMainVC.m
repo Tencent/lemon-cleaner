@@ -102,7 +102,9 @@
 - (instancetype)init {
     self = [super initWithNibName:NSStringFromClass(self.class) bundle:[NSBundle bundleForClass:self.class]];
     if (self) {
-        _totalSize = [[NSUserDefaults standardUserDefaults] doubleForKey:@"Lemon_KB_To_GB"];
+        // 目前和首页扫描没有对齐，这里总大小使用模块内计算的
+        // _totalSize = [[NSUserDefaults standardUserDefaults] doubleForKey:@"Lemon_KB_To_GB"];
+        _totalSize = 0;
         _categoryItemArr = [NSMutableArray array];
         _diskModelArr = [NSMutableArray array];
         self.lastUpdateCellTime = 0;
@@ -678,7 +680,7 @@
 
 - (void)fileMoveMangerScan:(NSString *)path size:(long long)size {
     self.currentTotalSize = self.currentTotalSize + size;
-    float value = self.currentTotalSize / (self.totalSize * 1.0);
+    float value = self.currentTotalSize / (MAX(1, self.totalSize) * 1.0);
     if (value >= 1) {
         value = 1;
     }
@@ -699,6 +701,18 @@
 
 - (void)fileMoveMangerScanFinished {
     self.appArr = [LMFileMoveManger shareInstance].appArr;
+    // 重新计算 totalSize（不使用外部 UserDefaults），按所有子项的 fileSize 累加
+    long long computedTotal = 0;
+    NSArray *immutableAppArr = [self.appArr copy];
+    for (LMAppCategoryItem *appItem in immutableAppArr) {
+        NSArray *immutableSubItems = [appItem.subItems copy];
+        for (LMFileCategoryItem *fileItem in immutableSubItems) {
+            computedTotal += fileItem.fileSize;
+        }
+    }
+    
+    self.totalSize = computedTotal;
+
     [self showSelectView];
 }
 

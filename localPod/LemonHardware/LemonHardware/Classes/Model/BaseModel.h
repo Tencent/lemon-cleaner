@@ -20,6 +20,8 @@
 
 -(NSString *)getHardWareInfoPathByName:(NSString *)hardWareName;
 
+-(NSString *)getHardWareInfoTempPathByName:(NSString *)hardWareName;
+
 -(NSString *)getValueForkey:(NSString *)key withString:(NSString *)configStr;
 
 #endif

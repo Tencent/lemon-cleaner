@@ -196,7 +196,7 @@ static NSString * const kExternalStoragePathPrefix = @"/volumes";
             if (!toTrash) {
                 [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
             } else {
-                [removeTool removeFileToTrashInSerialQueue:path];
+                [removeTool removeFileToTrash:path];
             }
             removeSize += needRemoveItem.fileSize;
             

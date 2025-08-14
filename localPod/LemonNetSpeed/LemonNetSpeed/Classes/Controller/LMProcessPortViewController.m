@@ -361,7 +361,10 @@ typedef NSInteger LMPortSortType;
                 [pis addObject:[portItem substringWithRange:res.range]];
             }
             NSInteger minLength = 9;
-            if (@available(macOS 15.0, *)) {
+            if (@available(macOS 16.0, *)) {
+                minLength = 12;
+            }
+            else if (@available(macOS 15.0, *)) {
                 minLength = 11;
             }
             if (pis.count < minLength) {
@@ -384,13 +387,25 @@ typedef NSInteger LMPortSortType;
             McProcessInfoData* findInfo = NULL;
             for (McProcessInfoData* info in processInfo) {
                 pid_t pid = info.pid;
+                BOOL (^samePid)(NSInteger index) = ^BOOL (NSInteger index){
+                    if (!(pis.count > index)) return NO;
+                    NSString *value = [pis objectAtIndex:index];
+                    pid_t __pid = 0;
+                    if (@available(macOS 16.0, *)) {
+                        NSArray *appInfos = [value componentsSeparatedByString:@":"];
+                        __pid = [appInfos.lastObject intValue];
+                    } else {
+                        __pid = [value intValue];
+                    }
+                    return (pid == __pid);
+                };
                 if (isTcp) {
-                    if (pis.count > minLength && [[pis objectAtIndex:(minLength - 1)] integerValue] == pid) {
+                    if (samePid(minLength - 1)) {
                         findInfo = info;
                         break;
                     }
                 } else {
-                    if (pis.count > (minLength - 1) && [[pis objectAtIndex:(minLength - 2)] integerValue] == pid) {
+                    if (samePid(minLength - 2)) {
                         findInfo = info;
                         break;
                     }

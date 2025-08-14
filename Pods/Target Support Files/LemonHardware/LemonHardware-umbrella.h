@@ -14,6 +14,7 @@
 #import "DiskModel.h"
 #import "BaseModel.h"
 #import "MachineModel.h"
+#import "HardwareHeader.h"
 
 FOUNDATION_EXPORT double LemonHardwareVersionNumber;
 FOUNDATION_EXPORT const unsigned char LemonHardwareVersionString[];

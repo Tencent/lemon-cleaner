@@ -290,8 +290,16 @@
             
             //2与4对比  ----- 文件尾缀与bundleid尾缀对比
             if (([lastPathExtention length] > 0)  &&[lastPathExtention isEqualToString:lastBundleExtention]) {
-                [resultArr addObject:path];
-                continue;
+                // 5ZSL2CJU2T.com.dingtalk.mac   com.yinxiang.Mac 按照上面的判断，这种就会发生误判
+                // 额外检查：确保路径组件的前缀部分与bundleId的前缀部分有一定相似性
+                NSString *pathPrefix = [lastPathComponent stringByDeletingPathExtension].lowercaseString;
+                NSString *bundlePrefix = [bundleId stringByDeletingPathExtension].lowercaseString;
+                
+                // 如果前缀部分有相似性，才添加到结果中
+                if ([pathPrefix containsString:bundlePrefix] || [bundlePrefix containsString:pathPrefix]) {
+                    [resultArr addObject:path];
+                    continue;
+                }
             }
             
         }

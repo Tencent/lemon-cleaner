@@ -124,9 +124,12 @@ NSArray<NSString *> *extractTailLines(NSData *data, NSUInteger maxLines) {
     for (NSNumber *offset in [lineOffsets reverseObjectEnumerator]) {
         NSUInteger end = offset.unsignedIntegerValue;
         if (end < start - 1) {  // 跳过空行
-            NSString *line = [[NSString alloc] initWithBytes:bytes + end + 1
-                                                      length:start - end - 1
-                                                    encoding:NSUTF8StringEncoding];
+            // 更安全的做法：使用 NSData
+            NSData *subData = [NSData dataWithBytes:bytes + end + 1
+                                             length:start - end - 1];
+            if (subData.length == 0) break;
+            NSString *line = [[NSString alloc] initWithData:subData
+                                                   encoding:NSUTF8StringEncoding];
             if (line) {
                 [lines addObject:line];
             }

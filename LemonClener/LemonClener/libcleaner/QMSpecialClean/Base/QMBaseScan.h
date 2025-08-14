@@ -6,6 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <QMCoreFunction/LMReferenceDefines.h>
 @protocol QMScanDelegate;
 
 NS_ASSUME_NONNULL_BEGIN

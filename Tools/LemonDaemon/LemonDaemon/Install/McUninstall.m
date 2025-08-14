@@ -15,6 +15,25 @@
 #import <semaphore.h>
 #import "LMPlistHelper.h"
 
+// 判断当前系统版本是否在指定版本数组中的公共方法
+BOOL isCurrentSystemVersionInArray(NSArray<NSString *> *versionArray) {
+    if (versionArray.count == 0) {
+        return NO;
+    }
+    
+    NSOperatingSystemVersion systemVersion = [[NSProcessInfo processInfo] operatingSystemVersion];
+    NSString *currentVersion = [NSString stringWithFormat:@"%ld.%ld.%ld",
+                                    systemVersion.majorVersion,
+                                    systemVersion.minorVersion,
+                                    systemVersion.patchVersion];
+    
+    return [versionArray containsObject:currentVersion];
+}
+
+// 13.7.5 / 13.7.5 用户覆盖安装后守护进程拉不起来，发现控制 "com.tencent.Lemon.listen" 在该版本上失效，使用  "com.tencent.Lemon"
+BOOL isRepairFailedSystemVersion(void) {
+    return isCurrentSystemVersionInArray(@[@"13.7.5", @"13.7.6"]);
+}
 
 //如果Application里没有Lemon.app或version不一样，则执行copy操作。
 int copyFileIfNeed() {
@@ -467,6 +486,10 @@ int intsallSub(const char *szUserName, const char *szVersion, int nUserPid)
         return QMINST_ERR_COPYPLIST;
     }
     [fileMgr setAttributes:rootAttr ofItemAtPath:DAEMON_LAUNCHD_PATH error:nil];
+    if (isRepairFailedSystemVersion()) {    // 13.7.5 卸载listen无效
+        int result = loadPlist(DAEMON_LAUNCHD_PATH);
+        NSLog(@" [repair] %s, load deamon : %d", __FUNCTION__, result);
+    }
     
     //    NSString *loadCmd = [NSString stringWithFormat:@"launchctl load -w %@", DAEMON_LAUNCHD_PATH];
     //    system([loadCmd UTF8String]);
@@ -549,6 +572,13 @@ int InstallCastle(const char *szUserName, const char *szVersion, int nUserPid)
     killProcessByExecname(exeNamesToKill);
     
     unlinkOldSem();
+    
+    // 13.7.5 / 13.7.6 安装新包卸载守护进程
+    if (isRepairFailedSystemVersion()) {    // 13.7.5卸载listen无效
+        delFileOrDir(DAEMON_STARTUP_LISTEN_SOCKT);  // 需要清理掉socket文件，否则还是无效
+        int result = unloadPlistByLable(OLD_DAEMON_LAUNCHD_LABLE);
+        NSLog(@" [repair] %s, unload deamon : %d", __FUNCTION__, result);
+    }
     
     //    //真实安装
     return intsallSub(szUserName, szVersion, nUserPid);

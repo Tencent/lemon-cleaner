@@ -135,13 +135,11 @@ int CmcGetNetPacketsInfo(uint64_t *packets_recv,
                 // IFT_LOOP 回环接口， 本地
                 // IFT_GIF IPv4 隧道， 本地
                 // IFT_STF IPv6 隧道， 本地
-                // IFT_BRIDGE 桥接接口，重复
+                // IFT_BRIDGE 桥接接口，重复(物理网卡为0的情况下，兜底加入桥接的流量)
                 // IFT_PKTAP 抓包调试， 本地
-                if (if2m->ifm_data.ifi_type != IFT_OTHER
-                    && if2m->ifm_data.ifi_type != IFT_LOOP
+                if (if2m->ifm_data.ifi_type != IFT_LOOP
                     && if2m->ifm_data.ifi_type != IFT_GIF
                     && if2m->ifm_data.ifi_type != IFT_STF
-                    && if2m->ifm_data.ifi_type != IFT_BRIDGE
                     && if2m->ifm_data.ifi_type != IFT_PKTAP)
                 {
                     *packets_send += if2m->ifm_data.ifi_opackets;
