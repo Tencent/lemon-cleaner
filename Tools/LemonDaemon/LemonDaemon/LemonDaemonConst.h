@@ -65,6 +65,8 @@
 #define DAEMON_STARTUP_LISTEN_LABLE     @"com.tencent.Lemon.listen"
 #define DAEMON_UNINSTALL_LAUNCHD_LABLE  @"com.tencent.Lemon.uninstall"
 
+#define DAEMON_STARTUP_LISTEN_SOCKT     @"/var/run/com.tencent.Lemon.socket"
+
 //配置文件
 #define APP_PLIST_PATH          @"/Library/Preferences/com.tencent.Lemon.plist"
 #define MONITOR_PLIST_PATH      @"/Library/Preferences/com.tencent.LemonMonitor.plist"

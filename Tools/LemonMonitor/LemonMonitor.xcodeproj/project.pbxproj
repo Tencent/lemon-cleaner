@@ -21,7 +21,6 @@
 		85433828167A400ADBC4F9A9 /* Pods_LemonMonitor.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5867102A50C1CF6F106E2FB8 /* Pods_LemonMonitor.framework */; };
 		8B5499D728A3562A00B55BB8 /* LMHoverButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B5499D328A3562A00B55BB8 /* LMHoverButton.m */; };
 		8B5499D828A3562A00B55BB8 /* LMAboutWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B5499D628A3562A00B55BB8 /* LMAboutWindow.m */; };
-		B76D5C582DE7F3D900E6D3DC /* DynamicConfig in Resources */ = {isa = PBXBuildFile; fileRef = B76D5C572DE7F3D900E6D3DC /* DynamicConfig */; };
 		B7A745852DF9ABA20097CD3D /* LMUtilFunc.m in Sources */ = {isa = PBXBuildFile; fileRef = B7A745842DF9ABA20097CD3D /* LMUtilFunc.m */; };
 		B7A82D2A2D6DBB8600036DEE /* LMBaseLineSegmentedControl.m in Sources */ = {isa = PBXBuildFile; fileRef = B7A82D292D6DBB8600036DEE /* LMBaseLineSegmentedControl.m */; };
 		B7A82D2B2D6DBB8600036DEE /* LMBaseLineSegmentedCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B7A82D272D6DBB8600036DEE /* LMBaseLineSegmentedCell.m */; };
@@ -30,6 +29,7 @@
 		B7A82D9B2D718F4200036DEE /* LemonMonitorDNCClient.m in Sources */ = {isa = PBXBuildFile; fileRef = B7A82D9A2D718F4200036DEE /* LemonMonitorDNCClient.m */; };
 		B7D8F53D2DB23CA500D5D00E /* LMPPOneClickGuideView.m in Sources */ = {isa = PBXBuildFile; fileRef = B7D8F53C2DB23CA500D5D00E /* LMPPOneClickGuideView.m */; };
 		B7D8F5492DB25B6600D5D00E /* LMPPOneClickGuideBgView.m in Sources */ = {isa = PBXBuildFile; fileRef = B7D8F5482DB25B6600D5D00E /* LMPPOneClickGuideBgView.m */; };
+		B7DD3E9D2E39F4E700A5D399 /* LMTrashCheckManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B7DD3E9C2E39F4E700A5D399 /* LMTrashCheckManager.m */; };
 		B88029CF196BE562007CFE8D /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B88029CE196BE562007CFE8D /* SystemConfiguration.framework */; };
 		B88029D1196BE573007CFE8D /* libpcap.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = B88029D0196BE573007CFE8D /* libpcap.dylib */; };
 		B8B6CAF8198B8EA000946160 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B8B6CAF7198B8EA000946160 /* QuartzCore.framework */; };
@@ -165,7 +165,6 @@
 		8B5499D428A3562A00B55BB8 /* LMAboutWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMAboutWindow.h; sourceTree = "<group>"; };
 		8B5499D528A3562A00B55BB8 /* LMHoverButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMHoverButton.h; sourceTree = "<group>"; };
 		8B5499D628A3562A00B55BB8 /* LMAboutWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMAboutWindow.m; sourceTree = "<group>"; };
-		8DC815ACEF43BB4681E209AE /* Pods_LemonMonitor.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_LemonMonitor.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B7A745832DF9ABA20097CD3D /* LMUtilFunc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LMUtilFunc.h; sourceTree = "<group>"; };
 		B7A745842DF9ABA20097CD3D /* LMUtilFunc.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LMUtilFunc.m; sourceTree = "<group>"; };
 		B7A82D262D6DBB8600036DEE /* LMBaseLineSegmentedCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = LMBaseLineSegmentedCell.h; path = ../../Lemon/View/LMSegment/LMBaseLineSegmentedCell.h; sourceTree = SOURCE_ROOT; };
@@ -183,6 +182,8 @@
 		B7D8F53C2DB23CA500D5D00E /* LMPPOneClickGuideView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LMPPOneClickGuideView.m; sourceTree = "<group>"; };
 		B7D8F5472DB25B6600D5D00E /* LMPPOneClickGuideBgView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LMPPOneClickGuideBgView.h; sourceTree = "<group>"; };
 		B7D8F5482DB25B6600D5D00E /* LMPPOneClickGuideBgView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LMPPOneClickGuideBgView.m; sourceTree = "<group>"; };
+		B7DD3E9B2E39F4E700A5D399 /* LMTrashCheckManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LMTrashCheckManager.h; sourceTree = "<group>"; };
+		B7DD3E9C2E39F4E700A5D399 /* LMTrashCheckManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LMTrashCheckManager.m; sourceTree = "<group>"; };
 		B88029CE196BE562007CFE8D /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		B88029D0196BE573007CFE8D /* libpcap.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpcap.dylib; path = usr/lib/libpcap.dylib; sourceTree = SDKROOT; };
 		B8B6CAF7198B8EA000946160 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
@@ -313,6 +314,8 @@
 		79A9633B236A846B00DB0B1D /* TrashCheck */ = {
 			isa = PBXGroup;
 			children = (
+				B7DD3E9B2E39F4E700A5D399 /* LMTrashCheckManager.h */,
+				B7DD3E9C2E39F4E700A5D399 /* LMTrashCheckManager.m */,
 				79A9633F236A84F000DB0B1D /* TrashCheckMonitor.h */,
 				79A96340236A84F000DB0B1D /* TrashCheckMonitor.m */,
 				7952E49B23FD12D20058C48C /* LMTrashSizeCheckWindowController.h */,
@@ -590,8 +593,6 @@
 		D46FAA0621008BD100CF8E0F /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				B76D5C572DE7F3D900E6D3DC /* DynamicConfig */,
-				B76D5C532DE7F17B00E6D3DC /* DynamicConfig.json */,
 				84BA8E7921758EA70066B794 /* uiresources.xcassets */,
 				F81F2F59224C753A0023C1D7 /* Localizable.strings */,
 			);
@@ -751,7 +752,6 @@
 				F81F2F57224C753A0023C1D7 /* Localizable.strings in Resources */,
 				DE4EF2DA27352D46005649F4 /* LMVisibleViewController.xib in Resources */,
 				7952E49F23FD12D20058C48C /* LMTrashSizeCheckWindowController.xib in Resources */,
-				B76D5C582DE7F3D900E6D3DC /* DynamicConfig in Resources */,
 				B8F11079196257B000D29FFC /* MainMenu.xib in Resources */,
 				84BA8E7A21758EA70066B794 /* uiresources.xcassets in Resources */,
 			);
@@ -832,6 +832,7 @@
 				DE27949D26A038BE007B4443 /* LMUpdatePopoverRootView.m in Sources */,
 				2A7A8E912E161F9C0056956F /* LMPPSmallComponentView.m in Sources */,
 				BCF3875221EEEDD90031A2FD /* LMSystemFeatureViewController.m in Sources */,
+				B7DD3E9D2E39F4E700A5D399 /* LMTrashCheckManager.m in Sources */,
 				B8F110581962572100D29FFC /* AppDelegate.mm in Sources */,
 				BC89F8A522759B7200983314 /* QMStatusMonitorView.m in Sources */,
 				BCF3875621EF27B20031A2FD /* LMMemoryCellView.m in Sources */,

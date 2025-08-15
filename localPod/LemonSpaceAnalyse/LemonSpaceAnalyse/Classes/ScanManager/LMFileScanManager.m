@@ -17,6 +17,7 @@
 #include <sys/errno.h>
 #include <unistd.h>
 #include <sys/vnode.h>
+#import <QMCoreFunction/LMReferenceDefines.h>
 
 
 
@@ -51,6 +52,8 @@
         _maxConcurrentCount =  [[NSProcessInfo processInfo] processorCount];
         _usedDiskSize = [self getAllBytes] - [self getAllUsableBytes];
         _hadScanDiskSize = 0;
+        _skipICloudFiles = YES; // 默认跳过iCloud未下载文件以避免卡顿
+        _specialFileExtensions = [NSSet setWithObjects:@"simruntime", @"app", @"bundle",  nil];
     }
     return self;
 }
@@ -144,7 +147,9 @@
         }
     }
     
+    @weakify(self);
     dispatch_group_notify(self.scanGroup,self.concurrentQueue, ^{
+        @strongify(self);
         if (self.time) {
             [self.time invalidate];
             self.time = nil;
@@ -168,6 +173,7 @@
     
 //    dispatch_group_async(self.scanGroup,self.concurrentQueue, ^{
         pthread_mutex_lock(&self->lock);
+    
         self.isCancel = YES;
         [self.taskStack removeAllObjects];
         if (self.time) {
@@ -191,6 +197,8 @@
                 _currentNum ++;
                 LMFileScanTask *removeTask = [self taskStack].lastObject;
                 removeTask.delegate = self;
+                removeTask.skipICloudFiles = self.skipICloudFiles;
+                removeTask.specialFileExtensions = self.specialFileExtensions;
                 self.searchPath = removeTask.dirItem.fullPath;
                 [[self runningTasks] addObject:removeTask];
                 [[self taskStack] removeObject:removeTask];

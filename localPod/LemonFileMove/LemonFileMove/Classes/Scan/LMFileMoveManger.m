@@ -167,7 +167,7 @@
     NSString *fileSizeStr;
     if (num < 0) {
         fileSizeStr = @"0KB";
-    } if (num < KB_LEVEL){
+    }else if (num < KB_LEVEL){
         resultSize = num/1000.0;
         fileSizeStr = [NSString stringWithFormat:@"%0.1fKB",resultSize];
     }else if(num < MB_LEVEL){
@@ -214,22 +214,25 @@
 - (void)getFileItemToCategoryWithItem:(LMResultItem *)item
                              Itemtype:(LMFileMoveScanType)type
                           appCategory:(LMAppCategoryItem *)currenAppItem {
-    LMFileCategoryItem *filecategory;
-    if(type == LMFileMoveScanType_File && item.selecteState == YES) {
-        filecategory = currenAppItem.subItems[LMFileCategoryItemType_File90Before];
-    } else if(type == LMFileMoveScanType_File && item.selecteState == NO) {
-        filecategory = currenAppItem.subItems[LMFileCategoryItemType_File90];
-    } else if(type == LMFileMoveScanType_Image && item.selecteState == YES) {
-        filecategory = currenAppItem.subItems[LMFileCategoryItemType_Image90Before];
-    } else if(type == LMFileMoveScanType_Image && item.selecteState == NO) {
-        filecategory = currenAppItem.subItems[LMFileCategoryItemType_Image90];
-    } else if(type == LMFileMoveScanType_Video && item.selecteState == YES) {
-        filecategory = currenAppItem.subItems[LMFileCategoryItemType_Video90Before];
-    } else if(type == LMFileMoveScanType_Video && item.selecteState == NO) {
-        filecategory = currenAppItem.subItems[LMFileCategoryItemType_Video90];
+    // 其实看代码逻辑这里最下层的LMResultItem只有On和Off,没有mixed
+    BOOL isSelected = (item.selecteState == NSControlStateValueOn);
+
+    NSInteger categoryIndex = 0;
+    if (type == LMFileMoveScanType_File) {
+        categoryIndex = isSelected ? LMFileCategoryItemType_File90Before : LMFileCategoryItemType_File90;
+    } else if (type == LMFileMoveScanType_Image) {
+        categoryIndex = isSelected ? LMFileCategoryItemType_Image90Before : LMFileCategoryItemType_Image90;
+    } else if (type == LMFileMoveScanType_Video) {
+        categoryIndex = isSelected ? LMFileCategoryItemType_Video90Before : LMFileCategoryItemType_Video90;
     }
-    [filecategory.subItems addObject:item];
-    filecategory.fileSize = filecategory.fileSize + item.fileSize;
+        
+    if (currenAppItem.subItems.count > 0 &&
+        categoryIndex >= 0 &&
+        categoryIndex < currenAppItem.subItems.count) {
+        LMFileCategoryItem * filecategory = currenAppItem.subItems[categoryIndex];
+        [filecategory.subItems addObject:item];
+        filecategory.fileSize = filecategory.fileSize + item.fileSize;
+    }
 }
 
 #pragma mark - Moving File

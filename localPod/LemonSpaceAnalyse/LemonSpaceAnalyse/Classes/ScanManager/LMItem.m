@@ -43,10 +43,10 @@
             }else{
                 total = total + [item sizeInBytes];
             }
-            
         }];
         self.sizeInBytes = total;
-        if([self.fileName hasSuffix:@".app"] ||[self.fileName hasSuffix:@".bundle"]) {
+        NSString *pathExtension = [[self.fullPath pathExtension] lowercaseString];
+        if (pathExtension.length > 0 && [self.specialFileExtensions containsObject:pathExtension]) {
             self.childItems = [NSMutableArray array];
             self.isDirectory = NO;
         }

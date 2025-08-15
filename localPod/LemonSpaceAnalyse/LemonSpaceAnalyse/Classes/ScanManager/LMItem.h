@@ -19,6 +19,8 @@
 
 @property(nonatomic) BOOL isDirectory;
 
+@property (nonatomic, copy) NSSet<NSString *> *specialFileExtensions; // 尝试将如下后缀文件夹当作文件处理
+
 -(void)compareChild;
 - (long long)calculateSizeInBytesRecursively;
 - (id)initWithFullPath:(id)arg1;

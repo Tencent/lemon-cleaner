@@ -226,29 +226,33 @@ static NSString * const kPidKey = @"pid";
 }
 
 -(void)initDiskInfo{
-    if(!self.diskModel){
-        NSLog(@"%s, diskModel is nil", __FUNCTION__);
-        self.diskModel = [[DiskModel alloc]init];
-        [self.diskModel getHardWareInfo];
-    }
-    NSLog(@"%s, diskModel info: %@", __FUNCTION__, self.diskModel);
-    NSMutableDictionary *dict = [[NSMutableDictionary alloc]init];
-        NSArray *diskInfo = self.diskModel.diskZoneArr;
-        for (DiskZoneModel *zoneModel in diskInfo) {
-            NSLog(@"%s, zoneMode Info : %@", __FUNCTION__, zoneModel);
-            if(zoneModel.isMainDisk){
-                uint64_t usedBytes = zoneModel.maxSize - zoneModel.leftSize;
-                if (zoneModel.maxSize > 0)
-                {
-                    double useRate = usedBytes*1.0/zoneModel.maxSize;
-                    [dict setObject:@(usedBytes) forKey:@"used"];
-                    [dict setObject:@(zoneModel.maxSize) forKey:@"total"];
-                    NSLog(@"%s, useRate : %f", __FUNCTION__, useRate);
-                    [self updateDiskInfoWith:dict];
-                    break;
+    @weakify(self);
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        @strongify(self);
+        if(!self.diskModel){
+            NSLog(@"%s, diskModel is nil", __FUNCTION__);
+            self.diskModel = [[DiskModel alloc]init];
+            [self.diskModel getHardWareInfo];
+        }
+        NSLog(@"%s, diskModel info: %@", __FUNCTION__, self.diskModel);
+        NSMutableDictionary *dict = [[NSMutableDictionary alloc]init];
+            NSArray *diskInfo = self.diskModel.diskZoneArr;
+            for (DiskZoneModel *zoneModel in diskInfo) {
+                NSLog(@"%s, zoneMode Info : %@", __FUNCTION__, zoneModel);
+                if(zoneModel.isMainDisk){
+                    uint64_t usedBytes = zoneModel.maxSize - zoneModel.leftSize;
+                    if (zoneModel.maxSize > 0)
+                    {
+                        double useRate = usedBytes*1.0/zoneModel.maxSize;
+                        [dict setObject:@(usedBytes) forKey:@"used"];
+                        [dict setObject:@(zoneModel.maxSize) forKey:@"total"];
+                        NSLog(@"%s, useRate : %f", __FUNCTION__, useRate);
+                        [self updateDiskInfoWith:dict];
+                        break;
+                    }
                 }
             }
-        }
+    });
 }
 
 -(void)setupNetworkInfoView{

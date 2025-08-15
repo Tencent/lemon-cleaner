@@ -62,8 +62,9 @@
 
 -(void)writeFileToFile{
     NSString *pathName = [self getHardWareInfoPathByName:DISPLAY_PLIST];
-    pathName = [pathName stringByReplacingOccurrencesOfString:@" " withString:@"\\ "];
-    NSString *shellString = [NSString stringWithFormat:@"system_profiler SPDisplaysDataType -xml > %@", pathName];
+    NSString *tempPathName = [self getHardWareInfoTempPathByName:DISPLAY_PLIST];
+    
+    NSString *shellString = [NSString stringWithFormat:@"system_profiler SPDisplaysDataType -xml > \"%@\" && mv \"%@\" \"%@\"", tempPathName, tempPathName, pathName];
     @try{
         [QMShellExcuteHelper excuteCmd:shellString];
     }

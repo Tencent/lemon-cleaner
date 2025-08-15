@@ -34,7 +34,7 @@ TODO: Add long description of the pod here.
   s.source_files = 'LemonHardware/Classes/**/*'
   s.resources = ['LemonHardware/Assets/**/*']
 
-  s.public_header_files = ['LemonHardware/Classes/Controller/LemonHardwareWindowController.h','LemonHardware/Classes/Model/DiskModel.h','LemonHardware/Classes/Model/BaseModel.h','LemonHardware/Classes/Model/MachineModel.h']
+  s.public_header_files = ['LemonHardware/Classes/Controller/LemonHardwareWindowController.h','LemonHardware/Classes/Model/DiskModel.h','LemonHardware/Classes/Model/BaseModel.h','LemonHardware/Classes/Model/MachineModel.h','LemonHardware/Classes/Model/HardwareHeader.h']
   s.dependency 'AFNetworking', '3.2.1'
   s.dependency 'Masonry', '~> 1.1.0'
 

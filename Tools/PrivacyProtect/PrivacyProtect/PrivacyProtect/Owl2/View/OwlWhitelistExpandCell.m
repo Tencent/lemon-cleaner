@@ -262,11 +262,11 @@ CGFloat const OwlWLCellExpandHeight = 52;
 }
 
 - (void)updateCheckLabel:(NSTextField *)tf state:(BOOL)state {
-//    if (state) {
-//        tf.textColor = [LMAppThemeHelper getTitleColor];
-//    } else {
-//        tf.textColor = [NSColor colorWithHex:0x94979B];
-//    }
+    if (state) {
+        tf.textColor = [LMAppThemeHelper getTitleColor];
+    } else {
+        tf.textColor = [NSColor colorWithHex:0x94979B];
+    }
 }
 
 #pragma mark - getter

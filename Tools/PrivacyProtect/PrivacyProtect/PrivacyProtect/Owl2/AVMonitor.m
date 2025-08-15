@@ -18,6 +18,8 @@
 
 #define kLemonUseAVMonitorNotification 0
 #define kSend_Automatic_Event_Min_Interval  60  // 同一个应用控制另一个pid，最小通知间隔，已和产品确认
+#define kAutomationExecutionTime 1 // 暂定其它应用使用自动化打开另一个程序窗口最大耗时1s
+#define kStoreLogDelayTimeInSeconds 6 // ai报告离线日志一般有1-5s延时
 
 extern os_log_t logHandle;
 
@@ -69,6 +71,9 @@ typedef NS_ENUM(NSUInteger, LMControlCenterLogStatusType) {
 // 记录 之前发生过的自动糊提示事件 {bundleid_targetpid:date} ,60秒内同一个bundleid 和 接受者 只提示一次
 @property (nonatomic, strong) NSMutableDictionary * happenedAutomaticEventInfo;
 
+// 添加串行队列 确保设备访问的线程安全
+@property (nonatomic, strong) dispatch_queue_t deviceAccessQueue;
+
 @end
 
 @implementation AVMonitor
@@ -100,6 +105,9 @@ typedef NS_ENUM(NSUInteger, LMControlCenterLogStatusType) {
     self = [super init];
     if(nil != self)
     {
+        // 创建串行队列确保设备访问的线程安全
+        self.deviceAccessQueue = dispatch_queue_create("com.tencent.lemon.device.access", DISPATCH_QUEUE_SERIAL);
+        
         //init log monitor
         self.logMonitor = [[LogMonitor alloc] init]; // 旧版 audio video
 //        self.audio12logMonitor = [[LogMonitor alloc] init]; // 12系统 audio
@@ -243,13 +251,6 @@ typedef NS_ENUM(NSUInteger, LMControlCenterLogStatusType) {
     [self monitorAutomatic];
 }
 
-- (void)watchFrontMostWindow {
-    if (!self.frontMostWindowLogMonitor) {
-        self.frontMostWindowLogMonitor = [[LogMonitor alloc] init];
-    }
-    [self monitorFrontMostWindow];
-}
-
 - (void)unwatchAllAudioDevice
 {
     //watch all input audio (mic) devices
@@ -287,13 +288,6 @@ typedef NS_ENUM(NSUInteger, LMControlCenterLogStatusType) {
     if (self.automaticLogMonitor) {
         [self.automaticLogMonitor stop];
         self.automaticLogMonitor = nil;
-    }
-}
-
-- (void)unwatchFrontMostWindow {
-    if (self.frontMostWindowLogMonitor) {
-        [self.frontMostWindowLogMonitor stop];
-        self.frontMostWindowLogMonitor = nil;
     }
 }
 
@@ -430,25 +424,68 @@ typedef NS_ENUM(NSUInteger, LMControlCenterLogStatusType) {
     }];
 }
 
-- (void)monitorFrontMostWindow {
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:
-        @"(subsystem == 'com.apple.runningboard' AND composedMessage CONTAINS 'frontmost' AND composedMessage CONTAINS 'osservice<com.apple.coreservices.launchservicesd>') "
-        "OR (composedMessage CONTAINS 'TCCAccessRequestIndirect' AND composedMessage CONTAINS 'Frontmost')"
-    ];
-    
-    // 启动日志监控
-    @weakify(self);
-    [self.frontMostWindowLogMonitor start:predicate level:Log_Level_Default callback:^(OSLogEvent *logEvent) {
-        @strongify(self);
-        NSString *message = logEvent.composedMessage;
-        // 提取目标 bundle ID
-        NSString *targetBundleID = [self __extractBundleIDFromEventMessage:message];
-        if (!targetBundleID) {
-            return;
+- (void)updateFrontMostWindowWithCompletion:(void (^)(NSString *))completion {
+    if (@available(macOS 10.15, *)) {
+        NSDate *startDate = [NSDate dateWithTimeIntervalSinceNow:kAutomationExecutionTime];
+        NSLog(@"current date: %@", [NSDate date]);
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(kStoreLogDelayTimeInSeconds * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            // 1. 获取日志存储
+            NSError *error;
+            OSLogStore *store = [OSLogStore localStoreAndReturnError:&error];
+            OSLogPosition *position = [store positionWithDate:startDate];
+            if (error) {
+                if (completion) {
+                    completion(nil);
+                }
+                return;
+            }
+            
+            // 2. 创建进程过滤谓词
+            NSPredicate *processPredicate = [NSPredicate predicateWithFormat:@"process == 'runningboardd'"];
+            
+            // 3. 创建消息开头匹配谓词（使用单个正则表达式匹配两种模式）
+            NSPredicate *messageStartPredicate = [NSPredicate predicateWithFormat:@"message MATCHES[c] '^Acquiring assertion targeting \\\\[(app<application|osservice).*'"];
+
+            // 4. 创建必须包含'frontmost:'的谓词
+            NSPredicate *frontmostPredicate = [NSPredicate predicateWithFormat:@"message CONTAINS[c] 'frontmost:'"];
+
+            // 5. 使用AND组合所有谓词
+            NSPredicate *combinedPredicate = [NSCompoundPredicate andPredicateWithSubpredicates:@[
+               processPredicate,
+               messageStartPredicate,
+               frontmostPredicate
+            ]];
+
+            // 3. 执行查询
+            OSLogEnumerator *enumerator = [store entriesEnumeratorWithOptions:OSLogEnumeratorReverse position:position predicate:combinedPredicate error:&error];
+            if (error || !enumerator) {
+                if (completion) {
+                    completion(nil);
+                }
+                return;
+            }
+            NSInteger count = 0;
+            OSLogEntry *entry = nil;
+            NSString *targetBundleID = nil;
+            while (entry = [enumerator nextObject]) {
+                NSString *message = entry.composedMessage;
+                // 提取目标 bundle ID
+                targetBundleID = [self __extractBundleIDFromEventMessage:message];
+                if (targetBundleID.length > 0) {
+                    NSLog(@"----->current most front app:%@ %@", entry.date, targetBundleID);
+                    break;
+                }
+                if (++count >= 100) break; // 限制最大查询数量
+            }
+            if (completion) {
+                completion(targetBundleID);
+            }
+        });
+    } else {
+        if (completion) {
+            completion(nil);
         }
-        NSLog(@"current most front app: %@", targetBundleID);
-        self.currentFrontMostAppBundleId = targetBundleID;
-    }];
+    }
 }
 
 - (NSString *)__extractBundleIDFromEventMessage:(NSString *)message {
@@ -477,57 +514,26 @@ typedef NS_ENUM(NSUInteger, LMControlCenterLogStatusType) {
 - (void)monitor15Screen
 {
     NSPredicate *sender = [NSPredicate predicateWithFormat:@"sender == 'replayd' OR sender == 'screencapture' OR sender == 'ScreenCaptureKit' OR sender == 'AVFCapture' OR sender == 'ReplayKit'"];
+    @weakify(self);
     [self.screenLogMonitor start:sender level:Log_Level_Default callback:^(OSLogEvent *logEvent) {
-        
-        __auto_type handleEvent = ^(BOOL isScreenShot, BOOL isFinish) {
-            
-            Client *client = [Client new];
-            Event *event = [[Event alloc] init:client device:nil deviceType:LMDevice_Screen state:NSControlStateValueOn];
-            
-            client.pid = logEvent.processIdentifier;
-            client.path = valueForStringItem(getProcessPath(client.pid.intValue));
-            if ([client.path hasSuffix:@"sbin/screencapture"]) { //系统自带截图工具使用父进程信息更准确
-                pid_t ppid = getParentProcessID(client.pid.intValue);
-                if (ppid > 0) {
-                    client.pid = @(ppid);
-                    client.path = valueForStringItem(getProcessPath(ppid));
-                }
-            }
-            client.processBundleID = GUIApplicationBundleIdentifierForPid(client.pid.intValue);
-            
-            if (isFinish) {
-                event.state = NSControlStateValueOff;
-                client.pid = @(0);
-            } else {
-                client.name = valueForStringItem(getProcessName(client.path));
-            }
-            
-            if (isScreenShot) {
-                event.deviceExtra = 1;
-            }
-            
-            if (self.eventCallback) {
-                self.eventCallback(event);
-            }
-        };
-        
+        @strongify(self);
         NSString *message = logEvent.composedMessage;
         if (!self.lastScreenEventDate || -[self.lastScreenEventDate timeIntervalSinceNow] > 1) {
             if ([message containsString:@"SLSHWCaptureDesktopProxying_block_invoke"] ||
                 [message isEqualTo:@"Capturing image"]) { //系统截图
                 self.lastScreenEventDate = [NSDate date];
-                handleEvent(YES, NO);
+                [self handleEventWithLogEvent:logEvent IsScreenShot:YES isFinish:NO];
             } else if ([message containsString:@"[RPDaemonProxy proxyCoreGraphicsWithMethodType:"]) {
                 self.lastScreenEventDate = [NSDate date];
-                handleEvent(YES, NO);
+                [self handleEventWithLogEvent:logEvent IsScreenShot:YES isFinish:NO];
             }
             else if ([message containsString:@"[SCStreamManager registerStream:]"]) {
                 self.lastScreenEventDate = [NSDate date];
-                handleEvent(NO, NO);
+                [self handleEventWithLogEvent:logEvent IsScreenShot:NO isFinish:NO];
             } else if ([message containsString:@"[AVCaptureSession_Tundra addInput:]"] &&
                        [message containsString:@"AVCaptureScreenInput"]) {
                 self.lastScreenEventDate = [NSDate date];
-                handleEvent(NO, NO);
+                [self handleEventWithLogEvent:logEvent IsScreenShot:NO isFinish:NO];
             }
         }
         if (!self.lastScreenEventEndDate || -[self.lastScreenEventEndDate timeIntervalSinceNow] > 1) {
@@ -535,10 +541,41 @@ typedef NS_ENUM(NSUInteger, LMControlCenterLogStatusType) {
                 [message containsString:@"[AVCaptureSession_Tundra removeInput:]"] ||
                 [message containsString:@"Recording stop requested at"]) {
                 self.lastScreenEventEndDate = [NSDate date];
-                handleEvent(NO, YES);
+                [self handleEventWithLogEvent:logEvent IsScreenShot:NO isFinish:YES];
             }
         }
     }];
+}
+
+- (void)handleEventWithLogEvent:(OSLogEvent *)logEvent IsScreenShot:(BOOL)isScreenShot isFinish:(BOOL)isFinish {
+    Client *client = [Client new];
+    Event *event = [[Event alloc] init:client device:nil deviceType:LMDevice_Screen state:NSControlStateValueOn];
+    
+    client.pid = logEvent.processIdentifier;
+    client.path = valueForStringItem(getProcessPath(client.pid.intValue));
+    if ([client.path hasSuffix:@"sbin/screencapture"]) { //系统自带截图工具使用父进程信息更准确
+        pid_t ppid = getParentProcessID(client.pid.intValue);
+        if (ppid > 0) {
+            client.pid = @(ppid);
+            client.path = valueForStringItem(getProcessPath(ppid));
+        }
+    }
+    client.processBundleID = GUIApplicationBundleIdentifierForPid(client.pid.intValue);
+    
+    if (isFinish) {
+        event.state = NSControlStateValueOff;
+        client.pid = @(0);
+    } else {
+        client.name = valueForStringItem(getProcessName(client.path));
+    }
+    
+    if (isScreenShot) {
+        event.deviceExtra = 1;
+    }
+    
+    if (self.eventCallback) {
+        self.eventCallback(event);
+    }
 }
 
 // 用户手动阻止生成结束事件
@@ -811,7 +848,9 @@ typedef NS_ENUM(NSUInteger, LMControlCenterLogStatusType) {
     NSLog(@"CPU architecuture: Intel ...will leverage 'VDCAssistant'");
     
     __block unsigned long long msgCount = 0;
+    @weakify(self);
     [self.logMonitor start:[NSPredicate predicateWithFormat:@"process == 'VDCAssistant'"] level:Log_Level_Default callback:^(OSLogEvent *logEvent) {
+        @strongify(self);
         msgCount++;
         // 新client，加入列表
         if (YES == [logEvent.composedMessage hasPrefix:@"Client Connect for PID"]) {
@@ -830,7 +869,9 @@ typedef NS_ENUM(NSUInteger, LMControlCenterLogStatusType) {
 - (void)monitor12Audio
 {
     NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"pid:(\\d*)," options:0 error:nil];
+    @weakify(self);
     [self.audio12logMonitor start:[NSPredicate predicateWithFormat:@"process == 'coreaudiod' && subsystem == 'com.apple.TCC' && category == 'access'"] level:Log_Level_Info callback:^(OSLogEvent *logEvent) {
+        @strongify(self);
         //tcc request
         if (YES == [logEvent.composedMessage containsString:@"function=TCCAccessRequest, service=kTCCServiceMicrophone"]) {
             NSLog(@"new tcc access msg: %@", logEvent.composedMessage);
@@ -1426,79 +1467,85 @@ bail:
     //block
     // invoked when video changes
     @weakify(device);
+    @weakify(self);
     CMIOObjectPropertyListenerBlock listenerBlock = ^(UInt32 inNumberAddresses, const CMIOObjectPropertyAddress addresses[])
     {
         @strongify(device);
+        @strongify(self);
+
         if (!device) return;
         
-        //state
-        NSInteger state = -1;
-    
-        //get state
-        state = [self getCameraState:device];
-        
-        //dbg msg
-        NSLog(@"Camera: %@ changed state to %ld", device.localizedName, (long)state);
-        
-        //save last camera off
-        if(NSControlStateValueOff == state)
-        {
-            //save
-            self.lastCameraOff = device;
-        }
-        
-        //camera on?
-        // macOS 13.3+, use this as trigger
-        // older version send event via log monitor
-        // 从12系统开始观察设备状态
-        if (@available(macOS 12.0, *)) {
+        // 所有设备状态访问都在串行队列中执行
+        dispatch_async(self.deviceAccessQueue, ^{
+            //state
+            NSInteger state = -1;
+            
+            //get state
+            state = [self getCameraState:device];
+            
             //dbg msg
-            NSLog(@"new camera event");
+            NSLog(@"Camera: %@ changed state to %ld", device.localizedName, (long)state);
             
-            //camera: on
-            if(NSControlStateValueOn == state)
+            //save last camera off
+            if(NSControlStateValueOff == state)
             {
-                NSLog(@"camera event: on");
-                self.activeCamera = device;
-                
-                //delay
-                // need time for logging to grab responsible process
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.5 * NSEC_PER_SEC), dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                
-                    if (@available(macOS 13.0, *)) { //13以上直接使用控制中心日志
-                    } else {
-                        Client* client = nil;
-                        if(0 != self.lastCameraClient)
-                        {
-                            //init client from attribution
-                            client = [[Client alloc] init];
-                            client.pid = [NSNumber numberWithInteger:self.lastCameraClient];
-                            client.path = valueForStringItem(getProcessPath(client.pid.intValue));
-                            client.name = valueForStringItem(getProcessName(client.path));
-                        }
-                        Event *event = [[Event alloc] init:client device:device deviceType:LMDevice_Camera state:NSControlStateValueOn];
-                        [self handleEvent:event];
-                    }
-
-                });
+                //save
+                self.lastCameraOff = device;
             }
             
-            //camera: off
-            else if(NSControlStateValueOff == state)
-            {
+            //camera on?
+            // macOS 13.3+, use this as trigger
+            // older version send event via log monitor
+            // 从12系统开始观察设备状态
+            if (@available(macOS 12.0, *)) {
                 //dbg msg
-                NSLog(@"camera event: off");
+                NSLog(@"new camera event");
                 
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.5 * NSEC_PER_SEC), dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                //camera: on
+                if(NSControlStateValueOn == state)
+                {
+                    NSLog(@"camera event: on");
+                    self.activeCamera = device;
                     
-                    if (@available(macOS 13.0, *)) { //13以上直接使用控制中心日志
-                    } else {
-                        Event *event = [[Event alloc] init:nil device:device deviceType:LMDevice_Camera state:NSControlStateValueOff];
-                        [self handleEvent:event];
-                    }
-                });
-            }
-        } //macOS 13.3
+                    //delay
+                    // need time for logging to grab responsible process
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.5 * NSEC_PER_SEC), dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                        
+                        if (@available(macOS 13.0, *)) { //13以上直接使用控制中心日志
+                        } else {
+                            Client* client = nil;
+                            if(0 != self.lastCameraClient)
+                            {
+                                //init client from attribution
+                                client = [[Client alloc] init];
+                                client.pid = [NSNumber numberWithInteger:self.lastCameraClient];
+                                client.path = valueForStringItem(getProcessPath(client.pid.intValue));
+                                client.name = valueForStringItem(getProcessName(client.path));
+                            }
+                            Event *event = [[Event alloc] init:client device:device deviceType:LMDevice_Camera state:NSControlStateValueOn];
+                            [self handleEvent:event];
+                        }
+                        
+                    });
+                }
+                
+                //camera: off
+                else if(NSControlStateValueOff == state)
+                {
+                    //dbg msg
+                    NSLog(@"camera event: off");
+                    
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.5 * NSEC_PER_SEC), dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                        
+                        if (@available(macOS 13.0, *)) { //13以上直接使用控制中心日志
+                        } else {
+                            Event *event = [[Event alloc] init:nil device:device deviceType:LMDevice_Camera state:NSControlStateValueOff];
+                            [self handleEvent:event];
+                        }
+                    });
+                }
+            } //macOS 13.3
+        });
     };
     
     //get device ID
@@ -2193,7 +2240,6 @@ bail:
     [self.audio12logMonitor stop];
     [self.controlCenterLogMonitor stop];
     [self.screenLogMonitor stop];
-    [self.frontMostWindowLogMonitor stop];
     [self.automaticLogMonitor stop];
     
     //dbg msg
@@ -2295,63 +2341,63 @@ bail:
 //stop video monitor
 -(void)unwatchVideoDevice:(AVCaptureDevice*)device
 {
-    //status
-    OSStatus status = -1;
-    
-    //device id
-    CMIOObjectID deviceID = 0;
-    
-    //property struct
-    CMIOObjectPropertyAddress propertyStruct = {0};
-    
-    //bail if device was disconnected
-    if(NO == device.isConnected)
-    {
-        //bail
-        goto bail;
-    }
-    
-    //get device ID
-    deviceID = [self getAVObjectID:device];
-    if(0 == deviceID)
-    {
-        //err msg
-        os_log_error(logHandle, "ERROR: 'failed to find %@'s object id", device.localizedName);
+    // 在串行队列中执行取消监听操作
+    dispatch_async(self.deviceAccessQueue, ^{
+        //status
+        OSStatus status = -1;
         
-        //bail
-        goto bail;
-    }
-    
-    //init property struct's selector
-    propertyStruct.mSelector = kAudioDevicePropertyDeviceIsRunningSomewhere;
-    
-    //init property struct's scope
-    propertyStruct.mScope = kAudioObjectPropertyScopeGlobal;
-    
-    //init property struct's element
-    propertyStruct.mElement = kAudioObjectPropertyElementMain;
-    
-    //remove
-    status = CMIOObjectRemovePropertyListenerBlock(deviceID, &propertyStruct, self.eventQueue, self.cameraListeners[device.uniqueID]);
-    if(noErr != status)
-    {
-        //err msg
-        os_log_error(logHandle, "ERROR: 'AudioObjectRemovePropertyListenerBlock' failed with %d", status);
+        //device id
+        CMIOObjectID deviceID = 0;
         
-        //bail
-        goto bail;
-    }
-    
-    //dbg msg
-    NSLog(@"stopped monitoring %@ (uuid: %@ / %x) for video changes", device.localizedName, device.uniqueID, deviceID);
-    
-bail:
-    
-    //always unset listener block
-    self.cameraListeners[device.uniqueID] = nil;
-    
-    return;
-    
+        //property struct
+        CMIOObjectPropertyAddress propertyStruct = {0};
+        
+        //bail if device was disconnected
+        if(NO == device.isConnected)
+        {
+            //bail
+            goto bail;
+        }
+        
+        //get device ID
+        deviceID = [self getAVObjectID:device];
+        if(0 == deviceID)
+        {
+            //err msg
+            os_log_error(logHandle, "ERROR: 'failed to find %@'s object id", device.localizedName);
+            
+            //bail
+            goto bail;
+        }
+        
+        //init property struct's selector
+        propertyStruct.mSelector = kAudioDevicePropertyDeviceIsRunningSomewhere;
+        
+        //init property struct's scope
+        propertyStruct.mScope = kAudioObjectPropertyScopeGlobal;
+        
+        //init property struct's element
+        propertyStruct.mElement = kAudioObjectPropertyElementMain;
+        
+        //remove
+        status = CMIOObjectRemovePropertyListenerBlock(deviceID, &propertyStruct, self.eventQueue, self.cameraListeners[device.uniqueID]);
+        if(noErr != status)
+        {
+            //err msg
+            os_log_error(logHandle, "ERROR: 'AudioObjectRemovePropertyListenerBlock' failed with %d", status);
+            
+            //bail
+            goto bail;
+        }
+        
+        //dbg msg
+        NSLog(@"stopped monitoring %@ (uuid: %@ / %x) for video changes", device.localizedName, device.uniqueID, deviceID);
+        
+    bail:
+        
+        //always unset listener block
+        self.cameraListeners[device.uniqueID] = nil;
+    });
 }
 
 # pragma mark UNNotificationCenter Delegate Methods

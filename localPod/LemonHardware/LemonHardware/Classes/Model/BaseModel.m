@@ -25,6 +25,14 @@
     return filePath;
 }
 
+-(NSString *)getHardWareInfoTempPathByName:(NSString *)hardWareName{
+    NSString *appSuppPath = [self getApplicationSupportPath];
+    NSTimeInterval timeStamp = [[NSDate date] timeIntervalSince1970];
+    NSString *tempHardWareName = [NSString stringWithFormat:@"%f_%@", timeStamp, hardWareName];
+    NSString *filePath = [appSuppPath stringByAppendingPathComponent:tempHardWareName];
+    return filePath;
+}
+
 -(NSString *)getApplicationSupportPath{
     NSFileManager *fileManager = [[NSFileManager alloc] init];
     NSString *bundleId = [[NSBundle mainBundle] bundleIdentifier];

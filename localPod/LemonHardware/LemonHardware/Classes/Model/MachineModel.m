@@ -127,11 +127,14 @@
 
 -(void)writeToFile{
     NSString *pathName = [self getHardWareInfoPathByName:HARDWARE_PLIST];
-    pathName = [pathName stringByReplacingOccurrencesOfString:@" " withString:@"\\ "];
+    
+    NSString *tempPathName = [self getHardWareInfoTempPathByName:HARDWARE_PLIST];
+    
     NSTask * task = [[NSTask alloc] init];
     // apply settings for task
     [task setLaunchPath: @"/bin/bash"];
-    [task setArguments: [NSArray arrayWithObjects:@"-c", [@"system_profiler SPHardwareDataType SPMemoryDataType SPDisplaysDataType -xml > " stringByAppendingString:pathName], nil]];
+    NSString *shellString = [NSString stringWithFormat:@"system_profiler SPHardwareDataType SPMemoryDataType SPDisplaysDataType -xml > \"%@\" && mv \"%@\" \"%@\"", tempPathName, tempPathName, pathName];
+    [task setArguments: [NSArray arrayWithObjects:@"-c", shellString, nil]];
     
     @try
     {

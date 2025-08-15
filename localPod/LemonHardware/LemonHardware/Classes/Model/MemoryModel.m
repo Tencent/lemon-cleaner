@@ -42,8 +42,9 @@
 
 -(void)writeToFile{
     NSString *pathName = [self getHardWareInfoPathByName:MEM_PLIST];
-    pathName = [pathName stringByReplacingOccurrencesOfString:@" " withString:@"\\ "];
-    NSString *shellString = [NSString stringWithFormat:@"system_profiler SPMemoryDataType -xml > %@", pathName];
+    NSString *tempPathName = [self getHardWareInfoTempPathByName:MEM_PLIST];
+    
+    NSString *shellString = [NSString stringWithFormat:@"system_profiler SPMemoryDataType -xml > \"%@\" && mv \"%@\" \"%@\"", tempPathName, tempPathName, pathName];
     @try{
         [QMShellExcuteHelper excuteCmd:shellString];
     }

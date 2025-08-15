@@ -41,6 +41,8 @@
 #import "NSDate+LMCalendar.h"
 #import "LemonMonitorDNCServer.h"
 #import "LMUtilFunc.h"
+#import <QMCoreFunction/QMDeviceMigrationHelper.h>
+#import <LemonHardware/HardwareHeader.h>
 
 @interface AppDelegate () <NSUserNotificationCenterDelegate>
 {
@@ -62,6 +64,8 @@
 {
     self.currentNet = CurrentNetworkStatusUnknown;
     self.needShowBulle = NO;
+
+    [self deviceMigration];
 
     NSLog(@"applicationDidFinishLaunching enter");    
 #ifdef DEBUG
@@ -99,7 +103,7 @@
     appTashDel = [[AppTrashDel alloc] init];
     
     [self startup];
-    
+
     // 预警提示(仅针对10.8以上系统)
     if ([QMEnvironmentInfo systemVersion] >= QMSystemVersionMountainLion)
     {
@@ -107,6 +111,7 @@
     }
     [self addObserver];
     [self loadMonitorNotification];
+
     //先stat一次内存，方便首次show出进程信息时进程的内存准确
     [[LemonMonitroHelpParams sharedInstance] startStatMemory];
     [[LemonMonitroHelpParams sharedInstance] stopStatMemory];
@@ -276,13 +281,9 @@
 - (void)loadMonitorNotification{
     [[QMUserNotificationCenter defaultUserNotificationCenter] addDelegate:(id<NSUserNotificationCenterDelegate>)self
                                                                    forKey:@"LemonResearchNotification"];
-#ifndef APPSTORE_VERSION
     //设备保护
     [[Owl2Manager sharedManager] startOwlProtect];
-#endif
 }
-
-
 
 #ifndef APPSTORE_VERSION
 -(void)tellMonitorStopOwlProtect{
@@ -539,6 +540,16 @@ extern CFAbsoluteTime g_startTime;
     notification.hasActionButton = YES;
     [[QMUserNotificationCenter defaultUserNotificationCenter] deliverNotification:notification
                                                                                key:@"LemonResearchNotification"];
+}
+
+- (void)deviceMigration {
+    // 检查是否换机
+    [QMDeviceMigrationHelper checkForDeviceMigrationWithCompletion:^(BOOL didSwitchDevice) {
+        if (didSwitchDevice) {
+            // 检测到换机则清除从旧机器迁移过来的设备信息
+            [[NSUserDefaults standardUserDefaults] removeObjectForKey:MAC_MODEL_DETAIL_INFO];
+        }
+    }];
 }
 
 @end
