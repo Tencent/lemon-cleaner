@@ -30,12 +30,10 @@
 }
 
 -(BOOL)getHardWareInfo{
-//    __weak DiskModel *weakSelf = self;
-//    dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        [self writeInfoToToFile];
-        [self readFromFile];
-        self.isInit = YES;
-//    });
+    [self.diskZoneArr removeAllObjects];
+    [self writeInfoToToFile];
+    [self readFromFile];
+    self.isInit = YES;
     
     return YES;
 }

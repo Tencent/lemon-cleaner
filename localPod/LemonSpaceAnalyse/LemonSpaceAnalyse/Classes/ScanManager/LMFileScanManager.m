@@ -147,9 +147,7 @@
         }
     }
     
-    @weakify(self);
     dispatch_group_notify(self.scanGroup,self.concurrentQueue, ^{
-        @strongify(self);
         if (self.time) {
             [self.time invalidate];
             self.time = nil;

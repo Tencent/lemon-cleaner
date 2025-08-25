@@ -33,12 +33,21 @@ typedef struct val_attrs {
     off_t             fileSize;
 } val_attrs_t;
 
+static BOOL isOperatingSystemAtLeastMacOS13 = NO;
+
 @interface LMFileScanTask ()
 
 @end
 
 @implementation LMFileScanTask
 
++ (void)initialize {
+    if (self == [LMFileScanTask class]) {
+        if (@available(macOS 13.0, *)) {
+            isOperatingSystemAtLeastMacOS13 = YES;
+        }
+    }
+}
 
 - (id)initWithRootDirItem:(LMItem *)dirItem{
     
@@ -70,6 +79,13 @@ typedef struct val_attrs {
 }
 
 -(void)starTaskWithBlock:(LMFileScanTaskBlock)block{
+    // 降低内存峰值，减少一个数量级 27G到2.7G
+    @autoreleasepool {
+        [self __starTaskWithBlock:block];
+    }
+}
+
+-(void)__starTaskWithBlock:(LMFileScanTaskBlock)block{
     LMItem *parentItem = [self dirItem];
     NSString *parentFullPath = [parentItem fullPath];
     parentItem.specialFileExtensions = self.specialFileExtensions;
@@ -163,11 +179,14 @@ typedef struct val_attrs {
                         continue;
                     }
                     
-                    // 检查是否应该跳过iCloud文件
-                    if ([self shouldSkipICloudFile:fileItem.fullPath]) {
-                        // 跳过未下载的iCloud文件，避免触发同步
-                        continue;
+                    if (isOperatingSystemAtLeastMacOS13) {
+                        // 检查是否应该跳过iCloud文件
+                        if ([self shouldSkipICloudFile:fileItem.fullPath]) {
+                            // 跳过未下载的iCloud文件，避免触发同步
+                            continue;
+                        }
                     }
+                    
                     if (attrs.returned.commonattr & ATTR_CMN_OBJTYPE) {
                         attrs.obj_type = *(fsobj_type_t *)field;
                         field += sizeof(fsobj_type_t);
@@ -190,7 +209,12 @@ typedef struct val_attrs {
                     if (fileItem.isDirectory == NO && (attrs.returned.fileattr & ATTR_FILE_ALLOCSIZE)) {
                         NSFileManager *fileManager = [NSFileManager defaultManager];
                         
-                        if ([fileManager qm_isICloudFileAtPath:fileItem.fullPath]) {
+                        BOOL isICloudFile = NO;
+                        if (isOperatingSystemAtLeastMacOS13) {
+                            // 13及以上调用qm_isICloudFileAtPath，避免多线程问题。
+                            isICloudFile = [fileManager qm_isICloudFileAtPath:fileItem.fullPath];
+                        }
+                        if (isICloudFile) {
                             // iCloud文件，使用安全方法获取大小，避免触发下载
                             fileItem.sizeInBytes = [fileManager qm_safeFileSizeAtPath:fileItem.fullPath];
                             field += sizeof(off_t); // 跳过field指针，不读取可能触发下载的数据

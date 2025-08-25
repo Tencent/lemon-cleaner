@@ -52,11 +52,11 @@
 
 -(BOOL)isTrashItemsChanged{
     NSInteger oldTrashSize = [SharedPrefrenceManager getInteger:OLD_TRASH_SIZE];
-    NSLog(@"%s,old trash size : %ld",__FUNCTION__, (long)oldTrashSize);
+//    NSLog(@"%s,old trash size : %ld",__FUNCTION__, (long)oldTrashSize);
     NSString *trashPath = [self getWatchPath];
     NSArray *trashItems = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:trashPath error:nil];
     NSInteger newTrashSize = trashItems.count;
-    NSLog(@"%s,new trash size : %ld",__FUNCTION__, (long)newTrashSize);
+//    NSLog(@"%s,new trash size : %ld",__FUNCTION__, (long)newTrashSize);
     [SharedPrefrenceManager putInteger:newTrashSize withKey:OLD_TRASH_SIZE];
     if(newTrashSize > oldTrashSize)
         return YES;
@@ -106,7 +106,7 @@
     
     NSString* ret = [self appendAppExtensionTo:nameWithOutTime];
     
-    NSLog(@"[TrashDel] %s, return str:%@", __FUNCTION__, ret);
+//    NSLog(@"[TrashDel] %s, return str:%@", __FUNCTION__, ret);
     return ret;
 }
 
@@ -128,7 +128,7 @@
 
 // 找出最新的删除 App.
 - (NSArray *)getNewTashApps {
-    NSLog(@"%s", __FUNCTION__);
+//    NSLog(@"%s", __FUNCTION__);
     NSArray *oldTrashApps = [self getOldTrashApps];  //写在 ~/Library/Application Support/com.tencent.Lemon/trashLog
     NSArray *curTrashApps = [self getTrashApps];
     [self saveTrashApps:curTrashApps];
@@ -136,7 +136,7 @@
     // oldTrashApps为nil, 代表应用刚启动第一次检测，所以直接返回nil
     // oldTrashApps为大小为0的array，代表上一次检测垃圾桶里没有app
     if (!oldTrashApps) {
-        NSLog(@"%s oldTrash is nil, stop scan", __FUNCTION__);
+//        NSLog(@"%s oldTrash is nil, stop scan", __FUNCTION__);
         return nil;
     }
     
@@ -154,8 +154,8 @@
         }
     }
 
-    NSLog(@"%s oldTrash Apps is \n %@", __FUNCTION__,  [oldTrashApps componentsJoinedByString:@",  "]);
-    NSLog(@"%s nowTrash Apps is \n %@", __FUNCTION__,  [curTrashApps componentsJoinedByString:@",  "]);
+//    NSLog(@"%s oldTrash Apps is \n %@", __FUNCTION__,  [oldTrashApps componentsJoinedByString:@",  "]);
+//    NSLog(@"%s nowTrash Apps is \n %@", __FUNCTION__,  [curTrashApps componentsJoinedByString:@",  "]);
     
     NSMutableArray *newApps = [[NSMutableArray alloc] init];
     
@@ -172,7 +172,7 @@
         NSBundle *appBundle = [NSBundle bundleWithPath:appPath];
         
         if (!appBundle || !appBundle.bundleIdentifier) {
-            NSLog(@"%s stop uninstall this app:%@ is valid, appBundle is %@", __FUNCTION__, newItem, appBundle);
+//            NSLog(@"%s stop uninstall this app:%@ is valid, appBundle is %@", __FUNCTION__, newItem, appBundle);
             continue;
         }
         
@@ -180,14 +180,14 @@
             || [appBundle.bundleIdentifier hasPrefix:MAIN_APP_BUNDLEID]
             || [appBundle.bundleIdentifier hasPrefix:MONITOR_APP_BUNDLEID])
         {
-            NSLog(@"%s stop uninstall this type app:%@, id:%@ ", __FUNCTION__, newItem, appBundle.bundleIdentifier);
+//            NSLog(@"%s stop uninstall this type app:%@, id:%@ ", __FUNCTION__, newItem, appBundle.bundleIdentifier);
             continue;
         }
         
         // 当该bundleID的软件仍然在运行，不处理
         NSArray *runApps = [NSRunningApplication runningApplicationsWithBundleIdentifier:appBundle.bundleIdentifier];
         if (runApps.count > 0){
-            NSLog(@"%s stop uninstall this app:%@, id:%@ because still running", __FUNCTION__, newItem, appBundle.bundleIdentifier);
+//            NSLog(@"%s stop uninstall this app:%@, id:%@ because still running", __FUNCTION__, newItem, appBundle.bundleIdentifier);
             continue;
         }
         
@@ -199,7 +199,7 @@
         if (otherPath
             &&![otherPath hasPrefix:[self getWatchPath]]
               && ![dmgPathPredicate evaluateWithObject:otherPath]){
-            NSLog(@"%s stop uninstall this app:%@, id:%@ because have other app at: %@", __FUNCTION__, newItem, appBundle.bundleIdentifier, otherPath);
+//            NSLog(@"%s stop uninstall this app:%@, id:%@ because have other app at: %@", __FUNCTION__, newItem, appBundle.bundleIdentifier, otherPath);
             continue;
         }
         
@@ -207,7 +207,7 @@
         NSURL *itemUrl = [[NSURL alloc]initFileURLWithPath:[trashPath stringByAppendingPathComponent:newItem]];
         NSFileManager *fileManager = [NSFileManager defaultManager];
         if(![fileManager fileExistsAtPath:[itemUrl path]]){
-            NSLog(@"%s file not exist %@ ", __FUNCTION__, newItem);
+//            NSLog(@"%s file not exist %@ ", __FUNCTION__, newItem);
             continue;
         }
         [newApps addObject:newItem];
@@ -227,7 +227,7 @@
     }
     
     if(oldTrashContainsApps.count > 0){
-        NSLog(@"oldTrashContainsApps:%@", [oldTrashContainsApps componentsJoinedByString:@", "]);
+//        NSLog(@"oldTrashContainsApps:%@", [oldTrashContainsApps componentsJoinedByString:@", "]);
     }
     return newApps;
     
