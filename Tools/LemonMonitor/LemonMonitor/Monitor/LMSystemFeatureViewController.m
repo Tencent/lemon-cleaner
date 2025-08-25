@@ -232,8 +232,9 @@ static NSString * const kPidKey = @"pid";
         if(!self.diskModel){
             NSLog(@"%s, diskModel is nil", __FUNCTION__);
             self.diskModel = [[DiskModel alloc]init];
-            [self.diskModel getHardWareInfo];
         }
+        [self.diskModel getHardWareInfo];
+
         NSLog(@"%s, diskModel info: %@", __FUNCTION__, self.diskModel);
         NSMutableDictionary *dict = [[NSMutableDictionary alloc]init];
             NSArray *diskInfo = self.diskModel.diskZoneArr;

@@ -82,7 +82,7 @@
                 return NSOrderedDescending;
             }
     }];
-    return [array copy];
+    return array;
 }
 
 @end

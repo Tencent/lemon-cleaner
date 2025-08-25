@@ -10,7 +10,7 @@
 
 @interface LMItem : NSObject
 
-@property(nonatomic, copy) NSMutableArray *childItems;
+@property(nonatomic, strong) NSMutableArray *childItems;
 @property(nonatomic, weak) LMItem *parentDirectory;
 
 @property(nonatomic, strong) NSString *fileName;
