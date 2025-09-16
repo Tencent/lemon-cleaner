@@ -73,10 +73,9 @@ static CGFloat kArrowOffset_en = 90.0;
             } else {
                 [self.bubbleView setBubbleTitle:NSLocalizedStringFromTableInBundle(@"该文件为只读模式，不支持清理", nil, [NSBundle bundleForClass:[self class]], @"")];
             }
-            CGFloat arrowOffset = [LanguageHelper getCurrentSystemLanguageType] == SystemLanguageTypeChinese ? kArrowOffset_ch: kArrowOffset_en;
-            NSPoint point = [self.checkBox convertPoint:NSMakePoint(7 + arrowOffset, -2) toView:nil];
+            NSPoint point = [self.checkBox convertPoint:NSMakePoint(-23, -2) toView:nil];
             CGSize size = [self.bubbleView calculateViewSize];
-            point = NSMakePoint(point.x - size.width, self.window.contentView.frame.size.height - point.y - size.height);
+            point = NSMakePoint(point.x, self.window.contentView.frame.size.height - point.y - size.height);
             [self.bubbleView showInView:self.window.contentView atPosition:point];
         } else {
             [self.bubbleView removeFromSuperview];
@@ -287,12 +286,8 @@ static CGFloat kArrowOffset_en = 90.0;
 
 - (LMBubbleView *)bubbleView {
     if (!_bubbleView) {
-        _bubbleView = [LMBubbleView bubbleWithStyle:LMBubbleStyleText arrowDirection:LMBubbleArrowDirectionBottomRight];
-        if ([LanguageHelper getCurrentSystemLanguageType] == SystemLanguageTypeChinese) {
-            _bubbleView.arrowOffset = kArrowOffset_ch;
-        } else {
-            _bubbleView.arrowOffset = kArrowOffset_en;
-        }
+        _bubbleView = [LMBubbleView bubbleWithStyle:LMBubbleStyleText arrowDirection:LMBubbleArrowDirectionBottomLeft];
+        _bubbleView.arrowOffset = kArrowOffset_ch;
     }
     return _bubbleView;
 }

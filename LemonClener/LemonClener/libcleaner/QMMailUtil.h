@@ -8,9 +8,11 @@
 
 #import <Foundation/Foundation.h>
 
+@class QMActionItem;
+
 @protocol QMMailDelegate <NSObject>
 
-- (void)mailScanProcess:(double)process path:(NSString *) path pathResult:(NSArray *)paths;
+- (void)mailScanProcess:(double)process path:(NSString *) path pathResult:(NSArray *)paths actionItem:(QMActionItem *)actionItem;
 
 @end
 
@@ -21,6 +23,6 @@
 +(NSArray *) getMailDownloadFilePathArray:(NSString *) mailDownloadPath;
 
 // 路径 "~/Library/Mail"
-+(NSArray *) getMailAttachMentPathArray:(NSString *)mailPath withDelegate:(id<QMMailDelegate>) mailDelegate;
++(NSArray *) getMailAttachMentPathArray:(NSString *)mailPath actionItem:(QMActionItem *)actionItem withDelegate:(id<QMMailDelegate>) mailDelegate;
 
 @end

@@ -185,8 +185,6 @@
             if (self.onClickSwitchHandler) {
                 self.onClickSwitchHandler(button.on);
             }
-//            [QMReport reportButtonClick:LEMON_OWL_ALLOW_AUTOMATIC_BUTTON_CLICK];
-//            [[NSUserDefaults standardUserDefaults] setBool:config.on forKey:K_IS_WATCHING_AUTOMATIC];
         }];
     }
     return _switchButton;

@@ -34,6 +34,7 @@
 #import "QMByteSizeFormatter.h"
 #import "QMNetTopHelp.h"
 #import "QMNetTopMonitor.h"
+#import "QMNetworkSpeedCalculator.h"
 #import "QMNetworkSpeedFormatter.h"
 #import "QMSampleStorage.h"
 #import "QMValueHistory.h"

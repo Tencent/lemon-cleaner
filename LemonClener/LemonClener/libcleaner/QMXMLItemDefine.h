@@ -153,12 +153,13 @@ typedef enum
 }QMCleanType;
 
 @class QMResultItem;
+@class QMActionItem;
 @protocol QMScanDelegate <NSObject>
 
 - (NSDictionary *)xmlFilterDict;
 - (BOOL)needStopScan;
-- (BOOL)scanProgressInfo:(float)value scanPath:(NSString *)path resultItem:(QMResultItem *)item;
-- (void)scanActionCompleted;
+- (BOOL)scanProgressInfo:(float)value scanPath:(NSString *)path resultItem:(QMResultItem *)item actionItem:(QMActionItem *)actionItem;
+- (void)scanActionCompleted:(QMActionItem *)actionItem;
 - (NSString *)currentScanCategoryKey;
 
 @end

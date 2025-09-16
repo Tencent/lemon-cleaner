@@ -516,6 +516,7 @@ typedef NS_ENUM(NSUInteger, LMControlCenterLogStatusType) {
     NSPredicate *sender = [NSPredicate predicateWithFormat:@"sender == 'replayd' OR sender == 'screencapture' OR sender == 'ScreenCaptureKit' OR sender == 'AVFCapture' OR sender == 'ReplayKit'"];
     @weakify(self);
     [self.screenLogMonitor start:sender level:Log_Level_Default callback:^(OSLogEvent *logEvent) {
+        if (!weak_self) return;
         @strongify(self);
         NSString *message = logEvent.composedMessage;
         if (!self.lastScreenEventDate || -[self.lastScreenEventDate timeIntervalSinceNow] > 1) {

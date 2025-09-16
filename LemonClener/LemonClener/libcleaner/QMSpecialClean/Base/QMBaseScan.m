@@ -10,9 +10,9 @@
 
 @implementation QMBaseScan
 
-- (void)scanActionCompleted {
-    if ([self.delegate respondsToSelector:@selector(scanActionCompleted)]) {
-        [self.delegate scanActionCompleted];
+- (void)scanActionCompleted:(QMActionItem *)actionItem {
+    if ([self.delegate respondsToSelector:@selector(scanActionCompleted:)]) {
+        [self.delegate scanActionCompleted:actionItem];
     }
 }
 

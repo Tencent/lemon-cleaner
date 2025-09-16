@@ -220,8 +220,8 @@ static NSString * const kPidKey = @"pid";
         self.upSpeed = upSpeed;
         self.downSpeed = downSpeed;
         
-        self.downloadTotalTextField.stringValue = [NSString stringFromNetSpeedWithoutSpacing:downSpeed/1024.f];
-        self.uploadTotalTextField.stringValue = [NSString stringFromNetSpeedWithoutSpacing:upSpeed/1024.f];
+        self.downloadTotalTextField.stringValue = [NSString stringFromNetSpeedWithoutSpacing:downSpeed];
+        self.uploadTotalTextField.stringValue = [NSString stringFromNetSpeedWithoutSpacing:upSpeed];
         
         [self addSpeedByProcessFromArray:flowSpeedArray];
     });

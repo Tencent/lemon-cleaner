@@ -83,7 +83,7 @@
 - (void)scanAppLeftWithItem:(QMActionItem *)actionItem
 {
     [self __scanAppLeftWithItem:actionItem];
-    [self scanActionCompleted];
+    [self scanActionCompleted:actionItem];
 }
 
 - (void)__scanAppLeftWithItem:(QMActionItem *)actionItem
@@ -103,7 +103,7 @@
             break;
         }
         [addSoftLock unlock];
-        if ([delegate scanProgressInfo:0.1 scanPath:nil resultItem:nil])
+        if ([delegate scanProgressInfo:0.1 scanPath:nil resultItem:nil actionItem:actionItem])
             return;
         [NSThread sleepForTimeInterval:0.2];
     }
@@ -136,7 +136,7 @@
         }
     }
     
-    if ([delegate scanProgressInfo:0.2 scanPath:nil resultItem:nil])
+    if ([delegate scanProgressInfo:0.2 scanPath:nil resultItem:nil actionItem:actionItem])
         return;
     
     // 获取搜索路径
@@ -162,7 +162,7 @@
             [unExistApps addObject:curObj];
         else
             [existAppsBundle addObject:[[curObj lastPathComponent] stringByDeletingPathExtension]];
-        if ([delegate scanProgressInfo:0.2 + (i + 1.0) / ([pathArray count] * 5) scanPath:curObj resultItem:nil])
+        if ([delegate scanProgressInfo:0.2 + (i + 1.0) / ([pathArray count] * 5) scanPath:curObj resultItem:nil actionItem:actionItem])
             return;
     }
     
@@ -238,7 +238,7 @@
     }
     
     
-    if ([delegate scanProgressInfo:0.5 scanPath:nil resultItem:nil])
+    if ([delegate scanProgressInfo:0.5 scanPath:nil resultItem:nil actionItem:actionItem])
         return;
     
     
@@ -306,7 +306,7 @@
             QMResultItem * resultItem = [[QMResultItem alloc] initWithPath:path];
             resultItem.cleanType = actionItem.cleanType;
             [resultItem addResultWithPath:path];
-            if ([delegate scanProgressInfo:0.5 + (i + 1.0) / ([unExistApps count] * 2) scanPath:preferencePath resultItem:resultItem])
+            if ([delegate scanProgressInfo:0.5 + (i + 1.0) / ([unExistApps count] * 2) scanPath:preferencePath resultItem:resultItem actionItem:actionItem])
                 return;
         }
     }

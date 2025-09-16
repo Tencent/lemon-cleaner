@@ -20,12 +20,14 @@
 
 @interface QMScanCategory()<QMScanDelegate>
 
+@property (nonatomic, strong) NSOperationQueue *mainScanActionQueue;              // 首页\状态栏快速 Action扫描队列
+@property (nonatomic, strong) dispatch_queue_t actionDelegateOperationQueue;      // 专门处理数据访问的串行队列
+
 @end
 
 @implementation QMScanCategory
 @synthesize m_filerDict;
 @synthesize delegate;
-@synthesize isStopScan;
 
 - (id)init
 {
@@ -47,6 +49,13 @@
         m_softScan.delegate = self;
         m_xcodeScan.delegate = self;
         m_wechatScan.delegate = self;
+        
+        self.mainScanActionQueue = [[NSOperationQueue alloc] init];
+        self.mainScanActionQueue.maxConcurrentOperationCount = 8;  // 最多8个
+        self.mainScanActionQueue.qualityOfService = NSQualityOfServiceUserInitiated;
+
+        self.actionDelegateOperationQueue = dispatch_queue_create("com.lemon.action.scan.queue", DISPATCH_QUEUE_SERIAL);
+
     }
     return self;
 }
@@ -63,13 +72,17 @@
 
 - (void)scanActiontem:(QMActionItem *)actionItem
 {
+    [self _scanActiontem:actionItem];
+}
+
+- (void)_scanActiontem:(QMActionItem *)actionItem
+{
 //    if ([actionItem state] != NSOnState)
 //        return;
-    m_curScanActionItem = actionItem;
-    m_curScanActionItem.progressValue = 0;
+    actionItem.progressValue = 0;
     QMActionType actionType = actionItem.type;
     
-    [self scanProgressInfo:0 scanPath:nil resultItem:nil];
+    [self scanProgressInfo:0 scanPath:nil resultItem:nil actionItem:actionItem];
     
     switch (actionType)
     {
@@ -141,7 +154,7 @@
         default:
             break;
     }
-    m_curScanActionItem.progressValue = 1;
+    actionItem.progressValue = 1;
 }
 
 - (void)scanCategoryWithItem:(QMCategoryItem *)categoryItem
@@ -169,11 +182,12 @@
     
     for (QMCategorySubItem * subItem in m_categorySubItemArray_copy) {
         @autoreleasepool {
-            if (isStopScan) {
+            if (self.isStopScan) {
                 break;
             }
             
             m_curScanSubCategoryItem = subItem;
+            m_curFinishedScanActionItemCount = 0;
             
             // 开始扫描
             if (delegate)   [delegate startScanCategory:subItem.subCategoryID];
@@ -181,14 +195,25 @@
                 NSLog(@"");
             }
             NSUInteger subCount = [subItem.m_actionItemArray count];
+            
+            NSMutableArray *operations = [NSMutableArray array];
+            
             for (int j = 0; j < subCount; j++)
             {
-                m_curScanIndex = j;
-                [self scanActiontem:[subItem.m_actionItemArray objectAtIndex:j]];
-                m_scanCount++;
-                if (isStopScan)
+                if (self.isStopScan)
                     break;
+
+                QMActionItem *actionItem = [subItem.m_actionItemArray objectAtIndex:j];
+                NSBlockOperation *scanOperation = [NSBlockOperation blockOperationWithBlock:^{
+                    @autoreleasepool {
+                        [self scanActiontem:actionItem];
+                    }
+                }];
+                [operations addObject:scanOperation];
             }
+            // 批量添加操作并等待完成
+            [self.mainScanActionQueue addOperations:operations waitUntilFinished:YES];
+            
             m_curScanSubCategoryItem.progressValue = 1;
             // 扫描结束
             if (delegate)   [delegate scanCategoryDidEnd:subItem.subCategoryID];
@@ -213,15 +238,17 @@
     {
         // 开始扫描
         if (self->delegate)   [self->delegate startScanCategory:item.categoryID];
+        
         if ([item.categoryID isEqualToString:@"2"]) {
             QMCacheEnumerator *cacheEnumerator = [QMCacheEnumerator shareInstance];
             [cacheEnumerator initialData];
         }
         // 扫描item
         [self scanCategoryWithItem:item];
+
         // 扫描结束
         if (self->delegate)   [self->delegate scanCategoryDidEnd:item.categoryID];
-        if (self->isStopScan) break;
+        if (self.isStopScan) break;
         i++;
     }
     [[QMScanFileSizeCacheManager manager] end];
@@ -256,7 +283,7 @@
     }
     m_curScanCategoryItem = categoryItem;
     
-    for (int i = 0; i < count && !isStopScan; i++)
+    for (int i = 0; i < count && !self.isStopScan; i++)
     {
         @autoreleasepool
         {
@@ -267,21 +294,32 @@
                 continue;
             
             m_curScanSubCategoryItem = subItem;
+            m_curFinishedScanActionItemCount = 0;
             
             // 开始扫描
             if (delegate)   [delegate startScanCategory:subItem.subCategoryID];
             
             NSUInteger subCount = [subItem.m_actionItemArray count];
+            
+            NSMutableArray *operations = [NSMutableArray array];
+
             for (int j = 0; j < subCount; j++)
             {
-                m_curScanIndex = j;
-                QMActionItem * actionItem = [subItem.m_actionItemArray objectAtIndex:j];
-                if (!actionItem.cautionID && [actionItem state] == NSOnState)
-                    [self scanActiontem:actionItem];
-                m_scanCount++;
-                if (isStopScan)
+                if (self.isStopScan)
                     break;
+               // m_curScanIndex = j;
+                QMActionItem * actionItem = [subItem.m_actionItemArray objectAtIndex:j];
+                
+                NSBlockOperation *scanOperation = [NSBlockOperation blockOperationWithBlock:^{
+                    @autoreleasepool {
+                        if (!actionItem.cautionID && [actionItem state] == NSOnState)
+                            [self scanActiontem:actionItem];
+                    }
+                }];
+                [operations addObject:scanOperation];
             }
+            [self.mainScanActionQueue addOperations:operations waitUntilFinished:YES];
+            
             m_curScanSubCategoryItem.progressValue = 1;
             // 扫描结束
             if (delegate)   [delegate scanCategoryDidEnd:subItem.subCategoryID];
@@ -289,7 +327,6 @@
     }
     categoryItem.progressValue = 1;
 }
-
 - (void)startQuickScanCategoryArray:(NSArray *)itemArray
 {
     [self performQuickScanCategoryArray:itemArray];
@@ -323,7 +360,7 @@
             [self scanQuickCategoryWithItem:item];
         // 扫描结束
         if (delegate)   [delegate scanCategoryDidEnd:item.categoryID];
-        if (isStopScan) break;
+        if (self.isStopScan) break;
     }
 }
 
@@ -337,41 +374,58 @@
 
 - (BOOL)needStopScan
 {
-    return isStopScan;
+    return self.isStopScan;
 }
 
-- (BOOL)scanProgressInfo:(float)value scanPath:(NSString *)path resultItem:(QMResultItem *)item
+- (BOOL)scanProgressInfo:(float)value scanPath:(NSString *)path resultItem:(QMResultItem *)item actionItem:(QMActionItem *)actionItem
 {
-    float progressValue = (value + m_scanCount) * m_scanFlags;
-    if (item) {
-        item.cautionID = m_curScanActionItem.cautionID;
-        if ([[m_curScanCategoryItem m_categorySubItemArray] count] == 0) {
-            [m_curScanCategoryItem addResultItem:item];
-        } else {
-            if (![m_curScanSubCategoryItem showAction]) {
-                [self->m_curScanSubCategoryItem addResultItem:item];
-                if ([self->m_curScanSubCategoryItem.subCategoryID isEqualToString:@"204021"]) {
-                    [self->m_curScanSubCategoryItem sortResultItem];
-                }
-                if ([[self->m_curScanSubCategoryItem subCategoryID] isEqualToString:@"1003"]) {
-                    [self->m_curScanSubCategoryItem refreshResultSize];
-                }
+    if (!actionItem) {
+        NSLog(@"error: action item nil");
+        return self.isStopScan;
+    }
+    dispatch_async(self.actionDelegateOperationQueue, ^{
+        float progressValue = (value + self->m_scanCount) * self->m_scanFlags;
+        if (item) {
+            item.cautionID = actionItem.cautionID;
+            if ([[self->m_curScanCategoryItem m_categorySubItemArray] count] == 0) {
+                [self->m_curScanCategoryItem addResultItem:item];
             } else {
-                item.showHierarchyType = 4;
-                [self->m_curScanActionItem addResultItem:item];
+                if (![self->m_curScanSubCategoryItem showAction]) {
+                    [self->m_curScanSubCategoryItem addResultItem:item];
+                    if ([self->m_curScanSubCategoryItem.subCategoryID isEqualToString:@"204021"]) {
+                        [self->m_curScanSubCategoryItem sortResultItem];
+                    }
+                    if ([[self->m_curScanSubCategoryItem subCategoryID] isEqualToString:@"1003"]) {
+                        [self->m_curScanSubCategoryItem refreshResultSize];
+                    }
+                } else {
+                    item.showHierarchyType = 4;
+                    [actionItem addResultItem:item];
+                }
             }
         }
-    }
-    m_curScanActionItem.progressValue = value;
-    m_curScanSubCategoryItem.progressValue = (m_curScanIndex + value) / [[m_curScanSubCategoryItem m_actionItemArray] count];
-    m_curScanCategoryItem.progressValue = progressValue;
-    if (delegate)
-        [delegate scanProgressInfo:progressValue scanPath:path resultItem:item];
-    return isStopScan;
+        actionItem.progressValue = value;
+        self->m_curScanSubCategoryItem.progressValue = (self->m_curFinishedScanActionItemCount + value) / [[self->m_curScanSubCategoryItem m_actionItemArray] count];
+        self->m_curScanCategoryItem.progressValue = progressValue;
+        if (self->delegate)
+            [self->delegate scanProgressInfo:progressValue scanPath:path resultItem:item actionItem:actionItem];
+    });
+
+    return self.isStopScan;
 }
 
-- (void)scanActionCompleted {
-    [self->m_curScanActionItem addResultCompleted];
+- (void)scanActionCompleted:(QMActionItem *)actionItem {
+    if (!actionItem) {
+        NSLog(@"error: %s action item nil", __FUNCTION__);
+        return;
+    }
+    dispatch_async(self.actionDelegateOperationQueue, ^{
+        // 改到这里来计数，每次action扫描结束之后
+        self->m_scanCount++;
+        self->m_curFinishedScanActionItemCount++;
+        
+        [actionItem addResultCompleted];
+    });
 }
 
 - (NSString *)currentScanCategoryKey

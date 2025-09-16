@@ -44,6 +44,10 @@
 
 @implementation LMFileScanManager
 
+- (void)dealloc {
+    NSLog(@"__%s__", __PRETTY_FUNCTION__);
+}
+
 - (id)init{
     self = [super init];
     if (self) {
@@ -169,30 +173,45 @@
 
 - (void)cancel{
     
-//    dispatch_group_async(self.scanGroup,self.concurrentQueue, ^{
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
         pthread_mutex_lock(&self->lock);
     
         self.isCancel = YES;
+        // 让正在扫描中的任务取消
+        for (LMFileScanTask *task in self.runningTasks) {
+            [task cancel];
+        }
         [self.taskStack removeAllObjects];
         if (self.time) {
             [self.time invalidate];
             self.time = nil;
         }
         pthread_mutex_unlock(&self->lock);
-//    });
-
-    
+    });
 }
 
 - (void)loop{
-    @autoreleasepool {
-    start:
-        pthread_mutex_lock(&lock);
-        NSInteger taskStackCount = [[self taskStack] count];
-        NSInteger runningTasksCount = [[self runningTasks] count];
-        if ((taskStackCount != 0) || (runningTasksCount != 0)) {
-            if (taskStackCount != 0) {
-                _currentNum ++;
+    while (YES) {
+        @autoreleasepool {
+            // 检查取消状态
+            pthread_mutex_lock(&lock);
+            if (self.isCancel) {
+                pthread_mutex_unlock(&lock);
+                break;
+            }
+            
+            NSInteger taskStackCount = [[self taskStack] count];
+            NSInteger runningTasksCount = [[self runningTasks] count];
+            
+            // 如果没有任务且没有运行中的任务，退出循环
+            if (taskStackCount == 0 && runningTasksCount == 0) {
+                pthread_mutex_unlock(&lock);
+                break;
+            }
+            
+            // 如果有待处理的任务
+            if (taskStackCount > 0) {
+                _currentNum++;
                 LMFileScanTask *removeTask = [self taskStack].lastObject;
                 removeTask.delegate = self;
                 removeTask.skipICloudFiles = self.skipICloudFiles;
@@ -201,30 +220,26 @@
                 [[self runningTasks] addObject:removeTask];
                 [[self taskStack] removeObject:removeTask];
                 pthread_mutex_unlock(&lock);
+                
                 NSMutableArray *arr = [NSMutableArray array];
                 [removeTask starTaskWithBlock:^(LMItem *item) {
-                    @autoreleasepool {
-                        LMFileScanTask *addTask = [[LMFileScanTask alloc] initWithRootDirItem:item];
-                        [arr addObject:addTask];
-                    }
+                    LMFileScanTask *addTask = [[LMFileScanTask alloc] initWithRootDirItem:item];
+                    [arr addObject:addTask];
                 }];
+                
                 pthread_mutex_lock(&lock);
-                if([arr count] > 0){
-                    if (self.isCancel == YES) {
-                        
-                    }else{
-                        [self.taskStack addObjectsFromArray:arr];
-                    }
+                // 再次检查取消状态
+                if (!self.isCancel && [arr count] > 0) {
+                    [self.taskStack addObjectsFromArray:arr];
                 }
                 [self.runningTasks removeObject:removeTask];
+
                 pthread_mutex_unlock(&lock);
-                goto start;
-            }else{
+            } else {
+                // 没有新任务但有运行中的任务，短暂等待
                 pthread_mutex_unlock(&lock);
-                goto start;
+                usleep(1000); // 1毫秒，避免忙等待
             }
-        }else{
-            pthread_mutex_unlock(&lock);
         }
     }
 }

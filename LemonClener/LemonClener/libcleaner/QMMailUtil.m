@@ -7,6 +7,7 @@
 //
 
 #import "QMMailUtil.h"
+#import "QMActionItem.h"
 
 @implementation QMMailUtil
 
@@ -46,7 +47,7 @@
 
 //mail attachments
 // mailPath: "~/Library/Mail"
-+(NSArray *) getMailAttachMentPathArray:(NSString *)mailPath withDelegate:(id<QMMailDelegate>) mailDelegate{
++(NSArray *) getMailAttachMentPathArray:(NSString *)mailPath actionItem:(QMActionItem *)actionItem withDelegate:(id<QMMailDelegate>) mailDelegate{
     
     NSFileManager *fileManager = [NSFileManager defaultManager];
     BOOL mailExist = [fileManager fileExistsAtPath:mailPath];
@@ -116,7 +117,7 @@
         }
         
         index += 1;
-        if(mailDelegate) [mailDelegate mailScanProcess: index/(double)mailBoxNum path:itemUrl.path pathResult:subResultArray];
+        if(mailDelegate) [mailDelegate mailScanProcess: index/(double)mailBoxNum path:itemUrl.path pathResult:subResultArray actionItem:actionItem];
 
     }
     

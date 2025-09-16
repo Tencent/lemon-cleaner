@@ -13,15 +13,13 @@
 "清理耗时：%lds" = "Time consumption：%lds";
 "清理耗时：1s" = "Time consumption：1s";
 "已选择垃圾" = "selected";
-"已发现可清理文件 %@" = "%@ ";
-"共发现可清理文件 %@" = "%@ ";
+"已发现可清理文件 %@" = "%@ found so far​​";
+"共发现可清理文件 %@" = "Total %@ for cleanup";
 " 棒极了，没有发现垃圾哦～" = " Great! Your Mac is clean.";
 "扫描文件：%ld个" = "Items scanned：%ld";
 "扫描耗时：%lds" = "Time consumption：%lds";
 "%@ 清理中..." = "%@ cleaning...";
 "%@ 清理中..." = "%@ cleaning...";
-"已发现可清理文件 %@" = " %@ ";
-"共发现可清理文件 %@" = "%@ ";
 "正在扫描%@" = "Scanning%@";
 "正在清理%@" = "Cleaning%@";
 "是否删除下载文件" = "Delete Download Files";

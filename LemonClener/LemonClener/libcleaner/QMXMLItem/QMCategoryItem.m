@@ -170,8 +170,9 @@
     {
         NSMutableArray * array = [NSMutableArray array];
         for (QMActionItem * subItem in [self m_actionItemArray]){
-            NSArray *resultItemArray = [subItem resultItemArray];
-            if (resultItemArray != nil) {
+            // 防止直接引用的情况被意外释放
+            NSArray *resultItemArray = [[subItem resultItemArray] copy];
+            if (resultItemArray.count > 0) {
                 [array addObjectsFromArray:resultItemArray];
             }
         }

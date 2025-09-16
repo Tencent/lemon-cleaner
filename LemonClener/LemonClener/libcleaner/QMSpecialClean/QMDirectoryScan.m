@@ -27,7 +27,7 @@
 // 扫描目录内的文件
 - (void)scanActionWithItem:(QMActionItem *)actionItem {
     [self __scanActionWithItem:actionItem];
-    [self scanActionCompleted];
+    [self scanActionCompleted:actionItem];
 }
 
 - (void)__scanActionWithItem:(QMActionItem *)actionItem
@@ -82,7 +82,7 @@
         
         // 添加结果
         if (resultItem) [resultItem addResultWithPathArray:resultPathArray];
-        if ([delegate scanProgressInfo:(i + 1.0) / [pathArray count] scanPath:result resultItem:resultItem])
+        if ([delegate scanProgressInfo:(i + 1.0) / [pathArray count] scanPath:result resultItem:resultItem actionItem:actionItem])
             break;
     }
 }

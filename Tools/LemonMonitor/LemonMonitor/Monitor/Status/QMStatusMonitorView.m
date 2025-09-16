@@ -281,7 +281,7 @@
     downLoadSpeedText.textColor = [self getTextColor];
     
     (*size).height = 22;
-    (*size).width = 50;
+    (*size).width = 33;
     mDownSpeedField = downLoadSpeedText;
     mUpSpeedField = upLoadSpeedText;
 //    mUpLoadSpeedMeasurement = upLoadSpeedMeasurement;
