@@ -2,7 +2,7 @@
 //  QMAppUnlessFile.m
 //  QMCleanDemo
 //
-
+//  Created by yuanwen on 13-10-16.
 //  Copyright (c) 2013年 yuanwen. All rights reserved.
 //
 
@@ -55,14 +55,15 @@ options:flags errorHandler:nil]
 - (void)scanAppUnlessLanguage:(QMActionItem *)actionItem
 {
     [self __scanAppUnlessLanguage:actionItem];
-    [self scanActionCompleted];
+    [self scanActionCompleted:actionItem];
 }
 
 - (void)__scanAppUnlessLanguage:(QMActionItem *)actionItem
 {
-    NSMutableDictionary * languagesResult = [[NSMutableDictionary alloc] init];
     m_languageFilter = [[QMFilterParse alloc] initFilterDict:[delegate xmlFilterDict]];
     NSArray * pathArray = [m_languageFilter enumeratorAtFilePath:actionItem];
+    
+    NSMutableDictionary * languagesResult = [[NSMutableDictionary alloc] init];
     for (int i = 0; i < [pathArray count]; i++)
     {
         NSString * result = [pathArray objectAtIndex:i];
@@ -119,7 +120,7 @@ options:flags errorHandler:nil]
                         [lprojFileDict setObject:subFileArray forKey:parentPath];
                         
                         // 进度信息
-                        if ([delegate scanProgressInfo:((i + 0.0) / [pathArray count]) scanPath:appPath resultItem:nil])
+                        if ([delegate scanProgressInfo:((i + 0.0) / [pathArray count]) scanPath:appPath resultItem:nil actionItem:actionItem])
                         {
                             return;
                         }
@@ -127,14 +128,14 @@ options:flags errorHandler:nil]
                 }
             }
             // 进度信息
-            if ([delegate scanProgressInfo:((i + 0.0) / [pathArray count]) scanPath:appPath resultItem:nil])
+            if ([delegate scanProgressInfo:((i + 0.0) / [pathArray count]) scanPath:appPath resultItem:nil actionItem:actionItem])
             {
                 return;
             }
         }
         
         // 进度信息
-        if ([delegate scanProgressInfo:((i + 0.0) / [pathArray count]) scanPath:appPath resultItem:nil])
+        if ([delegate scanProgressInfo:((i + 0.0) / [pathArray count]) scanPath:appPath resultItem:nil actionItem:actionItem])
         {
             return;
         }
@@ -212,7 +213,7 @@ options:flags errorHandler:nil]
                     
                     j++;
                     // 进度信息
-                    if ([delegate scanProgressInfo:(i + (j + 0.0) / [contentLanguages count]) / [pathArray count] scanPath:result resultItem:languageItem])
+                    if ([delegate scanProgressInfo:(i + (j + 0.0) / [contentLanguages count]) / [pathArray count] scanPath:result resultItem:languageItem actionItem:actionItem])
                     {
                         return;
                     }
@@ -327,15 +328,15 @@ options:flags errorHandler:nil]
 - (void)scanAppUnlessBinary:(QMActionItem *)actionItem
 {
     [self __scanAppUnlessBinary:actionItem];
-    [self scanActionCompleted];
+    [self scanActionCompleted:actionItem];
 }
 
 - (void)__scanAppUnlessBinary:(QMActionItem *)actionItem
 {
-    NSMutableDictionary * retDict = [NSMutableDictionary dictionary];
-    
     QMFilterParse * binaryFilter = [[QMFilterParse alloc] initFilterDict:[delegate xmlFilterDict]];
     NSArray * pathArray = [binaryFilter enumeratorAtFilePath:actionItem];
+    
+    NSMutableDictionary * retDict = [NSMutableDictionary dictionary];
     for (int i = 0; i < [pathArray count]; i++)
     {
         NSString * result = [pathArray objectAtIndex:i];
@@ -371,7 +372,7 @@ options:flags errorHandler:nil]
                     [binaryArray addObject:[pathURL path]];
                 }
             }
-            if ([delegate scanProgressInfo:(i + 1.0) / [pathArray count] scanPath:result resultItem:nil])
+            if ([delegate scanProgressInfo:(i + 1.0) / [pathArray count] scanPath:result resultItem:nil actionItem:actionItem])
                 return;
         }
         QMResultItem * resultItem = nil;
@@ -404,18 +405,23 @@ options:flags errorHandler:nil]
 //                else array = machFiles;
                 [retDict setObject:resultItem forKey:appPath];
             }
-            if ([delegate scanProgressInfo:(i + 1.0) / [pathArray count] scanPath:result resultItem:nil])
+            if ([delegate scanProgressInfo:(i + 1.0) / [pathArray count] scanPath:result resultItem:nil actionItem:actionItem])
                 break;
         }
-        if ([delegate scanProgressInfo:(i + 1.0) / [pathArray count] scanPath:result resultItem:resultItem])
+        if ([delegate scanProgressInfo:(i + 1.0) / [pathArray count] scanPath:result resultItem:resultItem actionItem:actionItem])
             return;
     }
 }
 
 - (void)scanAppInstallPackage:(QMActionItem *)actionItem{
+    [self __scanAppInstallPackage:actionItem];
+    [self scanActionCompleted:actionItem];
+}
+
+- (void)__scanAppInstallPackage:(QMActionItem *)actionItem{
+    NSArray *pathArray = @[[@"~/Downloads" stringByExpandingTildeInPath],[@"~/Desktop" stringByExpandingTildeInPath],[@"~/Library/Containers/com.tencent.WeWorkMac/Data/Documents/Profiles" stringByExpandingTildeInPath]];
     
     NSString *shellString = @"mdfind -onlyin \'%@\' 'kMDItemKind = \"磁盘映像\" || kMDItemKind = \"Disk Image\"'";
-    NSArray *pathArray = @[[@"~/Downloads" stringByExpandingTildeInPath],[@"~/Desktop" stringByExpandingTildeInPath],[@"~/Library/Containers/com.tencent.WeWorkMac/Data/Documents/Profiles" stringByExpandingTildeInPath]];
     
     for (NSString *path in pathArray) {
         NSString *cmd = [NSString stringWithFormat:shellString, path];
@@ -457,8 +463,8 @@ options:flags errorHandler:nil]
             // 添加结果
             if (resultItem) [resultItem addResultWithPath:result];
     
-            if ([delegate respondsToSelector:@selector(scanProgressInfo:scanPath:resultItem:)]) {
-                [delegate scanProgressInfo:(1 + 1.0) / [pathItemArray count] scanPath:result resultItem:resultItem];
+            if ([delegate respondsToSelector:@selector(scanProgressInfo:scanPath:resultItem:actionItem:)]) {
+                [delegate scanProgressInfo:(i + 1.0) / [pathItemArray count] scanPath:result resultItem:resultItem actionItem:actionItem];
             }
         }
         
@@ -467,12 +473,13 @@ options:flags errorHandler:nil]
 
 - (void)scanAppGeneralBinary:(QMActionItem *)actionItem {
     [self __scanAppGeneralBinary:actionItem];
-    [self scanActionCompleted];
+    [self scanActionCompleted:actionItem];
 }
 
 - (void)__scanAppGeneralBinary:(QMActionItem *)actionItem {
-   
-    NSMutableDictionary *installBundleIdDic = [InstallAppHelper getInstallBundleIds];
+    
+    NSMutableDictionary *installBundleIdDic =  [InstallAppHelper getInstallBundleIds];
+    
     dispatch_group_t group = dispatch_group_create();
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     for (NSString *appBundleId in installBundleIdDic.allKeys) {
@@ -480,6 +487,7 @@ options:flags errorHandler:nil]
             //苹果app白名单 普通app白名单
             if (![kWhiteAppleAppBundleID containsObject:appBundleId] && ![kWhiteCommonAppBundleID containsObject:appBundleId]) {
                 NSString *appPath = [installBundleIdDic objectForKey:appBundleId];
+                NSInteger currentIndex = [installBundleIdDic.allKeys indexOfObject:appBundleId];
                 
                 NSError * err = nil;
                 NSFileManager * manager = [NSFileManager defaultManager];
@@ -565,8 +573,8 @@ options:flags errorHandler:nil]
                         resultItem.cleanType = actionItem.cleanType;
                         resultItem.binaryType = type;
                         if (resultItem) [resultItem addResultWithPathArray:arr];
-                        if ([self.delegate respondsToSelector:@selector(scanProgressInfo:scanPath:resultItem:)]) {
-                            [self.delegate scanProgressInfo:(1 + 1.0) / [installBundleIdDic count] scanPath:appPath resultItem:resultItem];
+                        if ([self.delegate respondsToSelector:@selector(scanProgressInfo:scanPath:resultItem:actionItem:)]) {
+                            [self.delegate scanProgressInfo:(currentIndex + 1.0) / [installBundleIdDic count] scanPath:appPath resultItem:resultItem actionItem:actionItem];
                         }
                     }
                     
@@ -642,15 +650,15 @@ options:flags errorHandler:nil]
 - (void)scanDeveloperJunck:(QMActionItem *)actionItem
 {
     [self __scanDeveloperJunck:actionItem];
-    [self scanActionCompleted];
+    [self scanActionCompleted:actionItem];
 }
 
 - (void)__scanDeveloperJunck:(QMActionItem *)actionItem
 {
     NSMutableDictionary * m_developerResult = [NSMutableDictionary dictionary];
-    
     m_developerFilter = [[QMFilterParse alloc] initFilterDict:[delegate xmlFilterDict]];
     NSArray * pathArray = [m_developerFilter enumeratorAtFilePath:actionItem];
+    
     for (int i = 0; i < [pathArray count]; i++)
     {
         NSString * result = [pathArray objectAtIndex:i];
@@ -695,7 +703,7 @@ options:flags errorHandler:nil]
                     [nibsArray addObject:[pathURL path]];
                 }
             }
-            if ([delegate scanProgressInfo:(i + 1.0) / [pathArray count] scanPath:result resultItem:nil])
+            if ([delegate scanProgressInfo:(i + 1.0) / [pathArray count] scanPath:result resultItem:nil actionItem:actionItem])
                 return;
         }
         
@@ -727,7 +735,7 @@ options:flags errorHandler:nil]
         }
         
         // 进度信息
-        if ([delegate scanProgressInfo:(i + 1.0) / [pathArray count] scanPath:result resultItem:resultItem])
+        if ([delegate scanProgressInfo:(i + 1.0) / [pathArray count] scanPath:result resultItem:resultItem actionItem:actionItem])
             return;
         
     }

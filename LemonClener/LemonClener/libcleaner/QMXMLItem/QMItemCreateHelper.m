@@ -60,7 +60,7 @@ typedef NS_ENUM(NSUInteger, CreateActionItemType) {
 
 +(QMCategorySubItem *)processInfoToCreateSubItem:(NSString *)bundleId installBundleDic:(NSDictionary *)installBundleDic{
     //过滤浏览器软件
-    if ([bundleId isEqualToString:@"com.apple.Safari"] || [bundleId isEqualToString:@"com.google.Chrome"] || [bundleId isEqualToString:@"com.operasoftware.Opera"] || [bundleId isEqualToString:@"org.mozilla.firefox"] || [bundleId isEqualToString:@"com.tencent.QQBrowser"]) {
+    if ([bundleId isEqualToString:@"com.apple.Safari"] || [bundleId isEqualToString:@"com.google.Chrome"] || [bundleId isEqualToString:@"com.operasoftware.Opera"] || [bundleId isEqualToString:@"org.mozilla.firefox"] || [bundleId isEqualToString:@"com.tencent.QQBrowser"] || [bundleId isEqualToString:@"com.quark.desktop"]) {
         return nil;
     }
     //用来搜索路径使用

@@ -33,8 +33,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, readonly) BOOL attached;
 
-@property (nonatomic) DiskModel *diskModel;
-
 - (void)showPopover;
 - (void)dismissPopover;
 

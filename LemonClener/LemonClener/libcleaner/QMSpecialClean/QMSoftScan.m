@@ -17,7 +17,7 @@
 
 -(void)scanSketchFileCache:(QMActionItem *)actionItem{
     [self __scanSketchFileCache:actionItem];
-    [self scanActionCompleted];
+    [self scanActionCompleted:actionItem];
 }
 
 -(void)__scanSketchFileCache:(QMActionItem *)actionItem{
@@ -45,7 +45,7 @@
         if ([resultItem resultFileSize] == 0) {
             resultItem = nil;
         }
-        if ([delegate scanProgressInfo:(i + 1.0) / [pathItemArray count] scanPath:result resultItem:resultItem])
+        if ([delegate scanProgressInfo:(i + 1.0) / [pathItemArray count] scanPath:result resultItem:resultItem actionItem:actionItem])
             break;
     }
 }
@@ -53,7 +53,7 @@
 //扫描自适配软件缓存
 -(void)scanAdaptSoftCache:(QMActionItem *)actionItem{
     [self __scanAdaptSoftCache:actionItem];
-    [self scanActionCompleted];
+    [self scanActionCompleted:actionItem];
 }
 
 -(void)__scanAdaptSoftCache:(QMActionItem *)actionItem{
@@ -83,7 +83,7 @@
         if ([resultItem resultFileSize] == 0) {
             resultItem = nil;
         }
-        if ([delegate scanProgressInfo:(i + 1.0) / [pathArray count] scanPath:result resultItem:resultItem])
+        if ([delegate scanProgressInfo:(i + 1.0) / [pathArray count] scanPath:result resultItem:resultItem actionItem:actionItem])
             break;
     }
 }
@@ -91,7 +91,7 @@
 //扫描剩余的缓存的大小
 -(void)scanLeftAppCache:(QMActionItem *)actionItem{
     [self __scanLeftAppCache:actionItem];
-    [self scanActionCompleted];
+    [self scanActionCompleted:actionItem];
 }
 
 -(void)__scanLeftAppCache:(QMActionItem *)actionItem{
@@ -126,7 +126,7 @@
         if ([resultItem resultFileSize] == 0) {
             resultItem = nil;
         }
-        if ([delegate scanProgressInfo:(i + 1.0) / [pathArray count] scanPath:result resultItem:resultItem])
+        if ([delegate scanProgressInfo:(i + 1.0) / [pathArray count] scanPath:result resultItem:resultItem actionItem:actionItem])
             break;
     }
 }
@@ -134,7 +134,7 @@
 //扫描剩余的日志大小
 -(void)scanLeftAppLog:(QMActionItem *)actionItem{
     [self __scanLeftAppLog:actionItem];
-    [self scanActionCompleted];
+    [self scanActionCompleted:actionItem];
 }
 
 -(void)__scanLeftAppLog:(QMActionItem *)actionItem{
@@ -189,7 +189,7 @@
         
         // 添加结果
         if (resultItem) [resultItem addResultWithPathArray:resultPathArray];
-        if ([delegate scanProgressInfo:(i + 1.0) / [pathArray count] scanPath:result resultItem:resultItem])
+        if ([delegate scanProgressInfo:(i + 1.0) / [pathArray count] scanPath:result resultItem:resultItem actionItem:actionItem])
             break;
     }
 }

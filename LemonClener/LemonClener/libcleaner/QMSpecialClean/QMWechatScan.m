@@ -2,7 +2,6 @@
 //  QMWechatScan.m
 //  LemonClener
 //
-
 //  Copyright © 2019 Tencent. All rights reserved.
 //
 
@@ -30,15 +29,13 @@ static NSString * const kWeChat4PartsOfVideos = @"/msg/video";
 //扫描头像图片
 - (void)scanWechatAvatar:(QMActionItem *)actionItem {
     [self __scanWechatAvatar:actionItem];
-    [self scanActionCompleted];
+    [self scanActionCompleted:actionItem];
 }
 
 - (void)__scanWechatAvatar:(QMActionItem *)actionItem {
     // 微信4直接在结果中展示微信4的文件夹
-    
-    // 第一步：找出文件夹
     NSArray *folders = [self findFoldersWithAction:actionItem keyword:@"Avatar" v4Keyword:@"head_image"];
-    
+
     NSMutableArray * v4Folders = [NSMutableArray array];
     NSMutableArray * v3Folders = [NSMutableArray array];
     for (NSString * dir in folders) {
@@ -51,13 +48,13 @@ static NSString * const kWeChat4PartsOfVideos = @"/msg/video";
     
     // 微信4
     if (v4Folders.count > 0) {
-        [self callbackResultArray:v4Folders cleanType:actionItem.cleanType];
+        [self callbackResultArray:v4Folders cleanType:actionItem.cleanType actionItem:actionItem];
     }
     
     // 微信3
     // 分部处理结果
     // 该命令递归找出所有路径下的图片文件需要20s
-    // NSString *shellString = @"mdfind -onlyin \"%@\" 'kMDItemContentTypeTree == \"public.image\"'";
+    //     NSString *shellString = @"mdfind -onlyin \"%@\" 'kMDItemContentTypeTree == \"public.image\"'";
     
     //该命令找出所有路径下第一层文件需要0.45s
     //NSString *shellString = @"find \"%@\" -maxdepth 1 -type f -not -name \".*\"";
@@ -65,24 +62,23 @@ static NSString * const kWeChat4PartsOfVideos = @"/msg/video";
     // 与mdfind 命令类似，前提是用户不修改后缀名。耗时0.35
     NSString *shellString = @"find \"%@\" -type f \\( -iname \\*.jpg -o -iname \\*.jpeg -o -iname \\*.png -o -iname \\*.gif \\)";
     @weakify(self);
-    [self scanFileWithFolders:v3Folders shell:shellString continueExec:^BOOL(NSString *path){
+    [self scanFileWithFolders:v3Folders shell:shellString actionItem:actionItem continueExec:^BOOL(NSString *path){
         return YES;
     } eachCompletion:^(NSArray *resultArray) {
         @strongify(self);
-        [self callbackResultArray:resultArray cleanType:actionItem.cleanType];
+        [self callbackResultArray:resultArray cleanType:actionItem.cleanType actionItem:actionItem];
     }];
 }
 
 //扫描聊天图片 90天内
 - (void)scanWechatImage:(QMActionItem *)actionItem {
     [self __scanWechatImage:actionItem];
-    [self scanActionCompleted];
+    [self scanActionCompleted:actionItem];
 }
 
 - (void)__scanWechatImage:(QMActionItem *)actionItem {
     // 微信4直接在结果中展示微信4的文件夹
 
-    // 第一步：找出文件夹
     NSArray *folders = [self findFoldersWithAction:actionItem keyword:@"Image" v4Keyword:@"attach"];
     
     NSMutableArray * v4Folders = [NSMutableArray array];
@@ -97,7 +93,7 @@ static NSString * const kWeChat4PartsOfVideos = @"/msg/video";
     
     // 微信4
     if (v4Folders.count > 0) {
-        [self callbackResultArray:v4Folders cleanType:actionItem.cleanType];
+        [self callbackResultArray:v4Folders cleanType:actionItem.cleanType actionItem:actionItem];
     }
     
     // 微信3
@@ -106,42 +102,45 @@ static NSString * const kWeChat4PartsOfVideos = @"/msg/video";
     // 为处理结果中的获取可以打开文件应用图标的耗时优化做准备
     NSString *shellString = @"find \"%@\" -type f \\( -iname \\*.jpg -o -iname \\*.jpeg -o -iname \\*.png -o -iname \\*.gif \\)";
     @weakify(self);
-    [self scanFileWithFolders:v3Folders shell:shellString continueExec:^BOOL(NSString *path){
+    [self scanFileWithFolders:v3Folders shell:shellString actionItem:actionItem continueExec:^BOOL(NSString *path){
         return [path containsString:kCommonPartsOfPath];
     } eachCompletion:^(NSArray *resultArray) {
         @strongify(self);
-        [self callbackResultArray:resultArray cleanType:actionItem.cleanType];
+        [self callbackResultArray:resultArray cleanType:actionItem.cleanType actionItem:actionItem];
     }];
 }
 
 //扫描聊天图片 90天前
 - (void)scanWechatImage90DayAgo:(QMActionItem *)actionItem {
     [self __scanWechatImage90DayAgo:actionItem];
-    [self scanActionCompleted];
+    [self scanActionCompleted:actionItem];
 }
 
 - (void)__scanWechatImage90DayAgo:(QMActionItem *)actionItem {
+    
     NSArray *folders = [self findFoldersWithAction:actionItem keyword:@"Image" v4Keyword:@""];
+    
     // 原始代码是找出目录下所有文件。
     // 此处为了优化后续处理结果的代码，因此只按需查找图片文件
     // 为处理结果中的获取可以打开文件应用图标的耗时优化做准备
     NSString *shellString = @"find \"%@\" -type f \\( -iname \\*.jpg -o -iname \\*.jpeg -o -iname \\*.png -o -iname \\*.gif \\) -mtime +90";
     @weakify(self);
-    [self scanFileWithFolders:folders shell:shellString continueExec:^BOOL(NSString *path){
+    [self scanFileWithFolders:folders shell:shellString actionItem:actionItem continueExec:^BOOL(NSString *path){
         return [path containsString:kCommonPartsOfPath];
     } eachCompletion:^(NSArray *resultArray) {
         @strongify(self);
-        [self callbackResultArray:resultArray cleanType:actionItem.cleanType];
+        [self callbackResultArray:resultArray cleanType:actionItem.cleanType actionItem:actionItem];
     }];
 }
 
 //扫描接收的文件
 - (void)scanWechatFile:(QMActionItem *)actionItem {
     [self __scanWechatFile:actionItem];
-    [self scanActionCompleted];
+    [self scanActionCompleted:actionItem];
 }
 
 - (void)__scanWechatFile:(QMActionItem *)actionItem {
+    
     NSArray *folders = [self findFoldersWithAction:actionItem keyword:@"File" v4Keyword:@"file"];
     
     NSMutableArray * v4Folders = [NSMutableArray array];
@@ -155,26 +154,27 @@ static NSString * const kWeChat4PartsOfVideos = @"/msg/video";
     }
     // 微信4
     if (v4Folders.count > 0) {
-        [self callbackResultArray:v4Folders cleanType:actionItem.cleanType];
+        [self callbackResultArray:v4Folders cleanType:actionItem.cleanType actionItem:actionItem];
     }
     
     // 微信3
     @weakify(self);
-    [self scanFileWithFolders:v3Folders shell:nil continueExec:^BOOL(NSString *path){
+    [self scanFileWithFolders:v3Folders shell:nil actionItem:actionItem continueExec:^BOOL(NSString *path){
         return [path containsString:kCommonPartsOfPath];
     } eachCompletion:^(NSArray *resultArray) {
         @strongify(self);
-        [self callbackResultArray:resultArray cleanType:actionItem.cleanType];
+        [self callbackResultArray:resultArray cleanType:actionItem.cleanType actionItem:actionItem];
     }];
 }
 
 //扫描接收到的视频
 - (void)scanWechatVideo:(QMActionItem *)actionItem {
     [self __scanWechatVideo:actionItem];
-    [self scanActionCompleted];
+    [self scanActionCompleted:actionItem];
 }
 
 - (void)__scanWechatVideo:(QMActionItem *)actionItem {
+    
     NSArray *folders = [self findFoldersWithAction:actionItem keyword:@"Video" v4Keyword:@"video"];
     
     NSMutableArray * v4Folders = [NSMutableArray array];
@@ -188,33 +188,35 @@ static NSString * const kWeChat4PartsOfVideos = @"/msg/video";
     }
     // 微信4
     if (v4Folders.count > 0) {
-        [self callbackResultArray:v4Folders cleanType:actionItem.cleanType];
+        [self callbackResultArray:v4Folders cleanType:actionItem.cleanType actionItem:actionItem];
     }
     
     // 微信3
     @weakify(self);
-    [self scanFileWithFolders:folders shell:nil continueExec:^BOOL(NSString *path){
+    [self scanFileWithFolders:folders shell:nil actionItem:actionItem continueExec:^BOOL(NSString *path){
         return [path containsString:kCommonPartsOfPath];
     } eachCompletion:^(NSArray *resultArray) {
         @strongify(self);
-        [self callbackResultArray:resultArray cleanType:actionItem.cleanType];
+        [self callbackResultArray:resultArray cleanType:actionItem.cleanType actionItem:actionItem];
     }];
 }
 
 //扫描接收到的音频
 - (void)scanWechatAudio:(QMActionItem *)actionItem {
     [self __scanWechatAudio:actionItem];
-    [self scanActionCompleted];
+    [self scanActionCompleted:actionItem];
 }
 
 - (void)__scanWechatAudio:(QMActionItem *)actionItem {
+    
     NSArray *folders = [self findFoldersWithAction:actionItem keyword:@"Audio" v4Keyword:@""];
+    
     @weakify(self);
-    [self scanFileWithFolders:folders shell:nil continueExec:^BOOL(NSString *path){
+    [self scanFileWithFolders:folders shell:nil actionItem:actionItem continueExec:^BOOL(NSString *path){
         return [path containsString:kCommonPartsOfPath];
     } eachCompletion:^(NSArray *resultArray) {
         @strongify(self);
-        [self callbackResultArray:resultArray cleanType:actionItem.cleanType];
+        [self callbackResultArray:resultArray cleanType:actionItem.cleanType actionItem:actionItem];
     }];
 }
 
@@ -271,11 +273,11 @@ static NSString * const kWeChat4PartsOfVideos = @"/msg/video";
 }
 
 // 递归找出folders下的所有图片文件并返回
-- (void)scanFileWithFolders:(NSArray *)folders shell:(NSString *)shellString continueExec:(BOOL(^)(NSString *path))continueExec eachCompletion:(void(^)(NSArray *))completion {
+- (void)scanFileWithFolders:(NSArray *)folders shell:(NSString *)shellString actionItem:(QMActionItem *)actionItem continueExec:(BOOL(^)(NSString *path))continueExec eachCompletion:(void(^)(NSArray *))completion {
     for(NSInteger i = 0; i < folders.count; i++) {
         @autoreleasepool {
             NSString *path = folders[i];
-            if ([self.delegate scanProgressInfo:(i + 1.0) / [folders count] scanPath:path resultItem:nil]) {
+            if ([self.delegate scanProgressInfo:(i + 1.0) / [folders count] scanPath:path resultItem:nil actionItem:actionItem]) {
                 break;
             }
             
@@ -322,7 +324,7 @@ static NSString * const kWeChat4PartsOfVideos = @"/msg/video";
     return resultArray.copy;
 }
 
-- (void)callbackResultArray:(NSArray *)resultArray cleanType:(QMCleanType)cleanType {
+- (void)callbackResultArray:(NSArray *)resultArray cleanType:(QMCleanType)cleanType actionItem:(QMActionItem *)actionItem {
     // 逐个获取icon，耗时增加了2个数量级。
     NSImage *icon = [[NSWorkspace sharedWorkspace] iconForFile:resultArray.firstObject];    
     for (int i = 0; i < [resultArray count]; i++)
@@ -338,7 +340,7 @@ static NSString * const kWeChat4PartsOfVideos = @"/msg/video";
             if ([resultItem resultFileSize] == 0) {
                 resultItem = nil;
             }
-            if ([self.delegate scanProgressInfo:(i + 1.0) / [resultArray count] scanPath:result resultItem:resultItem])
+            if ([self.delegate scanProgressInfo:(i + 1.0) / [resultArray count] scanPath:result resultItem:resultItem actionItem:actionItem])
                 break;
         }
     }

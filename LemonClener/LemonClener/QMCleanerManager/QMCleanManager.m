@@ -321,7 +321,7 @@
 }
 
 // 进度显示
-- (void)scanProgressInfo:(float)value scanPath:(NSString *)path resultItem:(QMResultItem *)item
+- (void)scanProgressInfo:(float)value scanPath:(NSString *)path resultItem:(QMResultItem *)item actionItem:(QMActionItem *)actionItem
 {
     __weak QMCleanManager *weakSelf = self;
     

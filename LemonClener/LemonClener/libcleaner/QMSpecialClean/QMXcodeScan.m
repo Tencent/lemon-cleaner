@@ -21,7 +21,7 @@
 //
 -(void)scanDerivedDataApp:(QMActionItem *)actionItem{
     [self __scanDerivedDataApp:actionItem];
-    [self scanActionCompleted];
+    [self scanActionCompleted:actionItem];
 }
 
 -(void)__scanDerivedDataApp:(QMActionItem *)actionItem{
@@ -59,14 +59,14 @@
         if ([resultItem resultFileSize] == 0) {
             resultItem = nil;
         }
-        if ([delegate scanProgressInfo:(i + 1.0) / [pathItemArray count] scanPath:result resultItem:resultItem])
+        if ([delegate scanProgressInfo:(i + 1.0) / [pathItemArray count] scanPath:result resultItem:resultItem actionItem:actionItem])
             break;
     }
 }
 
 -(void)scanArchives:(QMActionItem *)actionItem{
     [self __scanArchives:actionItem];
-    [self scanActionCompleted];
+    [self scanActionCompleted:actionItem];
 }
 
 -(void)__scanArchives:(QMActionItem *)actionItem{
@@ -104,7 +104,7 @@
         if ([resultItem resultFileSize] == 0) {
             resultItem = nil;
         }
-        if ([delegate scanProgressInfo:(i + 1.0) / [pathItemArray count] scanPath:result resultItem:resultItem])
+        if ([delegate scanProgressInfo:(i + 1.0) / [pathItemArray count] scanPath:result resultItem:resultItem actionItem:actionItem])
             break;
     }
 }

@@ -210,3 +210,102 @@ NSDictionary *processSocketInfo(void)
     return socketDictionary;
 }
 
+// 使用 nettop 命令行工具获取网络速度信息
+NSDictionary *processNetInfoWithNetTop(void)
+{
+    NSTask *task = [[NSTask alloc] init];
+    task.launchPath = @"/usr/bin/nettop";
+    
+    // 使用 nettop 获取实时网络速度: -P 按进程分组, -l 1 只运行一次, -J 指定输出列, -x 不显示表头
+    task.arguments = @[@"-P", @"-l", @"1", @"-J", @"bytes_in,bytes_out", @"-x"];
+    
+    NSPipe *pipe = [NSPipe pipe];
+    task.standardOutput = pipe;
+    task.standardError = pipe;
+    
+    NSFileHandle *file = pipe.fileHandleForReading;
+    
+    @try {
+        [task launch];
+        [task waitUntilExit];
+        
+        NSData *data = [file readDataToEndOfFile];
+        NSString *output = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+        
+        if (task.terminationStatus == 0) {
+            return parseNetTrafficWihtNetTopOutput(output);
+        } else {
+            NSLog(@"[QMNetTopHelp] nettop command failed with status: %d", task.terminationStatus);
+            // 如果 nettop 失败，返回空字典
+            return @{};
+        }
+    } @catch (NSException *exception) {
+        NSLog(@"[QMNetTopHelp] Exception running nettop: %@", exception.reason);
+        // 如果出现异常，返回空字典
+        return @{};
+    }
+}
+
+static NSInteger kUp_OFFSET_FROM_END = 1;
+static NSInteger kDown_OFFSET_FROM_END = 2;
+static NSInteger kPID_OFFSET_FROM_END = 3;
+
+// 解析 nettop 输出，返回网络速度信息
+NSDictionary *parseNetTrafficWihtNetTopOutput(NSString *nettopOutput)
+{
+    NSMutableDictionary *speedDictionary = [[NSMutableDictionary alloc] init];
+    
+    if (!nettopOutput || nettopOutput.length == 0) {
+        return speedDictionary;
+    }
+    
+    NSArray *lines = [nettopOutput componentsSeparatedByString:@"\n"];
+    
+    for (NSString *line in lines) {
+        NSString *trimmedLine = [line stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+        if (trimmedLine.length == 0) {
+            continue;
+        }
+        
+        // nettop 输出格式: ProcessName.PID bytes_in bytes_out
+        NSArray *components = [trimmedLine componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+                
+        NSMutableArray *filteredComponents = [NSMutableArray array];
+        
+        // 过滤空字符串
+        for (NSString *component in components) {
+            if (component.length > 0) {
+                [filteredComponents addObject:component];
+            }
+        }
+        
+        if (filteredComponents.count >= 3) {
+            NSInteger pidIndex = (filteredComponents.count - kPID_OFFSET_FROM_END);
+            NSString *processNameWithPID = filteredComponents[pidIndex];
+            // 解析进程名和PID (格式: ProcessName.PID)
+            NSRange lastDotRange = [processNameWithPID rangeOfString:@"." options:NSBackwardsSearch];
+            if (lastDotRange.location != NSNotFound) {
+                NSString *pidString = [processNameWithPID substringFromIndex:lastDotRange.location + 1];
+                int pid = [pidString intValue];
+                if (pid > 0) {
+                    NSInteger inIndex = (filteredComponents.count - kDown_OFFSET_FROM_END);
+                    NSInteger outIndex = (filteredComponents.count - kUp_OFFSET_FROM_END);
+                    uint64_t bytesIn = [filteredComponents[inIndex] longLongValue];   // 下行速度 (接收)
+                    uint64_t bytesOut = [filteredComponents[outIndex] longLongValue];  // 上行速度 (发送)
+                    
+                    // 只有有网络活动的进程才添加到结果中
+                    if (bytesIn > 0 || bytesOut > 0) {
+                        NSDictionary *speedInfo = @{
+                            kUpNetKey: @(bytesOut),    // UP = 上行 = 发送
+                            kDownNetKey: @(bytesIn) // DOWN = 下行 = 接收
+                        };
+                        
+                        speedDictionary[@(pid)] = speedInfo;
+                    }
+                }
+            }
+        }
+    }
+    
+    return speedDictionary;
+}

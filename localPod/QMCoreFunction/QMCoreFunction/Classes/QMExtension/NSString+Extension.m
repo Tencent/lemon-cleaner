@@ -189,48 +189,51 @@ NS_INLINE NSInteger __binary_multiple__(BOOL diskMode) {
 
 @end
 
+static const float kSpeedUint = 1024.0;
+static const float kOneThousand = 1000;
+
 @implementation NSString (Speed)
 
 + (NSString *)stringFromNetSpeed:(CGFloat)value
 {
-    const float oneMB = 1024;
     float _value = 0;
     NSString * formatStr = nil;
-    if (value > 1000)
+    if (value > kOneThousand * kOneThousand)
     {
-        _value = value / oneMB;
+        _value = value / (kSpeedUint * kSpeedUint);
         formatStr = @" MB/s";
     }
-    else
+    else if (value > kOneThousand)
     {
-        _value = value;
+        _value = value / kSpeedUint;
         formatStr = @" KB/s";
+    } else {
+        _value = value;
+        formatStr = @" B/s";
     }
-    if (_value > 100)
-        return [NSString stringWithFormat:@"%d%@", (int)_value, formatStr];
-    else
-        return [NSString stringWithFormat:@"%.1f%@", _value, formatStr];
+    
+    return [NSString stringWithFormat:@"%.1f%@", _value, formatStr];
 }
 
 + (NSString *)stringFromNetSpeedWithoutSpacing:(CGFloat)value
 {
-    const float oneMB = 1024;
     float _value = 0;
     NSString * formatStr = nil;
-    if (value > 1000)
+    if (value > kOneThousand * kOneThousand)
     {
-        _value = value / oneMB;
+        _value = value / (kSpeedUint * kSpeedUint);
         formatStr = @"MB/s";
     }
-    else
+    else if (value > kOneThousand)
     {
-        _value = value;
+        _value = value / kSpeedUint;
         formatStr = @"KB/s";
+    } else {
+        _value = value;
+        formatStr = @"B/s";
     }
-    if (_value > 100)
-        return [NSString stringWithFormat:@"%d%@", (int)_value, formatStr];
-    else
-        return [NSString stringWithFormat:@"%.1f%@", _value, formatStr];
+    
+    return [NSString stringWithFormat:@"%.1f%@", _value, formatStr];
 }
 
 @end

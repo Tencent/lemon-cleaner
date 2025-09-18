@@ -28,6 +28,7 @@ typedef void(^LMFileScanTaskBlock)(LMItem*);
 
 - (id)initWithRootDirItem:(LMItem *)dirItem;
 -(void)starTaskWithBlock:(LMFileScanTaskBlock)block;
+-(void)cancel;
 
 @end
 

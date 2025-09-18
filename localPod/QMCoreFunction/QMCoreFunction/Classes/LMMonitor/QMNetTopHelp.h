@@ -18,3 +18,8 @@ NSString *make_socket_key(int type,const struct in_addr *srcIp, u_short srcPort,
 //返回所有进程的socket信息 key-pid value-sockets(up and down)
 NSDictionary *processSocketInfo(void);
 
+//使用 nettop 命令行工具获取网络速度信息
+NSDictionary *processNetInfoWithNetTop(void);
+
+//解析 nettop 输出，返回网络流量信息
+NSDictionary *parseNetTrafficWihtNetTopOutput(NSString *nettopOutput);

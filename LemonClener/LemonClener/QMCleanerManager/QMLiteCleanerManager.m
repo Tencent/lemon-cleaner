@@ -182,7 +182,7 @@
     }
 }
 
-- (void)scanProgressInfo:(float)value scanPath:(NSString *)path resultItem:(QMResultItem *)item
+- (void)scanProgressInfo:(float)value scanPath:(NSString *)path resultItem:(QMResultItem *)item actionItem:(QMActionItem *)actionItem
 {
     if (item && ![_resultItemArray containsObject:item])
     {

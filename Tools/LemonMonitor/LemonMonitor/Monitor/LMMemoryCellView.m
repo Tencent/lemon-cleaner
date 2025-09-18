@@ -13,6 +13,8 @@
 #import <QMUICommon/AcceptsFirstMouseView.h>
 #import <QMUICommon/LMAppThemeHelper.h>
 
+// 当前cell的Bubble展示，其他cell收到通知则隐藏。处理快速滑动时mouseExited可能不会接收回调的问题
+NSNotificationName kCloseInfoBubbleDidShowNotificaiton = @"kCloseInfoBubbleDidShowNotificaiton";
 
 @interface MessageViewController : NSViewController
 
@@ -47,6 +49,8 @@
     }
     
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onKillProcess:) name:KILL_PROCESS_AT_MONITOR object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(closeInfoBubbleDidShowNotificaiton:) name:kCloseInfoBubbleDidShowNotificaiton object:nil];
+    
     return self;
 }
 
@@ -237,6 +241,8 @@
 
 - (void)showBubble
 {
+    [[NSNotificationCenter defaultCenter] postNotificationName:kCloseInfoBubbleDidShowNotificaiton object:self];
+    
     if(self.bubble && [self.bubble isVisible]){
         return;
     }
@@ -276,6 +282,13 @@
 
 // 触发杀进程时(不一定是当前 cell 对于的进程被杀), 必须取消 提示窗口 的显示(防止如果进程被杀,响应的cell 对应的提示窗口要取消显示,否则会出现进程列表中 cell不满五个时,同时有多个提示窗口的问题).
 -(void)onKillProcess:(NSNotification*)notificer{
+    [self showCloseInfo:NO event:nil];
+}
+
+- (void)closeInfoBubbleDidShowNotificaiton:(NSNotification *)notify {
+    if (notify.object == self) {
+        return;
+    }
     [self showCloseInfo:NO event:nil];
 }
 

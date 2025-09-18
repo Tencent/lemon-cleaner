@@ -43,8 +43,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (assign, nonatomic, getter = isLoading) BOOL loading; // show loading view
 
-@property (nonatomic) DiskModel *diskModel;
-
 + (NSDictionary *)networkInfoItemWithPid:(id)pid name:(NSString *)processName icon:(NSImage *)image upSpeed:(NSNumber *)upSpeed downSpeed:(NSNumber *)downSpeed;
 
 - (void)startMonitor;

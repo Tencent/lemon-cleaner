@@ -12,7 +12,10 @@
 @implementation QMNetworkSpeedFormatter
 - (NSString *)stringForObjectValue:(NSNumber *)obj
 {
-    NSString *ret = [NSString stringFromNetSpeed:[obj longLongValue]/1000.0];
+    if (![obj isKindOfClass:NSNumber.class]) {
+        return @"";
+    }
+    NSString *ret = [NSString stringFromNetSpeed:[obj longLongValue]];
     return ret;
 }
 @end

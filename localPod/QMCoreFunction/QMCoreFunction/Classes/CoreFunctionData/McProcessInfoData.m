@@ -77,4 +77,41 @@
     return self;
 }
 
+#ifdef DEBUG
+- (NSString *)description {
+    return [NSString stringWithFormat:@"<%@: %p>\n"
+            @"  PID: %d\n"
+            @"  PPID: %d\n"
+            @"  UID: %d\n"
+            @"  Process Name: %@\n"
+            @"  User Name: %@\n"
+            @"  Execute Path: %@\n"
+            @"  CPU Usage: %.2f%%\n"
+            @"  CPU Time: %llu\n"
+            @"  Current Time: %llu\n"
+            @"  Thread Count: %d\n"
+            @"  Resident Size: %llu bytes (%.2f MB)\n"
+            @"  Virtual Size: %llu bytes (%.2f MB)\n"
+            @"  Upload Speed: %.2f B/s\n"
+            @"  Download Speed: %.2f B/s\n"
+            @"  Process Flag: %d",
+            NSStringFromClass([self class]), self,
+            self.pid,
+            self.ppid,
+            self.uid,
+            self.pName ?: @"(null)",
+            self.pUserName ?: @"(null)",
+            self.pExecutePath ?: @"(null)",
+            self.cpuUsage,
+            self.cpuTime,
+            self.currentTime,
+            self.threadCount,
+            self.resident_size, self.resident_size / (1024.0 * 1024.0),
+            self.virtual_size, self.virtual_size / (1024.0 * 1024.0),
+            self.upSpeed,
+            self.downSpeed,
+            self.pflag];
+}
+#endif
+
 @end

@@ -36,7 +36,7 @@ typedef struct val_attrs {
 static BOOL isOperatingSystemAtLeastMacOS13 = NO;
 
 @interface LMFileScanTask ()
-
+@property (atomic, assign) BOOL isCancel;
 @end
 
 @implementation LMFileScanTask
@@ -55,6 +55,7 @@ static BOOL isOperatingSystemAtLeastMacOS13 = NO;
     if (self) {
         _dirItem = dirItem;
         _skipICloudFiles = NO;
+        
     }
     return self;
 }
@@ -76,6 +77,10 @@ static BOOL isOperatingSystemAtLeastMacOS13 = NO;
         return ![fileManager qm_isICloudFileDownloadedAtPath:filePath];
     }
     return NO;
+}
+
+- (void)cancel {
+    self.isCancel = YES;
 }
 
 -(void)starTaskWithBlock:(LMFileScanTaskBlock)block{
@@ -117,6 +122,10 @@ static BOOL isOperatingSystemAtLeastMacOS13 = NO;
         perror("Error was ");
     } else {
         for (;;) {
+            if (self.isCancel) {
+                break;
+            }
+            
             int retcount;
 
             retcount = getattrlistbulk(dirfd, &attrList, &attrBuf[0],sizeof(attrBuf), 0);

@@ -68,6 +68,11 @@
     if (!effectivePath) {
         // 3. 回退检查 ProgramArguments 的第一个元素
         NSArray *programArguments = dict[@"ProgramArguments"];
+        if (![programArguments isKindOfClass:NSArray.class]) {
+            // ProgramArguments 必须是字符串数组
+            // https://developer.apple.com/library/archive/documentation/MacOSX/Conceptual/BPSystemStartup/Chapters/CreatingLaunchdJobs.html
+            return YES;
+        }
         if (programArguments.count == 0) {
             NSLog(@"Error: Program and ProgramArguments does not contain executable Path(%@)", path);
             return YES;
@@ -136,7 +141,7 @@
 - (void)scanBrokenRegister:(QMActionItem *)actionItem
 {
     [self __scanBrokenRegister:actionItem];
-    [self scanActionCompleted];
+    [self scanActionCompleted:actionItem];
 }
 
 - (void)__scanBrokenRegister:(QMActionItem *)actionItem
@@ -165,7 +170,7 @@
         // 添加结果
         resultItem.cleanType = actionItem.cleanType;
         if (resultItem) [resultItem addResultWithPath:result];
-        if ([delegate scanProgressInfo:(i + 1.0) / [pathArray count] scanPath:result resultItem:resultItem])
+        if ([delegate scanProgressInfo:(i + 1.0) / [pathArray count] scanPath:result resultItem:resultItem actionItem:actionItem])
         {
             return;
         }
@@ -189,7 +194,7 @@
                 [resultItem addResultWithPath:brokenLogin];
                 resultItem.cleanType = QMCleanRemoveLogin;
             }
-            if ([delegate scanProgressInfo:(1.0) / [pathArray count] scanPath:brokenLogin resultItem:resultItem])
+            if ([delegate scanProgressInfo:(1.0) / [pathArray count] scanPath:brokenLogin resultItem:resultItem actionItem:actionItem])
                 break;
                 
         }

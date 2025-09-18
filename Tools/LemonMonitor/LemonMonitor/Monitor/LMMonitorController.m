@@ -88,6 +88,7 @@ enum
 @property (nonatomic, strong) NSString *mainDiskName;
 @property NSTimer *checkFullDiskAccessTimer;
 @property(nonatomic, strong) NSTimer *timer;
+@property (nonatomic, strong) dispatch_queue_t updateDiskInfoQueue;
 
 @end
 
@@ -98,6 +99,7 @@ enum
 {
     self = [super init];
     if (self) {
+        self.updateDiskInfoQueue = dispatch_queue_create("com.tencent.lemonMonitor.updateDiskInfo", DISPATCH_QUEUE_SERIAL);
         [self setupData];
         [self loadWindow];
         _isUserChangeLanguage = NO;
@@ -107,13 +109,6 @@ enum
 
 -(void)setupData
 {
-    NSNumber *type = [[NSUserDefaults standardUserDefaults] objectForKey:kLemonShowMonitorCfg];
-    if (([type integerValue] & STATUS_TYPE_GLOBAL) == 0) {
-        // 直接关闭进程（如果用户关闭了显示状态栏的开关）
-        [[NSApplication sharedApplication] terminate:nil];
-        return;
-    }
-    
     _upSpeedHistory = [[QMValueHistory alloc] initWithCapacity:32];
     _downSpeedHistory = [[QMValueHistory alloc] initWithCapacity:32];
     dataCenter = [QMDataCenter defaultCenter];
@@ -421,7 +416,6 @@ enum
         //用于显示弹窗
         _popover = [[LMMonitorPoppverController alloc] init];
         _popover.statusView = statusView;
-        _popover.diskModel = diskModel;
         
         LMSystemFeatureViewController *networkVC = _popover.systemFeatureViewController;
         networkVC.upSpeedHistory = _upSpeedHistory;
@@ -580,7 +574,7 @@ enum
         diskModel = [[DiskModel alloc]init];
     }
     @weakify(self);
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+    dispatch_async(self.updateDiskInfoQueue, ^{
         @strongify(self);
         [self->diskModel getHardWareInfo];
         [self __updateDiskInfo];

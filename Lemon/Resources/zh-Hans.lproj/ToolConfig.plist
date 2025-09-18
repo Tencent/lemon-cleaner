@@ -104,24 +104,7 @@
 		<key>reportId</key>
 		<integer>7207</integer>
 	</dict>
-	<key>McPrivacyFile</key>
-	<dict>
-		<key>toolId</key>
-		<integer>7</integer>
-		<key>toolPicName</key>
-		<string>icon_tool_lemon_lab</string>
-		<key>className</key>
-		<string>lemon_lab</string>
-		<key>toolName</key>
-		<string>柠檬精选</string>
-		<key>toolDesc</key>
-		<string>发现更多优质Mac应用</string>
-		<key>recommend</key>
-		<false/>
-		<key>reportId</key>
-		<integer>7207</integer>
-	</dict>
-	<key>McLemonLab</key>
+	<key>McDiskAnalyzer</key>
 	<dict>
 		<key>toolId</key>
 		<integer>6</integer>
@@ -136,7 +119,24 @@
 		<key>recommend</key>
 		<false/>
 		<key>reportId</key>
-		<integer>7207</integer>
+		<integer>7208</integer>
+	</dict>
+	<key>McLemonLab</key>
+	<dict>
+		<key>toolId</key>
+		<integer>7</integer>
+		<key>toolPicName</key>
+		<string>icon_tool_lemon_lab</string>
+		<key>className</key>
+		<string>lemon_lab</string>
+		<key>toolName</key>
+		<string>柠檬精选</string>
+		<key>toolDesc</key>
+		<string>发现更多优质Mac应用</string>
+		<key>recommend</key>
+		<false/>
+		<key>reportId</key>
+		<integer>7209</integer>
 	</dict>
 </dict>
 </plist>

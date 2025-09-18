@@ -193,6 +193,7 @@ typedef NSInteger LMPortSortType;
 - (void)viewWillLayout{
     [super viewWillLayout];
     [LMAppThemeHelper setDivideLineColorFor:self.lineView];
+    [self.tableView setBackgroundColor:[LMAppThemeHelper getMainBgColor]];
 }
 
 - (void) setHeaderButton:(NSButton *)button withText:(NSString *)text withColor:(NSColor *)color {

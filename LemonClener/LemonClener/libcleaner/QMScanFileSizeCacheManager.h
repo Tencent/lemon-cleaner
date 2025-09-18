@@ -20,8 +20,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)end;
 
 - (BOOL)hasCachedFileSizeWithPath:(NSString *)path;
-- (unsigned long long)getCachedFileSizeWithPath:(NSString *)path;
-- (BOOL)cacheFileAtPath:(NSString *)path withSize:(unsigned long long)size;
+- (uint64_t)getCachedFileSizeWithPath:(NSString *)path;
+- (void)cacheFileAtPath:(NSString *)path withSize:(unsigned long long)size;
 
 
 

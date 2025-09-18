@@ -7,6 +7,7 @@
 
 #import <Foundation/Foundation.h>
 #import <QMCoreFunction/LMReferenceDefines.h>
+#import "QMActionItem.h"
 @protocol QMScanDelegate;
 
 NS_ASSUME_NONNULL_BEGIN
@@ -15,7 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (weak) id<QMScanDelegate> delegate;
 
-- (void)scanActionCompleted;
+- (void)scanActionCompleted:(QMActionItem *)actionItem;
 
 @end
 

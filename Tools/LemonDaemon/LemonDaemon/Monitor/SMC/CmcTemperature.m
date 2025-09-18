@@ -21,14 +21,14 @@
 // cpu
 
 // TCGc: GPU Intel Graphics
-// TC0c: 未知
+// TC0c: 未知 -- Lemon 未使用
 // TC0D: CPU diode CPU核心区域温度
-// TC0E: CPU diode virtual 物理CPU虚拟化，代表虚拟CPU的核心温度。-- Lemon未使用
-// TC0F: CPU diode filtered 经过处理的CPU核心区域温度，更稳定和可靠。-- Lemon未使用
+// TC0E: CPU diode virtual 物理CPU虚拟化，代表虚拟CPU的核心温度。
+// TC0F: CPU diode filtered 经过处理的CPU核心区域温度，更稳定和可靠。
 // TC0H: CPU heatsink CPU散热器温度
 // TC0P: CPU proximity CPU周围温度传感器
 // TCAD: CPU package cpu外壳温度
-uint32_t g_cpuKey[] = {'TC0P', 'TCGc', 'TC0D', 'TC0H', 'TC0c', 'TCAD'};
+uint32_t g_cpuKey[] = {'TC0P', 'TC0D', 'TC0H', 'TC0E', 'TC0F', 'TCAD'};
 
 /// 初代M1芯片的Mac没有SMC。下列传感器并不能准确反应CPU的温度
 UInt32Char_t cpuTempKeyM1_Early[] = {"Tc0a","Tc0b","Tc0x","Tc0z","Tc7a","Tc7b","Tc7x","Tc7z","Tc8a","Tc8b","Tc9a","Tc9b","Tc9x","Tc9z"};
@@ -37,7 +37,7 @@ UInt32Char_t cpuTempKeyM1_Early[] = {"Tc0a","Tc0b","Tc0x","Tc0z","Tc7a","Tc7b","
 UInt32Char_t cpuTempKeyM1[] = {"Tp09", "Tp0T", "Tp01", "Tp05", "Tp0D", "Tp0H", "Tp0L", "Tp0P", "Tp0X", "Tp0b", "Tg05", "Tg0D", "Tg0L", "Tg0T"}; // 后4个为GPU
 UInt32Char_t cpuTempKeyM2[] = {"Tp1h", "Tp1t", "Tp1p", "Tp1l", "Tp01", "Tp05", "Tp09", "Tp0D", "Tp0X", "Tp0b", "Tp0f", "Tp0j", "Tg0f", "Tg0j"}; // 后2个为GPU
 UInt32Char_t cpuTempKeyM3[] = {"Te05", "Te0L", "Te0P", "Te0S", "Tf04", "Tf09", "Tf0A", "Tf0B", "Tf0D", "Tf0E", "Tf44", "Tf49", "Tf4A", "Tf4B", "Tf4D", "Tf4E", "Tf14", "Tf18", "Tf19", "Tf1A", "Tf24", "Tf28", "Tf29", "Tf2A"}; // 后8个为GPU
-UInt32Char_t cpuTempKeyM4[] = {"Tp09", "Tp0T", "Tp01", "Tp05", "Tp0D", "Tp0H", "Tp0L", "Tp0X", "Tp0b", "Tp0f", "Tp1t", "Te05", "Te0S", "Te0A", "Te06", "Te0I", "Te0T"}; // 本次未包含GPU传感器
+UInt32Char_t cpuTempKeyM4[] = {"Te05", "Te09", "Te0H", "Te0S", "Tp01", "Tp05", "Tp09", "Tp0D", "Tp0V", "Tp0Y", "Tp0b", "Tp0e"}; // 本次未包含GPU传感器
 int g_cpuKeyIndex = 0;
 
 // battery

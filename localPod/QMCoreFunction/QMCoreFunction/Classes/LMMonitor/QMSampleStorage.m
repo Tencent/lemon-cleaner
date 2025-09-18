@@ -10,7 +10,8 @@
 #import <libproc.h>
 #import "McCoreFunction.h"
 #import "McCpuInfo.h"
-#import "QMNetTopMonitor.h"
+#import "QMNetworkSpeedCalculator.h"
+#import "QMNetTopHelp.h"
 #import <libproc.h>
 
 #define TIMEVAL_TO_UINT64(a) ((unsigned long long)((a)->tv_sec) * 1000000ULL + (a)->tv_usec)
@@ -43,54 +44,43 @@
     pid_t myPid = [NSProcessInfo processInfo].processIdentifier;
     
     NSMutableDictionary *pidMap = [NSMutableDictionary dictionary];
+    NSMutableDictionary *nameMap = [NSMutableDictionary dictionary];
     NSMutableArray *childProcesses = [NSMutableArray array];
     __block McProcessInfoData *safariProcess = nil;
     NSMutableArray *safariWebContent = [NSMutableArray array];
     
-    
     NSPredicate *filter = [NSPredicate predicateWithBlock:^BOOL(McProcessInfoData *processInfo, NSDictionary *bindings) {
         pid_t pid = processInfo.pid;
         
-        if (pid == 1184) {
-            
-        }
         // 过滤自身
         if (pid == myPid) return NO;
         
-        BOOL (^testPath)(NSString *) = ^BOOL (NSString *execPath) {
-            return [execPath hasPrefix:@"/Applications/"] || [execPath hasPrefix:@"/Users/"] || [execPath hasPrefix:@"/Volumes/"];
-        };
         NSString *path = processInfo.pExecutePath;
         // 过滤被结束的应用
         NSRunningApplication *app = [NSRunningApplication runningApplicationWithProcessIdentifier:pid];
-        if (app) {
-            // 过滤自身/插件与Agent
-            if ([app.bundleIdentifier hasPrefix:@"com.tencent.LemonMonitor"]) return NO;
-            if ([app.bundleIdentifier hasPrefix:@"com.tencent.Lemon"]) return NO;
-            if ([[path lastPathComponent] isEqualToString:@"LemonDaemon"]) return NO;
-            
-            if ([app.bundleIdentifier isEqualToString:@"com.apple.Safari"]) {
-                safariProcess = processInfo;
-            } else if ([[app.executableURL path] hasPrefix:@"/System/Library/Frameworks/WebKit.framework/"])        {
-                [safariWebContent addObject:processInfo];
-            } else {
-                // 判断是否父进程为/Applications或/Home目录下的
-                pid_t ppid = processInfo.ppid;
-                NSRunningApplication *parentApp = [NSRunningApplication runningApplicationWithProcessIdentifier:ppid];
-                if (parentApp) {
-                    NSString *execPath = [app.executableURL path];
-                    if (testPath(execPath)) {
-                        [childProcesses addObject:processInfo];
-                        return NO;
-                    }
-                }
-            }
+        // 过滤自身/插件与Agent
+        if ([app.bundleIdentifier hasPrefix:@"com.tencent.LemonMonitor"]) return NO;
+        if ([app.bundleIdentifier hasPrefix:@"com.tencent.Lemon"]) return NO;
+        if ([[path lastPathComponent] isEqualToString:@"LemonDaemon"]) return NO;
+        
+        pid_t ppid = processInfo.ppid;
+        NSRunningApplication *parentApp = [NSRunningApplication runningApplicationWithProcessIdentifier:ppid];
+        if (parentApp) {
+            [childProcesses addObject:processInfo];
+            return NO;
         }
-        if (testPath(path)) {
-            pidMap[@(pid)] = processInfo;
-            return YES;
+        
+        // com.apple.WebKit.Networking 特殊处理
+        if ([processInfo.pName isEqualToString:@"com.apple.WebKit.Networking"]) {
+            [childProcesses addObject:processInfo];
+            return NO;
         }
-        return NO;
+        NSString *localizedName = app.localizedName;
+        if (localizedName) {
+            nameMap[localizedName] = processInfo;
+        }
+        pidMap[@(pid)] = processInfo;
+        return YES;
     }];
     
     NSArray *processArray = [[McCoreFunction shareCoreFuction] processInfo:NULL totalMemory:NULL];
@@ -98,7 +88,9 @@
     if (self.isProcessPortStat) {
         self.originProcessInfoArray = processArray;
     }
-    NSDictionary *flowSpeed = [QMNetTopMonitor flowSpeed];
+//    NSDictionary *flowSpeed = [QMNetTopMonitor flowSpeed];
+    // 使用nettop 替换 socket
+    NSDictionary *flowSpeed = [QMNetworkSpeedCalculator calculateNetworkSpeed];
     
     for (McProcessInfoData *procInfo in sample)
     {
@@ -109,7 +101,23 @@
     
     
     for (McProcessInfoData *childProcess in childProcesses) {
-        McProcessInfoData *parent = pidMap[@(childProcess.ppid)];
+        
+        McProcessInfoData *parent = nil;
+        if ([childProcess.pName isEqualToString:@"com.apple.WebKit.Networking"]) {
+            // com.apple.WebKit.Networking 特殊处理
+            NSRunningApplication *app = [NSRunningApplication runningApplicationWithProcessIdentifier:childProcess.pid];
+            NSString *localizedName = app.localizedName;
+            NSString *pLocalizedName = [self stringByRemovingNetworkingSuffixFromString:localizedName];
+            if (pLocalizedName) {
+                parent = nameMap[pLocalizedName];
+                if (!parent) {
+                    NSLog(@"Warning: Failed to find parent process for localizedName: %@", localizedName);
+                }
+            }
+        } else {
+            parent = pidMap[@(childProcess.ppid)];
+        }
+        
         if (parent) {
             parent.cpuUsage += childProcess.cpuUsage;
             parent.resident_size += childProcess.resident_size;
@@ -122,16 +130,6 @@
         }
     }
     
-    if (safariProcess) {
-        for (McProcessInfoData *webContentProcess in safariWebContent) {
-            safariProcess.cpuUsage += webContentProcess.cpuUsage;
-            safariProcess.resident_size += webContentProcess.resident_size;
-            NSDictionary *flowInfo = [flowSpeed objectForKey:@(webContentProcess.pid)];
-            safariProcess.upSpeed += [flowInfo[kUpNetKey] doubleValue];
-            safariProcess.downSpeed += [flowInfo[kDownNetKey] doubleValue];
-        }
-    }
-    
     self.processInfoArray = sample;
 }
 
@@ -140,6 +138,18 @@
     if (!isStat){
         self.originProcessInfoArray = [NSMutableArray array];
     }
+}
+
+- (NSString *)stringByRemovingNetworkingSuffixFromString:(NSString *)string {
+    if (!string) return nil;
+    NSString *suffix = @"Networking";
+    // 使用 rangeOfString:options: 从后向前匹配，确保是结尾且忽略大小写
+    NSRange range = [string rangeOfString:suffix options:(NSBackwardsSearch | NSCaseInsensitiveSearch)];
+    if (range.location != NSNotFound && NSMaxRange(range) == string.length) {
+        NSString *trimmed = [string substringToIndex:range.location];
+        return [trimmed stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    }
+    return nil;
 }
 
 @end

@@ -187,7 +187,6 @@ static const CGFloat kDefaultBubbleMarginToScreen = 50;
     [self showBubble];
     NSLog(@"McNetInfo,%s,startMonitor before", __FUNCTION__);
     [self.systemFeatureViewController startMonitor];
-    self.systemFeatureViewController.diskModel = self.diskModel;
     
     NSLog(@"McNetInfo,%s,startMonitor end", __FUNCTION__);
     [self.cleanViewController startMonitor];

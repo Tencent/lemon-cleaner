@@ -19,7 +19,7 @@
 
 - (void)scanMailAttachments:(QMActionItem *)actionItem{
     [self __scanMailAttachments:actionItem];
-    [self scanActionCompleted];
+    [self scanActionCompleted:actionItem];
 }
 
 - (void)__scanMailAttachments:(QMActionItem *)actionItem{
@@ -29,14 +29,14 @@
     _cleanType = actionItem.cleanType;
     QMActionPathItem *pathItem = [actionItem.pathItemArray objectAtIndex:0];
     NSString *standardPath = [pathItem.value stringByStandardizingPath];
-    [QMMailUtil getMailAttachMentPathArray:standardPath withDelegate:self];
+    [QMMailUtil getMailAttachMentPathArray:standardPath actionItem:actionItem withDelegate:self];
 }
 
 
-- (void)mailScanProcess:(double)process path:(NSString *) path pathResult:(NSArray *)paths{
+- (void)mailScanProcess:(double)process path:(NSString *) path pathResult:(NSArray *)paths actionItem:(QMActionItem *)actionItem {
     if(self.delegate){
         if ((paths == nil) || ([paths count] == 0)) {
-            if ([self.delegate scanProgressInfo:process scanPath:path resultItem:nil]) {
+            if ([self.delegate scanProgressInfo:process scanPath:path resultItem:nil actionItem:actionItem]) {
                 return;
             }
         }else{
@@ -57,7 +57,7 @@
                 
                 // 添加结果
                 if (resultItem) [resultItem addResultWithPath:tempPath];
-                if([self.delegate scanProgressInfo:process scanPath:tempPath resultItem:resultItem]){
+                if([self.delegate scanProgressInfo:process scanPath:tempPath resultItem:resultItem actionItem:actionItem]){
                     return;
                 }
             }
