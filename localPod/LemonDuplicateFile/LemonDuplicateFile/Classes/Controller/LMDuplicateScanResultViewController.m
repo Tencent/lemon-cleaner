@@ -15,6 +15,7 @@
 #import "LMDuplicateCleanResultViewController.h"
 #import "LMDuplicateCleanViewController.h"
 #import "QMDuplicateItemManager.h"
+#import <QMUICommon/LMFilePreviewView.h>
 #import <Quartz/Quartz.h>
 #import <QMCoreFunction/NSImage+Extension.h>
 #import <QMCoreFunction/NSEvent+Extension.h>
@@ -37,7 +38,7 @@
 #define KEY_DUPLICATE_SMART_SCAN_ALERT_SHOWN_BOOL  @"duplicate_smart_scan_alert_show"
 
 
-@interface LMDuplicateScanResultViewController () <QLPreviewItem, NSTableViewDelegate, NSTableViewDataSource, NSOutlineViewDataSource, NSOutlineViewDelegate> {
+@interface LMDuplicateScanResultViewController () <NSTableViewDelegate, NSTableViewDataSource, NSOutlineViewDataSource, NSOutlineViewDelegate> {
     NSBundle *bundle;
     QMDuplicateFile *selectedDuplicateFile;
     QMDuplicateBatch *selectedDuplicateBatch;
@@ -64,7 +65,7 @@
 @property(nonatomic) NSTextField *descTextField;
 @property(nonatomic) NSView *bottomLineView;
 @property(nonatomic) NSButton *cleanBtn;
-@property(nonatomic) QLPreviewView *previewView;
+@property(nonatomic) LMFilePreviewView *previewView;
 @property(nonatomic) NSView *previewContainer;
 @property(nonatomic) NSView *outlineSplitLineView;
 @property(nonatomic) NSView *noDataAlertView;
@@ -432,7 +433,7 @@
 - (void)resetPreview {
     if (_previewView && _previewView.superview)
         [_previewView removeFromSuperview];
-    _previewView = [[QLPreviewView alloc] initWithFrame:NSZeroRect style:QLPreviewViewStyleCompact];
+    _previewView = [[LMFilePreviewView alloc] initWithFrame:NSZeroRect];
     [self->_previewContainer addSubview:_previewView];
     [_previewView mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.left.equalTo(self->_previewContainer);
@@ -441,10 +442,11 @@
     }];
 
     _previewView.autoresizingMask = NSViewHeightSizable | NSViewWidthSizable;
-    __weak LMDuplicateScanResultViewController *weakSelf = self;
-    [_previewView setPreviewItem:weakSelf];
-    [_previewView refreshPreviewItem];
-
+    
+    // 显示当前选中的文件
+    if (selectedDuplicateFile && selectedDuplicateFile.filePath) {
+        [_previewView showPreviewForFilePath:selectedDuplicateFile.filePath];
+    }
 }
 
 - (void)showDefaultPreview {
@@ -483,6 +485,9 @@
     } else {
         // 如果没有 outlineView  没有 data,则不显示 preview
         [self.previewContainer setHidden:YES];
+        if (_previewView) {
+            [_previewView clearPreview];
+        }
     }
 }
 
@@ -583,22 +588,7 @@
 
 }
 
-#pragma mark-
-#pragma mark preview delegate
 
-- (NSURL *)previewItemURL {
-    if (selectedDuplicateFile == nil || selectedDuplicateFile.filePath == nil) {
-        return nil;
-    }
-    return [NSURL fileURLWithPath:selectedDuplicateFile.filePath];
-}
-
-- (NSString *)previewItemTitle {
-    if (selectedDuplicateFile == nil || selectedDuplicateFile.filePath == nil) {
-        return nil;
-    }
-    return selectedDuplicateFile.filePath;
-}
 
 
 // MARK: outlineView -- start ---
@@ -806,7 +796,9 @@
 
     if (selectedDuplicateBatch.subItems && selectedDuplicateBatch.subItems.count > idx) {
         selectedDuplicateFile = selectedDuplicateBatch.subItems[uIdx];
-        [self resetPreview];
+        if (_previewView && selectedDuplicateFile.filePath) {
+            [_previewView showPreviewForFilePath:selectedDuplicateFile.filePath];
+        }
     }
 }
 
@@ -979,6 +971,9 @@
         }];
         [self privateReloadOutlineViewData];
         [self.previewContainer setHidden:YES];
+        if (_previewView) {
+            [_previewView clearPreview];
+        }
     }
 }
 

@@ -26,10 +26,11 @@
 #import "LMBigSpaceView.h"
 #import "LMSpaceModelManager.h"
 #import "LMSpaceButton.h"
+#import <QMUICommon/LMFilePreviewView.h>
 
 #define LMSpaceTableRowIdentifier @"LMSpaceTableRowIdentifier"
 
-@interface LMSpaceResultViewController ()<NSTableViewDelegate, NSTableViewDataSource,LMSpaceViewDelegate,QLPreviewItem>
+@interface LMSpaceResultViewController ()<NSTableViewDelegate, NSTableViewDataSource,LMSpaceViewDelegate>
 @property (weak) IBOutlet NSView *headerBigView;
 
 @property (weak) IBOutlet NSTextField *headerTitle;
@@ -82,8 +83,7 @@
 @property (nonatomic, assign) long tbTwoCurrentRow;
 @property (nonatomic, assign) long tbThreeCurrentRow;
 
-@property(nonatomic, strong) QLPreviewView *previewView;
-@property(nonatomic, strong) NSURL *showUrl;
+@property(nonatomic, strong) LMFilePreviewView *previewView;
 @property(nonatomic, assign) BOOL isVisualMode;
 
 @end
@@ -225,7 +225,7 @@
     //
     self.filePath.rightAlignment = NO;
     
-    self.previewView = [[QLPreviewView alloc] initWithFrame:CGRectMake(0, 0, 0, 0) style:QLPreviewViewStyleCompact];
+    self.previewView = [[LMFilePreviewView alloc] initWithFrame:CGRectMake(0, 0, 0, 0)];
 
     [self.fileBigView addSubview:self.previewView];
     [self.previewView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -370,10 +370,7 @@
             self.fileName.stringValue = grandsonItem.fileName;
             self.filePath.path = grandsonItem.fullPath;
             self.fileSize.stringValue = [self changeSizeStr:grandsonItem.sizeInBytes];
-            self.showUrl = [NSURL fileURLWithPath:grandsonItem.fullPath];
-            __weak typeof(self) weakSelf = self;
-            [self.previewView setPreviewItem:weakSelf];
-            [self.previewView refreshPreviewItem];
+            [self.previewView showPreviewForFilePath:grandsonItem.fullPath];
         }
     }else{
         if (tableView == self.tableViewOne) {
@@ -664,11 +661,7 @@
     return YES;
 }
 
-#pragma mark - QLPreviewItem
 
-- (NSURL *)previewItemURL {
-    return  self.showUrl;
-}
 
 #pragma mark - 私有
 
@@ -796,10 +789,7 @@
             self.fileName.stringValue = grandsonItem.fileName;
             self.filePath.path = grandsonItem.fullPath;
             self.fileSize.stringValue = [self changeSizeStr:grandsonItem.sizeInBytes];
-            self.showUrl = [NSURL fileURLWithPath:grandsonItem.fullPath];
-            __weak typeof(self) weakSelf = self;
-            [self.previewView setPreviewItem:weakSelf];
-            [self.previewView refreshPreviewItem];
+            [self.previewView showPreviewForFilePath:grandsonItem.fullPath];
         }
     }
     [self.tableView reloadData];

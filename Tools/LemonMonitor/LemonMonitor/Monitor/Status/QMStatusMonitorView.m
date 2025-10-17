@@ -24,6 +24,9 @@
     NSMutableArray* mArrayForDarkModeAdaptiveViews;
 
 }
+// [NSColor controlTextColor] 的缓存，在必要的时候主动更新
+@property (nonatomic, copy) NSColor *textColor;
+
 @end
 
 
@@ -281,7 +284,7 @@
     downLoadSpeedText.textColor = [self getTextColor];
     
     (*size).height = 22;
-    (*size).width = 33;
+    (*size).width = 40;
     mDownSpeedField = downLoadSpeedText;
     mUpSpeedField = upLoadSpeedText;
 //    mUpLoadSpeedMeasurement = upLoadSpeedMeasurement;
@@ -349,7 +352,37 @@
 }
 
 - (NSColor *)getTextColor {
-    return [NSColor controlTextColor];
+    if (!_textColor) {
+        [self updateTextColor];
+    }
+    return _textColor;
+}
+
+- (void)updateTextColor {
+    self.textColor = [NSColor controlTextColor];
+}
+
+- (void)updateAllTextColors {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self updateTextColor];
+        NSColor *currentTextColor = [self getTextColor];
+        for (NSTextField *textField in self->mArrayForDarkModeAdaptiveViews) {
+            textField.textColor = currentTextColor;
+            [textField setNeedsDisplay:YES];
+        }
+    });
+}
+
+- (void)viewDidMoveToWindow {
+    [super viewDidMoveToWindow];
+    if (self.window) {
+        [self updateAllTextColors];
+    }
+}
+
+- (void)viewDidChangeEffectiveAppearance {
+    [super viewDidChangeEffectiveAppearance];
+    [self updateAllTextColors];
 }
 
 - (void)updateTrackingAreas
@@ -604,7 +637,7 @@
                 make.left.equalTo(dividerIcon.mas_right).offset(3);
                 make.right.equalTo(self.mas_right);
                 make.height.equalTo(height);
-                make.width.mas_equalTo(width.intValue + 10);
+                make.width.mas_equalTo(width.intValue + 2);
             }];
         }
         else
@@ -649,13 +682,9 @@
     mDarkModeOn = ( style && [style isKindOfClass:[NSString class]] && NSOrderedSame == [style caseInsensitiveCompare:@"dark"] );
     
     NSLog(@"%s,mDarkModeOn=%d", __PRETTY_FUNCTION__, mDarkModeOn);
-
-    for (NSTextField* textField in mArrayForDarkModeAdaptiveViews)
-    {
-//        NSInteger textColor = mDarkModeOn ? 0xFFFFFF : 0x333333;
-//        textField.textColor = [NSColor colorWithHex:textColor alpha:1.0];
-        textField.textColor = [NSColor controlTextColor];
-    }
+    
+    // 使用统一的颜色更新方法
+    [self updateAllTextColors];
 }
 
 @end

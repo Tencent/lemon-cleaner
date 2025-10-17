@@ -404,6 +404,13 @@ NSString* getProcessName(NSString* path)
 // parse it back up to find app's bundle
 NSBundle* findAppBundle(NSString* binaryPath)
 {
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    // 检查路径是否存在
+    BOOL exists = [fileManager fileExistsAtPath:binaryPath];
+    if (!exists) {
+        return nil;
+    }
+    
     //app's bundle
     NSBundle* appBundle = nil;
     
@@ -432,9 +439,19 @@ NSBundle* findAppBundle(NSString* binaryPath)
         // ->and at this point, its not a match
         appBundle = nil;
         
-        //remove last part
-        // ->will try this next
-        appPath = [appPath stringByDeletingLastPathComponent];
+        BOOL exitLoop = NO;
+        do {
+            // remove last part
+            // ->will try this next
+            appPath = [appPath stringByDeletingLastPathComponent];
+            if (appPath == nil
+                || [appPath isEqualToString:@"/"]
+                || [appPath isEqualToString:@""]) {
+                break;
+            }
+            // 检查读取权限
+            exitLoop = [fileManager isReadableFileAtPath:appPath];
+        } while (!exitLoop);
         
     //scan until we get to root
     // ->of course, loop will exit if app info dictionary is found/loaded

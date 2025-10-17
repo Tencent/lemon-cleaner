@@ -40,6 +40,8 @@
         pathArray = @[[originPath stringByAppendingPathComponent:@"Files"]];
     } else if (type == LMFileMoveScanType_Video) {
         pathArray = @[[originPath stringByAppendingPathComponent:@"Videos"]];
+    } else {
+        return;
     }
     
     //过滤90天/90天后
@@ -59,7 +61,7 @@
     __weak typeof(self) weakSelf = self;
     [self callbackResultArray:resultArr.copy appType:LMAppCategoryItemType_QQ type:type before:before completion:^(LMResultItem *resultItem) {
         __strong typeof(weakSelf) strongSelf = weakSelf;
-        if ([strongSelf.delegate respondsToSelector:@selector(QQScanWithType:resultItem:)] && !self.cancel) {
+        if ([strongSelf.delegate respondsToSelector:@selector(QQScanWithType:resultItem:)] && !strongSelf.cancel) {
             [strongSelf.delegate QQScanWithType:type resultItem:resultItem];
         }
     }];
@@ -97,7 +99,7 @@
     __weak typeof(self) weakSelf = self;
     [self callbackResultArray:resultArr appType:LMAppCategoryItemType_QQ type:type before:before completion:^(LMResultItem *resultItem) {
         __strong typeof(weakSelf) strongSelf = weakSelf;
-        if ([strongSelf.delegate respondsToSelector:@selector(QQScanWithType:resultItem:)] && !self.cancel) {
+        if ([strongSelf.delegate respondsToSelector:@selector(QQScanWithType:resultItem:)] && !strongSelf.cancel) {
             [strongSelf.delegate QQScanWithType:type resultItem:resultItem];
         }
     }];

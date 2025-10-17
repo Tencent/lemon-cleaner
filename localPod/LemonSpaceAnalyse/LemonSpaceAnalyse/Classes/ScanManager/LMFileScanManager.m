@@ -71,8 +71,17 @@
     if (self.usedDiskSize <= self.hadScanDiskSize) {
         self.usedDiskSize = self.hadScanDiskSize;
     }
-    if ([self.delegate respondsToSelector:@selector(progressRate:progressStr:)]) {
-        [self.delegate progressRate:self.hadScanDiskSize/(self.usedDiskSize*1.0) progressStr:self.searchPath];
+    
+    // 获取delegate的强引用，防止在方法调用过程中被释放。MacOS 26特有，可能修改了weak释放时机
+    id<LMFileScanManagerDelegate> strongDelegate = self.delegate;
+    if ([strongDelegate respondsToSelector:@selector(progressRate:progressStr:)]) {
+        // 配合delegate强引用做的保护
+        NSString *searchPath = self.searchPath ?: @"";
+        CGFloat rate = 0.0;
+        if (self.usedDiskSize != 0) {
+            rate = self.hadScanDiskSize/(self.usedDiskSize*1.0);
+        }
+        [strongDelegate progressRate:rate progressStr:searchPath];
     }
 }
 -(long long)getAllUsableBytes {

@@ -30,8 +30,7 @@
 - (NSRect)titleRectForBounds:(NSRect)theRect {
     NSRect titleFrame = [super titleRectForBounds:theRect];
     NSSize titleSize = [[self attributedStringValue] size];
-    // macos 26 的内部版本号 16
-    if (@available(macOS 16.0, *)) {
+    if (@available(macOS 26.0, *)) {
         // 0.18 为手工测量
         titleFrame.origin.y = (theRect.size.height-titleSize.height)*0.18;
     } else {

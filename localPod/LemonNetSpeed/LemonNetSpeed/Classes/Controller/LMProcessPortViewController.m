@@ -334,115 +334,227 @@ typedef NSInteger LMPortSortType;
     return _icon;
 }
 - (void)statProcessPort{
+    // 创建串行队列用于数据处理，确保数据处理的顺序性
+    static dispatch_queue_t dataProcessQueue;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        dataProcessQueue = dispatch_queue_create("com.lemon.processport.data", DISPATCH_QUEUE_SERIAL);
+    });
+    
+    __weak typeof(self) weakSelf = self;
+    dispatch_async(dataProcessQueue, ^{
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        if (!strongSelf) return;
+        
+        [strongSelf processPortDataInBackground];
+    });
+}
+
+/**
+ * 后台数据处理方法
+ */
+- (void)processPortDataInBackground {
     int processTotal = 0, tcpLocal = 0, tcpRemote = 0;
+    
     @autoreleasepool{
-        NSArray *processInfo = [[McStatMonitor shareMonitor] fetchCacheProcessInfo];
-//        if (processInfo.count == 0) {
-//            return;
-//        }
-        NSString *outputStr = [QMShellExcuteHelper excuteCmd:@"netstat -vatn |grep -E 'tcp4|tcp6|tcp46|udp4|udp6|udp46'"];
+        // 获取进程信息
+        NSArray *processInfo = [self fetchProcessInfo];
+        
+        // 获取网络端口数据
+        NSString *outputStr = [self fetchNetworkPortData];
+        
+        // 清空现有数据
         [self.portModelArray removeAllObjects];
+        
+        // 解析端口数据
         NSArray *portArr = [outputStr componentsSeparatedByString:@"\n"];
         for (NSString *portItem in portArr) {
-            //if ([portItem containsString:@"*.*                    *.*"]) {
-            //    continue;
-            //}
-            //NSLog(@"portItem: %@", portItem);
-            
-            NSError* error;
-            NSRegularExpression* regex = [NSRegularExpression regularExpressionWithPattern:@"[^ ]+" options:0 error:&error];
-            NSArray *tempArr = [regex matchesInString:portItem options:0 range:NSMakeRange(0, [portItem length])];
-            NSMutableArray *reArr = [NSMutableArray arrayWithArray:tempArr];
-            //netstat -f inet -n
-            //tcp4       0      0  192.168.141.1.59960    192.168.141.128.445    ESTABLISHED
-            //netstat -vatn |grep -E 'tcp4|tcp6|tcp46|udp4|udp6|udp46'
-            //tcp4       0      0  10.68.56.61.53315      10.14.36.100.8080      ESTABLISHED 131072 131376  32971      0
-            NSMutableArray *pis = [NSMutableArray array];
-            for (NSTextCheckingResult *res in reArr) {
-                [pis addObject:[portItem substringWithRange:res.range]];
+            LMProcessPortModel *model = [self parsePortItem:portItem 
+                                                processInfo:processInfo 
+                                               processTotal:&processTotal 
+                                                   tcpLocal:&tcpLocal 
+                                                  tcpRemote:&tcpRemote];
+            if (model) {
+                [self.portModelArray addObject:model];
             }
-            NSInteger minLength = 9;
-            if (@available(macOS 16.0, *)) {
-                minLength = 12;
-            }
-            else if (@available(macOS 15.0, *)) {
-                minLength = 11;
-            }
-            if (pis.count < minLength) {
-                continue;
-            }
-            if ([[pis objectAtIndex:3] isEqualToString:@"*.*"] &&
-                [[pis objectAtIndex:4] isEqualToString:@"*.*"]) {
-                //continue;
-            }
-//            if ([[pis objectAtIndex:5] isEqualToString:@"CLOSE_WAIT"] ||
-//                [[pis objectAtIndex:5] isEqualToString:@"FIN_WAIT_2"] ||
-//                [[pis objectAtIndex:5] isEqualToString:@"FIN_WAIT"]) {
-//                continue;
-//            }
-            BOOL isTcp = NO;
-            if ([[pis objectAtIndex:0] hasPrefix:@"tcp"]) {
-                isTcp = YES;
-            }
-            LMProcessPortModel *model = [[LMProcessPortModel alloc] init];
-            McProcessInfoData* findInfo = NULL;
-            for (McProcessInfoData* info in processInfo) {
-                pid_t pid = info.pid;
-                BOOL (^samePid)(NSInteger index) = ^BOOL (NSInteger index){
-                    if (!(pis.count > index)) return NO;
-                    NSString *value = [pis objectAtIndex:index];
-                    pid_t __pid = 0;
-                    if (@available(macOS 16.0, *)) {
-                        NSArray *appInfos = [value componentsSeparatedByString:@":"];
-                        __pid = [appInfos.lastObject intValue];
-                    } else {
-                        __pid = [value intValue];
-                    }
-                    return (pid == __pid);
-                };
-                if (isTcp) {
-                    if (samePid(minLength - 1)) {
-                        findInfo = info;
-                        break;
-                    }
-                } else {
-                    if (samePid(minLength - 2)) {
-                        findInfo = info;
-                        break;
-                    }
-                }
-            }
-            if (!findInfo) {
-                continue;
-            }
-            model.pid = findInfo.pid;
-            model.appName = findInfo.pName;
-            NSImage *cacheIcon = [self.iconArray objectForKey:model.appName];
-            if (cacheIcon) {
-                model.appIcon = cacheIcon;
+        }
+    }
+    
+    // 回到主队列更新UI
+    __weak typeof(self) weakSelf = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        if (!strongSelf) return;
+        
+        [strongSelf updateUIWithProcessTotal:processTotal tcpLocal:tcpLocal tcpRemote:tcpRemote];
+    });
+}
+
+/**
+ * 获取进程信息
+ */
+- (NSArray *)fetchProcessInfo {
+    NSArray *processInfo = [[McStatMonitor shareMonitor] fetchCacheProcessInfo];
+    return processInfo;
+}
+
+/**
+ * 获取网络端口数据
+ */
+- (NSString *)fetchNetworkPortData {
+    return [QMShellExcuteHelper excuteCmd:@"netstat -vatn |grep -E 'tcp4|tcp6|tcp46|udp4|udp6|udp46'"];
+}
+
+/**
+ * 解析单个端口条目
+ */
+- (LMProcessPortModel *)parsePortItem:(NSString *)portItem 
+                          processInfo:(NSArray *)processInfo 
+                         processTotal:(int *)processTotal 
+                             tcpLocal:(int *)tcpLocal 
+                            tcpRemote:(int *)tcpRemote {
+    NSError* error;
+    NSRegularExpression* regex = [NSRegularExpression regularExpressionWithPattern:@"[^ ]+" options:0 error:&error];
+    NSArray *tempArr = [regex matchesInString:portItem options:0 range:NSMakeRange(0, [portItem length])];
+    NSMutableArray *reArr = [NSMutableArray arrayWithArray:tempArr];
+    //netstat -f inet -n
+    //tcp4       0      0  192.168.141.1.59960    192.168.141.128.445    ESTABLISHED
+    //netstat -vatn |grep -E 'tcp4|tcp6|tcp46|udp4|udp6|udp46'
+    //tcp4       0      0  10.68.56.61.53315      10.14.36.100.8080      ESTABLISHED 131072 131376  32971      0
+    
+    /** macos 26
+     tcp4       0      0  10.91.81.62.62057      10.88.202.158.443      ESTABLISHED        14998         6109  131072  131228         SmartVPN:1764   00182 00000008 000000000029be8b 00000000 04000800      2      0 000000
+     tcp4       0      0  192.168.255.10.62056   10.88.202.158.443      ESTABLISHED        14998         6109  401024  146988           iOABiz:1673   00102 00020000 000000000029be8a 00180001 04080800      2      0 000000
+     */
+    NSMutableArray *pis = [NSMutableArray array];
+    for (NSTextCheckingResult *res in reArr) {
+        [pis addObject:[portItem substringWithRange:res.range]];
+    }
+    NSInteger minLength = 9;
+    if (@available(macOS 15.0, *)) {
+        minLength = 11;
+    }
+    if (pis.count < minLength) {
+        return nil;
+    }
+
+    BOOL isTcp = NO;
+    if ([[pis objectAtIndex:0] hasPrefix:@"tcp"]) {
+        isTcp = YES;
+    }
+    
+    // 查找对应的进程信息
+    McProcessInfoData* findInfo = [self findProcessInfoByPID:pis 
+                                                 processInfo:processInfo 
+                                                       isTcp:isTcp 
+                                                   minLength:minLength];
+    if (!findInfo) {
+        return nil;
+    }
+    
+    // 创建并配置模型
+    LMProcessPortModel *model = [[LMProcessPortModel alloc] init];
+    model.pid = findInfo.pid;
+    model.appName = findInfo.pName;
+    
+    // 设置图标
+    [self setIconForModel:model processInfo:findInfo];
+    
+    // 配置协议相关信息
+    [self configureProtocolForModel:model 
+                         portFields:pis 
+                              isTcp:isTcp 
+                           tcpLocal:tcpLocal 
+                          tcpRemote:tcpRemote];
+    
+    model.srcIpPort = [pis objectAtIndex:3];
+    model.destIpPort = [pis objectAtIndex:4];
+    
+    (*processTotal)++;
+    return model;
+}
+
+/**
+ * 根据PID查找进程信息
+ */
+- (McProcessInfoData *)findProcessInfoByPID:(NSArray *)portFields 
+                                processInfo:(NSArray *)processInfo 
+                                      isTcp:(BOOL)isTcp 
+                                  minLength:(NSInteger)minLength {
+    
+    McProcessInfoData* findInfo = NULL;
+    for (McProcessInfoData* info in processInfo) {
+        pid_t pid = info.pid;
+        BOOL (^samePid)(NSInteger index) = ^BOOL (NSInteger index){
+            if (!(portFields.count > index)) return NO;
+            NSString *value = [portFields objectAtIndex:index];
+            pid_t __pid = 0;
+            if (@available(macOS 26.0, *)) {
+                NSArray *appInfos = [value componentsSeparatedByString:@":"];
+                __pid = [appInfos.lastObject intValue];
             } else {
-                NSString *bundlePath = [[[findInfo.pExecutePath stringByDeletingLastPathComponent] stringByDeletingLastPathComponent ]stringByDeletingLastPathComponent];
-                NSImage *icon = nil;
-                if ([[bundlePath pathExtension] isEqualToString:@"app"]) {
-                    icon = [self icon:bundlePath];
-                } else {
-                    icon = [self icon:nil];
-                }
-                if (icon) {
-                    model.appIcon = icon;
-                    [self.iconArray setObject:model.appIcon forKey:model.appName];
-                }
+                __pid = [value intValue];
             }
-            if (isTcp) {
-                model.protocol = @"TCP";
-                model.connectState = @"--";
-                if ([[pis objectAtIndex:5] hasSuffix:@"ESTABLISHED"]) {
-                    model.connectState = NSLocalizedStringFromTableInBundle(@"LMProcessPortViewController_statProcessPort_1558009676_1", nil, [NSBundle bundleForClass:[self class]], @"");
-                } else if ([[pis objectAtIndex:5] hasSuffix:@"LISTEN"]) {
-                    model.connectState = NSLocalizedStringFromTableInBundle(@"LMProcessPortViewController_statProcessPort_1558009676_2", nil, [NSBundle bundleForClass:[self class]], @"");
-                } else {
-                    model.connectState = @"--";
-                }
+            return (pid == __pid);
+        };
+        if (isTcp) {
+            if (samePid(minLength - 1)) {
+                findInfo = info;
+                break;
+            }
+        } else {
+            if (samePid(minLength - 2)) {
+                findInfo = info;
+                break;
+            }
+        }
+    }
+    return findInfo;
+}
+
+/**
+ * 为进程模型设置图标
+ */
+- (void)setIconForModel:(LMProcessPortModel *)model 
+            processInfo:(McProcessInfoData *)processInfo {
+    
+    NSImage *cacheIcon = [self.iconArray objectForKey:model.appName];
+    if (cacheIcon) {
+        model.appIcon = cacheIcon;
+    } else {
+        NSString *bundlePath = [[[processInfo.pExecutePath stringByDeletingLastPathComponent] stringByDeletingLastPathComponent ]stringByDeletingLastPathComponent];
+        NSImage *icon = nil;
+        if ([[bundlePath pathExtension] isEqualToString:@"app"]) {
+            icon = [self icon:bundlePath];
+        } else {
+            icon = [self icon:nil];
+        }
+        if (icon) {
+            model.appIcon = icon;
+            [self.iconArray setObject:model.appIcon forKey:model.appName];
+        }
+    }
+}
+
+/**
+ * 配置协议相关信息
+ */
+- (void)configureProtocolForModel:(LMProcessPortModel *)model 
+                       portFields:(NSArray *)portFields 
+                            isTcp:(BOOL)isTcp 
+                         tcpLocal:(int *)tcpLocal 
+                        tcpRemote:(int *)tcpRemote {
+    
+    if (isTcp) {
+        model.protocol = @"TCP";
+        model.connectState = @"--";
+        if ([[portFields objectAtIndex:5] hasSuffix:@"ESTABLISHED"]) {
+            model.connectState = NSLocalizedStringFromTableInBundle(@"LMProcessPortViewController_statProcessPort_1558009676_1", nil, [NSBundle bundleForClass:[self class]], @"");
+        } else if ([[portFields objectAtIndex:5] hasSuffix:@"LISTEN"]) {
+            model.connectState = NSLocalizedStringFromTableInBundle(@"LMProcessPortViewController_statProcessPort_1558009676_2", nil, [NSBundle bundleForClass:[self class]], @"");
+        } else {
+            model.connectState = @"--";
+        }
 //            if ([[pis objectAtIndex:5] isEqualToString:@"CLOSE_WAIT"] ||
 //                [[pis objectAtIndex:5] isEqualToString:@"FIN_WAIT_2"] ||
 //                [[pis objectAtIndex:5] isEqualToString:@"FIN_WAIT"]) {
@@ -451,27 +563,28 @@ typedef NSInteger LMPortSortType;
 //                if ([[pis objectAtIndex:5] length] > 0) {
 //                    model.connectState = [pis objectAtIndex:5];
 //                }
-                if ([[pis objectAtIndex:4] hasPrefix:@"127.0.0.1"] ||
-                    [[pis objectAtIndex:4] isEqualToString:@"*.*"]) {
-                    model.socketType = NSLocalizedStringFromTableInBundle(@"LMProcessPortViewController_statProcessPort_1558009676_3", nil, [NSBundle bundleForClass:[self class]], @"");
-                    tcpLocal++;
-                } else {
-                    model.socketType = NSLocalizedStringFromTableInBundle(@"LMProcessPortViewController_statProcessPort_1558009676_4", nil, [NSBundle bundleForClass:[self class]], @"");
-                    tcpRemote++;
-                }
-            } else {
-                model.protocol = @"UDP";
-                model.connectState = @"--";
-                model.socketType = @"--";
-            }
-            model.srcIpPort = [pis objectAtIndex:3];
-            model.destIpPort = [pis objectAtIndex:4];
-            [self.portModelArray addObject:model];
-            processTotal++;
+        if ([[portFields objectAtIndex:4] hasPrefix:@"127.0.0.1"] ||
+            [[portFields objectAtIndex:4] isEqualToString:@"*.*"]) {
+            model.socketType = NSLocalizedStringFromTableInBundle(@"LMProcessPortViewController_statProcessPort_1558009676_3", nil, [NSBundle bundleForClass:[self class]], @"");
+            (*tcpLocal)++;
+        } else {
+            model.socketType = NSLocalizedStringFromTableInBundle(@"LMProcessPortViewController_statProcessPort_1558009676_4", nil, [NSBundle bundleForClass:[self class]], @"");
+            (*tcpRemote)++;
         }
-        
-        //NSLog(@"%lu", (unsigned long)self.portModelArray.count);
+    } else {
+        model.protocol = @"UDP";
+        model.connectState = @"--";
+        model.socketType = @"--";
     }
+}
+
+/**
+ * 更新UI
+ */
+- (void)updateUIWithProcessTotal:(int)processTotal 
+                        tcpLocal:(int)tcpLocal 
+                       tcpRemote:(int)tcpRemote {
+    
     if (self.portModelArray.count > 0) {
         [self.tfPortInfo setHidden:NO];
         [self.headView setHidden:NO];
@@ -481,6 +594,20 @@ typedef NSInteger LMPortSortType;
         [self.indicator setHidden:YES];
     }
     [self refreshUI];
+    
+    // 创建端口信息富文本
+    NSAttributedString *portInfoAttrStr = [self createPortInfoAttributedString:processTotal 
+                                                                      tcpLocal:tcpLocal 
+                                                                     tcpRemote:tcpRemote];
+    self.tfPortInfo.attributedStringValue = portInfoAttrStr;
+}
+
+/**
+ * 创建端口信息富文本
+ */
+- (NSAttributedString *)createPortInfoAttributedString:(int)processTotal 
+                                              tcpLocal:(int)tcpLocal 
+                                             tcpRemote:(int)tcpRemote {
     
     //processTotal = tcpLocal + tcpRemote;
     NSString *strPort = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"LMProcessPortViewController_statProcessPort_NSString_5", nil, [NSBundle bundleForClass:[self class]], @""), processTotal, tcpLocal, tcpRemote];
@@ -521,7 +648,7 @@ typedef NSInteger LMPortSortType;
                                  NSForegroundColorAttributeName: [NSColor colorWithHex:0x04D999]}
                          range:range3];
     }
-    self.tfPortInfo.attributedStringValue = attrStr;
+    return attrStr;
 }
 
 

@@ -189,8 +189,10 @@
             m_curScanSubCategoryItem = subItem;
             m_curFinishedScanActionItemCount = 0;
             
-            // 开始扫描
-            if (delegate)   [delegate startScanCategory:subItem.subCategoryID];
+            dispatch_async(self.actionDelegateOperationQueue, ^{
+                // 开始扫描
+                if (self->delegate)   [self->delegate startScanCategory:subItem.subCategoryID];
+            });
             if([subItem.title isEqualToString:@"IntelliJIdea"]){
                 NSLog(@"");
             }
@@ -215,8 +217,11 @@
             [self.mainScanActionQueue addOperations:operations waitUntilFinished:YES];
             
             m_curScanSubCategoryItem.progressValue = 1;
-            // 扫描结束
-            if (delegate)   [delegate scanCategoryDidEnd:subItem.subCategoryID];
+            
+            dispatch_async(self.actionDelegateOperationQueue, ^{
+                // 扫描结束
+                if (self->delegate)   [self->delegate scanCategoryDidEnd:subItem.subCategoryID];
+            });
         }
     }
     categoryItem.progressValue = 1;
@@ -236,8 +241,10 @@
     int i = 0;
     for (QMCategoryItem * item in itemArray)
     {
-        // 开始扫描
-        if (self->delegate)   [self->delegate startScanCategory:item.categoryID];
+        dispatch_async(self.actionDelegateOperationQueue, ^{
+            // 开始扫描
+            if (self->delegate)   [self->delegate startScanCategory:item.categoryID];
+        });
         
         if ([item.categoryID isEqualToString:@"2"]) {
             QMCacheEnumerator *cacheEnumerator = [QMCacheEnumerator shareInstance];
@@ -246,8 +253,10 @@
         // 扫描item
         [self scanCategoryWithItem:item];
 
-        // 扫描结束
-        if (self->delegate)   [self->delegate scanCategoryDidEnd:item.categoryID];
+        dispatch_async(self.actionDelegateOperationQueue, ^{
+            // 扫描结束
+            if (self->delegate)   [self->delegate scanCategoryDidEnd:item.categoryID];
+        });
         if (self.isStopScan) break;
         i++;
     }
@@ -295,10 +304,9 @@
             
             m_curScanSubCategoryItem = subItem;
             m_curFinishedScanActionItemCount = 0;
-            
             // 开始扫描
-            if (delegate)   [delegate startScanCategory:subItem.subCategoryID];
-            
+            if (self->delegate)   [self->delegate startScanCategory:subItem.subCategoryID];
+
             NSUInteger subCount = [subItem.m_actionItemArray count];
             
             NSMutableArray *operations = [NSMutableArray array];
@@ -322,7 +330,7 @@
             
             m_curScanSubCategoryItem.progressValue = 1;
             // 扫描结束
-            if (delegate)   [delegate scanCategoryDidEnd:subItem.subCategoryID];
+            if (self->delegate)   [self->delegate scanCategoryDidEnd:subItem.subCategoryID];
         }
     }
     categoryItem.progressValue = 1;
@@ -354,12 +362,12 @@
     for (QMCategoryItem * item in scanCategoryArray)
     {
         // 开始扫描
-        if (delegate)   [delegate startScanCategory:item.categoryID];
+        if (self->delegate)   [self->delegate startScanCategory:item.categoryID];
         // 扫描item
         if (item.state != NSOffState)
             [self scanQuickCategoryWithItem:item];
         // 扫描结束
-        if (delegate)   [delegate scanCategoryDidEnd:item.categoryID];
+        if (self->delegate)   [self->delegate scanCategoryDidEnd:item.categoryID];
         if (self.isStopScan) break;
     }
 }
@@ -383,7 +391,11 @@
         NSLog(@"error: action item nil");
         return self.isStopScan;
     }
+    
+    @weakify(self);
     dispatch_async(self.actionDelegateOperationQueue, ^{
+        @strongify(self);
+        if (!self) return;
         float progressValue = (value + self->m_scanCount) * self->m_scanFlags;
         if (item) {
             item.cautionID = actionItem.cautionID;
@@ -407,8 +419,13 @@
         actionItem.progressValue = value;
         self->m_curScanSubCategoryItem.progressValue = (self->m_curFinishedScanActionItemCount + value) / [[self->m_curScanSubCategoryItem m_actionItemArray] count];
         self->m_curScanCategoryItem.progressValue = progressValue;
-        if (self->delegate)
-            [self->delegate scanProgressInfo:progressValue scanPath:path resultItem:item actionItem:actionItem];
+        
+        // MacOS 26 偶现crash修复
+        id<QMScanCategoryDelegate> strongDelegate = self->delegate;
+        if (strongDelegate) {
+            QMActionItem *strongActionItem = actionItem;
+            [strongDelegate scanProgressInfo:progressValue scanPath:path resultItem:item actionItem:strongActionItem];
+        }
     });
 
     return self.isStopScan;

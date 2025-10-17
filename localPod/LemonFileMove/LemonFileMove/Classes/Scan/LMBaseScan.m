@@ -151,4 +151,63 @@
     return subdirectories.copy;
 }
 
+// 带过滤条件的版本
+- (NSArray *)findSubdirectoriesFromPaths:(NSArray *)pathArray
+                                maxDepth:(NSInteger)maxDepth
+                           filterBlock:(BOOL(^)(NSString *path, NSInteger depth))filterBlock {
+    NSMutableArray *subdirectories = [NSMutableArray array];
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    
+    for (NSString *path in pathArray) {
+        @autoreleasepool {
+            if (self.cancel) {
+                break;
+            }
+            
+            NSString *expandedPath = [path stringByExpandingTildeInPath];
+            
+            NSDirectoryEnumerator *enumerator = [fileManager enumeratorAtPath:expandedPath];
+            
+            NSString *subPath;
+            while ((subPath = [enumerator nextObject])) {
+                if (self.cancel) {
+                    break;
+                }
+
+                NSInteger currentDepth = enumerator.level;
+                // 如果超过最大深度，跳过
+                if (currentDepth > maxDepth) {
+                    [enumerator skipDescendants];
+                    continue;
+                }
+                
+                NSString *fullPath = [expandedPath stringByAppendingPathComponent:subPath];
+                
+                BOOL isDirectory;
+                if ([fileManager fileExistsAtPath:fullPath isDirectory:&isDirectory] && isDirectory) {
+                    // 过滤隐藏文件夹
+                    if (![[subPath lastPathComponent] hasPrefix:@"."]) {
+                        // 应用自定义过滤条件
+                        if (!filterBlock || filterBlock(fullPath, currentDepth)) {
+                            [subdirectories addObject:fullPath];
+                        }
+                    } else {
+                        // 隐藏文件夹跳过子目录
+                        [enumerator skipDescendants];
+                        continue;
+                    }
+                    
+                    // 如果已经达到最大深度，跳过子目录
+                    if (currentDepth == maxDepth) {
+                        [enumerator skipDescendants];
+                        continue;
+                    }
+                }
+            }
+        }
+    }
+    
+    return [subdirectories copy];
+}
+
 @end

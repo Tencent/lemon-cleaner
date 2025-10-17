@@ -13,6 +13,8 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+extern NSNotificationName LMCleanViewWillDisappearNotificaiton;
+
 @interface LMMemoryItem : NSObject
 @property (nonatomic, strong) NSImage *icon;
 @property (nonatomic, strong) NSString *name;

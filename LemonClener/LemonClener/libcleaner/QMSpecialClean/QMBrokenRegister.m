@@ -85,6 +85,20 @@
         return YES;
     }
     
+    // 处理相对路径
+    if ([executablePath hasPrefix:@"./"]) {
+        NSString *workingDirectory = dict[@"WorkingDirectory"];
+        if (![workingDirectory isKindOfClass:NSString.class]) {
+            // 没有配置工作路径
+            return YES;
+        }
+        if (![workingDirectory isAbsolutePath]) {
+            // 非绝对路径
+            return YES;
+        }
+        executablePath = [workingDirectory stringByAppendingPathComponent:[executablePath substringFromIndex:2]];
+    }
+    
     // 4. 处理路径中的 ~ 符号
     executablePath = [executablePath stringByExpandingTildeInPath];
     
