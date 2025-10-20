@@ -34,6 +34,8 @@
     } else if (type == LMFileMoveScanType_Video) {
         keyWord = @"Video";
         shellString = @"mdfind -onlyin \"%@\" 'kMDItemContentType == \"public.folder\" && kMDItemDisplayName=\"Videos\"'";
+    } else {
+        return;
     }
 
     NSArray *pathArray = [self getPath:WorkWeChatScanPath shellString:shellString keyword:keyWord];
@@ -57,7 +59,7 @@
     __weak typeof(self) weakSelf = self;
     [self callbackResultArray:resultArr.copy appType:LMAppCategoryItemType_WeCom type:type before:before completion:^(LMResultItem *resultItem) {
         __strong typeof(weakSelf) strongSelf = weakSelf;
-        if ([strongSelf.delegate respondsToSelector:@selector(workWeChatScanWithType:resultItem:)] && !self.cancel) {
+        if ([strongSelf.delegate respondsToSelector:@selector(workWeChatScanWithType:resultItem:)] && !strongSelf.cancel) {
             [strongSelf.delegate workWeChatScanWithType:type resultItem:resultItem];
         }
     }];

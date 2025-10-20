@@ -50,6 +50,7 @@ NSNotificationName kCloseInfoBubbleDidShowNotificaiton = @"kCloseInfoBubbleDidSh
     
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(onKillProcess:) name:KILL_PROCESS_AT_MONITOR object:nil];
     [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(closeInfoBubbleDidShowNotificaiton:) name:kCloseInfoBubbleDidShowNotificaiton object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(cleanViewWillDisappearNotificaiton:) name:LMCleanViewWillDisappearNotificaiton object:nil];
     
     return self;
 }
@@ -204,6 +205,14 @@ NSNotificationName kCloseInfoBubbleDidShowNotificaiton = @"kCloseInfoBubbleDidSh
 //    NSLog(@"mouseMoved ....event:%@", event);
 }
 
+- (void)viewWillMoveToWindow:(NSWindow *)newWindow {
+    [super viewWillMoveToWindow:newWindow];
+    if (!newWindow) {
+        // 包含隐藏、从window中移除，从而达到释放
+        [self showCloseInfo:NO event:nil];
+    }
+}
+
 - (void)showCloseInfo:(BOOL)show event:(NSEvent *)event{
 
     if(show && event){
@@ -289,6 +298,11 @@ NSNotificationName kCloseInfoBubbleDidShowNotificaiton = @"kCloseInfoBubbleDidSh
     if (notify.object == self) {
         return;
     }
+    [self showCloseInfo:NO event:nil];
+}
+
+- (void)cleanViewWillDisappearNotificaiton:(NSNotification *)notify {
+    // 兜底：界面退出时隐藏释放bubble
     [self showCloseInfo:NO event:nil];
 }
 

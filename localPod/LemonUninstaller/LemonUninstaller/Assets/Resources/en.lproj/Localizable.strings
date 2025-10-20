@@ -49,9 +49,13 @@
 
 "LMFileItem_getLMFileTypeName_1553153166_99" = "Other files(files in this directory will be moved to your trash)";
 
-
-
 "McTableCellView_awakeFromNib_btnRemove_1" = "Details";
+
+"McUninstallViewController_showCustomUninstallAlert_title" = "Detected that \"%@\" has its own uninstaller";
+"McUninstallViewController_showCustomUninstallAlert_subtitle" = "For the most complete cleanup, use the app's built-in uninstaller. Lemon uninstall is also available.";
+"McUninstallViewController_showCustomUninstallAlert_button_1" = "Use Built-in Uninstaller";
+"McUninstallViewController_showCustomUninstallAlert_button_2" = "Uninstall with Lemon";
+"McUninstallViewController_showCustomUninstallAlert_button_3" = "Cancel";
 
 "McUninstallSelectedViewController_refreshText_titleString_1" = "%@ has %@ linked files. You can recovered %@ if remove them.";
 "McUninstallWindowController_alertSetup_alertTitleView_1" = "Do you want to remove linked files?";

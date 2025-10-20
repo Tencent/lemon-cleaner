@@ -73,6 +73,7 @@
 #import "LMSortableButton.h"
 #import "LMSortableButtonCell.h"
 #import "LMTitleButton.h"
+#import "LMFilePreviewView.h"
 #import "MMDrawingUtils.h"
 #import "MMScroller.h"
 #import "MMScrollView.h"

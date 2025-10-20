@@ -41,6 +41,8 @@
 #define DEFAULT_APP_PATH        @"/Applications/Tencent Lemon.app"
 #define UPDATE_APP_NAME         @"LemonUpdate.app"
 
+NSNotificationName LMCleanViewWillDisappearNotificaiton =  @"LMCleanViewWillDisappearNotificaiton";
+
 @implementation LMMemoryItem
 @end
 
@@ -138,6 +140,7 @@
 }
 - (void)viewWillDisappear
 {
+    [[NSNotificationCenter defaultCenter] postNotificationName:LMCleanViewWillDisappearNotificaiton object:nil];
     [super viewWillDisappear];
     [[LemonMonitroHelpParams sharedInstance] stopStatMemory];
 }

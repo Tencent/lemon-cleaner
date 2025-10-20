@@ -41,6 +41,11 @@ NS_ASSUME_NONNULL_BEGIN
                      before:(BOOL)before
                  completion:(void(^)(LMResultItem *resultItem))completion;
 
+// 找出子路径下的文件夹
+- (NSArray *)findSubdirectoriesFromPaths:(NSArray *)pathArray
+                                maxDepth:(NSInteger)maxDepth
+                             filterBlock:(BOOL(^)(NSString *path, NSInteger depth))filterBlock;
+
 @end
 
 NS_ASSUME_NONNULL_END

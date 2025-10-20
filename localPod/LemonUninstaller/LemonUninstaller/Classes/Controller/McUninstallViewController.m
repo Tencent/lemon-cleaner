@@ -33,6 +33,7 @@
 #import <QMUICommon/LMPermissionGuideWndController.h>
 #import "AppTrashDel.h"
 #import "LMUninstallXMLParseManager.h"
+#import "LMUninstallerDetector.h"
 #define LOADING_VIEW_SIZE       160
 
 //monitor 卸载残留检测
@@ -81,6 +82,7 @@
 
 @property (strong,nonatomic) LMPermissionGuideWndController *permissionGuideWndController;
 
+@property (nonatomic, copy) NSString *lastCustomUninstallerAppPath;
 
 @end
 
@@ -99,11 +101,43 @@
         _myBundle = [NSBundle bundleForClass:[self class]];
         sortType = McLocalSortName;
         sortOrderType = Ascending;
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(windowDidBecomeKey:)
+                                                     name:NSWindowDidBecomeKeyNotification
+                                                   object:self.view.window];
     }
     return self;
 }
 
+// 通过点击使用自带卸载程序，返回当前页面是卸载程序是否存在，不存在则刷新
+- (void)windowDidBecomeKey:(NSNotification *)notification {
+    if (self.lastCustomUninstallerAppPath && ![NSFileManager.defaultManager fileExistsAtPath:self.lastCustomUninstallerAppPath]) {
+        self.lastCustomUninstallerAppPath = nil;
+        [self refreshAppListAfterCustomUninstall];
+    }
+}
 
+- (void)refreshAppListAfterCustomUninstall {
+    // 重新扫描应用列表（增量扫描）
+    NSInteger currentSortType = self->sortType;
+    NSInteger currentSortOrderType = self->sortOrderType;
+    __weak typeof(self) weakSelf = self;
+    dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        // 强制重新扫描应用列表
+        [[LMLocalAppListManager defaultManager] fastScan:currentSortType byAscendingOrder:currentSortOrderType];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            __strong typeof(weakSelf) strongSelf = weakSelf;
+            if (!strongSelf) {
+                return;
+            }
+            
+            // 更新UI
+            [strongSelf refreshUI];
+        });
+    });
+}
 
 - (void)addLoadingViews {
     NSRect bounds = tableView.bounds;
@@ -792,8 +826,63 @@ BOOL isAppRunningBundleId(NSString *bundelId){
 }
 
 - (void)showDetailItemView:(LMLocalApp *) software{
-     [self.view.window.windowController showUninstallDetailViewWithSoft:software];
+    // 检测是否有自带卸载程序
+    NSString *customUninstallerPath = [[LMUninstallerDetector sharedInstance] detectUninstallerForApp:software];
+    
+    if (customUninstallerPath) {
+        // 发现自带卸载程序，弹出选择对话框
+        NSLog(@" softwarte %@, has custom uninstaller path :%@", software.appName, customUninstallerPath);
+        [self showCustomUninstallerAlert:software uninstallerPath:customUninstallerPath];
+    } else {
+        // 没有自带卸载程序，走原来的逻辑
+        [self.view.window.windowController showUninstallDetailViewWithSoft:software];
+    }
 }
+
+- (void)showCustomUninstallerAlert:(LMLocalApp *)software uninstallerPath:(NSString *)uninstallerPath {
+    NSAlert *alert = [[NSAlert alloc] init];
+    alert.alertStyle = NSInformationalAlertStyle;
+
+    // 设置按钮
+    NSButton *button1 = [alert addButtonWithTitle:NSLocalizedStringFromTableInBundle(@"McUninstallViewController_showCustomUninstallAlert_button_1", nil, [NSBundle bundleForClass:[self class]], @"")];
+    NSButton *button2 = [alert addButtonWithTitle:NSLocalizedStringFromTableInBundle(@"McUninstallViewController_showCustomUninstallAlert_button_2", nil, [NSBundle bundleForClass:[self class]], @"")];
+    NSButton *button3 = [alert addButtonWithTitle:NSLocalizedStringFromTableInBundle(@"McUninstallViewController_showCustomUninstallAlert_button_3", nil, [NSBundle bundleForClass:[self class]], @"")];
+    // 26系统上取消按钮有focus ring
+    button1.focusRingType = NSFocusRingTypeNone;
+    button2.focusRingType = NSFocusRingTypeNone;
+    button3.focusRingType = NSFocusRingTypeNone;
+
+    // 设置消息内容
+    alert.messageText = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"McUninstallViewController_showCustomUninstallAlert_title", nil, [NSBundle bundleForClass:[self class]], @""), software.showName];
+    alert.informativeText = NSLocalizedStringFromTableInBundle(@"McUninstallViewController_showCustomUninstallAlert_subtitle", nil, [NSBundle bundleForClass:[self class]], @"");
+    
+    // 设置应用图标
+    if (software.icon) {
+        alert.icon = software.icon;
+    }
+    
+    NSInteger response = [alert runModal];
+    
+    switch (response) {
+        case NSAlertFirstButtonReturn: {
+            if ([NSFileManager.defaultManager fileExistsAtPath:uninstallerPath]) {
+                self.lastCustomUninstallerAppPath = software.bundlePath;
+                [[NSWorkspace sharedWorkspace] openFile:uninstallerPath];
+            }
+            break;
+        }
+        case NSAlertSecondButtonReturn: {
+            // 使用Lemon卸载 - 走原来的逻辑
+            [self.view.window.windowController showUninstallDetailViewWithSoft:software];
+            break;
+        }
+        case NSAlertThirdButtonReturn:
+        default:
+            // 取消 - 什么都不做
+            break;
+    }
+}
+
 
 - (BOOL)showIsKillingAppAlert:(NSString *)appName appPath:(NSString *)appPath{
     NSAlert *alert = [[NSAlert alloc] init];

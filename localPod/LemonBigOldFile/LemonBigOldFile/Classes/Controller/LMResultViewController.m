@@ -12,7 +12,7 @@
 #import "LMRootCellView.h"
 #import "LMSubItemCellView.h"
 #import "QMLargeOldManager.h"
-#import <Quartz/Quartz.h>
+#import <QMUICommon/LMFilePreviewView.h>
 #import <Masonry/Masonry.h>
 #import <QMCoreFunction/QMFileClassification.h>
 #import "NSButton+Extension.h"
@@ -34,7 +34,7 @@
 #define FILTER_BTN_COLOR_SEL    0x515151
 #define FILTER_BTN_COLOR_NO_SEL 0x94979b
 
-@interface LMResultViewController ()<NSOutlineViewDataSource, NSOutlineViewDelegate, QLPreviewItem, BigFileWndEvent, RowViewDelegate>
+@interface LMResultViewController ()<NSOutlineViewDataSource, NSOutlineViewDelegate, BigFileWndEvent, RowViewDelegate>
 {
     NSArray* _resultAllArray;
     NSArray* _resultArray;
@@ -46,7 +46,7 @@
     
     BOOL _loading;
 }
-@property(nonatomic) QLPreviewView *previewView;
+@property(nonatomic, strong) LMFilePreviewView *filePreviewView;
 
 @end
 
@@ -258,7 +258,9 @@
 }
 
 - (void)setupPreview {
-    _previewView = [[QLPreviewView alloc] initWithFrame:previewContainer.bounds style:QLPreviewViewStyleCompact];
+    _filePreviewView = [[LMFilePreviewView alloc] initWithFrame:previewContainer.bounds];
+    [previewContainer addSubview:_filePreviewView];
+    _filePreviewView.autoresizingMask = NSViewHeightSizable | NSViewWidthSizable;
     [previewFrame setHidden:YES];
 }
 
@@ -378,6 +380,7 @@
 - (void)showSelectedItemInfo:(QMLargeOldResultItem *)item {
     if(!item || !_previewing) {
         [previewFrame setHidden:YES];
+        [_filePreviewView clearPreview];
         return;
     }
     [previewFrame setHidden:NO];
@@ -388,35 +391,14 @@
     previewItemSize.stringValue = [NSString stringFromDiskSize:selectedItem.fileSize];
     [self setTitleColorForTextField:previewItemSize];
     
-    if(_previewView && _previewView.superview)
-        [_previewView removeFromSuperview];
-    _previewView = [[QLPreviewView alloc] initWithFrame:previewContainer.bounds style:QLPreviewViewStyleCompact];
+    // 使用自定义的LMFilePreviewView显示预览
+    [_filePreviewView showPreviewForFilePath:selectedItem.filePath];
     
-    [previewContainer addSubview:_previewView];
-    _previewView.autoresizingMask = NSViewHeightSizable | NSViewWidthSizable;
-    [_previewView setPreviewItem:self];
-
-    [_previewView refreshPreviewItem];
     NSLog(@"BigFile showSelectedItemInfo:%d", [self getFileType:selectedItem.fileType]);
     
 }
 
-#pragma mark-
-#pragma mark preview delegate
 
-- (NSURL *)previewItemURL {
-    if (selectedItem == nil || selectedItem.filePath == nil) {
-        return nil;
-    }
-    return [NSURL fileURLWithPath:selectedItem.filePath];
-}
-
-- (NSString *)previewItemTitle {
-    if (selectedItem == nil || selectedItem.filePath == nil) {
-        return nil;
-    }
-    return selectedItem.filePath;
-}
 
 #pragma mark-
 #pragma mark outline Row View Delegate
@@ -616,6 +598,7 @@
         frame.size.width = OUTLINE_VIEW_WIDTH_MAX;
         [outlineScrollView setFrame:frame];
         [previewFrame setHidden:YES];
+        [_filePreviewView clearPreview];
         
         NSInteger row = [outlineView rowForItem:selectedItem];
         if(row >= 0) {

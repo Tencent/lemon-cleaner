@@ -52,6 +52,12 @@
 
 "McTableCellView_awakeFromNib_btnRemove_1" = "卸载详情";
 
+"McUninstallViewController_showCustomUninstallAlert_title" = "检测到 %@ 有自带的卸载程序";
+"McUninstallViewController_showCustomUninstallAlert_subtitle" = "建议使用应用自带的卸载程序以确保完全卸载。您也可以选择使用Lemon进行卸载";
+"McUninstallViewController_showCustomUninstallAlert_button_1" = "使用自带卸载程序";
+"McUninstallViewController_showCustomUninstallAlert_button_2" = "使用 Lemon 卸载";
+"McUninstallViewController_showCustomUninstallAlert_button_3" = "取消";
+
 
 "McUninstallSelectedViewController_refreshText_titleString_1" = "%@残留%@个相关文件,强力卸载可腾出%@空间.";
 "McUninstallWindowController_alertSetup_alertTitleView_1" = "你是否需要清除软件残留?";
