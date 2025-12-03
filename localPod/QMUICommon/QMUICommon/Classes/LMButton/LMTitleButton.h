@@ -21,6 +21,7 @@
 
 - (void)setUp;
 
+- (BOOL)mouseInView;
 - (void)applyTitleColor;
 
 @end

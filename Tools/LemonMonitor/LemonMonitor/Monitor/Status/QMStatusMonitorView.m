@@ -363,14 +363,12 @@
 }
 
 - (void)updateAllTextColors {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self updateTextColor];
-        NSColor *currentTextColor = [self getTextColor];
-        for (NSTextField *textField in self->mArrayForDarkModeAdaptiveViews) {
-            textField.textColor = currentTextColor;
-            [textField setNeedsDisplay:YES];
-        }
-    });
+    [self updateTextColor];
+    NSColor *currentTextColor = [self getTextColor];
+    for (NSTextField *textField in self->mArrayForDarkModeAdaptiveViews) {
+        textField.textColor = currentTextColor;
+        [textField setNeedsDisplay:YES];
+    }
 }
 
 - (void)viewDidMoveToWindow {
@@ -378,11 +376,6 @@
     if (self.window) {
         [self updateAllTextColors];
     }
-}
-
-- (void)viewDidChangeEffectiveAppearance {
-    [super viewDidChangeEffectiveAppearance];
-    [self updateAllTextColors];
 }
 
 - (void)updateTrackingAreas

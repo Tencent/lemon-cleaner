@@ -30,7 +30,9 @@
 - (NSRect)titleRectForBounds:(NSRect)theRect {
     NSRect titleFrame = [super titleRectForBounds:theRect];
     NSSize titleSize = [[self attributedStringValue] size];
-    if (@available(macOS 26.0, *)) {
+    if (@available(macOS 26.2, *)) {
+        titleFrame.origin.y = theRect.origin.y-(theRect.size.height-titleSize.height)*0.15;
+    } else if (@available(macOS 26.0, *)) {
         // 0.18 为手工测量
         titleFrame.origin.y = (theRect.size.height-titleSize.height)*0.18;
     } else {

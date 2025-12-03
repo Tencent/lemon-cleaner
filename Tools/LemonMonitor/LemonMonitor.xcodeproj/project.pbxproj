@@ -30,6 +30,7 @@
 		B7D8F53D2DB23CA500D5D00E /* LMPPOneClickGuideView.m in Sources */ = {isa = PBXBuildFile; fileRef = B7D8F53C2DB23CA500D5D00E /* LMPPOneClickGuideView.m */; };
 		B7D8F5492DB25B6600D5D00E /* LMPPOneClickGuideBgView.m in Sources */ = {isa = PBXBuildFile; fileRef = B7D8F5482DB25B6600D5D00E /* LMPPOneClickGuideBgView.m */; };
 		B7DD3E9D2E39F4E700A5D399 /* LMTrashCheckManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B7DD3E9C2E39F4E700A5D399 /* LMTrashCheckManager.m */; };
+		B7E32CB12EAA408500AD8E74 /* LMAdaptiveScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = B7E32CB02EAA408500AD8E74 /* LMAdaptiveScrollView.m */; };
 		B88029CF196BE562007CFE8D /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B88029CE196BE562007CFE8D /* SystemConfiguration.framework */; };
 		B88029D1196BE573007CFE8D /* libpcap.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = B88029D0196BE573007CFE8D /* libpcap.dylib */; };
 		B8B6CAF8198B8EA000946160 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B8B6CAF7198B8EA000946160 /* QuartzCore.framework */; };
@@ -184,6 +185,8 @@
 		B7D8F5482DB25B6600D5D00E /* LMPPOneClickGuideBgView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LMPPOneClickGuideBgView.m; sourceTree = "<group>"; };
 		B7DD3E9B2E39F4E700A5D399 /* LMTrashCheckManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LMTrashCheckManager.h; sourceTree = "<group>"; };
 		B7DD3E9C2E39F4E700A5D399 /* LMTrashCheckManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LMTrashCheckManager.m; sourceTree = "<group>"; };
+		B7E32CAF2EAA408500AD8E74 /* LMAdaptiveScrollView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LMAdaptiveScrollView.h; sourceTree = "<group>"; };
+		B7E32CB02EAA408500AD8E74 /* LMAdaptiveScrollView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LMAdaptiveScrollView.m; sourceTree = "<group>"; };
 		B88029CE196BE562007CFE8D /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		B88029D0196BE573007CFE8D /* libpcap.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpcap.dylib; path = usr/lib/libpcap.dylib; sourceTree = SDKROOT; };
 		B8B6CAF7198B8EA000946160 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
@@ -545,6 +548,8 @@
 		BC89F89822759B7200983314 /* Status */ = {
 			isa = PBXGroup;
 			children = (
+				B7E32CAF2EAA408500AD8E74 /* LMAdaptiveScrollView.h */,
+				B7E32CB02EAA408500AD8E74 /* LMAdaptiveScrollView.m */,
 				BC89F8A122759B7200983314 /* QMStatusMonitorView.h */,
 				BC89F89922759B7200983314 /* QMStatusMonitorView.m */,
 				BC89F89C22759B7200983314 /* QMStatusCircleView.h */,
@@ -853,6 +858,7 @@
 				BC89F8A622759B7200983314 /* QMStatusTextField.m in Sources */,
 				B7A745852DF9ABA20097CD3D /* LMUtilFunc.m in Sources */,
 				79A96341236A84F000DB0B1D /* TrashCheckMonitor.m in Sources */,
+				B7E32CB12EAA408500AD8E74 /* LMAdaptiveScrollView.m in Sources */,
 				BC89F8A822759B7200983314 /* QMDragEffectView.m in Sources */,
 				B8F110511962572100D29FFC /* main.m in Sources */,
 				B7D8F5492DB25B6600D5D00E /* LMPPOneClickGuideBgView.m in Sources */,

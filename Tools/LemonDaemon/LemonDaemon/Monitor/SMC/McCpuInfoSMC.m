@@ -90,6 +90,19 @@
         return McCpuTypeM4;
     }
     
+    if ([name containsString:@"m5"]) {
+        if ([name containsString:@"pro"]) {
+            return McCpuTypeM5Pro;
+        }
+        if ([name containsString:@"max"]) {
+            return McCpuTypeM5Max;
+        }
+        if ([name containsString:@"ultra"]) {
+            return McCpuTypeM5Ultra;
+        }
+        return McCpuTypeM5;
+    }
+    
     return McCpuTypeUnknown;
 }
 

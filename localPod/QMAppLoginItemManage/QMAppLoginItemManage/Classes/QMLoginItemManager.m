@@ -297,8 +297,12 @@ typedef char (*SMLoginItemSetEnabledWithURL_ptr) ( void* ptr, char enabled);
             }
             NSString *filePath = [directoryPath stringByAppendingPathComponent:fileName];
             NSDictionary *dict = [[NSDictionary alloc] initWithContentsOfFile:filePath];
+            // 保护。防止用户修改了plist文件的key类型。
+            if (![dict isKindOfClass:NSDictionary.class] || dict.count == 0) {
+                continue;
+            }
             NSString *label = dict[LAUNCH_SERVICE_LABEL];
-            if (!label || [label isEqualToString:@""]) {
+            if (![label isKindOfClass:NSString.class] || label.length == 0) {
                 continue;
             }
             QMAppLaunchItem *launchItem = [[QMAppLaunchItem alloc] initWithLaunchFilePath:filePath itemType:LoginItemTypeService];
@@ -317,17 +321,21 @@ typedef char (*SMLoginItemSetEnabledWithURL_ptr) ( void* ptr, char enabled);
                 launchItem.appPath = localApp.bundlePath;
             } else if(dict) {
                 NSArray *array = dict[LAUNCH_SERVICE_PROGRAM_ARGUMENTS];
-                if(array && array.count > 0){
-                    NSString *programPath = array[0];
-                    //判断是否包含app
-                    if (([programPath containsString:@".app/"] || [programPath hasSuffix:@"app"])) {
-                        NSRange range = [programPath rangeOfString:@".app"];
-                        if (range.location != NSNotFound) {
-                            NSUInteger index = range.location + 4;
-                            NSString *appPath = [programPath substringToIndex:index];
-                            launchItem.appPath = appPath;
-                            launchItem.appName = [appPath lastPathComponent];
-                        }
+                if (![array isKindOfClass:NSArray.class] || array.count == 0) {
+                    continue;
+                }
+                NSString *programPath = array[0];
+                if (![programPath isKindOfClass:NSString.class] || programPath.length == 0) {
+                    continue;
+                }
+                //判断是否包含app
+                if (([programPath containsString:@".app/"] || [programPath hasSuffix:@"app"])) {
+                    NSRange range = [programPath rangeOfString:@".app"];
+                    if (range.location != NSNotFound) {
+                        NSUInteger index = range.location + 4;
+                        NSString *appPath = [programPath substringToIndex:index];
+                        launchItem.appPath = appPath;
+                        launchItem.appName = [appPath lastPathComponent];
                     }
                 }
             }
