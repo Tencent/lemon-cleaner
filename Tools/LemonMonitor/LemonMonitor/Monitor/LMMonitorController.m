@@ -329,8 +329,15 @@ enum
         [_statusItem setToolTip:@""];
         [_statusItem setView:statusView];
     }
-    [statusView setStatusType:type.integerValue];
-    
+    if (@available(macOS 26.0, *)) {
+        // 放到下一个loop循环中，待applicationDidLaunch方法完成，color可以正确响应主题色。
+        // macos 26 出现的响应主题色异常。
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [statusView setStatusType:type.integerValue];
+        });
+    } else {
+        [statusView setStatusType:type.integerValue];
+    }
 }
 
 -(void)userChangeLanguage:(NSNotification *)notification{

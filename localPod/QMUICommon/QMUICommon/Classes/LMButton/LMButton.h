@@ -11,4 +11,7 @@
 
 @interface LMButton : LMImageButton
 
+// 手动同步NSButtonCell属性到自定义Label
+- (void)syncCellProperties;
+
 @end

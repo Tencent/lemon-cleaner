@@ -1616,12 +1616,16 @@ void _executeXPCCommandAsync(mc_pipe_cmd *pcmd,
         }else{
             NSLog(@"rdata: %lu", (unsigned long)rdata.length);
             mc_pipe_result *presult = (mc_pipe_result *)[rdata bytes];
-            return_code = presult->cmd_ret;
-            
-            mc_pipe_result *tresult;
-            tresult = (mc_pipe_result *)malloc(presult->size);
-            memcpy(tresult, presult, presult->size);
-            *ppresult = tresult;
+            if (presult != NULL) {
+                return_code = presult->cmd_ret;
+                
+                mc_pipe_result *tresult;
+                tresult = (mc_pipe_result *)malloc(presult->size);
+                memcpy(tresult, presult, presult->size);
+                *ppresult = tresult;
+            } else {
+                return_code = -1;
+            }
         }
         
         block(return_code);
