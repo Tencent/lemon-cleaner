@@ -187,6 +187,12 @@
     self.tableViewOne.selectionHighlightStyle = NSTableViewSelectionHighlightStyleRegular;
     self.tableViewTwo.selectionHighlightStyle = NSTableViewSelectionHighlightStyleRegular;
     self.tableViewThree.selectionHighlightStyle = NSTableViewSelectionHighlightStyleRegular;
+
+    // 显式指定 action 接收者，避免响应链查找不到当前控制器。
+    [self.tableView setTarget:self];
+    [self.tableViewOne setTarget:self];
+    [self.tableViewTwo setTarget:self];
+    [self.tableViewThree setTarget:self];
     
     [self.tableView setDoubleAction:@selector(doubleAction:)];
     [self.tableViewOne setDoubleAction:@selector(doubleAction:)];
