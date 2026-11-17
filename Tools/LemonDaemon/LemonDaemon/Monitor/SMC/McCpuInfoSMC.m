@@ -102,7 +102,11 @@
         }
         return McCpuTypeM5;
     }
-    
+
+    if ([name isEqualToString:@"applem6"]) {
+        return McCpuTypeM6;
+    }
+
     return McCpuTypeUnknown;
 }
 

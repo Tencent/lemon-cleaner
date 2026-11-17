@@ -37,7 +37,9 @@ typedef NS_ENUM(NSUInteger, McCpuType) {
     McCpuTypeM5, // 仅发行M5,截止2025-11-13
     McCpuTypeM5Pro,
     McCpuTypeM5Max,
-    McCpuTypeM5Ultra,    
+    McCpuTypeM5Ultra,
+
+    McCpuTypeM6,
 };
 
 @interface McCpuInfoSMC : NSObject
