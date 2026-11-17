@@ -49,6 +49,5 @@
 
 - (BOOL)parseXMLWithData:(NSString *)dataPath;
 - (NSString *)parseXMLVersion:(NSString *)path;
-+ (NSData *)builtInCleanXMLData;
 
 @end

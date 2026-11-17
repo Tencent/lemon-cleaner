@@ -138,7 +138,6 @@
 - (NSImage *)lazyLoadImage:(NSString *)name attr:(NSImage *__strong*)attr
 {
     // 修复：移除 NSParameterAssert，防止 Release 模式下触发 SIGTRAP
-    // Bugly Issue: 4C0519333DB09742C4215DBA0D0E9555
     if (!attr) {
         NSLog(@"[LemonMonitor] ERROR: lazyLoadImage called with NULL attr pointer for image: %@", name);
         return nil;

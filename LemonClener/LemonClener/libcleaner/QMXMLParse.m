@@ -33,37 +33,15 @@
     return self;
 }
 
-+ (NSData *)builtInCleanXMLData
-{
-    if ([McCoreFunction isAppStoreVersion]) {
-        if ([LanguageHelper getCurrentSystemLanguageType] == SystemLanguageTypeChinese) {
-            return [NSData dataWithBytes:g_as_xmlData length:sizeof(g_as_xmlData)];
-        }
-        return [NSData dataWithBytes:g_as_xmlData_en length:sizeof(g_as_xmlData_en)];
-    }
-    if ([LanguageHelper getCurrentSystemLanguageType] == SystemLanguageTypeChinese) {
-        return [NSData dataWithBytes:g_xmlData length:sizeof(g_xmlData)];
-    }
-    return [NSData dataWithBytes:g_xmlData_en length:sizeof(g_xmlData_en)];
-}
-
-- (NSData *)_decryptBuiltInXMLData:(NSData *)xmlData
-{
-    if (!xmlData) {
-        return nil;
-    }
-    QMSigFileHandler *sigFileHandler = [QMSigFileHandler initWithContent:xmlData];
-    if (!sigFileHandler.data) {
-        NSLog(@"lm cleaner built-in xml decrypt failed, refuse plaintext fallback");
-        return nil;
-    }
-    return sigFileHandler.data;
-}
-
 - (BOOL)parseXMLWithData:(NSString *)dataPath
 {
-    if (dataPath) {
-        NSLog(@"lm cleaner ignore disk xml path = %@", dataPath);
+    // 当前更新的xml版本
+    NSString * updateVersion = nil;
+    NSData * updateXmlData = nil;
+    if (dataPath)
+    {
+        updateXmlData = [NSData dataWithContentsOfFile:dataPath];
+        updateVersion = [self _parseXMLVersion:updateXmlData];
     }
     NSLog(@"lm cleaner use update verison = %@", updateVersion);
     // 本地的xml版本
@@ -106,26 +84,31 @@
     
     
     m_onlyVersion = NO;
-    NSXMLParser *parser = [[NSXMLParser alloc] initWithData:plainXMLData];
+    QMSigFileHandler * sigFileHandler = [QMSigFileHandler initWithContent:xmlData];
+    NSXMLParser * parser = nil;
+    if (sigFileHandler)
+        parser = [[NSXMLParser alloc] initWithData:sigFileHandler.data];
+    else
+        parser = [[NSXMLParser alloc] initWithData:xmlData];
     [parser setDelegate:self];
     [parser parse];
-    if ([parser parserError]) {
-        NSLog(@"Clean Parser XML Error : %@", [parser parserError]);
-    }
+    if ([parser parserError])
+    NSLog(@"Clean Parser XML Error : %@", [parser parserError]);
     return ([parser parserError] == nil);
 }
 
 - (NSString *)_parseXMLVersion:(NSData *)xmlData
 {
-    if (!xmlData) {
-        return nil;
-    }
+    if (!xmlData)
+    return nil;
     m_onlyVersion = YES;
-    NSData *plainXMLData = [self _decryptBuiltInXMLData:xmlData];
-    if (!plainXMLData) {
-        return nil;
-    }
-    NSXMLParser *parser = [[NSXMLParser alloc] initWithData:plainXMLData];
+    
+    QMSigFileHandler * sigFileHandler = [QMSigFileHandler initWithContent:xmlData];
+    NSXMLParser * parser = nil;
+    if (sigFileHandler)
+    parser = [[NSXMLParser alloc] initWithData:sigFileHandler.data];
+    else
+    parser = [[NSXMLParser alloc] initWithData:xmlData];
     [parser setDelegate:self];
     [parser parse];
     return self.version;

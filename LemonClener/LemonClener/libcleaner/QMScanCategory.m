@@ -164,7 +164,6 @@
         return;
     
     // 修复：添加 weak-strong dance 防止 Use-After-Free
-    // Bugly Issue: F0D7290C9AD3D68EF0A71D718B8F41B4
     @weakify(self);
     
     categoryItem.progressValue = 0;
@@ -249,7 +248,6 @@
 
 - (void)performAllCategoryScanWithArray:(NSArray *)itemArray {
     // 修复：添加 weak-strong dance 防止 Use-After-Free
-    // Bugly Issue: F0D7290C9AD3D68EF0A71D718B8F41B4
     @weakify(self);
 
     [[QMScanFileSizeCacheManager manager] start];
@@ -414,11 +412,9 @@
     }
     
     // 修复：提前捕获 delegate 避免竞态条件
-    // Bugly Issue: A9BFAFF2CA2333FA86B78A0F9AB38B47
     @weakify(self);
     id<QMScanCategoryDelegate> delegateSnapshot = self.delegate;
     // 修复：快照并强持有当前游标对象，避免迟到的异步回调读到已被推进/释放的 m_curScanXXX（Use-After-Free）
-    // Bugly Issue: A9BFAFF2CA2333FA86B78A0F9AB38B47
     QMCategoryItem    *categorySnapshot    = m_curScanCategoryItem;
     QMCategorySubItem *subCategorySnapshot = m_curScanSubCategoryItem;
     

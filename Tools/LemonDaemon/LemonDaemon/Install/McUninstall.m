@@ -20,9 +20,6 @@
 #import "LMPlistHelper.h"
 #import "ExecuteCmdHelper.h"
 
-// 签名验证用的开发者证书 CN（与 LMDaemonListenerDelegate.m 中保持一致）
-#define SIGNING_AUTH_FOR_UPDATE @"Developer ID Application: Tencent Technology (Shenzhen) Company Limited (88L2Q4487U)"
-
 // 判断当前系统版本是否在指定版本数组中的公共方法
 BOOL isCurrentSystemVersionInArray(NSArray<NSString *> *versionArray) {
     if (versionArray.count == 0) {
@@ -889,7 +886,7 @@ static OSStatus _verifyAppSignatureStrict(NSString *appPath) {
     SecRequirementRef requirement = NULL;
     NSString *reqStr = [NSString stringWithFormat:
                         @"anchor apple generic and certificate leaf [subject.OU] = \"%@\" and certificate leaf [subject.CN] = \"%@\"",
-                        LEMON_TEAM_ID, SIGNING_AUTH_FOR_UPDATE];
+                        LEMON_TEAM_ID, LEMON_SIGNING_AUTH];
     status = SecRequirementCreateWithString((__bridge CFStringRef)reqStr, kSecCSDefaultFlags, &requirement);
     if (status != errSecSuccess) {
         CFRelease(staticCode);
@@ -970,7 +967,7 @@ int UpdateCastle(char *newAppPath, const char *szUserName, const char *szVersion
     
     // ===== 第3步：Copy-then-verify —— 拷贝到 root 所有的安全暂存路径 =====
     // 生成 UUID 暂存路径，位于 /Applications 同级目录（同文件系统，便于后续 rename）
-    NSString *stagingDir = [NSString stringWithFormat:@"/Applications/.LemonUpdate-staging-%@",
+    NSString *stagingDir = [NSString stringWithFormat:@"/Applications/.Lemon-staging-%@",
                             [[NSUUID UUID] UUIDString]];
     
     // 确保暂存路径不存在（防止预植入攻击）
