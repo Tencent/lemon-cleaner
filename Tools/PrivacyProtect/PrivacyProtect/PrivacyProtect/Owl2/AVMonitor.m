@@ -350,7 +350,11 @@ typedef NS_ENUM(NSUInteger, LMControlCenterLogStatusType) {
     NSPredicate *tccPredicate = [NSPredicate predicateWithFormat:@"subsystem == 'com.apple.TCC' AND message CONTAINS 'TCCAccessRequestIndirect: TCCAccessRequestIndirect with pid'"];
     @weakify(self);
     [self.automaticLogMonitor start:tccPredicate level:Log_Level_Default callback:^(OSLogEvent *logEvent) {
-        @strongify(self);
+        //手动 __strong，避免 @strongify 宏保留 __weak 导致的 UAF（详见 monitor15Screen 说明）
+        __strong typeof(weak_self) self = weak_self;
+        if (!self || !logEvent || !logEvent.composedMessage) {
+            return;
+        }
         
         NSString *message = logEvent.composedMessage;
                 
@@ -516,8 +520,22 @@ typedef NS_ENUM(NSUInteger, LMControlCenterLogStatusType) {
     NSPredicate *sender = [NSPredicate predicateWithFormat:@"sender == 'replayd' OR sender == 'screencapture' OR sender == 'ScreenCaptureKit' OR sender == 'AVFCapture' OR sender == 'ReplayKit'"];
     @weakify(self);
     [self.screenLogMonitor start:sender level:Log_Level_Default callback:^(OSLogEvent *logEvent) {
-        if (!weak_self) return;
-        @strongify(self);
+        //注意：不能使用 @strongify 宏，其展开为 __typeof__(weak_self) 会保留 __weak 限定符，
+        //得到的 self 仍是弱引用、不会 retain，导致后续 if(!self) 判空后 self 仍可能被并发释放（UAF）。
+        //这里手动声明 __strong，真正将对象钉住在本次回调期间。
+        __strong typeof(weak_self) self = weak_self;
+        //check if self is still alive
+        if (!self) {
+            NSLog(@"AVMonitor was deallocated, ignoring screen log event");
+            return;
+        }
+        
+        //check if logEvent is valid
+        if (!logEvent || !logEvent.composedMessage) {
+            NSLog(@"Invalid logEvent or composedMessage is nil");
+            return;
+        }
+        
         NSString *message = logEvent.composedMessage;
         if (!self.lastScreenEventDate || -[self.lastScreenEventDate timeIntervalSinceNow] > 1) {
             if ([message containsString:@"SLSHWCaptureDesktopProxying_block_invoke"] ||
@@ -851,7 +869,11 @@ typedef NS_ENUM(NSUInteger, LMControlCenterLogStatusType) {
     __block unsigned long long msgCount = 0;
     @weakify(self);
     [self.logMonitor start:[NSPredicate predicateWithFormat:@"process == 'VDCAssistant'"] level:Log_Level_Default callback:^(OSLogEvent *logEvent) {
-        @strongify(self);
+        //手动 __strong，避免 @strongify 宏保留 __weak 导致的 UAF（详见 monitor15Screen 说明）
+        __strong typeof(weak_self) self = weak_self;
+        if (!self || !logEvent || !logEvent.composedMessage) {
+            return;
+        }
         msgCount++;
         // 新client，加入列表
         if (YES == [logEvent.composedMessage hasPrefix:@"Client Connect for PID"]) {
@@ -872,7 +894,11 @@ typedef NS_ENUM(NSUInteger, LMControlCenterLogStatusType) {
     NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"pid:(\\d*)," options:0 error:nil];
     @weakify(self);
     [self.audio12logMonitor start:[NSPredicate predicateWithFormat:@"process == 'coreaudiod' && subsystem == 'com.apple.TCC' && category == 'access'"] level:Log_Level_Info callback:^(OSLogEvent *logEvent) {
-        @strongify(self);
+        //手动 __strong，避免 @strongify 宏保留 __weak 导致的 UAF（详见 monitor15Screen 说明）
+        __strong typeof(weak_self) self = weak_self;
+        if (!self || !logEvent || !logEvent.composedMessage) {
+            return;
+        }
         //tcc request
         if (YES == [logEvent.composedMessage containsString:@"function=TCCAccessRequest, service=kTCCServiceMicrophone"]) {
             NSLog(@"new tcc access msg: %@", logEvent.composedMessage);
@@ -1476,8 +1502,22 @@ bail:
 
         if (!device) return;
         
+        //check if device is still valid before accessing
+        // this prevents race conditions with device removal
+        if (![self isDeviceValid:device]) {
+            NSLog(@"Device %@ is no longer valid in listener callback, skipping state check", device.localizedName);
+            return;
+        }
+        
         // 所有设备状态访问都在串行队列中执行
         dispatch_async(self.deviceAccessQueue, ^{
+            //double-check device validity in serial queue
+            // provides extra safety against race conditions
+            if (![self isDeviceValid:device]) {
+                NSLog(@"Device %@ became invalid before serial queue execution", device.localizedName);
+                return;
+            }
+            
             //state
             NSInteger state = -1;
             
@@ -1795,6 +1835,35 @@ bail:
     return isRunning;
 }
 
+//check if device is valid and connected
+// used to prevent accessing deallocated or suspended devices
+-(BOOL)isDeviceValid:(AVCaptureDevice *)device {
+    //check if device is nil
+    if (!device) {
+        NSLog(@"Device is nil");
+        return NO;
+    }
+    
+    //check if device is connected
+    if (!device.isConnected) {
+        NSLog(@"Device %@ is not connected", device.localizedName);
+        return NO;
+    }
+    
+    //check if device is in system registry
+    // this prevents accessing devices that are being removed
+    NSArray<AVCaptureDevice *> *registeredDevices = [AVCaptureDevice devicesWithMediaType:AVMediaTypeVideo];
+    for (AVCaptureDevice *registeredDevice in registeredDevices) {
+        if ([registeredDevice.uniqueID isEqualToString:device.uniqueID]) {
+            return YES;
+        }
+    }
+    
+    //device not found in registry
+    NSLog(@"Device %@ (uuid: %@) not found in system registry", device.localizedName, device.uniqueID);
+    return NO;
+}
+
 //check if a specified video is active
 // note: on M1 this sometimes always says 'on' (smh apple)
 -(UInt32)getCameraState:(AVCaptureDevice*)device
@@ -1813,6 +1882,20 @@ bail:
     
     //property address struct
     CMIOObjectPropertyAddress propertyStruct = {0};
+    
+    //check if device is valid and connected
+    // this prevents accessing suspended or deallocated devices
+    if (![self isDeviceValid:device])
+    {
+        //dbg msg
+        NSLog(@"Device %@ is invalid or disconnected, assuming camera off", device.localizedName);
+        
+        //assume camera is off
+        isRunning = 0;
+        
+        //bail
+        goto bail;
+    }
     
     //get device ID
     deviceID = [self getAVObjectID:device];
@@ -1841,14 +1924,42 @@ bail:
     propertyStruct.mElement = kAudioObjectPropertyElementMain;
     
     //query to get 'kAudioDevicePropertyDeviceIsRunningSomewhere' status
-    status = CMIOObjectGetPropertyData(deviceID, &propertyStruct, 0, NULL, sizeof(kAudioDevicePropertyDeviceIsRunningSomewhere), &propertySize, &isRunning);
+    // wrap in @try-@catch to prevent crashes from CMIO framework exceptions
+    @try {
+        status = CMIOObjectGetPropertyData(deviceID, &propertyStruct, 0, NULL, sizeof(kAudioDevicePropertyDeviceIsRunningSomewhere), &propertySize, &isRunning);
+    }
+    @catch (NSException *exception) {
+        //err msg
+        os_log_error(logHandle, "ERROR: CMIOObjectGetPropertyData threw exception: %@ (device: %@)", exception, device.localizedName);
+        
+        //assume camera is off when exception occurs
+        isRunning = 0;
+        
+        //bail
+        goto bail;
+    }
+    
     if(noErr != status)
     {
-        //err msg
-        os_log_error(logHandle, "ERROR: failed to get run state for %@ (error: %#x)", device.localizedName, status);
-        
-        //set error
-        isRunning = -1;
+        //check if this is a known "safe" error
+        // kAudioHardwareUnknownPropertyError (-2003) and kAudioHardwareBadObjectError (-1000)
+        // indicate device property is unavailable (device suspended or removed)
+        if (status == kAudioHardwareUnknownPropertyError || status == kAudioHardwareBadObjectError)
+        {
+            //dbg msg
+            NSLog(@"Device %@ property unavailable (status: %#x), assuming camera off", device.localizedName, status);
+            
+            //assume camera is off
+            isRunning = 0;
+        }
+        else
+        {
+            //err msg
+            os_log_error(logHandle, "ERROR: failed to get run state for %@ (error: %#x)", device.localizedName, status);
+            
+            //set error
+            isRunning = -1;
+        }
         
         //bail
         goto bail;
@@ -2547,6 +2658,44 @@ bail:
     return;
 }
 #endif
+
+//dealloc
+// stop all log monitors to prevent crashes from callbacks after AVMonitor is deallocated
+-(void)dealloc
+{
+    //stop screen log monitor
+    if (self.screenLogMonitor) {
+        [self.screenLogMonitor stop];
+        self.screenLogMonitor = nil;
+    }
+    
+    //stop control center log monitor
+    if (self.controlCenterLogMonitor) {
+        [self.controlCenterLogMonitor stop];
+        self.controlCenterLogMonitor = nil;
+    }
+    
+    //stop audio12 log monitor
+    if (self.audio12logMonitor) {
+        [self.audio12logMonitor stop];
+        self.audio12logMonitor = nil;
+    }
+    
+    //stop automatic log monitor
+    if (self.automaticLogMonitor) {
+        [self.automaticLogMonitor stop];
+        self.automaticLogMonitor = nil;
+    }
+    
+    //stop main log monitor
+    if (self.logMonitor) {
+        [self.logMonitor stop];
+        self.logMonitor = nil;
+    }
+    
+    //dbg msg
+    NSLog(@"AVMonitor deallocated, all log monitors stopped");
+}
 
 @end
 

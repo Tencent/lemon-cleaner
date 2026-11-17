@@ -363,6 +363,12 @@ static NSString * const kSuffixAppex = @".appex/";
 #pragma mark NSUserNotificationCenterDelegate
 
 - (void)userNotificationCenter:(NSUserNotificationCenter *)center didDeliverNotification:(NSUserNotification *)notification {
+    if (![NSThread isMainThread]) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self userNotificationCenter:center didDeliverNotification:notification];
+        });
+        return;
+    }
     // 通知被展示
     NSLog(@"notification show: %@", notification.userInfo);
     
@@ -412,11 +418,20 @@ static NSString * const kSuffixAppex = @".appex/";
                        appAction:notifItem.processItem.convenient_thirdAppActionForLog
                       userAction:Owl2LogUserActionNone
                         hardware:notifItem.processItem.deviceType.intValue];
-    }@catch (NSException *exception) {}
+    }@catch (NSException *exception) {
+        NSLog(@"[Owl2] addLogItem exception name=%@ reason=%@",
+              exception.name, exception.reason);
+    }
 }
 
 - (void)userNotificationCenter:(NSUserNotificationCenter *)center didActivateNotification:(NSUserNotification *)notification
 {
+    if (![NSThread isMainThread]) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self userNotificationCenter:center didActivateNotification:notification];
+        });
+        return;
+    }
     // 通知被操作
     NSLog(@"notification didActivate: %@", notification.userInfo);
     
@@ -453,7 +468,10 @@ static NSString * const kSuffixAppex = @".appex/";
                                       appAction:notifItem.processItem.convenient_thirdAppActionForLog
                                      userAction:prevent?userAction:Owl2LogUserActionAllow
                                        hardware:notifItem.processItem.convenient_hardware];
-                } @catch (NSException *exception) {}
+                } @catch (NSException *exception) {
+                    NSLog(@"[Owl2] updateLogItem(prevent) exception name=%@ reason=%@",
+                          exception.name, exception.reason);
+                }
                 [self killAppWithDictItem:notifItem.processItem.originalDic];
             }];
         }
@@ -471,7 +489,10 @@ static NSString * const kSuffixAppex = @".appex/";
                                       appAction:notifItem.processItem.convenient_thirdAppActionForLog
                                      userAction:userAction
                                        hardware:notifItem.processItem.convenient_hardware];
-                }@catch (NSException *exception) {}
+                }@catch (NSException *exception) {
+                    NSLog(@"[Owl2] updateLogItem exception name=%@ reason=%@",
+                          exception.name, exception.reason);
+                }
             }
                 break;
             case Owl2LogUserActionContent: // 点击内容不处理

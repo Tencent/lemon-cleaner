@@ -39,10 +39,14 @@
 
 - (NSArray<NSString *> *)collectImagePathsInRootPath:(NSArray<NSString *> *)rootPath{
     NSLog(@"LMPhotoCleaner--->collectImagePathsInRootPath begin");
+    // 剔除嵌套的子路径/重复路径，避免父目录与其子目录被重复收集
+    // （否则同一批图片被收集多次 → 进度分母虚高 → 完成条件永不满足 → 扫描卡住）
+    rootPath = [FileMangerHelper removeNestedSubPathsWithPathArray:rootPath];
     if([FileMangerHelper isContainPhotoLibraryWithPathArray:rootPath]){
         [self getImageNamesDeletedOfSystemAlbum];
     }
-    NSMutableArray<NSString *> *resultPaths = [[NSMutableArray alloc] init];
+    // 使用有序集合做精确路径去重，兜底 .photoslibrary 被重映射到 ~/Pictures 后与其它已选目录重叠的场景
+    NSMutableOrderedSet<NSString *> *resultPaths = [[NSMutableOrderedSet alloc] init];
     for (NSString *path in rootPath) {
 //        NSLog(@"select path = %@", path);
         NSString *outputString = nil;
@@ -58,8 +62,12 @@
 //            onlyinPath = [onlyinPath stringByReplacingOccurrencesOfString:@" " withString:@"\\ "];
 //        }
 //        onlyinPath = @"/Users/junior/photo";
-        NSString *shellString = [NSString stringWithFormat:@"find \"%@\" -type f \\( -iname \\*.jpg -o -iname \\*.jpeg -o -iname \\*.png -o -iname \\*.gif \\)", onlyinPath];
-        outputString = [QMShellExcuteHelper excuteCmd:shellString];
+        outputString = [QMShellExcuteHelper executeLaunchPath:@"/usr/bin/find"
+                                                    arguments:@[onlyinPath, @"-type", @"f", @"(",
+                                                                @"-iname", @"*.jpg", @"-o",
+                                                                @"-iname", @"*.jpeg", @"-o",
+                                                                @"-iname", @"*.png", @"-o",
+                                                                @"-iname", @"*.gif", @")"]];
 //        NSLog(@"outputString = %@", outputString);
         
         NSArray *picArr = [outputString componentsSeparatedByString:@"\n"];
@@ -90,7 +98,7 @@
     }
     NSLog(@"LMPhotoCleaner_collectImagePathsInRootPath end");
 //    [self.allPaths removeAllObjects];
-    return resultPaths;
+    return [resultPaths array];
 }
 
 -(NSString *)photoDirectory{

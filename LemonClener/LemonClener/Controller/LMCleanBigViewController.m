@@ -1455,6 +1455,21 @@ static NSString * const kLemonFileMoveIntroduceVCDidAppear = @"kLemonFileMoveInt
     }
 }
 
+- (void)cleanDidCancel
+{
+    _currentCleanStop = YES;
+    [[LMCleanerDataCenter shareInstance] setIsCleanning:NO];
+    if (![[LMCleanerDataCenter shareInstance] isBigPage]) {
+        return;
+    }
+    [_outLineView reloadData];
+    [self setViewIsScanningOrCleanning:NO];
+    [self.removeButton setHidden:NO];
+    [self setRemoveButtonState];
+    [self.logoImageView setImage:[NSImage imageNamed:@"big_circle_haverubbish" withClass:[self class]]];
+    [self setResultTotalAndSelectSizeLabel];
+}
+
 - (void)cleanResultDidEnd:(NSUInteger)totalSize leftSize:(NSUInteger)leftSize{
     _currentCleanStop = YES;
 }

@@ -7,6 +7,7 @@
 //
 
 #import "LMSystemPhotoCleanerHelper.h"
+#import "LMAppleScriptStringEscape.h"
 #import <QMCoreFunction/NSString+Extension.h>
 @interface LMSystemPhotoCleanerHelper()
 
@@ -95,18 +96,25 @@
     if ((pathArray == nil) || ([pathArray count] == 0)) {
         return NO;
     }
-    NSString *jsonString = @"";
-    for (NSInteger i = 0; i < [pathArray count]; i++) {
-        NSString *_str = [pathArray objectAtIndex:i];
-        [_str stringByReplacingOccurrencesOfString:@" " withString:@"\\ "];
-        jsonString = [jsonString stringByAppendingString:@"\""];
-        jsonString = [jsonString stringByAppendingString:_str];
-        if(i == [pathArray count] - 1){
-            jsonString = [jsonString stringByAppendingString:@"\""];
-        } else {
-            jsonString = [jsonString stringByAppendingString:@"\","];
+    // 安全（S5-as5 sink B）：文件名是磁盘枚举得到的低信任输入，内插进 AppleScript
+    // 源码前必须转义（反斜杠 + 双引号）。原有"转义"返回值被丢弃从未生效（死代码），
+    // 且空格在字符串字面量内本就不需要转义。含换行等无法安全转义的文件名跳过，
+    // 不进入脚本，确保校验失败 = 该项不执行，而非继续拼接。
+    NSMutableArray<NSString *> *escapedNames = [NSMutableArray arrayWithCapacity:[pathArray count]];
+    for (NSString *name in pathArray) {
+        NSString *escaped = LMEscapeAppleScriptString(name);
+        if (!escaped) {
+            NSLog(@"addAlbumsWithSubArray: skip file with unsafe name for AppleScript: %@", name);
+            continue;
         }
+        [escapedNames addObject:escaped];
     }
+    if ([escapedNames count] == 0) {
+        NSLog(@"addAlbumsWithSubArray: no valid file name after escaping, abort script");
+        return NO;
+    }
+    NSString *jsonString = [NSString stringWithFormat:@"\"%@\"",
+                            [escapedNames componentsJoinedByString:@"\",\""]];
     
     
     NSAppleScript *script = nil;

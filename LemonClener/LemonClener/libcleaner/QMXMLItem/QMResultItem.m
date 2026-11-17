@@ -9,6 +9,7 @@
 #import "QMResultItem.h"
 #import "QMXMLItemDefine.h"
 #import "QMCleanUtils.h"
+#import "LMCleanPathAllowlist.h"
 #import <QMCoreFunction/McCoreFunction.h>
 
 @implementation QMResultBrowerItem
@@ -107,7 +108,11 @@
 - (void)addResultWithPath:(NSString *)rpath
 {
     if ([m_pathSet containsObject:rpath])
-        return;    
+        return;
+    if ([rpath hasPrefix:@"/"] && ![LMCleanPathAllowlist isAbsolutePathAllowed:rpath]) {
+        [LMCleanPathAllowlist logRejectedScanPath:rpath];
+        return;
+    }
     [m_pathSet addObject:rpath];
     if (self.cleanType != QMCleanCutBinary && self.cleanType != QMCleanDeleteBinary)
         m_resultFileSize += [QMCleanUtils caluactionSize:rpath];
@@ -126,6 +131,10 @@
 - (void)addResultWithPathByDeamonCalculateSize:(NSString *)rpath{
     if ([m_pathSet containsObject:rpath])
         return;
+    if ([rpath hasPrefix:@"/"] && ![LMCleanPathAllowlist isAbsolutePathAllowed:rpath]) {
+        [LMCleanPathAllowlist logRejectedScanPath:rpath];
+        return;
+    }
     [m_pathSet addObject:rpath];
     NSDictionary *fileInfoDic = [[McCoreFunction shareCoreFuction] getFileInfo:rpath];
     NSUInteger fileSize = [[fileInfoDic objectForKey:@"fileSize"] integerValue];

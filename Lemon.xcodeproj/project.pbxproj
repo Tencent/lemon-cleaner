@@ -14,6 +14,7 @@
 		2F7D4C29219161B8008D59E0 /* createRemoveFlagFile.sh in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2F7D4C2221915BAB008D59E0 /* createRemoveFlagFile.sh */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		2F7D4C912192EFE7008D59E0 /* renameApp.sh in CopyFiles */ = {isa = PBXBuildFile; fileRef = 2F7D4C902192EFCB008D59E0 /* renameApp.sh */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		2F8855A721BE53D700E659C7 /* LMInstallerHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F8855A521BE53D500E659C7 /* LMInstallerHelper.m */; };
+		B7SEC00001000001000SEC01 /* LMCodeSignVerifier.m in Sources */ = {isa = PBXBuildFile; fileRef = B7SEC00001000002000SEC01 /* LMCodeSignVerifier.m */; };
 		2F980D8D21AEBAFB0066D520 /* com.tencent.Lemon.trash.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2F980D8C21AEBAFB0066D520 /* com.tencent.Lemon.trash.plist */; };
 		2FA7A5A621C77C4B00B93EF5 /* com.tencent.Lemon.uninstall.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2FA7A59E21C77C4B00B93EF5 /* com.tencent.Lemon.uninstall.plist */; };
 		5CA3561121DF4A4900BCD89D /* privacyclean07@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5CA3559621DF4A4800BCD89D /* privacyclean07@2x.png */; };
@@ -505,6 +506,8 @@
 		2F86C2252140BFBB00B8C0A9 /* PhotoCollectionViewHeader.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = PhotoCollectionViewHeader.xib; path = Tools/LemonPhotoCleaner/LemonPhotoCleaner/Controller/PhotoCollectionViewHeader.xib; sourceTree = SOURCE_ROOT; };
 		2F8855A521BE53D500E659C7 /* LMInstallerHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMInstallerHelper.m; sourceTree = "<group>"; };
 		2F8855A621BE53D600E659C7 /* LMInstallerHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMInstallerHelper.h; sourceTree = "<group>"; };
+		B7SEC00001000002000SEC01 /* LMCodeSignVerifier.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMCodeSignVerifier.m; sourceTree = "<group>"; };
+		B7SEC00001000003000SEC01 /* LMCodeSignVerifier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMCodeSignVerifier.h; sourceTree = "<group>"; };
 		2F980D8C21AEBAFB0066D520 /* com.tencent.Lemon.trash.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = com.tencent.Lemon.trash.plist; sourceTree = "<group>"; };
 		2FA7A59E21C77C4B00B93EF5 /* com.tencent.Lemon.uninstall.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = com.tencent.Lemon.uninstall.plist; sourceTree = "<group>"; };
 		5CA3559621DF4A4800BCD89D /* privacyclean07@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "privacyclean07@2x.png"; sourceTree = "<group>"; };
@@ -1528,6 +1531,8 @@
 				76B4C2802872953300F61386 /* LMVersionHelper.m */,
 				2F8855A621BE53D600E659C7 /* LMInstallerHelper.h */,
 				2F8855A521BE53D500E659C7 /* LMInstallerHelper.m */,
+				B7SEC00001000003000SEC01 /* LMCodeSignVerifier.h */,
+				B7SEC00001000002000SEC01 /* LMCodeSignVerifier.m */,
 				F85BC5B521256E6E00BD147D /* UIHelper.h */,
 				F85BC5B621256E6E00BD147D /* UIHelper.m */,
 			);
@@ -2141,6 +2146,7 @@
 			files = (
 				5CA3579A21E4A59500BCD89D /* MyAnimateCellView.m in Sources */,
 				2F8855A721BE53D700E659C7 /* LMInstallerHelper.m in Sources */,
+				B7SEC00001000001000SEC01 /* LMCodeSignVerifier.m in Sources */,
 				8B54998928A20A1400B55BB8 /* LMHoverButton.m in Sources */,
 				D4F1DF7D219C432F000CDA07 /* PreferenceWindowController.m in Sources */,
 				F87749FD2281240B000C7175 /* PreferenceASViewController.m in Sources */,
@@ -2384,6 +2390,7 @@
 			baseConfigurationReference = AABB39B505F3F27400C594F3 /* Pods-Lemon.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = NO;
 				CODE_SIGN_ENTITLEMENTS = "Lemon/Tencent Lemon.entitlements";
 				CODE_SIGN_IDENTITY = "Developer ID Application: Tencent Technology (Shenzhen) Company Limited (88L2Q4487U)";
 				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = YES;
@@ -2441,6 +2448,7 @@
 			baseConfigurationReference = 90072B757471067B640ECCE6 /* Pods-Lemon.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = NO;
 				CODE_SIGN_ENTITLEMENTS = "Lemon/Tencent Lemon.entitlements";
 				CODE_SIGN_IDENTITY = "Developer ID Application: Tencent Technology (Shenzhen) Company Limited (88L2Q4487U)";
 				CODE_SIGN_INJECT_BASE_ENTITLEMENTS = NO;

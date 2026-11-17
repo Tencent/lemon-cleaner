@@ -18,6 +18,7 @@
 
 #import "McStatMonitor.h"
 #import <QMCoreFunction/McProcessInfoData.h>
+#import <QMCoreFunction/McCoreFunction.h>
 
 #import <LemonStat/McDiskInfo.h>
 #import "LMSystemFeatureViewController.h"
@@ -341,6 +342,12 @@ enum
 }
 
 -(void)userChangeLanguage:(NSNotification *)notification{
+    if (![NSThread isMainThread]) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self userChangeLanguage:notification];
+        });
+        return;
+    }
     NSLog(@"userChangeLanguage  _popover set to nil ");
     _isUserChangeLanguage = YES;
     //hook monitor多语言
@@ -373,6 +380,12 @@ enum
 // mark: 暗黑模式/非暗黑模式时 显示 状态栏图标
 - (void)configureMenuBarForDarkModeChange
 {
+    if (![NSThread isMainThread]) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self configureMenuBarForDarkModeChange];
+        });
+        return;
+    }
     NSString *imageName = nil;
     if ([QMEnvironmentInfo isDarkMode]) {
         imageName = @"status_network_traffic_dark";
@@ -594,8 +607,9 @@ enum
     for (DiskZoneModel *zoneModel in diskInfo) {
 //            NSLog(@"%s, zoneMode Info : %@", __FUNCTION__, zoneModel);
         if(zoneModel.isMainDisk){
-            
-            uint64_t usedBytes = zoneModel.maxSize - zoneModel.leftSize;
+            // 防御：leftSize > maxSize 时避免 uint64_t 无符号下溢
+            uint64_t usedBytes = (zoneModel.maxSize > zoneModel.leftSize) ?
+                                 (uint64_t)(zoneModel.maxSize - zoneModel.leftSize) : 0;
             if (zoneModel.maxSize > 0)
             {
                 double useRate = usedBytes*1.0/zoneModel.maxSize;
@@ -623,7 +637,8 @@ enum
         [LMHardWareDataUtil calculateDiskUsageInfoWithMainDiskName:self.mainDiskName volumeArray:volumnesArray freeBytes:&freeBytes totalBytes:&totalBytes];
 //        NSLog(@"DiskInfo--%s-- freeBytes:%llul, totalBytes:%llul",__FUNCTION__,freeBytes,totalBytes);
        
-        usedBytes = totalBytes - freeBytes;
+        // 防御：freeBytes > totalBytes 时避免 uint64_t 无符号下溢
+        usedBytes = (totalBytes > freeBytes) ? (totalBytes - freeBytes) : 0;
         if (totalBytes > 0)
         {
             double useRate = usedBytes*1.0/totalBytes;
@@ -658,6 +673,12 @@ enum
 }
 
 -(void)receiveDarkModeChanged:(NSNotification *)notification {
+    if (![NSThread isMainThread]) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self receiveDarkModeChanged:notification];
+        });
+        return;
+    }
     [statusView onDarkModeChange];
 }
 

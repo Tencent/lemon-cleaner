@@ -150,6 +150,19 @@ NSString *getKextPathByBundleId(NSString *bundleId) {
     NSString *kextPath = [NSString stringWithUTF8String:kext_param->szKext];
     NSLog(@"uninstallKext kext path is %@", kextPath);
 
+    // 安全校验：只允许合法的 kext 路径前缀
+    NSString *resolvedKextPath = [[kextPath stringByStandardizingPath] stringByResolvingSymlinksInPath];
+    if (![resolvedKextPath hasPrefix:@"/Library/Extensions/"] &&
+        ![resolvedKextPath hasPrefix:@"/System/Library/Extensions/"] &&
+        ![resolvedKextPath hasPrefix:@"/Library/Application Support/"]) {
+        NSLog(@"[security] uninstallKextWithPath: reject invalid kext path: %@ (resolved: %@)", kextPath, resolvedKextPath);
+        return -2;
+    }
+    // 防止路径穿越
+    if ([kextPath containsString:@".."]) {
+        NSLog(@"[security] uninstallKextWithPath: reject path with traversal: %@", kextPath);
+        return -2;
+    }
 
     NSFileManager *fileManager = [NSFileManager defaultManager];
     BOOL isExist = [fileManager fileExistsAtPath:kextPath];
@@ -190,6 +203,12 @@ NSString *getKextPathByBundleId(NSString *bundleId) {
     NSLog(@"uninstallKext kext bundleId is %@", bundleId);
 
     if (!bundleId || bundleId.length < 1) {
+        return -3;
+    }
+    NSCharacterSet *allowedBundleIdChars = [NSCharacterSet characterSetWithCharactersInString:
+                                            @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.-"];
+    if ([bundleId rangeOfCharacterFromSet:[allowedBundleIdChars invertedSet]].location != NSNotFound) {
+        NSLog(@"[security] uninstallKextWithBundleId: reject invalid bundleId: %@", bundleId);
         return -3;
     }
     

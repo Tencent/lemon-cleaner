@@ -50,4 +50,37 @@
     }
     return NO;
 }
+
++(NSArray<NSString *> *)removeNestedSubPathsWithPathArray:(NSArray<NSString *> *)paths{
+    if (paths.count == 0) {
+        return @[];
+    }
+    // 第一步：去掉完全相同的重复路径，保留首次出现顺序
+    NSMutableOrderedSet<NSString *> *uniquePaths = [NSMutableOrderedSet orderedSet];
+    for (NSString *path in paths) {
+        if (path.length > 0) {
+            [uniquePaths addObject:path];
+        }
+    }
+    // 第二步：剔除被其它路径包含的子路径
+    NSMutableArray<NSString *> *resultPaths = [NSMutableArray array];
+    for (NSString *path in uniquePaths) {
+        BOOL isChildOfOther = NO;
+        for (NSString *comparePath in uniquePaths) {
+            if ([comparePath isEqualToString:path]) {
+                continue;
+            }
+            // comparePath 是 path 的祖先目录：补 "/" 边界，避免 /a/bc 被误判为 /a/b 的子路径
+            NSString *prefix = [comparePath hasSuffix:@"/"] ? comparePath : [comparePath stringByAppendingString:@"/"];
+            if (comparePath.length < path.length && [path hasPrefix:prefix]) {
+                isChildOfOther = YES;
+                break;
+            }
+        }
+        if (!isChildOfOther) {
+            [resultPaths addObject:path];
+        }
+    }
+    return resultPaths;
+}
 @end

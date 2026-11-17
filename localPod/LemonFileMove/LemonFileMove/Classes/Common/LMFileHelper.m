@@ -81,9 +81,18 @@
 }
 
 + (NSInteger)fileCountAtPath:(NSString *)path {
-    NSString *cmd = [NSString stringWithFormat:@"find '%@' -type f | wc -l", path];
-    NSString *fileCount = [QMShellExcuteHelper excuteCmd:cmd];
-    return [fileCount integerValue];
+    NSString *fileList = [QMShellExcuteHelper executeLaunchPath:@"/usr/bin/find"
+                                                     arguments:@[path, @"-type", @"f"]];
+    if (fileList.length == 0) {
+        return 0;
+    }
+    NSInteger count = 0;
+    for (NSString *line in [fileList componentsSeparatedByString:@"\n"]) {
+        if (line.length > 0) {
+            count++;
+        }
+    }
+    return count;
 }
 
 + (BOOL)isEmptyDirectory:(NSString *)path filterHiddenItem:(BOOL)filterHiddenItem isDirectory:(nullable BOOL *)isDirectory {

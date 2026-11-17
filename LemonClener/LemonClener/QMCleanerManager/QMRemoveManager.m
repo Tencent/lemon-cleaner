@@ -10,6 +10,8 @@
 #import "QMCleanerUtils.h"
 #import "QMCoreFunction/McCoreFunction.h"
 #import "QMDataConst.h"
+#import "QMResultItem.h"
+#import "LMCleanPathAllowlist.h"
 #import <QMCoreFunction/QMShellExcuteHelper.h>
 #include <sys/sysctl.h>
 
@@ -794,20 +796,148 @@
         });
         return NO;
     }
-    // 删除文件线程
-    if ([NSThread isMainThread])
-    {
+
+    NSUInteger blockedSize = 0;
+    NSArray<NSString *> *blockedPaths = [LMCleanPathAllowlist disallowedAbsolutePathsInResultDict:removeItemDict
+                                                                                         totalSize:&blockedSize];
+    if (source == QMCleanerActionSourceMonitor) {
+        if ([blockedPaths count] > 0) {
+            NSLog(@"lm cleaner monitor reject %lu out-of-allowlist path(s)", (unsigned long)blockedPaths.count);
+            removeItemDict = [self _dictionaryByDroppingDisallowedItems:removeItemDict];
+            if ([removeItemDict count] == 0) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    QMRemoveManager *strongSelf = weakSelf;
+                    [strongSelf->_delegate cleanResultDidEnd:0 leftSize:0];
+                });
+                return NO;
+            }
+            _removeAllSize = [self _totalSizeOfResultDict:removeItemDict];
+        }
+        [self _startProcessClean:removeItemDict actionSource:source];
+        return YES;
+    }
+
+    if ([blockedPaths count] > 0) {
+        __block BOOL confirmed = NO;
+        if ([NSThread isMainThread]) {
+            confirmed = [self _confirmHomeCleanForBlockedPaths:blockedPaths totalSize:blockedSize];
+        } else {
+            dispatch_sync(dispatch_get_main_queue(), ^{
+                confirmed = [self _confirmHomeCleanForBlockedPaths:blockedPaths totalSize:blockedSize];
+            });
+        }
+        if (!confirmed) {
+            [self _notifyCleanDidCancel];
+            return NO;
+        }
+    }
+    [self _startProcessClean:removeItemDict actionSource:source];
+    return YES;
+}
+
+- (void)_notifyCleanDidCancel
+{
+    void (^cancelBlock)(void) = ^{
+        if ([self.delegate respondsToSelector:@selector(cleanDidCancel)]) {
+            [self.delegate cleanDidCancel];
+        }
+    };
+    if ([NSThread isMainThread]) {
+        cancelBlock();
+    } else {
+        dispatch_async(dispatch_get_main_queue(), cancelBlock);
+    }
+}
+
+- (void)_startProcessClean:(NSMutableDictionary *)removeItemDict actionSource:(QMCleanerActionSource)source
+{
+    __weak QMRemoveManager *weakSelf = self;
+    if ([NSThread isMainThread]) {
         dispatch_async(dispatch_get_global_queue(0, 0), ^{
             QMRemoveManager *strongSelf = weakSelf;
-            
             [strongSelf processClean:removeItemDict actionSource:source];
         });
-    }
-    else
-    {
+    } else {
         [self processClean:removeItemDict actionSource:source];
     }
-    return YES;
+}
+
+- (BOOL)_confirmHomeCleanForBlockedPaths:(NSArray<NSString *> *)blockedPaths totalSize:(NSUInteger)totalSize
+{
+    NSAlert *alert = [[NSAlert alloc] init];
+    alert.alertStyle = NSAlertStyleWarning;
+    alert.messageText = LMLocalizedSelfBundleString(@"以下路径不在清理名单内，确认要删除吗？", nil);
+    NSUInteger showCount = MIN(blockedPaths.count, (NSUInteger)20);
+    NSMutableArray *lines = [NSMutableArray array];
+    for (NSUInteger i = 0; i < showCount; i++) {
+        [lines addObject:blockedPaths[i]];
+    }
+    if (blockedPaths.count > showCount) {
+        [lines addObject:[NSString stringWithFormat:LMLocalizedSelfBundleString(@"以及另外 %lu 条路径", nil),
+                          (unsigned long)(blockedPaths.count - showCount)]];
+    }
+    NSString *sizeText = [NSString stringFromSize:(uint64_t)totalSize delimiter:@" " diskMode:YES];
+    alert.informativeText = [NSString stringWithFormat:@"%@\n%@",
+                             [NSString stringWithFormat:LMLocalizedSelfBundleString(@"共 %lu 条，约 %@", nil),
+                              (unsigned long)blockedPaths.count, sizeText],
+                             [lines componentsJoinedByString:@"\n"]];
+    [alert addButtonWithTitle:LMLocalizedSelfBundleString(@"取消", nil)];
+    [alert addButtonWithTitle:LMLocalizedSelfBundleString(@"确认删除", nil)];
+    NSModalResponse response = [alert runModal];
+    return response == NSAlertSecondButtonReturn;
+}
+
+- (NSUInteger)_totalSizeOfResultDict:(NSDictionary *)resultDict
+{
+    NSUInteger total = 0;
+    for (NSDictionary *subItemDict in resultDict.allValues) {
+        if (![subItemDict isKindOfClass:[NSDictionary class]]) {
+            continue;
+        }
+        for (NSArray *array in subItemDict.allValues) {
+            if (![array isKindOfClass:[NSArray class]]) {
+                continue;
+            }
+            for (QMResultItem *item in array) {
+                if ([item isKindOfClass:[QMResultItem class]]) {
+                    total += [item resultFileSize];
+                }
+            }
+        }
+    }
+    return total;
+}
+
+- (NSMutableDictionary *)_dictionaryByDroppingDisallowedItems:(NSMutableDictionary *)resultDict
+{
+    NSMutableDictionary *filtered = [NSMutableDictionary dictionary];
+    for (NSString *key in resultDict.allKeys) {
+        NSDictionary *subItemDict = [resultDict objectForKey:key];
+        if (![subItemDict isKindOfClass:[NSDictionary class]]) {
+            continue;
+        }
+        NSMutableDictionary *filteredSub = [NSMutableDictionary dictionary];
+        for (NSString *subKey in subItemDict.allKeys) {
+            NSArray *array = [subItemDict objectForKey:subKey];
+            if (![array isKindOfClass:[NSArray class]]) {
+                continue;
+            }
+            NSMutableArray *kept = [NSMutableArray array];
+            for (QMResultItem *item in array) {
+                if ([item isKindOfClass:[QMResultItem class]] &&
+                    ![LMCleanPathAllowlist resultItemHasDisallowedAbsolutePath:item]) {
+                    [kept addObject:item];
+                }
+            }
+            if ([kept count] > 0) {
+                [filteredSub setObject:kept forKey:subKey];
+            }
+        }
+        if ([filteredSub count] > 0) {
+            [filtered setObject:filteredSub forKey:key];
+        }
+    }
+    return filtered;
 }
 
 - (void)removeWarnItem

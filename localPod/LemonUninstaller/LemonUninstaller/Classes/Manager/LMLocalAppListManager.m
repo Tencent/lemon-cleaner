@@ -7,6 +7,7 @@
 //
 
 #import "LMLocalAppListManager.h"
+#import "LMUninstallTrustLevel.h"
 #import "McApplicationScanner.h"
 #import "McPluginScanner.h"
 #import "McInputMethodScanner.h"
@@ -114,7 +115,6 @@
         return NO;
     }
 }
-
 
 - (NSArray *)needScanItems {
     NSMutableArray *unscanList = [NSMutableArray array];
@@ -264,10 +264,15 @@
             [ret addObject:app];
             continue;
         }
-        LMLocalApp *tempApp = [temp objectForKey:app.bundleID];
+        // 安全（S5.3-as1）：合并键 = bundleID + 路径信任级（LMUninstallTrustLevel.h）。
+        // bundleID 是 app 自声明字段、任意可填；用户可写目录（~/Downloads 等）扫出的伪造副本
+        // 若与 /Applications 下真实应用合并进同一卸载条目，一次常规卸载会借 root daemon
+        // 永久删除真实应用。信任级不同则不合并，各自独立成条目；同信任级多副本仍正常合并。
+        NSString *mergeKey = LMUninstallMergeKey(app.bundleID, app.bundlePath);
+        LMLocalApp *tempApp = [temp objectForKey:mergeKey];
         if (!tempApp) {
             LMLocalApp *newapp = [app copy]; //TODO 为什么要 copy一份? (copy 的意义是什么?) 真正卸载时显示不正常的原因(转圈的位置不对)
-            [temp setObject:newapp forKey:app.bundleID];
+            [temp setObject:newapp forKey:mergeKey];
         } else {
             if(!tempApp.isScanComplete && !app.isScanComplete){
                 [tempApp simpleMerge:app];

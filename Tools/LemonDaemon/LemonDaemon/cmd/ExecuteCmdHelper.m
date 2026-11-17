@@ -1,5 +1,5 @@
 //
-//  ExecuteCmdHelper.c
+//  ExecuteCmdHelper.m
 //  LemonDaemon
 //
 
@@ -8,38 +8,62 @@
 
 #include "ExecuteCmdHelper.h"
 
-
-
 NSString* executeCmdAndGetResult(NSString *cmd)
 {
-    // 初始化并设置shell路径
-    NSTask *task = [[NSTask alloc] init];
-    [task setLaunchPath: @"/bin/bash"];
-    // -c 用来执行string-commands（命令字符串），也就说不管后面的字符串里是什么都会被当做shellcode来执行
-    NSArray *arguments = [NSArray arrayWithObjects: @"-c", cmd, nil];
-    [task setArguments: arguments];
-    
-    // 新建输出管道作为Task的输出
-    NSPipe *pipe = [NSPipe pipe];
-    [task setStandardOutput: pipe];
-    
-    // 开始task
-    NSFileHandle *file = [pipe fileHandleForReading];
-    [task launch];
-    
-    // 获取运行结果
-    NSData *data = [file readDataToEndOfFile];
-    [task waitUntilExit];
-    int status = [task terminationStatus];
-    if (status == 0) {
-        NSLog(@"%s, Task succeeded.", __FUNCTION__);
-    } else {
-        [task terminate];
-        NSLog(@"%s, Task failed.", __FUNCTION__);
+    if (cmd.length == 0) {
+        return nil;
     }
-    [file closeFile];
-    return [[NSString alloc] initWithData: data encoding: NSUTF8StringEncoding];
+    return executeLaunchPathAndGetResult(@"/bin/bash", @[@"-c", cmd]);
 }
 
+NSString* executeLaunchPathAndGetResult(NSString *launchPath, NSArray<NSString *> *arguments)
+{
+    if (launchPath.length == 0 || arguments == nil) {
+        return nil;
+    }
+    NSTask *task = [[NSTask alloc] init];
+    [task setLaunchPath:launchPath];
+    [task setArguments:arguments];
+    NSPipe *pipe = [NSPipe pipe];
+    [task setStandardOutput:pipe];
+    [task setStandardError:[NSPipe pipe]];
+    NSFileHandle *file = [pipe fileHandleForReading];
+    @try {
+        [task launch];
+    } @catch (NSException *exception) {
+        NSLog(@"%s, launch failed: %@, path=%@ args=%@", __FUNCTION__, exception, launchPath, arguments);
+        return nil;
+    }
+    NSData *data = [file readDataToEndOfFile];
+    [task waitUntilExit];
+    [file closeFile];
+    return [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+}
 
+int executeLaunchPath(NSString *launchPath, NSArray<NSString *> *arguments)
+{
+    if (launchPath.length == 0 || arguments == nil) {
+        return -1;
+    }
+    NSTask *task = [[NSTask alloc] init];
+    [task setLaunchPath:launchPath];
+    [task setArguments:arguments];
+    @try {
+        [task launch];
+        [task waitUntilExit];
+        return task.terminationStatus;
+    } @catch (NSException *exception) {
+        NSLog(@"%s, launch failed: %@, path=%@ args=%@", __FUNCTION__, exception, launchPath, arguments);
+        return -1;
+    }
+}
 
+NSString* executeExecutableWithArguments(NSString *launchPath, NSArray<NSString *> *arguments)
+{
+    return executeLaunchPathAndGetResult(launchPath, arguments ?: @[]);
+}
+
+int executeExecutableWithArgumentsGetStatus(NSString *launchPath, NSArray<NSString *> *arguments)
+{
+    return executeLaunchPath(launchPath, arguments ?: @[]);
+}

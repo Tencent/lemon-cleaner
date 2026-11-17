@@ -260,13 +260,6 @@ static const CGFloat kTopPadding = 10;
 
 - (void)viewDidAppear {
     [super viewDidAppear];
-//    获取云配参数保留
-//    CFPreferencesAppSynchronize((__bridge CFStringRef)(MAIN_APP_BUNDLEID));
-//    CFBooleanRef kAnniActivityEnter = CFPreferencesCopyAppValue((__bridge CFStringRef)(@"kAnniActivityEnter"), (__bridge CFStringRef)(MAIN_APP_BUNDLEID));
-//     bug:偶现读取不到数据
-//    if (kAnniActivityEnter == NULL) {
-//        return;
-//    }
 }
 
 - (void) setupLauncherView

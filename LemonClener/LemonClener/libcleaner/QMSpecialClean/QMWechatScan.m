@@ -236,28 +236,18 @@ static NSString * const kWeChat4PartsOfVideos = @"/msg/video";
         path = [path stringByReplacingOccurrencesOfString:@"~" withString:[NSString getUserHomePath]];
         [pathArray addObject:path];
     }
-    // 在指定路径下找到指定命名的文件夹
-    NSString *shellString = @"mdfind -onlyin \"%@\" 'kMDItemContentType == \"public.folder\" && kMDItemDisplayName == \"%@\"'";
-    NSString *shellStringEmptyName = @"mdfind -onlyin \"%@\" 'kMDItemContentType == \"public.folder\"'";
-    // 统一使用find命令
-    // 该命令找不到文件夹，暂时未使用
-    // NSString *shellString = @"find \"%@\" -type d -name \"%@\"";
-    
     for (NSString *path in pathArray) {
         NSString * currentKeyWord = keyword;
         if ([QMCleanUtils isWeChat4FromPath:path]) {
             currentKeyWord = v4Keyword;
         }
         
-        // 数量相对较少，此处均只有一个元素，可不用@autoreleasepool
-        NSString *cmd = nil;
+        NSString *query = @"kMDItemContentType == \"public.folder\"";
         if (currentKeyWord.length > 0) {
-            cmd = [NSString stringWithFormat:shellString, path, currentKeyWord];
-        } else {
-            cmd = [NSString stringWithFormat:shellStringEmptyName, path];
+            query = [NSString stringWithFormat:@"kMDItemContentType == \"public.folder\" && kMDItemDisplayName == \"%@\"", currentKeyWord];
         }
-        
-        NSString *retPath = [QMShellExcuteHelper excuteCmd:cmd];
+        NSString *retPath = [QMShellExcuteHelper executeLaunchPath:@"/usr/bin/mdfind"
+                                                        arguments:@[@"-onlyin", path, query]];
         if ([retPath isKindOfClass:[NSNull class]]) {
             continue;
         }
@@ -306,8 +296,15 @@ static NSString * const kWeChat4PartsOfVideos = @"/msg/video";
 
 // 找出文件夹下的对应文件
 - (NSArray *)findFilesWithShell:(NSString *)shellString folder:(NSString *)path {
-    NSString *cmd = [NSString stringWithFormat:shellString, path];
-    NSString *retPath = [QMShellExcuteHelper excuteCmd:cmd];
+    NSMutableArray *arguments = [NSMutableArray arrayWithObjects:path, @"-type", @"f", @"(",
+                                 @"-iname", @"*.jpg", @"-o",
+                                 @"-iname", @"*.jpeg", @"-o",
+                                 @"-iname", @"*.png", @"-o",
+                                 @"-iname", @"*.gif", @")", nil];
+    if ([shellString containsString:@"-mtime"]) {
+        [arguments addObjectsFromArray:@[@"-mtime", @"+90"]];
+    }
+    NSString *retPath = [QMShellExcuteHelper executeLaunchPath:@"/usr/bin/find" arguments:arguments];
     if ([retPath isKindOfClass:[NSNull class]]) {
         return @[];
     }

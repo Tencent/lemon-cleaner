@@ -102,6 +102,16 @@
 
 #pragma mark - 内部函数
 
+- (BOOL)isResolvedPath:(NSString *)resolvedPath insideHome:(NSString *)homePath {
+    NSString *resolvedHome = [[homePath stringByStandardizingPath] stringByResolvingSymlinksInPath];
+    NSString *resolved = [[resolvedPath stringByStandardizingPath] stringByResolvingSymlinksInPath];
+    if (resolved.length == 0 || resolvedHome.length == 0) {
+        return NO;
+    }
+    NSString *prefix = [resolvedHome hasSuffix:@"/"] ? resolvedHome : [resolvedHome stringByAppendingString:@"/"];
+    return [resolved hasPrefix:prefix];
+}
+
 - (NSString *)getExistFile:(NSString *)projectPathString
 {
     if (!projectPathString || projectPathString.length == 0) {
@@ -111,8 +121,12 @@
     // 替换$USER_HOME$
     NSString *userHome = [@"~" stringByExpandingTildeInPath];
     NSString *realPath = [path stringByReplacingOccurrencesOfString:@"$USER_HOME$" withString:userHome];
-    if ([[NSFileManager defaultManager] fileExistsAtPath:realPath]) {
-        return [realPath copy];
+    if (![self isResolvedPath:realPath insideHome:userHome]) {
+        return nil;
+    }
+    NSString *resolved = [[realPath stringByStandardizingPath] stringByResolvingSymlinksInPath];
+    if ([[NSFileManager defaultManager] fileExistsAtPath:resolved] && [self isResolvedPath:resolved insideHome:userHome]) {
+        return resolved;
     }
     return nil;
 }

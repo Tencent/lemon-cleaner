@@ -807,8 +807,10 @@
 
 -(void)dealloc{
     NSLog(@"Super Dealloc _______________________ ，%@",[self className]);
-    [self.scanCheckTimer invalidate];
-    self.scanCheckTimer = nil;
+    if (self.scanCheckTimer) {
+        [self.scanCheckTimer invalidate];
+        self.scanCheckTimer = nil;
+    }
 }
 
 - (NSString *)getMD5WithPathArray:(NSArray *)array {

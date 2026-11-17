@@ -75,6 +75,20 @@ post_install do |installer_representation|
         target.build_configurations.each do |config|
             config.build_settings['ONLY_ACTIVE_ARCH'] = 'NO'
             config.build_settings['MACOSX_DEPLOYMENT_TARGET'] = '10.11'
+            config.build_settings['CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES'] = 'YES'
+        end
+    end
+
+    # Xcode 26+: AFNetworking 3.x 引用了 netinet6/in6.h 私有模块头文件，
+    # 新版 Xcode 严格检查会报错。netinet/in.h 已包含 IPv6 定义，直接删除该行。
+    af_dir = File.join(installer_representation.sandbox.root, 'AFNetworking', 'AFNetworking')
+    Dir.glob(File.join(af_dir, '*.m')).each do |af_file|
+        content = File.read(af_file)
+        if content.match?(/^.*netinet6\/in6\.h.*$/)
+            patched = content.gsub(/^.*netinet6\/in6\.h.*\n/, '')
+            File.chmod(0644, af_file)
+            File.write(af_file, patched)
+            puts "[Podfile] Patched #{File.basename(af_file)}: removed netinet6/in6.h line"
         end
     end
 end

@@ -9,11 +9,24 @@
 #import "McKextMgr.h"
 #import <IOKit/kext/KextManager.h>
 #import "OSKextError.h"
+#import "ExecuteCmdHelper.h"
 
 int stopKextPath(const char *kextPath)
 {
-    NSString *unloadCmd = [NSString stringWithFormat:@"kextunload %s",kextPath];
-    return system([unloadCmd UTF8String]);
+    if (kextPath == NULL || kextPath[0] == '\0') {
+        return -1;
+    }
+    NSString *path = [NSString stringWithUTF8String:kextPath];
+    if (path.length == 0) {
+        return -1;
+    }
+    if ([path containsString:@".."] || [path containsString:@";"] ||
+        [path containsString:@"|"] || [path containsString:@"&"] ||
+        [path containsString:@"`"] || [path containsString:@"$"]) {
+        NSLog(@"[security] stopKextPath: reject suspicious path: %@", path);
+        return -1;
+    }
+    return executeLaunchPath(@"/sbin/kextunload", @[path]);
 }
 
 int stopKext(const char *kextBundle)
@@ -21,8 +34,20 @@ int stopKext(const char *kextBundle)
     //#include <IOKit/kext/OSKextPrivate.h>
     //OSKextUnloadKextWithIdentifier
 
-    NSString *unloadCmd = [NSString stringWithFormat:@"kextunload -b %s",kextBundle];
-    return system([unloadCmd UTF8String]);
+    if (kextBundle == NULL || kextBundle[0] == '\0') {
+        return -1;
+    }
+    NSString *bundleId = [NSString stringWithUTF8String:kextBundle];
+    if (bundleId.length == 0) {
+        return -1;
+    }
+    NSCharacterSet *allowed = [NSCharacterSet characterSetWithCharactersInString:
+                               @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.-"];
+    if ([bundleId rangeOfCharacterFromSet:[allowed invertedSet]].location != NSNotFound) {
+        NSLog(@"[security] stopKext: reject invalid bundleId: %@", bundleId);
+        return -1;
+    }
+    return executeLaunchPath(@"/sbin/kextunload", @[@"-b", bundleId]);
     
 /* only for 10.7
     OSReturn ret = kOSKextReturnStartStopError;

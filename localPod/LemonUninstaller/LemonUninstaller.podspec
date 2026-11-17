@@ -34,7 +34,7 @@ TODO: Add long description of the pod here.
   s.source_files = 'LemonUninstaller/Classes/**/*'
   s.resources = ['LemonUninstaller/Assets/**/*']
 
-  s.public_header_files = ['LemonUninstaller/Classes/Controller/McUninstallWindowController.h','LemonUninstaller/Classes/TrashWatch/AppTrashDel.h']
+  s.public_header_files = ['LemonUninstaller/Classes/Controller/McUninstallWindowController.h','LemonUninstaller/Classes/TrashWatch/AppTrashDel.h','LemonUninstaller/Classes/TrashWatch/LMTrashAppIdentity.h']
   
   s.dependency 'AFNetworking', '3.2.1'
   s.dependency "Masonry", '1.1.0'

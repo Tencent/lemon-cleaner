@@ -54,7 +54,9 @@
 
 - (id)init {
     self = [super init];
+#ifdef DEBUG
     NSLog(@"LemonBizManager init begin");
+#endif
     if (self) {
         [[NSTimer scheduledTimerWithTimeInterval:2.0 repeats:YES handler:^{
             if (!self.mgrUpdate && ![[NSFileManager defaultManager] fileExistsAtPath:DEFAULT_APP_PATH] &&

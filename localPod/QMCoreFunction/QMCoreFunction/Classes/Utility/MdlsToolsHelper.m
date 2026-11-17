@@ -23,7 +23,7 @@
     if (![[[path lastPathComponent] pathExtension] isEqualToString:type]) {
         return 0;
     }
-    NSString *outString = [QMShellExcuteHelper excuteCmd:[NSString stringWithFormat:@"mdls \"%@\"", path]];
+    NSString *outString = [QMShellExcuteHelper executeLaunchPath:@"/usr/bin/mdls" arguments:@[path]];
     if ((outString == nil) || [outString isEqualToString:@""]) {
         return 0;
     }

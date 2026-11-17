@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic) LMLoopTriggerRunModes runModes;
 
-@property (nonatomic, copy) dispatch_block_t callback;
+@property (nonatomic, copy) LMLoopTriggerCallback callback;
 
 @end
 

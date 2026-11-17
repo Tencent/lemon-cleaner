@@ -27,6 +27,10 @@
 #define MONITOR_APP_BUNDLEID    @"com.tencent.LemonMonitor"
 #define DAEMON_APP_BUNDLEID     @"com.tencent.LemonDaemon"
 
+// 代码签名身份：Team ID 是 XPC 鉴权的唯一信任锚，禁止用 identifier / 版本号单独放行
+#define LEMON_TEAM_ID           @"88L2Q4487U"
+#define LEMON_SIGNING_AUTH      @"Developer ID Application: Tencent Technology (Shenzhen) Company Limited (88L2Q4487U)"
+
 //APP的文件名
 #define MAIN_APP_NAME           @"Tencent Lemon.app"
 #define MONITOR_APP_NAME        @"LemonMonitor.app"

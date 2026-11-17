@@ -33,11 +33,10 @@
 #import <QMUICommon/RatingUtils.h>
 #import <QMUICommon/LemonSuiteUserDefaults.h>
 #import <QMUICommon/FullDiskAccessPermissionViewController.h>
-#import "LMWebWindowController.h"
+#import <QMUICommon/QMBaseWindowController.h>
 #import "LemonVCModel.h"
 #import <QMUICommon/QMButton.h>
 #import "LMMaskView.h"
-#import "LMActivityCard.h"
 #import "LMGSView.h"
 #import "LMFileMoveIntroduceVC.h"
 #import <LemonFileMove/LMFileMoveDefines.h>
@@ -219,12 +218,12 @@
 @property (weak) IBOutlet NSImageView *resultTipImageView;
 @property (weak) IBOutlet NSTextField *resultTipLabel;
 @property (weak) IBOutlet NSTextField *noResultTipLabel;
-@property (weak) IBOutlet LMBorderButton *showBIgBtn;
-@property (weak) IBOutlet NSTextField *resultTitleLabel;
-@property (weak) IBOutlet LMButton *resultBtn;
+@property (weak, readwrite) IBOutlet LMBorderButton *showBIgBtn;
+@property (weak, readwrite) IBOutlet NSTextField *resultTitleLabel;
+@property (weak, readwrite) IBOutlet LMButton *resultBtn;
 
 //guideView
-@property (weak) IBOutlet NSView *guideView;
+@property (weak, readwrite) IBOutlet NSView *guideView;
 @property (weak) IBOutlet NSImageView *bubbleImageView;
 @property (weak) IBOutlet NSImageView *arrowImageView;
 @property (weak) IBOutlet NSTextField *guideDescLabel1;
@@ -606,7 +605,7 @@
         make.bottom.equalTo(self.mainView).offset(-10);
     }];
     
-    LMActivityCard *blurView =  [[LMActivityCard alloc] init];
+    NSView *blurView =  [[NSView alloc] init];
     blurView.wantsLayer = YES;
     blurView.layer.cornerRadius = 14;
     blurView.layer.masksToBounds = YES;
@@ -986,6 +985,7 @@
 }
 
 -(void)startCleanFunction{
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"lemon_clean_did_start" object:nil];
     [self setCleanCategoryLabel];
     self.currentCleanSizeInfo = [[NSMutableDictionary alloc] initWithDictionary:self.currentResultSizeInfo];
     
@@ -1112,6 +1112,7 @@
                         _isBubbleShown = NO;
                         _guideCount = 0;
                         self.guideView.hidden = NO;
+                        [[NSNotificationCenter defaultCenter] postNotificationName:@"lemon_guide_did_show" object:nil];
                         _guideTimer = [NSTimer scheduledTimerWithTimeInterval:1.0/30
                                                                        target:self
                                                                      selector:@selector(_refreshGuide)
@@ -1230,6 +1231,7 @@
     _isShowGuide = NO;
     self.resultBtn.enabled = YES;
     self.guideView.hidden = YES;
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"lemon_guide_did_close" object:nil];
     [_guideTimer invalidate];
     _guideTimer = nil;
 }
@@ -2371,8 +2373,23 @@
     [subCategoryItem setIsCleanning:NO];
 }
 
+- (void)cleanDidCancel
+{
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"lemon_clean_did_end" object:nil];
+    [[LMCleanerDataCenter shareInstance] setIsCleanning:NO];
+    _currentCleanStop = YES;
+    [self stopCleanTimer];
+    if (self.cleanStatus != CleanStatusCleanProgress) {
+        return;
+    }
+    CleanStatus status = self.cleanStatus;
+    self.cleanStatus = CleanStatusScanResult;
+    [self reArrangeContentView:status];
+}
+
 - (void)cleanResultDidEnd:(NSUInteger)totalSize leftSize:(NSUInteger)leftSize{
     NSLog(@"清理完成");
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"lemon_clean_did_end" object:nil];
     [[LMCleanerDataCenter shareInstance] setIsCleanning:NO];
     _currentCleanStop = YES;
     //    [_internetRubbishImageView stopAni];

@@ -8,6 +8,90 @@
 
 #import "BaseBrowserPrivacyDataManager.h"
 #import <QMCoreFunction/McCoreFunction.h>
+#import <sys/stat.h>
+#import <errno.h>
+
+static BOOL LMPrivacyIsSystemPathAlias(NSString *prefix) {
+    return [prefix isEqualToString:@"/tmp"] ||
+           [prefix isEqualToString:@"/var"] ||
+           [prefix isEqualToString:@"/etc"];
+}
+
+static BOOL LMPrivacyPathHasUnsafeSymlink(NSString *path) {
+    if (path.length == 0) {
+        return YES;
+    }
+    NSString *standardized = [path stringByStandardizingPath];
+    if (standardized.length == 0 || ![standardized hasPrefix:@"/"] || [standardized isEqualToString:@"/"]) {
+        return YES;
+    }
+
+    NSArray<NSString *> *parts = [standardized pathComponents];
+    NSMutableString *prefix = [NSMutableString string];
+    for (NSString *part in parts) {
+        if ([part isEqualToString:@"/"]) {
+            [prefix setString:@"/"];
+            continue;
+        }
+        if ([prefix isEqualToString:@"/"]) {
+            [prefix appendString:part];
+        } else {
+            [prefix appendFormat:@"/%@", part];
+        }
+
+        struct stat st;
+        if (lstat([prefix fileSystemRepresentation], &st) != 0) {
+            // 路径不存在时提前返回「没有不安全 symlink」是安全的：
+            // 后续枚举 / 删除会拦；这里不能当成 symlink 拒绝，否则正常已删目标会被误报。
+            if (errno == ENOENT || errno == ENOTDIR) {
+                return NO;
+            }
+            NSLog(@"[security] privacy lstat failed for %@ errno=%d", prefix, errno);
+            return YES;
+        }
+        if (S_ISLNK(st.st_mode) && !LMPrivacyIsSystemPathAlias(prefix)) {
+            NSLog(@"[security] privacy reject symlink component: %@", prefix);
+            return YES;
+        }
+    }
+    return NO;
+}
+
+static NSString *LMPrivacyContainmentKey(NSString *path) {
+    if (path.length == 0) {
+        return nil;
+    }
+    NSString *s = [path stringByStandardizingPath];
+    if (s.length == 0 || ![s hasPrefix:@"/"]) {
+        return nil;
+    }
+    if ([s isEqualToString:@"/tmp"] || [s hasPrefix:@"/tmp/"]) {
+        s = [@"/private" stringByAppendingString:s];
+    } else if ([s isEqualToString:@"/var"] || [s hasPrefix:@"/var/"]) {
+        s = [@"/private" stringByAppendingString:s];
+    } else if ([s isEqualToString:@"/etc"] || [s hasPrefix:@"/etc/"]) {
+        s = [@"/private" stringByAppendingString:s];
+    }
+    if (s.length > 1 && [s hasSuffix:@"/"]) {
+        s = [s substringToIndex:s.length - 1];
+    }
+    return s;
+}
+
+static BOOL LMPrivacyPathKeyStaysUnderVenueKey(NSString *pathKey, NSString *venueKey) {
+    if (pathKey.length == 0 || venueKey.length == 0) {
+        return NO;
+    }
+    if ([pathKey isEqualToString:venueKey]) {
+        return YES;
+    }
+    return [pathKey hasPrefix:[venueKey stringByAppendingString:@"/"]];
+}
+
+/// 仅在 walk 已通过后使用：不再 resolve，避免每个子项再走一遍逐级 lstat
+static BOOL LMPrivacyPathStaysUnderVenue(NSString *path, NSString *venue) {
+    return LMPrivacyPathKeyStaysUnderVenueKey(LMPrivacyContainmentKey(path), LMPrivacyContainmentKey(venue));
+}
 
 @implementation BaseBrowserPrivacyDataManager
 
@@ -282,10 +366,12 @@
 // level : 文件系统递归的深度, -1递归到最后一层
 - (NSArray *)getPrivacyItemArrayByPath:(NSString *)path fileLevel:(NSInteger)level scanApp:(BOOL)scanApp includeDir:(BOOL)includeDirectory {
     NSFileManager *fileManager = [NSFileManager defaultManager];
-    // 获取目录下的所有文件及文件夹(注意 directory 是指的 path,而不是结果时 directory.
-    //    NSArray *files = [fileManager contentsOfDirectoryAtPath:path error:nil];
-    
-    // 获取目录下的所有文件,递归的方式.
+    if (path.length == 0 || LMPrivacyPathHasUnsafeSymlink(path)) {
+        NSLog(@"[security] privacy skip enum root: %@", path);
+        return @[];
+    }
+    NSString *venueKey = LMPrivacyContainmentKey(path);
+
     NSURL *url = [NSURL fileURLWithPath:path];
     if(!url){
         return nil;
@@ -300,26 +386,31 @@
         NSNumber *flag = nil;
         [pathURL getResourceValue:&flag forKey:NSURLIsAliasFileKey error:nil];
         if (flag && [flag boolValue]) {
-            // 替身文件 (软硬连接)?
             continue;
         }
         if (level != -1 && [directoryEnumerator level] == level) {
             [directoryEnumerator skipDescendants];
+        }
+
+        NSString *itemPath = pathURL.path;
+        if (LMPrivacyPathHasUnsafeSymlink(itemPath) ||
+            !LMPrivacyPathKeyStaysUnderVenueKey(LMPrivacyContainmentKey(itemPath), venueKey)) {
+            continue;
         }
         
         NSNumber *isDirectory;
         [pathURL getResourceValue:&isDirectory forKey:NSURLIsDirectoryKey error:nil];
         
         // 只有可以删除的 在显示在 LocalStorage 中.
-        BOOL isDeletable = [fileManager isDeletableFileAtPath:pathURL.path];
+        BOOL isDeletable = [fileManager isDeletableFileAtPath:itemPath];
         
         if (isDirectory == nil || ([isDirectory boolValue] && !includeDirectory && !isDeletable)) {
             continue;
         } else {
             PrivacyFileItemData *itemData = [[PrivacyFileItemData alloc] init];
             itemData.isDirectory = [isDirectory boolValue];
-            itemData.itemName = [self getFileNameByPath:[pathURL path]];
-            itemData.path = pathURL.path;
+            itemData.itemName = [self getFileNameByPath:itemPath];
+            itemData.path = itemPath;
             itemData.totalSubNum = 1;
             [array addObject:itemData];
         }
@@ -336,6 +427,7 @@
     NSFileManager *fileManager = [NSFileManager defaultManager];
     NSInteger successNum = 0;
     NSInteger needDealNum = 0;
+    NSString *venueKey = LMPrivacyContainmentKey([self getBrowserDefaultPath]);
     
     for (PrivacyFileItemData *fileItemData in array) {
         if (debugFlag && successNum >= 1) {
@@ -347,20 +439,27 @@
         }
         
         needDealNum += 1;
+        NSString *itemPath = fileItemData.path;
+        if (LMPrivacyPathHasUnsafeSymlink(itemPath) ||
+            !LMPrivacyPathKeyStaysUnderVenueKey(LMPrivacyContainmentKey(itemPath), venueKey)) {
+            NSLog(@"[security] privacy skip clean outside venue: %@", itemPath);
+            continue;
+        }
         // 浏览器的 local storage 可能无法删除 (权限是-rw-------@)
-        BOOL isDeletable = [fileManager isDeletableFileAtPath:fileItemData.path];
+        // 低权失败不能单独构成 root 代删的充分条件：路径必须仍在本次浏览器数据目录内
+        BOOL isDeletable = [fileManager isDeletableFileAtPath:itemPath];
         if (isDeletable) {
             NSError *error;
-            BOOL success = [fileManager removeItemAtPath:fileItemData.path error:&error];
+            BOOL success = [fileManager removeItemAtPath:itemPath error:&error];
             if (!success) {
-                NSLog(@"Error removing file at path: %@, error is %@", fileItemData.path, error ? error.localizedDescription : @"nil");
+                NSLog(@"Error removing file at path: %@, error is %@", itemPath, error ? error.localizedDescription : @"nil");
             } else {
                 successNum += 1;
             }
         } else {
-            BOOL success = [[McCoreFunction shareCoreFuction] cleanItemAtPath:nil array:@[fileItemData.path] removeType:McCleanRemoveRoot];
+            BOOL success = [[McCoreFunction shareCoreFuction] cleanItemAtPath:nil array:@[itemPath] removeType:McCleanRemoveRoot];
             if (!success) {
-                NSLog(@"Error removing file by McCoreFunction#cleanItemAtPath at path: %@", fileItemData.path);
+                NSLog(@"Error removing file by McCoreFunction#cleanItemAtPath at path: %@", itemPath);
             } else {
                 successNum += 1;
             }
@@ -372,19 +471,20 @@
 
 
 - (PrivacyFileItemData *)getItemDataByPath:(NSString *)path {
-    BOOL isDirectory;
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    BOOL isExist = [fileManager fileExistsAtPath:path isDirectory:&isDirectory];
-    if (isExist) {
-        PrivacyFileItemData *itemData = [[PrivacyFileItemData alloc] init];
-        itemData.totalSubNum = 1;
-        itemData.itemName = [self getFileNameByPath:path];
-        itemData.path = path;
-        itemData.isDirectory = isDirectory;
-        return itemData;
+    if (path.length == 0 || LMPrivacyPathHasUnsafeSymlink(path) ||
+        !LMPrivacyPathStaysUnderVenue(path, [self getBrowserDefaultPath])) {
+        return nil;
     }
-    
-    return nil;
+    struct stat st;
+    if (lstat([path fileSystemRepresentation], &st) != 0) {
+        return nil;
+    }
+    PrivacyFileItemData *itemData = [[PrivacyFileItemData alloc] init];
+    itemData.totalSubNum = 1;
+    itemData.itemName = [self getFileNameByPath:path];
+    itemData.path = path;
+    itemData.isDirectory = S_ISDIR(st.st_mode);
+    return itemData;
 }
 
 - (FMDatabase *)getReadableDBByPath:(NSString *)defaultDbPath running:(BOOL)running {

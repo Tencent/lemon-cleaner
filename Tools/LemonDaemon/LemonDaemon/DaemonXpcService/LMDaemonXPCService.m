@@ -13,12 +13,16 @@
 
 //build
 - (void)buildXPCConnectChannel{
+#ifdef DEBUG
     NSLog(@"Lemon daemon buildXPCConnectChannel success");
+#endif
 }
 
 // reply with on data, just return value
 - (void)sendDataToDaemon:(NSData *)paramData withReply:(void (^)(NSData *))replyData{
+#ifdef DEBUG
     NSLog(@"sendDataToDaemon begin");
+#endif
     mc_pipe_cmd *pcmd = (mc_pipe_cmd *)[paramData bytes];
     
     if (pcmd->cmd_magic == MCCMD_STAT_PORT_INFO)
@@ -29,7 +33,9 @@
             if (ppresult != NULL) {
                 NSData *rdata = [NSData dataWithBytes:(void*)ppresult length:ppresult->size];
                 replyData(rdata);
+#ifdef DEBUG
                 NSLog(@"rdata: %lu", (unsigned long)rdata.length);
+#endif
                 free(ppresult);
             } else {
                 NSLog(@"%s %d ppresult is NULL", __FUNCTION__, pcmd->cmd_magic);

@@ -11,8 +11,10 @@
 #import "QMScanCategory.h"
 #import "QMCleanUtils.h"
 #import "QMDataConst.h"
+#import "LMCleanPathAllowlist.h"
 #import <QMCoreFunction/McCoreFunction.h>
 #import <QMCoreFunction/LanguageHelper.h>
+#include <sys/stat.h>
 
 NSString *kLMCleanKnowLedge = @"~/Library/Application Support/com.tencent.lemon/Knowledge/2";
 
@@ -56,6 +58,46 @@ NSString *kLMCleanKnowLedge = @"~/Library/Application Support/com.tencent.lemon/
 
 - (void)setParseEndNO{
     m_paseEnd = NO;
+}
+
+- (NSString *)_knowledgeSupportRoot
+{
+    if ([McCoreFunction isAppStoreVersion]) {
+        return [@"~/Library/Application Support/com.tencent.LemonLite" stringByExpandingTildeInPath];
+    }
+    return [@"~/Library/Application Support/com.tencent.lemon" stringByExpandingTildeInPath];
+}
+
+- (void)_safeRemoveKnowledgeFileIfNeeded
+{
+    NSString *path = [kLMCleanKnowLedge stringByExpandingTildeInPath];
+    if (path.length == 0) {
+        return;
+    }
+    const char *cpath = path.fileSystemRepresentation;
+    if (!cpath) {
+        return;
+    }
+    struct stat st;
+    if (lstat(cpath, &st) != 0) {
+        return;
+    }
+    if (!S_ISREG(st.st_mode)) {
+        NSLog(@"lm cleaner skip knowledge delete, not a regular file: %@", path);
+        return;
+    }
+    NSString *supportRoot = [self _knowledgeSupportRoot];
+    NSString *bound = [supportRoot hasSuffix:@"/"] ? supportRoot : [supportRoot stringByAppendingString:@"/"];
+    if (![path isEqualToString:supportRoot] && ![path hasPrefix:bound]) {
+        NSLog(@"lm cleaner skip knowledge delete, outside support dir: %@", path);
+        return;
+    }
+    NSError *error = nil;
+    if (![[NSFileManager defaultManager] removeItemAtPath:path error:&error]) {
+        NSLog(@"lm cleaner knowledge delete failed: %@ error = %@", path, error);
+        return;
+    }
+    NSLog(@"lm cleaner removed unsigned knowledge file: %@", path);
 }
 
 - (BOOL)checkWarnItemAtPath:(QMResultItem *)resultItem bundleID:(NSString **)bundle appName:(NSString **)name
@@ -128,28 +170,17 @@ NSString *kLMCleanKnowLedge = @"~/Library/Application Support/com.tencent.lemon/
 {
     if (!refresh && m_paseEnd)
         return YES;
-    
-    NSString * supportCleanXML = [kLMCleanKnowLedge stringByExpandingTildeInPath];
-    NSString * path = nil;
-    
-    if ([[NSFileManager defaultManager] fileExistsAtPath:supportCleanXML])
-    {
-        NSLog(@"lm cleaner use support datapath %hhd", [[NSFileManager defaultManager] fileExistsAtPath:supportCleanXML]);
-        path = supportCleanXML;
-    }
-    else
-    {
-        NSLog(@"lm cleaner use bundle datapath");
-        if ([McCoreFunction isAppStoreVersion]) {
-            path = [[NSBundle bundleForClass:[self class]] pathForResource:@"garbage_appstore" ofType:@"xml"];
-        } else {
-            path = [[NSBundle bundleForClass:[self class]] pathForResource:@"garbage1" ofType:@"xml"];
-        }
-    }
-    // 解析xml
-    QMXMLParse * xmlParse = [[QMXMLParse alloc] init];
+
+    [self _safeRemoveKnowledgeFileIfNeeded];
+    NSLog(@"lm cleaner use built-in xml");
+    QMXMLParse *xmlParse = [[QMXMLParse alloc] init];
     [xmlParse setDelegagte:(id<QMXMLParseDelegate>)self];
-    BOOL retValue = [xmlParse parseXMLWithData:path];
+    BOOL retValue = [xmlParse parseXMLWithData:nil];
+    if (retValue) {
+        [LMCleanPathAllowlist rebuildFromCategoryDict:m_categoryDict];
+    } else {
+        [LMCleanPathAllowlist rebuildFromCategoryDict:@{}];
+    }
     return retValue;
 }
 
@@ -158,10 +189,8 @@ NSString *kLMCleanKnowLedge = @"~/Library/Application Support/com.tencent.lemon/
 
 - (void)xmlParseErro:(NSError *)erro
 {
-    //[delegate xmlParseErro:erro];
-    // 移除当前解析失败文件
-    NSString * path = [kLMCleanKnowLedge stringByExpandingTildeInPath];
-    [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
+    NSLog(@"lm cleaner xml parse error = %@", erro);
+    [self _safeRemoveKnowledgeFileIfNeeded];
 }
 
 - (void)xmlParseDidStart
@@ -202,10 +231,7 @@ NSString *kLMCleanKnowLedge = @"~/Library/Application Support/com.tencent.lemon/
 - (void)xmlParseDidEnd
 {
     m_paseEnd = YES;
-    
-    // 解析完毕
-//    [[NSNotificationCenter defaultCenter] postNotificationName:kQMCleanXMLItemParseEnd
-//                                                        object:m_categoryDict];
+    [LMCleanPathAllowlist rebuildFromCategoryDict:m_categoryDict];
 }
 
 

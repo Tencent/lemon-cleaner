@@ -21,6 +21,8 @@
 - (void)cleanSubCategoryEnd:(NSString *)subCategoryID;
 - (void)cleanFileNums:(NSUInteger) cleanFileNums;
 - (BOOL)checkWarnItemAtPath:(QMResultItem *)resultItem bundleID:(NSString **)bundle appName:(NSString **)name;
+@optional
+- (void)cleanDidCancel;
 
 @end
 
