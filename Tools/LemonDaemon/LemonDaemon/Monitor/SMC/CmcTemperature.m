@@ -38,6 +38,14 @@ UInt32Char_t cpuTempKeyM3[] = {"Te05", "Te0L", "Te0P", "Te0S", "Tf04", "Tf09", "
 UInt32Char_t cpuTempKeyM4[] = {"Te05", "Te09", "Te0H", "Te0S", "Tp01", "Tp05", "Tp09", "Tp0D", "Tp0V", "Tp0Y", "Tp0b", "Tp0e"}; // 本次未包含GPU传感器
 
 UInt32Char_t cpuTempKeyM5[] = {"Te04", "Te08", "Te0C", "Te0R", "Tp00", "Tp04", "Tp0C", "Tp0G", "Tp0O", "Tp0R", "Tp0X", "Tp0a", "Tp0p", "Tp0u", "Tp0y"}; // 未包含GPU传感器
+
+// Mac mini (M6, Mac18,5) 上验证的 CPU 温度测点。
+static const UInt32Char_t cpuTempKeyM6[] = {
+    "Te07", "Te08", "Te09", "Te0c", "Te0e", "Te0f", "Te0g", "Te0h", "Te0i",
+    "Tp05", "Tp07", "Tp09", "Tp0A", "Tp0E", "Tp0G", "Tp0I", "Tp0L",
+    "Tp0b", "Tp0d", "Tp0g", "Tp0j", "Tp0m", "Tp0o", "Tp0r", "Tp0t",
+    "Tp0u", "Tp0w", "Tp0x", "Tp0y", "Tp0z",
+};
 int g_cpuKeyIndex = 0;
 
 // battery
@@ -87,6 +95,9 @@ float GetCPUTemperature(void) {
         case McCpuTypeM5Ultra:
             key_size = ARRAY_SIZE(cpuTempKeyM5);
             break;
+        case McCpuTypeM6:
+            key_size = ARRAY_SIZE(cpuTempKeyM6);
+            break;
         default:
             return -1;
     }
@@ -124,6 +135,9 @@ float GetCPUTemperature(void) {
         case McCpuTypeM5Max:
         case McCpuTypeM5Ultra:
             memcpy(cpuTempKey, cpuTempKeyM5, sizeof(cpuTempKeyM5));
+            break;
+        case McCpuTypeM6:
+            memcpy(cpuTempKey, cpuTempKeyM6, sizeof(cpuTempKeyM6));
             break;
         default:
             return -1;
