@@ -79,8 +79,16 @@ uint64_t testFileArch(const char *path)
     // no architecture could be cut
     return useless_size;
 }
+static NSString *_lipoExecutablePath(void) {
+    NSString *bundled = @"/Applications/Tencent Lemon.app/Contents/Resources/lipo";
+    if ([[NSFileManager defaultManager] isExecutableFileAtPath:bundled]) {
+        return bundled;
+    }
+    return @"/usr/bin/lipo";
+}
+
 BOOL cutFileArch(NSString *path, int archType) {
-    if (path == nil) {
+    if (path.length == 0) {
         return NO;
     }
     if (archType == 1) {

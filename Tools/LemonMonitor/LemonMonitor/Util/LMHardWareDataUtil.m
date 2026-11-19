@@ -41,10 +41,10 @@
         }
         if ([volumeInfo.volName isEqualToString:mainDiskName] && volumeInfo.internalDevice) {
             //重新进行计算可用空间
-            NSInteger freeBytes = [self getAllUsableBytes];
-//            NSLog(@"%s, newLeftSize: %ld", __FUNCTION__, (long)freeBytes);
-            if (freeBytes > 0) {
-                volumeInfo.freeBytes = freeBytes;
+            long long newFreeBytes = [self getAllUsableBytes];
+//            NSLog(@"%s, newLeftSize: %lld", __FUNCTION__, newFreeBytes);
+            if (newFreeBytes > 0) {
+                volumeInfo.freeBytes = newFreeBytes;
             }
         }
 //           NSLog(@"DiskInfo--%s--[volumnInfo.volName:%@,volumnInfo.devName:%@,volumnInfo.freeBytes:%llu,volumnInfo.totalBytes:%llul,]",__FUNCTION__,volumeInfo.volName, volumeInfo.devName,volumeInfo.freeBytes,volumeInfo.totalBytes);
@@ -61,18 +61,16 @@
     
 }
 
-+(float)getAllUsableBytes{
++(long long)getAllUsableBytes{
     if (@available(macOS 10.13, *)) {
         NSError *error = nil;
         NSURL *fileURL = [[NSURL alloc] initFileURLWithPath:NSHomeDirectory()];
-        //TODO: 拿到有效的剩余空间
         NSDictionary *results = [fileURL resourceValuesForKeys:@[NSURLVolumeAvailableCapacityForImportantUsageKey] error:&error];
         if (!results) {
             NSLog(@"Error retrieving resource keys");
             return 0;
         }
-        //    NSLog(@"float Available capacity for important usage: %lf",[[results objectForKey:NSURLVolumeAvailableCapacityForImportantUsageKey] floatValue]);
-        return [[results objectForKey:NSURLVolumeAvailableCapacityForImportantUsageKey] floatValue];
+        return [[results objectForKey:NSURLVolumeAvailableCapacityForImportantUsageKey] longLongValue];
     }else{
         return 0;
     }

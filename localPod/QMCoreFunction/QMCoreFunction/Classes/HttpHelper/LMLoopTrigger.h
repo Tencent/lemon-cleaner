@@ -18,6 +18,9 @@ typedef NS_OPTIONS(NSUInteger, LMLoopTriggerRunModes) {
     LMLoopTriggerRunModeEveryOneHour         = 1 << 4, // 每隔1小时
 };
 
+/// 回调 block，参数为本次触发的模式
+typedef void(^LMLoopTriggerCallback)(LMLoopTriggerRunModes triggerMode);
+
 // 主线程中调用
 @interface LMLoopTrigger : NSObject
 
@@ -27,7 +30,7 @@ typedef NS_OPTIONS(NSUInteger, LMLoopTriggerRunModes) {
 
 - (void)runModeRightNowForKey:(NSString *)key;
 
-- (void)runModes:(LMLoopTriggerRunModes)runModes key:(NSString *)key callback:(dispatch_block_t)callback;
+- (void)runModes:(LMLoopTriggerRunModes)runModes key:(NSString *)key callback:(LMLoopTriggerCallback)callback;
 
 @end
 

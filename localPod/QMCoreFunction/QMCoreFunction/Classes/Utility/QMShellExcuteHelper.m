@@ -19,19 +19,33 @@ static NSTimeInterval kDefaultTimeout = 10.0;
 }
 
 + (NSString *)excuteCmd:(NSString *)cmd timeout:(NSTimeInterval)timeout {
-    if (@available(macOS 14.0, *)) {
-        return [self __excuteCmd:cmd timeout:timeout];
-    } else {
-        return [self __excuteCmd:cmd timeout:0];
+    if (cmd.length == 0) {
+        return nil;
     }
+    return [self executeLaunchPath:@"/bin/bash" arguments:@[@"-c", cmd] timeout:timeout];
 }
 
-+ (NSString *)__excuteCmd:(NSString *)cmd timeout:(NSTimeInterval)timeout {
-    // 初始化并设置shell路径
++ (NSString *)executeLaunchPath:(NSString *)launchPath arguments:(NSArray<NSString *> *)arguments {
+    return [self executeLaunchPath:launchPath arguments:arguments timeout:kDefaultTimeout];
+}
+
++ (NSString *)executeLaunchPath:(NSString *)launchPath
+                      arguments:(NSArray<NSString *> *)arguments
+                        timeout:(NSTimeInterval)timeout {
+    if (launchPath.length == 0 || arguments == nil) {
+        return nil;
+    }
+    if (@available(macOS 14.0, *)) {
+        return [self __executeLaunchPath:launchPath arguments:arguments timeout:timeout];
+    }
+    return [self __executeLaunchPath:launchPath arguments:arguments timeout:0];
+}
+
++ (NSString *)__executeLaunchPath:(NSString *)launchPath
+                        arguments:(NSArray<NSString *> *)arguments
+                          timeout:(NSTimeInterval)timeout {
     NSTask *task = [[NSTask alloc] init];
-    [task setLaunchPath:@"/bin/bash"];
-    // -c 用来执行string-commands（命令字符串），也就说不管后面的字符串里是什么都会被当做shellcode来执行
-    NSArray *arguments = @[@"-c", cmd];
+    [task setLaunchPath:launchPath];
     [task setArguments:arguments];
     
     // 新建输出管道作为Task的输出

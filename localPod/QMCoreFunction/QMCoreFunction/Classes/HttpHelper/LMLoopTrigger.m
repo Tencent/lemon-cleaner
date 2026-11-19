@@ -40,7 +40,7 @@ static NSString * kRunModeKey = @"kRunModeKey";
 - (void)applicationDidFinishLaunching {
     for (LMLoopTriggerCallbackObject *object in self.registerCallbackDict.allValues) {
         if (object.runModes & LMLoopTriggerRunModeWhenAppLaunch) {
-            if (object.callback) object.callback();
+            if (object.callback) object.callback(LMLoopTriggerRunModeWhenAppLaunch);
         }
     }
 }
@@ -49,7 +49,7 @@ static NSString * kRunModeKey = @"kRunModeKey";
     LMLoopTriggerRunModes runMode = [timer.userInfo[kRunModeKey] unsignedIntegerValue];
     for (LMLoopTriggerCallbackObject *object in self.registerCallbackDict.allValues) {
         if (object.runModes & runMode) {
-            if (object.callback) object.callback();
+            if (object.callback) object.callback(runMode);
         }
     }
 }
@@ -77,11 +77,11 @@ static NSString * kRunModeKey = @"kRunModeKey";
     }
     LMLoopTriggerCallbackObject *object = self.registerCallbackDict[key];
     if (object.runModes & LMLoopTriggerRunModeSupportRightNow) {
-        if (object.callback) object.callback();
+        if (object.callback) object.callback(LMLoopTriggerRunModeSupportRightNow);
     }
 }
 
-- (void)runModes:(LMLoopTriggerRunModes)runModes key:key callback:(dispatch_block_t)callback {
+- (void)runModes:(LMLoopTriggerRunModes)runModes key:key callback:(LMLoopTriggerCallback)callback {
     if (runModes == 0) return;
     
     if (![key isKindOfClass:NSString.class]) {

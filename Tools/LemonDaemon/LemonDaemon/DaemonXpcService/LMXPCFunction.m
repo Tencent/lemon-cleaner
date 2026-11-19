@@ -38,7 +38,9 @@ int kill_proc_if_match_keyword(mc_pipe_cmd *pcmd, mc_pipe_result **ppresult);
 
 
 + (void)cmdDispather:(mc_pipe_cmd *)pcmd result:(mc_pipe_result **)ppresult {
+#ifdef DEBUG
     NSLog(@"[info] cmdDispather");
+#endif
     if (pcmd == NULL || ppresult == NULL)
         return;
     *ppresult = NULL;
@@ -49,8 +51,10 @@ int kill_proc_if_match_keyword(mc_pipe_cmd *pcmd, mc_pipe_result **ppresult);
     fsmon_param *fs_param;
     ProcessInfo_t *proc_info = NULL;
     switch (pcmd->cmd_magic) {
-        case MCCMD_TASKFORPID:
+        case MCCMD_TASKFORPID: {
+#ifdef DEBUG
             NSLog(@"[info] MCCMD_TASKFORPID cmd");
+#endif
 
             taskforpid_param *param = (taskforpid_param *) (pcmd + 1);
             total_size = sizeof(mc_pipe_result) + sizeof(taskforpid_result);
@@ -66,6 +70,7 @@ int kill_proc_if_match_keyword(mc_pipe_cmd *pcmd, mc_pipe_result **ppresult);
 
             *ppresult = presult;
             break;
+        }
 
         case MCCMD_PROCINFO:
             //NSLog(@"[info] MCCMD_PROCINFO cmd");
@@ -192,8 +197,10 @@ int kill_proc_if_match_keyword(mc_pipe_cmd *pcmd, mc_pipe_result **ppresult);
             *ppresult = presult;
             break;
 
-        case MCCMD_KILLPROC:
+        case MCCMD_KILLPROC: {
+#ifdef DEBUG
             NSLog(@"[info] MCCMD_KILLPROC cmd");
+#endif
 
             // kill process
             killproc_param *kill_param = (killproc_param *) (pcmd + 1);
@@ -205,9 +212,12 @@ int kill_proc_if_match_keyword(mc_pipe_cmd *pcmd, mc_pipe_result **ppresult);
 
             *ppresult = [self cmdSimpleReply:fun_ret magic:pcmd->cmd_magic];
             break;
+        }
 
         case MCCMD_KILLPROC_WITH_KEY_WORD:{
+#ifdef DEBUG
             NSLog(@"[info] MCCMD_KILLPROC_WITH_KEY_WORD cmd");
+#endif
             
             // kill process
             int fun_ret = kill_proc_if_match_keyword(pcmd, ppresult);
@@ -215,8 +225,10 @@ int kill_proc_if_match_keyword(mc_pipe_cmd *pcmd, mc_pipe_result **ppresult);
 
             break;
         }
-        case MCCMD_UNINSTALL:
+        case MCCMD_UNINSTALL: {
+#ifdef DEBUG
             NSLog(@"[info] Ready to uninstall !!!");
+#endif
 
             // certify the auth value
             uninstall_param *un_param = (uninstall_param *) (pcmd + 1);
@@ -250,19 +262,25 @@ int kill_proc_if_match_keyword(mc_pipe_cmd *pcmd, mc_pipe_result **ppresult);
 
             // never return
             break;
+        }
 
-        case MCCMD_UPDATE:
+        case MCCMD_UPDATE: {
+#ifdef DEBUG
             NSLog(@"[info] Update self !!!");
+#endif
 
             update_param *upt_param = (update_param *) (pcmd + 1);
             fun_ret = UpdateCastle(upt_param->szAppPath, upt_param->szUserName, upt_param->szVersion, upt_param->pid);
 
             *ppresult = [self cmdSimpleReply:fun_ret magic:pcmd->cmd_magic];
             break;
+        }
 
 
         case MCCMD_FILEACTION:{
+#ifdef DEBUG
             NSLog(@"[info] MCCMD_FILEACTION cmd");
+#endif
 
             fun_ret = -1;
             fileaction_param *file_param = (fileaction_param *) (pcmd + 1);
@@ -293,9 +311,25 @@ int kill_proc_if_match_keyword(mc_pipe_cmd *pcmd, mc_pipe_result **ppresult);
             break;
         }
         case MCCMD_MOVEFILE:{
+#ifdef DEBUG
             NSLog(@"[info] MCCMD_MOVEFILE cmd");
+#endif
 
             movefile_param *movfile_param = (movefile_param *) (pcmd + 1);
+            
+            // 安全校验：源路径和目标路径都必须在白名单中
+            NSString *mvSrcPath = [NSString stringWithUTF8String:movfile_param->szSrcPath];
+            NSString *mvDstPath = [NSString stringWithUTF8String:movfile_param->szDestPath];
+            if (!isPathAllowedForFileOp(mvSrcPath)) {
+                NSLog(@"[security] MCCMD_MOVEFILE: reject src path: %@", mvSrcPath);
+                *ppresult = [self cmdSimpleReply:-1 magic:pcmd->cmd_magic];
+                break;
+            }
+            if (!isPathAllowedForFileOp(mvDstPath)) {
+                NSLog(@"[security] MCCMD_MOVEFILE: reject dst path: %@", mvDstPath);
+                *ppresult = [self cmdSimpleReply:-1 magic:pcmd->cmd_magic];
+                break;
+            }
 
             fun_ret = fileMoveTo(movfile_param->szSrcPath, movfile_param->szDestPath, movfile_param->action);
 
@@ -303,7 +337,9 @@ int kill_proc_if_match_keyword(mc_pipe_cmd *pcmd, mc_pipe_result **ppresult);
             break;
         }
         case MCCMD_SETDOCK:{
+#ifdef DEBUG
             NSLog(@"[info] MCCMD_SETDOCK cmd");
+#endif
 
             setdock_param *setd_param = (setdock_param *) (pcmd + 1);
             fun_ret = 0;
@@ -314,7 +350,9 @@ int kill_proc_if_match_keyword(mc_pipe_cmd *pcmd, mc_pipe_result **ppresult);
             break;
         }
         case MCCMD_SETFANSPEED:{
+#ifdef DEBUG
             NSLog(@"[info] MCCMD_SETFANSPEED cmd");
+#endif
 
             setfanspeed_param *setfan_param = (setfanspeed_param *) (pcmd + 1);
 
@@ -324,19 +362,25 @@ int kill_proc_if_match_keyword(mc_pipe_cmd *pcmd, mc_pipe_result **ppresult);
             break;
         }
         case MCCMD_CHANGE_NETWORK_INFO: {
+#ifdef DEBUG
             NSLog(@"[info] MCCMD_CHANGE_NETWORK_INFO cmd");
+#endif
             fun_ret = system("chmod 644 /dev/bpf*");
             *ppresult = [self cmdSimpleReply:fun_ret magic:pcmd->cmd_magic];
         }
             break;
         case MCCMD_PURGE_MEMORY: {
+#ifdef DEBUG
             NSLog(@"[info] MCCMD_PURGE_MEMORY cmd");
+#endif
             fun_ret = system("purge");
             *ppresult = [self cmdSimpleReply:fun_ret magic:pcmd->cmd_magic];
         }
             break;
         case MCCMD_UNINSTALL_PLIST: {
+#ifdef DEBUG
             NSLog(@"[info] MCCMD_UNINSTALL_PLIST cmd");
+#endif
 
             op_file_path *plist_param = (op_file_path *) (pcmd + 1);
             NSString *plist = [NSString stringWithUTF8String:plist_param->szPath];
@@ -360,13 +404,15 @@ int kill_proc_if_match_keyword(mc_pipe_cmd *pcmd, mc_pipe_result **ppresult);
             
             NSFileManager *fileMgr = [NSFileManager defaultManager];
             if ([fileMgr fileExistsAtPath:plist]) {
-                fun_ret = system([[NSString stringWithFormat:@"launchctl unload %@", plist] UTF8String]);
+                fun_ret = executeLaunchPath(@"/bin/launchctl", @[@"unload", plist]);
             }
             *ppresult = [self cmdSimpleReply:fun_ret magic:pcmd->cmd_magic];
             break;
         }
         case MCCMD_MANAGE_LAUNCH_SYSTEM_STATUS: {
+#ifdef DEBUG
             NSLog(@"[info] MCCMD_MANAGE_LAUNCH_SYSTEM_STATUS cmd");
+#endif
             
             manage_launch_system_param *param = (manage_launch_system_param *) (pcmd + 1);
             NSString *path = [NSString stringWithUTF8String:param->path];
@@ -400,34 +446,70 @@ int kill_proc_if_match_keyword(mc_pipe_cmd *pcmd, mc_pipe_result **ppresult);
             NSFileManager *fileMgr = [NSFileManager defaultManager];
             if ([fileMgr fileExistsAtPath:path]) {
                 int action = param->action;
+#ifdef DEBUG
                 NSLog(@"[info] action = %d", action);
+#endif
                 if (action == MCCMD_LAUNCH_SYSTEM_STATUS_ENABLE) {
-                    fun_ret = system([[NSString stringWithFormat:@"launchctl enable system/%@ && launchctl load %@", label, path] UTF8String]);
+                    NSString *target = [NSString stringWithFormat:@"system/%@", label];
+                    fun_ret = executeLaunchPath(@"/bin/launchctl", @[@"enable", target]);
+                    if (fun_ret == 0) {
+                        fun_ret = executeLaunchPath(@"/bin/launchctl", @[@"load", path]);
+                    }
                 } else if (action == MCCMD_LAUNCH_SYSTEM_STATUS_DISABLE) {
-                    fun_ret = system([[NSString stringWithFormat:@"launchctl disable system/%@ && launchctl unload %@", label, path] UTF8String]);
+                    NSString *target = [NSString stringWithFormat:@"system/%@", label];
+                    fun_ret = executeLaunchPath(@"/bin/launchctl", @[@"disable", target]);
+                    if (fun_ret == 0) {
+                        fun_ret = executeLaunchPath(@"/bin/launchctl", @[@"unload", path]);
+                    }
                 }
+#ifdef DEBUG
                 NSLog(@"%s, manage root launchctl item: %@, result: %d ", __FUNCTION__, label, fun_ret);
+#endif
             }
             *ppresult = [self cmdSimpleReply:fun_ret magic:pcmd->cmd_magic];
             break;
         }
         case MCCMD_GET_LAUNCH_SYSTEM_STATUS : {
+#ifdef DEBUG
             NSLog(@"[info] MCCMD_GET_LAUNCH_SYSTEM_STATUS cmd");
+#endif
             op_simple_string *param = (op_simple_string *)(pcmd + 1);
             NSString *label = [NSString stringWithUTF8String:param->str];
-            NSString *cmdString = [NSString stringWithFormat:@"launchctl list | grep %@", label];
-            NSString *result = executeCmdAndGetResult(cmdString);
+            
+            // 安全校验：label 只允许字母、数字、点号、连字符、下划线
+            NSCharacterSet *allowedLabelChars = [NSCharacterSet characterSetWithCharactersInString:
+                @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.-_"];
+            if (!label || label.length == 0 ||
+                [label rangeOfCharacterFromSet:[allowedLabelChars invertedSet]].location != NSNotFound) {
+                NSLog(@"[security] reject invalid label for GET_LAUNCH_SYSTEM_STATUS: %@", label);
+                *ppresult = [self cmdSimpleReply:-1 magic:pcmd->cmd_magic];
+                break;
+            }
+            
+            NSString *result = executeLaunchPathAndGetResult(@"/bin/launchctl", @[@"list"]);
             int status = 0;
-            if(result && ![result isEqualToString:@""]){
-                status = 1;
-            }else{
-                status = 0;
+            if (result.length > 0) {
+                for (NSString *line in [result componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]]) {
+                    NSArray<NSString *> *fields = [line componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+                    NSMutableArray<NSString *> *nonEmpty = [NSMutableArray array];
+                    for (NSString *field in fields) {
+                        if (field.length > 0) {
+                            [nonEmpty addObject:field];
+                        }
+                    }
+                    if (nonEmpty.count > 0 && [nonEmpty.lastObject isEqualToString:label]) {
+                        status = 1;
+                        break;
+                    }
+                }
             }
             *ppresult = [self cmdSimpleReply:status magic:pcmd->cmd_magic];
             break;
         }
         case MCCMD_GET_FILE_INFO: {
+#ifdef DEBUG
             NSLog(@"[info] MCCMD_GET_FILE_INFO cmd");
+#endif
 
             op_file_path *plist_param = (op_file_path *) (pcmd + 1);
             NSString *path = [NSString stringWithUTF8String:plist_param->szPath];
@@ -468,40 +550,63 @@ int kill_proc_if_match_keyword(mc_pipe_cmd *pcmd, mc_pipe_result **ppresult);
             break;
         }
         case MCCMD_CLIENT_EXIT: {
+#ifdef DEBUG
             NSLog(@"[info] MCCMD_CLIENT_EXIT cmd");
+#endif
             client_exit_param *params = (client_exit_param *) (pcmd + 1);
             fun_ret = clientExit(params->pid);
             *ppresult = [self cmdSimpleReply:fun_ret magic:pcmd->cmd_magic];
             break;
         }
-        case MCCMD_FIXPLIST:
+        case MCCMD_FIXPLIST: {
+#ifdef DEBUG
             NSLog(@"[info] MCCMD_FIXPLIST cmd");
+#endif
 
             fixplist_param *fix_param = (fixplist_param *) (pcmd + 1);
             fun_ret = 0;
-            if (!fixPlistFile(fix_param->szPlistPath, fix_param->szObjectKey))
-                fun_ret = -1;
-
-            *ppresult = [self cmdSimpleReply:fun_ret magic:pcmd->cmd_magic];
-            break;
-
-        case MCCMD_WRITEPLIST:
-            NSLog(@"[info] MCCMD_WRITEPLIST cmd");
-
-            writeplist_param *plist_param = (writeplist_param *) (pcmd + 1);
-            fun_ret = 0;
-            if (!writePlistFile(plist_param->szPlistPath,
-                    plist_param->szObjectKey,
-                    plist_param->action_type,
-                    plist_param->plist_type,
-                    plist_param->obj_type,
-                    plist_param->obj_data,
-                    plist_param->obj_size)) {
-                fun_ret = -1;
+            {
+                NSString *fixPlistPath = [NSString stringWithUTF8String:fix_param->szPlistPath];
+                // 安全校验：路径白名单
+                if (!isPathAllowedForFileOp(fixPlistPath)) {
+                    NSLog(@"[security] MCCMD_FIXPLIST: reject path: %@", fixPlistPath);
+                    fun_ret = -1;
+                } else if (!fixPlistFile(fix_param->szPlistPath, fix_param->szObjectKey)) {
+                    fun_ret = -1;
+                }
             }
 
             *ppresult = [self cmdSimpleReply:fun_ret magic:pcmd->cmd_magic];
             break;
+        }
+
+        case MCCMD_WRITEPLIST: {
+#ifdef DEBUG
+            NSLog(@"[info] MCCMD_WRITEPLIST cmd");
+#endif
+
+            writeplist_param *plist_param = (writeplist_param *) (pcmd + 1);
+            fun_ret = 0;
+            {
+                NSString *writePlistPath = [NSString stringWithUTF8String:plist_param->szPlistPath];
+                // 安全校验：路径白名单
+                if (!isPathAllowedForFileOp(writePlistPath)) {
+                    NSLog(@"[security] MCCMD_WRITEPLIST: reject path: %@", writePlistPath);
+                    fun_ret = -1;
+                } else if (!writePlistFile(plist_param->szPlistPath,
+                        plist_param->szObjectKey,
+                        plist_param->action_type,
+                        plist_param->plist_type,
+                        plist_param->obj_type,
+                        plist_param->obj_data,
+                        plist_param->obj_size)) {
+                    fun_ret = -1;
+                }
+            }
+
+            *ppresult = [self cmdSimpleReply:fun_ret magic:pcmd->cmd_magic];
+            break;
+        }
 
         case MCCMD_OWL_GET_OWL_DEVICE_PROCESS_INFO: {
             lemon_com_process_info *odp_info = NULL;
@@ -543,42 +648,56 @@ int kill_proc_if_match_keyword(mc_pipe_cmd *pcmd, mc_pipe_result **ppresult);
         case MCCMD_OWL_WATCH_DEVICE_STATE: {
             owl_watch_device_param *param = (owl_watch_device_param *)(pcmd + 1);
             [[OwlManageDaemon shareInstance] changeDeviceWatchState:param];
+#ifdef DEBUG
             NSLog(@"[info] MCCMD_OWL_WATCH_DEVICE_STATE");
+#endif
             *ppresult = [self cmdSimpleReply:0 magic:pcmd->cmd_magic];
             break;
         }
         case MCCMD_UNINSTALL_KEXT_WITH_BUNDLEID: {
+#ifdef DEBUG
             NSLog(@"[info] MCCMD_UNINSTALL_KEXT_WITH_BUNDLEID");
+#endif
             NSInteger code = [LMKextManager uninstallKextWithBundleId:pcmd];
             *ppresult = [self cmdSimpleReply:(int) code magic:pcmd->cmd_magic];
             break;
         }
         case MCCMD_UNINSTALL_KEXT_WITH_PATH: {
+#ifdef DEBUG
             NSLog(@"[info] MCCMD_UNINSTALL_KEXT_WITH_PATH");
+#endif
             NSInteger code = [LMKextManager uninstallKextWithPath:pcmd];
             *ppresult = [self cmdSimpleReply:(int) code magic:pcmd->cmd_magic];
             break;
         }
         case MCCMD_RM_PKG_INFO_WITH_BUNDLEID: {
+#ifdef DEBUG
             NSLog(@"[info] MCCMD_RM_PKG_INFO_WITH_BUNDLEID");
+#endif
             NSInteger code = [self removePkgInfoBy:pcmd];
             *ppresult = [self cmdSimpleReply:(int) code magic:pcmd->cmd_magic];
             break;
         }
         case MCCMD_REMOVE_Login_Item: {
+#ifdef DEBUG
             NSLog(@"[info] MCCMD_REMOVE_Login_Item");
+#endif
             NSInteger code = [self removeLoginItem:pcmd];
             *ppresult = [self cmdSimpleReply:(int) code magic:pcmd->cmd_magic];
             break;
         }
         case MCCMD_COLLECT_LEMON_LOGINFO: {
+#ifdef DEBUG
             NSLog(@"[info] MCCMD_COLLECT_LEMON_LOGINFO");
+#endif
             NSInteger code = [self collectLemonLoginfo:pcmd];
             *ppresult = [self cmdSimpleReply:(int) code magic:pcmd->cmd_magic];
             break;
         }
         case MCCMD_NETWORK_FIREWALL_PF: {
+#ifdef DEBUG
             NSLog(@"[info] MCCMD_NETWORK_FIREWALL_PF");
+#endif
             NSInteger code = [self setLemonFirewallPortPF:pcmd];
             *ppresult = [self cmdSimpleReply:(int) code magic:pcmd->cmd_magic];
             break;
@@ -658,11 +777,15 @@ int kill_proc_if_match_keyword(mc_pipe_cmd *pcmd, mc_pipe_result **ppresult);
     int total_size;
     int fun_ret;
     mc_pipe_result *presult;
+#ifdef DEBUG
     NSLog(@"[info] MCCMD_STAT_PORT_INFO");
+#endif
 
     {
         NSString *cmdReturnStr = executeCmdAndGetResult(@"lsof -n -P |grep LISTEN");
+#ifdef DEBUG
         NSLog(@"%s execute result is [%@]", __func__, cmdReturnStr);
+#endif
 
         NSArray *items = [cmdReturnStr componentsSeparatedByString:@"\n"];
         NSMutableArray *portArray = [NSMutableArray array];
@@ -701,7 +824,9 @@ int kill_proc_if_match_keyword(mc_pipe_cmd *pcmd, mc_pipe_result **ppresult);
                 }
             }
         }
+#ifdef DEBUG
         NSLog(@"portArray: %@", portArray);
+#endif
 
         fun_ret = (int) (portArray.count);
         lemon_com_process_info *odp_info = malloc(sizeof(lemon_com_process_info) * fun_ret);
@@ -818,10 +943,18 @@ int kill_proc_if_match_keyword(mc_pipe_cmd *pcmd, mc_pipe_result **ppresult);
         NSLog(@"%s stop execute because  pkgBundleId is %@", __func__, pkgBundleId == nil ? @"nil" : pkgBundleId);
         return 0;
     }
+    
+    // 安全校验：bundleId 只允许 reverse-DNS 合法字符（字母、数字、点号、连字符）
+    NSCharacterSet *allowedBundleIdChars = [NSCharacterSet characterSetWithCharactersInString:
+        @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.-"];
+    if ([pkgBundleId rangeOfCharacterFromSet:[allowedBundleIdChars invertedSet]].location != NSNotFound) {
+        NSLog(@"[security] reject invalid pkgBundleId: %@", pkgBundleId);
+        return -1;
+    }
+    
     NSLog(@"%s: pkgBundleId  is %@", __func__, pkgBundleId);
     
-    NSString *pkgForgetCmd = [NSString stringWithFormat:@"pkgutil --forget  %@", pkgBundleId];
-    NSString *resultStr = executeCmdAndGetResult(pkgForgetCmd);
+    NSString *resultStr = executeLaunchPathAndGetResult(@"/usr/sbin/pkgutil", @[@"--forget", pkgBundleId]);
     NSLog(@"%s: remove pkg info with pkgBundleId: %@, result is %@", __func__, pkgBundleId, resultStr);
 
     if(!resultStr || [resultStr containsString:@"Error"]){  //卸载失败的字符串类似于Unknown error Error ...
@@ -859,6 +992,24 @@ int kill_proc_if_match_keyword(mc_pipe_cmd *pcmd, mc_pipe_result **ppresult);
 + (NSInteger)collectLemonLoginfo:(mc_pipe_cmd *)pcmd {
     op_file_path *plist_param = (op_file_path *) (pcmd + 1);
     NSString *userHomeDir = [NSString stringWithUTF8String:plist_param->szPath];
+    
+    // 安全校验：只允许 /Users/<name> 格式的路径
+    if (![userHomeDir hasPrefix:@"/Users/"] ||
+        [userHomeDir containsString:@".."] ||
+        [userHomeDir containsString:@";"] ||
+        [userHomeDir containsString:@"|"] ||
+        [userHomeDir containsString:@"&"] ||
+        [userHomeDir containsString:@"`"] ||
+        [userHomeDir containsString:@"$"]) {
+        NSLog(@"[security] collectLemonLoginfo: reject invalid userHomeDir: %@", userHomeDir);
+        return -1;
+    }
+    NSArray *pathComponents = [userHomeDir pathComponents];
+    if (pathComponents.count < 3) {
+        NSLog(@"[security] collectLemonLoginfo: reject too short userHomeDir: %@", userHomeDir);
+        return -1;
+    }
+    
     NSFileManager *fm = [NSFileManager defaultManager];
 
     NSString *support = [userHomeDir stringByAppendingPathComponent:[NSString stringWithFormat:@"Library/Caches/%@/lemonLogInfoTemp", MAIN_APP_BUNDLEID]];
@@ -887,11 +1038,24 @@ int kill_proc_if_match_keyword(mc_pipe_cmd *pcmd, mc_pipe_result **ppresult);
     NSString *sysinfo = [support stringByAppendingPathComponent:@"system_info.xml"];
     NSString *lemon_run_env_file = [support stringByAppendingPathComponent:@"lemon_run_env.log"];
 
-    NSString *cmd1 = [NSString stringWithFormat:@"echo 'sw_vers .....'  && sw_vers > %@", lemon_run_env_file];
-    system([cmd1 UTF8String]);
+    [[NSFileManager defaultManager] createFileAtPath:lemon_run_env_file contents:nil attributes:nil];
+    NSMutableString *envLog = [NSMutableString stringWithString:@"sw_vers .....\n"];
+    NSString *swVersOut = executeExecutableWithArguments(@"/usr/bin/sw_vers", @[]);
+    if (swVersOut.length > 0) {
+        [envLog appendString:swVersOut];
+        if (![swVersOut hasSuffix:@"\n"]) {
+            [envLog appendString:@"\n"];
+        }
+    }
 
-    NSString *rootLaunchctlListCmd = [NSString stringWithFormat:@"echo 'launchctl list as root .....' >> %@  && launchctl list | grep Lemon >> %@", lemon_run_env_file, lemon_run_env_file];
-    system([rootLaunchctlListCmd UTF8String]);
+    NSString *launchctlList = executeExecutableWithArguments(@"/bin/launchctl", @[@"list"]);
+    [envLog appendString:@"launchctl list as root .....\n"];
+    for (NSString *line in [launchctlList componentsSeparatedByString:@"\n"]) {
+        if ([line localizedCaseInsensitiveContainsString:@"Lemon"]) {
+            [envLog appendFormat:@"%@\n", line];
+        }
+    }
+    [envLog writeToFile:lemon_run_env_file atomically:YES encoding:NSUTF8StringEncoding error:nil];
 
 
     // 无法打印用户态下面的 launchctl list.  sudo -u userName 执行的结果还是 root用户态下的结果,而非 userName 用户态下. 可能的解决方法是 "su - username -c 'cmd' &" 这里会切换用户态(且在子 shell 中,切换只在当前命令有效),但失败了, 在 root shell su 貌似没有-c命令
@@ -907,8 +1071,10 @@ int kill_proc_if_match_keyword(mc_pipe_cmd *pcmd, mc_pipe_result **ppresult);
 
     //NSString* cmdReturnStr = [self excuteCmd:cmd1];
 
-    NSString *cmd3 = [NSString stringWithFormat:@"system_profiler -xml SPHardwareDataType > %@", sysinfo];
-    system([cmd3 UTF8String]);
+    NSString *sysProfile = executeExecutableWithArguments(@"/usr/sbin/system_profiler", @[@"-xml", @"SPHardwareDataType"]);
+    if (sysProfile) {
+        [sysProfile writeToFile:sysinfo atomically:YES encoding:NSUTF8StringEncoding error:nil];
+    }
     return 1;
 }
 
@@ -917,6 +1083,12 @@ int kill_proc_if_match_keyword(mc_pipe_cmd *pcmd, mc_pipe_result **ppresult);
     NSString *tcpPorts = [NSString stringWithUTF8String:com_param->szParam1];
     NSString *udpPorts = [NSString stringWithUTF8String:com_param->szParam2];
     NSLog(@"%s, tcpPorts: %@, udpPorts: %@", __func__, tcpPorts, udpPorts);
+    NSCharacterSet *allowedPorts = [NSCharacterSet characterSetWithCharactersInString:@"0123456789, "];
+    if ((tcpPorts.length > 0 && [tcpPorts rangeOfCharacterFromSet:[allowedPorts invertedSet]].location != NSNotFound) ||
+        (udpPorts.length > 0 && [udpPorts rangeOfCharacterFromSet:[allowedPorts invertedSet]].location != NSNotFound)) {
+        NSLog(@"[security] setLemonFirewallPortPF: reject invalid port list tcp=%@ udp=%@", tcpPorts, udpPorts);
+        return -1;
+    }
     NSString *strPfFile = @"/etc/pf.conf";
     NSError *error;
     NSString *strPF = [NSString stringWithContentsOfFile:strPfFile encoding:NSUTF8StringEncoding error:&error];
@@ -967,8 +1139,7 @@ int kill_proc_if_match_keyword(mc_pipe_cmd *pcmd, mc_pipe_result **ppresult);
     [file writeData:[NSData dataWithBytes:[strPF UTF8String] length:[strPF length]]];
     [file closeFile];
 
-    NSString *lemonPF = [NSString stringWithFormat:@"pfctl -ef %@", strPfFile];
-    NSString *cmdReturnStr = executeCmdAndGetResult(lemonPF);
+    NSString *cmdReturnStr = executeExecutableWithArguments(@"/sbin/pfctl", @[@"-ef", strPfFile]);
     NSLog(@"%s execute result is [%@]", __func__, cmdReturnStr);
 
     return 1;

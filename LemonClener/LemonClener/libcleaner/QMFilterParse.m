@@ -240,14 +240,20 @@
         NSString * str = [path substringWithRange:NSMakeRange(range1.location + range1.length, range2.location - range1.location - range2.length)];
         NSString * path1 = [path substringToIndex:range1.location];
         NSString * path2 = [path substringFromIndex:range2.location + 1];
+        if ([QMCleanUtils pathHasUnsafeSymlinkComponent:path1]) {
+            return retArray;
+        }
         NSArray * contentArray = [fm contentsOfDirectoryAtPath:path1 error:nil];
         for (NSString * temp in contentArray)
         {
             if (![QMCleanUtils assertRegex:str matchStr:temp] && ![temp isEqualToString:str])
                 continue;
-            NSString * tempPath = [path1 stringByAppendingPathComponent:temp];
-            tempPath = [tempPath stringByAppendingPathComponent:path2];
-            if ([fm fileExistsAtPath:tempPath])
+            NSString * matched = [path1 stringByAppendingPathComponent:temp];
+            if ([QMCleanUtils pathHasUnsafeSymlinkComponent:matched])
+                continue;
+            NSString * tempPath = [matched stringByAppendingPathComponent:path2];
+            if ([QMCleanUtils pathExistsWithoutFollowing:tempPath] &&
+                ![QMCleanUtils pathHasUnsafeSymlinkComponent:tempPath])
             {
                 id subPathObj = [self pathArrayWithRegex:tempPath];
                 if ([subPathObj isKindOfClass:[NSArray class]])
@@ -320,9 +326,11 @@
 
 - (NSArray *)_enumeratorAtFilePath:(NSString *)path pathItem:(QMActionPathItem *)pathItem
 {
-    NSFileManager * fm = [NSFileManager defaultManager];
-    if (![fm fileExistsAtPath:path])
+    if (path.length == 0 ||
+        ![QMCleanUtils pathExistsWithoutFollowing:path] ||
+        [QMCleanUtils pathHasUnsafeSymlinkComponent:path]) {
         return nil;
+    }
     int level = pathItem.level;
     //debug_NSLog(@"Start Scan level : %d path : %@", level, path);
 
@@ -344,6 +352,7 @@
     }
     NSDirectoryEnumerationOptions directoryEnum = 0;
     if (scanApp) directoryEnum = NSDirectoryEnumerationSkipsPackageDescendants;
+    NSString *venueKey = [QMCleanUtils containmentKeyForPath:path];
     // 扫描路径
     BOOL flags = [QMCleanUtils contentPathAtPath:path options:directoryEnum level:level propertiesKey:[NSArray arrayWithObject:NSURLIsAliasFileKey] block:^(NSURL *pathURL) {
         if(level == -1){
@@ -355,21 +364,25 @@
                 }
             }
         }
+        NSString *childPath = [pathURL path];
+        if (childPath.length == 0 ||
+            [QMCleanUtils pathHasUnsafeSymlinkComponent:childPath] ||
+            ![QMCleanUtils path:childPath staysUnderVenueKey:venueKey]) {
+            return [self->_delegate needStopScan];
+        }
         if (scanApp)
         {
             NSNumber * result = nil;
             [pathURL getResourceValue:&result forKey:NSURLIsPackageKey error:NULL];
             if (result && [result boolValue])
             {
-                NSString * path = [pathURL path];
-                if (path && [[[path pathExtension] lowercaseString] isEqualToString:@"app"])
-                    [retArray addObject:path];
+                if ([[[childPath pathExtension] lowercaseString] isEqualToString:@"app"])
+                    [retArray addObject:childPath];
             }
         }
         else
         {
-            NSString * path = [pathURL path];
-            if (path) [retArray addObject:path];
+            [retArray addObject:childPath];
         }
         return [self->_delegate needStopScan];
     }];

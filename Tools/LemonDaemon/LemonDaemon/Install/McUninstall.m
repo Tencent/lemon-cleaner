@@ -13,7 +13,12 @@
 #import "LMDMVersionHelper.h"
 #import <pwd.h>
 #import <semaphore.h>
+#import <sys/stat.h>
+#import <sys/xattr.h>
+#import <errno.h>
+#import <Security/Security.h>
 #import "LMPlistHelper.h"
+#import "ExecuteCmdHelper.h"
 
 // 判断当前系统版本是否在指定版本数组中的公共方法
 BOOL isCurrentSystemVersionInArray(NSArray<NSString *> *versionArray) {
@@ -154,10 +159,13 @@ void updateTools()
         if (![fileMgr fileExistsAtPath:toolPath] && [fileMgr fileExistsAtPath:oldPath])
         {
             NSString *exeName = [[[NSBundle bundleWithPath:oldPath] executablePath] lastPathComponent];
-            if (exeName.length > 0)
-            {
-                NSString *commandString = [@"killall " stringByAppendingString:exeName];
-                system([commandString UTF8String]);
+            NSCharacterSet *allowedExeChars = [NSCharacterSet characterSetWithCharactersInString:
+                                               @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789._-"];
+            if (exeName.length > 0 &&
+                [exeName rangeOfCharacterFromSet:[allowedExeChars invertedSet]].location == NSNotFound) {
+                executeLaunchPath(@"/usr/bin/killall", @[exeName]);
+            } else if (exeName.length > 0) {
+                NSLog(@"[security] updateTools: reject invalid exeName: %@", exeName);
             }
             [fileMgr moveItemAtPath:oldPath toPath:toolPath error:nil];
             [fileMgr setAttributes:toolAttr ofItemAtPath:toolPath error:nil];
@@ -441,6 +449,8 @@ int intsallSub(const char *szUserName, const char *szVersion, int nUserPid)
         return QMINST_ERR_COPYSELF;
     }
     [fileMgr setAttributes:rootAttr ofItemAtPath:agentPath error:nil];
+    // [macOS 27 适配] 清理 daemon 二进制的 quarantine 属性
+    removexattr([agentPath fileSystemRepresentation], "com.apple.quarantine", 0);
     
     //MARK: 拷贝monitor
     NSString *monitorSrcPath = MONITOR_SRC_APP_PATH;
@@ -469,6 +479,8 @@ int intsallSub(const char *szUserName, const char *szVersion, int nUserPid)
         return QMINST_ERR_COPYPLIST;
     }
     [fileMgr setAttributes:rootAttr ofItemAtPath:DAEMON_LAUNCHD_PATH error:nil];
+    // [macOS 27 适配] 清理 quarantine 属性，否则 launchd 拒绝加载
+    removexattr([DAEMON_LAUNCHD_PATH fileSystemRepresentation], "com.apple.quarantine", 0);
     // 无条件 load daemon plist，确保安装后 daemon 立即以 root 启动
     {
         int result = loadPlist(DAEMON_LAUNCHD_PATH);
@@ -487,6 +499,8 @@ int intsallSub(const char *szUserName, const char *szVersion, int nUserPid)
         return QMINST_ERR_COPYPLIST;
     }
     [fileMgr setAttributes:rootAttr ofItemAtPath:DAEMON_UNINSTALL_LAUNCHD_PATH error:nil];
+    // [macOS 27 适配] 清理 quarantine 属性
+    removexattr([DAEMON_UNINSTALL_LAUNCHD_PATH fileSystemRepresentation], "com.apple.quarantine", 0);
     loadPlist(DAEMON_UNINSTALL_LAUNCHD_PATH);
     
     
@@ -498,6 +512,11 @@ int intsallSub(const char *szUserName, const char *szVersion, int nUserPid)
         return QMINST_ERR_COPYPLIST;
     }
     [fileMgr setAttributes:rootAttr ofItemAtPath:MONITOR_LAUNCHD_PATH error:nil];
+    // [macOS 27 适配] 清理 monitor plist quarantine 属性
+    removexattr([MONITOR_LAUNCHD_PATH fileSystemRepresentation], "com.apple.quarantine", 0);
+    // [macOS 27 适配] 防御性清理 trash plist 的 quarantine（该 plist 由 AppTrashDel 安装，
+    // 但可能继承 App Bundle 的 quarantine；对不存在的文件/属性 removexattr 返回 -1，无害）
+    removexattr([TRASH_MONITOR_LAUNCHD_PATH fileSystemRepresentation], "com.apple.quarantine", 0);
     
     // 写入版本文件
     NSString *versionPath = [supportPath stringByAppendingPathComponent:INST_VERSION_NAME];
@@ -662,11 +681,9 @@ int InstallCastleOld(const char *szUserName, const char *szVersion, int nUserPid
     
     // launchctl直接加载Agent
     // 确保卸载残留的plist
-    NSString *unloadCmd = [NSString stringWithFormat:@"launchctl unload %@", DAEMON_LAUNCHD_PATH];
-    system([unloadCmd UTF8String]);
+    unloadPlist(DAEMON_LAUNCHD_PATH);
     // 旧版本plist中使用的Label是MAIN_APP_BUNDLEID非DAEMON_APP_BUNDLEID，所以确保残留在杀进程前先remove一次
-    NSString *removeCmd = [NSString stringWithFormat:@"launchctl remove %@", MAIN_APP_BUNDLEID];
-    system([removeCmd UTF8String]);
+    unloadPlistByLable(MAIN_APP_BUNDLEID);
     // 确保kill残留的daemon
     // terminate castle process
     ProcessInfo_t *proc_info = NULL;
@@ -695,8 +712,7 @@ int InstallCastleOld(const char *szUserName, const char *szVersion, int nUserPid
     if (proc_info != NULL)
         free(proc_info);
     
-    NSString *loadCmd = [NSString stringWithFormat:@"launchctl load -w %@", DAEMON_LAUNCHD_PATH];
-    system([loadCmd UTF8String]);
+    loadPlist(DAEMON_LAUNCHD_PATH);
     
     // 为了保证Monitor启动时Agent的Pipe已经建立
     usleep(100*1000);
@@ -740,20 +756,17 @@ int InstallCastleOld(const char *szUserName, const char *szVersion, int nUserPid
             return QMINST_ERR_PRIVILEGE;
         }
         
-        unloadCmd = [NSString stringWithFormat:@"launchctl unload %@", MONITOR_LAUNCHD_PATH];
-        system([unloadCmd UTF8String]);
-        system("killall Lemon\ Menu\ bar");
+        unloadPlist(MONITOR_LAUNCHD_PATH);
+        system("killall Lemon\\ Menu\\ bar");
         //        loadCmd = [NSString stringWithFormat:@"launchctl load -w %@", MONITOR_LAUNCHD_PATH];
         //        system([loadCmd UTF8String]);
     }
     else
     {
         // 直接root权限拉起的更新过程
-        NSString *unloadCmd = [NSString stringWithFormat:@"launchctl bsexec %d su %s -c 'launchctl unload %@'",
-                               nUserPid, szUserName, MONITOR_LAUNCHD_PATH];
-        system([unloadCmd UTF8String]);
+        unloadAgentPlistForUser(MONITOR_LAUNCHD_PATH, nUserPid, [NSString stringWithUTF8String:szUserName]);
         //killall命令有时候无法正常kill进程，废弃，使用kill -9来执行
-        system("killall Lemon\ Menu\ bar");
+        system("killall Lemon\\ Menu\\ bar");
         //        NSString *loadCmd = [NSString stringWithFormat:@"launchctl bsexec %d su %s -c 'launchctl load -w %@'",
         //                             nUserPid, szUserName, MONITOR_LAUNCHD_PATH];
         //        system([loadCmd UTF8String]);
@@ -823,37 +836,215 @@ void removeBrowserPlugins(NSString *homePath)
     if (ret == 0)
         return;
     
-    // 删除文件
+    // 删除文件：扩展目录名必须是 Chrome 合法 ID，且删除目标仍落在 Extensions 目录内
+    if (pathHasUnsafeSymlinkComponent(chromeFolder)) {
+        NSLog(@"[security] removeBrowserPlugins: reject symlink chrome folder: %@", chromeFolder);
+        return;
+    }
+    NSString *folderStd = [chromeFolder stringByStandardizingPath];
+    NSString *folderPrefix = [folderStd hasSuffix:@"/"] ? folderStd : [folderStd stringByAppendingString:@"/"];
+    static NSCharacterSet *invalidChromeExtChars = nil;
+    static dispatch_once_t onceChromeExtChars;
+    dispatch_once(&onceChromeExtChars, ^{
+        invalidChromeExtChars = [[NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnop"] invertedSet];
+    });
     for (NSString *removeKey in removeKeyArray)
     {
-        if ([removeKey length] == 0)
+        if ([removeKey length] != 32)
             continue;
-        
+        if ([removeKey rangeOfCharacterFromSet:invalidChromeExtChars].location != NSNotFound)
+            continue;
+
         NSString *destPath = [chromeFolder stringByAppendingPathComponent:removeKey];
+        NSString *destStd = [destPath stringByStandardizingPath];
+        if (![destStd hasPrefix:folderPrefix]) {
+            NSLog(@"[security] removeBrowserPlugins: reject path outside chrome folder: %@", destPath);
+            continue;
+        }
+        if (pathHasUnsafeSymlinkComponent(destPath)) {
+            NSLog(@"[security] removeBrowserPlugins: reject symlink dest: %@", destPath);
+            continue;
+        }
         [fileMgr removeItemAtPath:destPath error:nil];
     }
 }
 
 
 
-// 升级
+// TOCTOU-safe 签名验证辅助函数：对指定路径做严格签名校验
+// 使用 kSecCSStrictValidate | kSecCSCheckNestedCode | kSecCSCheckAllArchitectures
+// 确保 bundle 完整性（nested code、resource seal 等均被检查）
+static OSStatus _verifyAppSignatureStrict(NSString *appPath) {
+    SecStaticCodeRef staticCode = NULL;
+    CFURLRef bundleURL = (__bridge CFURLRef)[NSURL fileURLWithPath:appPath];
+    OSStatus status = SecStaticCodeCreateWithPath(bundleURL, kSecCSDefaultFlags, &staticCode);
+    if (status != errSecSuccess || staticCode == NULL) {
+        NSLog(@"[security] _verifyAppSignatureStrict: failed to create static code for %@, status=%d", appPath, (int)status);
+        return status != errSecSuccess ? status : errSecCSInternalError;
+    }
+    
+    SecRequirementRef requirement = NULL;
+    NSString *reqStr = [NSString stringWithFormat:
+                        @"anchor apple generic and certificate leaf [subject.OU] = \"%@\" and certificate leaf [subject.CN] = \"%@\"",
+                        LEMON_TEAM_ID, LEMON_SIGNING_AUTH];
+    status = SecRequirementCreateWithString((__bridge CFStringRef)reqStr, kSecCSDefaultFlags, &requirement);
+    if (status != errSecSuccess) {
+        CFRelease(staticCode);
+        NSLog(@"[security] _verifyAppSignatureStrict: failed to create requirement, status=%d", (int)status);
+        return status;
+    }
+    
+    // 严格验证：检查所有架构 + 嵌套代码 + 严格模式（resource envelope 完整性）
+    SecCSFlags strictFlags = kSecCSCheckAllArchitectures | kSecCSStrictValidate | kSecCSCheckNestedCode;
+    status = SecStaticCodeCheckValidity(staticCode, strictFlags, requirement);
+    CFRelease(staticCode);
+    CFRelease(requirement);
+    
+    if (status != errSecSuccess) {
+        NSLog(@"[security] _verifyAppSignatureStrict: signature validation FAILED for %@, status=%d", appPath, (int)status);
+    }
+    return status;
+}
+
+// TOCTOU-safe symlink 检查：确认路径本身不是符号链接
+static BOOL _pathIsSymlink(NSString *path) {
+    struct stat st;
+    if (lstat([path fileSystemRepresentation], &st) != 0) {
+        return NO; // lstat 失败，保守当作非链接（后续操作会自行失败）
+    }
+    return S_ISLNK(st.st_mode);
+}
+
+// 升级（TOCTOU-safe: copy-then-verify 模式）
 int UpdateCastle(char *newAppPath, const char *szUserName, const char *szVersion, int nUserPid)
 {
+    NSFileManager *fm = [NSFileManager defaultManager];
+    NSString *srcAppPath = [NSString stringWithUTF8String:newAppPath];
+    // 标准化路径：解析 ".." 和符号链接，确保白名单匹配一致
+    srcAppPath = srcAppPath.stringByStandardizingPath;
+    
+    // ===== 第1步：源路径安全检查 =====
+    // 1a. 源路径不能是 symlink（防止验签后被替换为恶意目标）
+    if (_pathIsSymlink(srcAppPath)) {
+        NSLog(@"[security] UpdateCastle: reject symlink source path: %@", srcAppPath);
+        return -2;
+    }
+    
+    // 1b. 源路径白名单：只接受合理的下载/缓存目录
+    BOOL pathAllowed = NO;
+    NSArray *allowedPrefixes = @[
+        @"/Users/",                   // 用户目录下的下载/缓存
+        @"/private/tmp/",             // 临时目录
+        @"/tmp/",                     // 临时目录
+        @"/Library/Caches/",          // 系统缓存
+        @"/var/folders/",             // NSTemporaryDirectory() 返回的用户临时目录
+        @"/private/var/folders/",     // /var/folders 的真实路径形式
+    ];
+    for (NSString *prefix in allowedPrefixes) {
+        if ([srcAppPath hasPrefix:prefix]) {
+            pathAllowed = YES;
+            break;
+        }
+    }
+    if (!pathAllowed) {
+        NSLog(@"[security] UpdateCastle: reject source path outside allowed prefixes: %@", srcAppPath);
+        return -2;
+    }
+    
+    // 1c. 路径不能包含 .. 避免目录穿越（标准化后仍检查，防御性编程）
+    if ([srcAppPath containsString:@".."]) {
+        NSLog(@"[security] UpdateCastle: reject path with ..: %@", srcAppPath);
+        return -2;
+    }
+    
+    // ===== 第2步：对源路径做第一次签名验证（快速拒绝明显非法的包） =====
+    OSStatus secStatus = _verifyAppSignatureStrict(srcAppPath);
+    if (secStatus != errSecSuccess) {
+        NSLog(@"[security] UpdateCastle: first signature check FAILED for %@, status=%d", srcAppPath, (int)secStatus);
+        return -3;
+    }
+    NSLog(@"[security] UpdateCastle: first signature check passed for %@", srcAppPath);
+    
+    // ===== 第3步：Copy-then-verify —— 拷贝到 root 所有的安全暂存路径 =====
+    // 生成 UUID 暂存路径，位于 /Applications 同级目录（同文件系统，便于后续 rename）
+    NSString *stagingDir = [NSString stringWithFormat:@"/Applications/.Lemon-staging-%@",
+                            [[NSUUID UUID] UUIDString]];
+    
+    // 确保暂存路径不存在（防止预植入攻击）
+    if ([fm fileExistsAtPath:stagingDir]) {
+        NSLog(@"[security] UpdateCastle: staging path already exists (unexpected): %@", stagingDir);
+        [fm removeItemAtPath:stagingDir error:nil];
+    }
+    
+    // 使用 ditto 拷贝（保留签名、xattr、resource fork），比 NSFileManager 更可靠
+    NSTask *dittoTask = [[NSTask alloc] init];
+    dittoTask.launchPath = @"/usr/bin/ditto";
+    dittoTask.arguments = @[srcAppPath, stagingDir];
+    @try {
+        [dittoTask launch];
+        [dittoTask waitUntilExit];
+    } @catch (NSException *exception) {
+        NSLog(@"[security] UpdateCastle: ditto exception: %@", exception);
+        [fm removeItemAtPath:stagingDir error:nil];
+        return -1;
+    }
+    
+    if (dittoTask.terminationStatus != 0) {
+        NSLog(@"[security] UpdateCastle: ditto failed with status %d", dittoTask.terminationStatus);
+        [fm removeItemAtPath:stagingDir error:nil];
+        return -1;
+    }
+    
+    // ===== 第4步：对暂存副本做第二次签名验证（消除 TOCTOU 窗口） =====
+    // 此时验证的是我们自己控制的副本，攻击者无法篡改
+    secStatus = _verifyAppSignatureStrict(stagingDir);
+    if (secStatus != errSecSuccess) {
+        NSLog(@"[security] UpdateCastle: SECOND signature check FAILED on staging copy %@, status=%d — possible TOCTOU attack!", stagingDir, (int)secStatus);
+        [fm removeItemAtPath:stagingDir error:nil];
+        return -3;
+    }
+    NSLog(@"[security] UpdateCastle: second signature check passed on staging copy");
+    
+    // ===== 第5步：原子替换到 /Applications =====
     // 移动文件时先把卸载监听unload掉
     unloadPlistByLable(DAEMON_UNINSTALL_LAUNCHD_LABLE);
     unloadAgentPlistByLableForAllUser(DAEMON_UNINSTALL_LAUNCHD_LABLE);
     
-    int action = MCCMD_MOVEFILE_MOVE;
-    if (@available(macOS 13.0, *)) {
-        action = MCCMD_MOVEFILE_COPY;
+    // 检查目标路径 /Applications 本身不是 symlink
+    NSString *applicationsDir = [DEFAULT_APP_PATH stringByDeletingLastPathComponent];
+    if (_pathIsSymlink(applicationsDir)) {
+        NSLog(@"[security] UpdateCastle: /Applications is a symlink! Aborting.");
+        [fm removeItemAtPath:stagingDir error:nil];
+        return -2;
     }
     
-    if (fileMoveTo(newAppPath, (char *)[DEFAULT_APP_PATH UTF8String], action) == -1)
-    {
-        NSLog(@"Update fail when replacing APP file");
-        return -1;
+    NSError *err = nil;
+    if ([fm fileExistsAtPath:DEFAULT_APP_PATH]) {
+        // 使用 replaceItemAtURL 实现原子替换（内部用 rename，失败时旧文件仍在）
+        // 这比"先删后拷"更安全：如果替换失败，用户不会丢失已安装的应用
+        if (![fm replaceItemAtURL:[NSURL fileURLWithPath:DEFAULT_APP_PATH]
+                    withItemAtURL:[NSURL fileURLWithPath:stagingDir]
+                   backupItemName:nil
+                          options:NSFileManagerItemReplacementUsingNewMetadataOnly
+                 resultingItemURL:nil
+                            error:&err]) {
+            NSLog(@"[ERR] UpdateCastle: atomic replace failed: %@", err);
+            // 回退：清理暂存目录
+            [fm removeItemAtPath:stagingDir error:nil];
+            return -1;
+        }
+    } else {
+        // 目标不存在，直接 rename（同文件系统下是原子操作）
+        if (rename([stagingDir fileSystemRepresentation], [DEFAULT_APP_PATH fileSystemRepresentation]) != 0) {
+            NSLog(@"[ERR] UpdateCastle: rename staging to target failed: %s", strerror(errno));
+            [fm removeItemAtPath:stagingDir error:nil];
+            return -1;
+        }
     }
     
+    NSLog(@"[security] UpdateCastle: app replaced successfully via copy-then-verify");
+    
+    // ===== 第6步：启动安装流程（与原有逻辑一致） =====
     // 所有参数 - 命令参数 | 用户名 | 版本号 | 主进程ID
     NSArray *arguments = [NSArray arrayWithObjects:[NSString stringWithUTF8String:kInstallCmd_cstr],
                           [NSString stringWithUTF8String:szUserName],
@@ -960,8 +1151,7 @@ void uninstallCastleOLd(BOOL isExit)
     NSMutableDictionary *userPidDic = [NSMutableDictionary dictionaryWithCapacity:10];
     
     // 旧版本plist中使用的Label是MAIN_APP_BUNDLEID非DAEMON_APP_BUNDLEID，所以确保残留在杀进程前先remove一次
-    NSString *removeCmd = [NSString stringWithFormat:@"launchctl remove %@", MAIN_APP_BUNDLEID];
-    system([removeCmd UTF8String]);
+    unloadPlistByLable(MAIN_APP_BUNDLEID);
     // terminate castle process
     ProcessInfo_t *proc_info = NULL;
     int ret = CmcGetProcessInfo(McprocNone, 0, NO, &proc_info);
@@ -1011,10 +1201,7 @@ void uninstallCastleOLd(BOOL isExit)
         NSNumber *userPid = [userPidDic objectForKey:userName];
         if (userPid != nil)
         {
-            NSString *unloadCmd = [NSString stringWithFormat:@"launchctl bsexec %@ su %@ -c 'launchctl unload %@'",
-                                   userPid, userName, MONITOR_LAUNCHD_PATH];
-            //NSLog(@"unload cmd: %@", unloadCmd);
-            system([unloadCmd UTF8String]);
+            unloadAgentPlistForUser(MONITOR_LAUNCHD_PATH, [userPid intValue], userName);
         }
         
         // 删除配置文件

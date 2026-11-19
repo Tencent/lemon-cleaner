@@ -30,6 +30,12 @@
 }
 
 - (void)restartNotification:(NSNotification *)notify {
+    if (![NSThread isMainThread]) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self restartNotification:notify];
+        });
+        return;
+    }
     LemonDNCRestartType type = [notify.userInfo[LemonDNCRestartUserInfoTypeKey] unsignedIntegerValue];
     LemonDNCRestartReason reason = [notify.userInfo[LemonDNCRestartUserInfoReasonKey] unsignedIntegerValue];
     

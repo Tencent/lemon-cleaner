@@ -12,6 +12,7 @@
 
 #import "McUninstallWindowController.h"
 #import "AppTrashDel.h"
+#import "LMTrashAppIdentity.h"
 
 FOUNDATION_EXPORT double LemonUninstallerVersionNumber;
 FOUNDATION_EXPORT const unsigned char LemonUninstallerVersionString[];

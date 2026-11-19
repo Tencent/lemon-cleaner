@@ -432,7 +432,7 @@ static inline CGFloat calculateAmountOfTicks(CGFloat heightOfView) { // 5 y labe
         NSValue * v = [pointCoordinaryCache objectAtIndex:i];
         NSPoint p = [v pointValue];
         //        if (fabs(p.x - eventPoint.x) < ERROR && fabs(p.y - eventPoint.y) < ERROR) {
-        if (fabs(p.x - eventPoint.x) < ERROR && kBuffer < p.y < self.frame.size.height - kBuffer) {
+        if (fabs(p.x - eventPoint.x) < ERROR && kBuffer < p.y && p.y < self.frame.size.height - kBuffer) {
             //            NSLog(@"on the sample point x:%f, y:%f", p.x, p.y);
             if (!mouseOnSamplePoint) {
                 [self moveInSamplePoint:p atIndex:i];

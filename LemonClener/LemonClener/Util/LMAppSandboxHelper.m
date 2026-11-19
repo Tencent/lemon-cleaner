@@ -132,8 +132,8 @@
 -(BOOL)isAppIsSandboxByPath:(NSString *)appPath{
     //        appPath = [appPath stringByReplacingOccurrencesOfString:@" " withString:@"\\ "];
     @try{
-        NSString *shellString = [NSString stringWithFormat:@"codesign -dv --entitlements :- '%@'", appPath];
-        NSString *retString = [QMShellExcuteHelper excuteCmd:shellString];
+        NSString *retString = [QMShellExcuteHelper executeLaunchPath:@"/usr/bin/codesign"
+                                                          arguments:@[@"-dv", @"--entitlements", @":-", appPath]];
         if ([retString isEqualToString:@""]) {
             return NO;
         }

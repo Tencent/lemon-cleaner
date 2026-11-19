@@ -43,6 +43,17 @@ typedef BOOL (^FinderResultBlock)(NSURL * pathURL);
 
 + (BOOL)checkQQMacMgrFile:(NSString *)path;
 
+/// 路径任一层为非系统别名（/tmp /var /etc）的 symlink 则返回 YES
++ (BOOL)pathHasUnsafeSymlinkComponent:(NSString *)path;
+/// 标准化 + 折叠 /tmp /var /etc，不 lstat、不 resolve。仅在 walk 已通过后做前缀比较
++ (NSString *)containmentKeyForPath:(NSString *)path;
+/// path 仍落在 venue 目录内（字符串前缀，不 resolve）
++ (BOOL)path:(NSString *)path staysUnderVenue:(NSString *)venue;
+/// 同上，venue 侧用预先算好的 containmentKey
++ (BOOL)path:(NSString *)path staysUnderVenueKey:(NSString *)venueKey;
+/// 不跟随 symlink 的存在性判断
++ (BOOL)pathExistsWithoutFollowing:(NSString *)path;
+
 // 缓存扫描路径
 + (void)setScanCacheResult:(NSDictionary *)dict;
 + (NSArray *)cacheResultWithPath:(NSString *)path;

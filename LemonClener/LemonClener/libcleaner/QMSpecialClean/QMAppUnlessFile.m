@@ -421,11 +421,11 @@ options:flags errorHandler:nil]
 - (void)__scanAppInstallPackage:(QMActionItem *)actionItem{
     NSArray *pathArray = @[[@"~/Downloads" stringByExpandingTildeInPath],[@"~/Desktop" stringByExpandingTildeInPath],[@"~/Library/Containers/com.tencent.WeWorkMac/Data/Documents/Profiles" stringByExpandingTildeInPath]];
     
-    NSString *shellString = @"mdfind -onlyin \'%@\' 'kMDItemKind = \"磁盘映像\" || kMDItemKind = \"Disk Image\"'";
+    NSString *query = @"kMDItemKind = \"磁盘映像\" || kMDItemKind = \"Disk Image\"";
     
     for (NSString *path in pathArray) {
-        NSString *cmd = [NSString stringWithFormat:shellString, path];
-        NSString *retString = [QMShellExcuteHelper excuteCmd:cmd];
+        NSString *retString = [QMShellExcuteHelper executeLaunchPath:@"/usr/bin/mdfind"
+                                                          arguments:@[@"-onlyin", path, query]];
         if (retString == nil || [retString isEqualToString:@""]) {
             continue;
         }
@@ -535,8 +535,7 @@ options:flags errorHandler:nil]
                     NSString *newPath = [appBinaryPath stringByAppendingPathComponent:path];
                     NSString *description = [workSpace localizedDescriptionForType:[workSpace typeOfFile:newPath error:nil]];
                     if ([description containsString:@"可执行"] || [description containsString:@"Unix executable"]) {
-                        NSString *shellString = [NSString stringWithFormat:@"file '%@'",newPath];
-                        NSString *retString = [QMShellExcuteHelper excuteCmd:shellString];
+                        NSString *retString = [QMShellExcuteHelper executeLaunchPath:@"/usr/bin/file" arguments:@[newPath]];
                         if ([retString containsString:@"x86"] && [retString containsString:@"arm64"]) {
                             type = AppBinaryType_Both;
                         } else if ([retString containsString:@"x86"] && ![retString containsString:@"arm64"]) {
@@ -555,8 +554,7 @@ options:flags errorHandler:nil]
                         NSString *newPath = path;//[appPath stringByAppendingPathComponent:path];
                         NSString *description = [workSpace localizedDescriptionForType:[workSpace typeOfFile:newPath error:nil]];
                         if ([description containsString:@"可执行"] || [description containsString:@"Unix executable"] ) {
-                            NSString *shellString = [NSString stringWithFormat:@"file '%@'",newPath];
-                            NSString *retString = [QMShellExcuteHelper excuteCmd:shellString];
+                            NSString *retString = [QMShellExcuteHelper executeLaunchPath:@"/usr/bin/file" arguments:@[newPath]];
                             
                             if ([retString containsString:@"x86"] && [retString containsString:@"arm64"]) {
                                 [arr addObject:newPath];

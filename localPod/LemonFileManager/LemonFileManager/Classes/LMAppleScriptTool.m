@@ -46,13 +46,27 @@
     // 说明系统废纸篓可能记录了某个文件的删除记录，并且和进程绑定。
     // 只能回滚到 applescript 的方式，同时设置开始删除前静音，结束后恢复声音，避免批量删除时系统提示音产生的噪音
     // 后续可能的解决办法：使用xpc服务的方式，因xpc是按需启动，在xpc服务中通过api的方式来删除文件，所以理论上可行（批量删除需要验证）。改动太大先mark
+    //
+    // 安全（S5-as5 sink A）：文件名是磁盘枚举得到的低信任输入（任何同户进程可控制），
+    // 内插进脚本源码前必须转义；含换行等无法安全转义的字符时回退 API 方式，
+    // 宁可损失个别怪名文件的"放回原处"UX，也不让未转义输入到达拼接点。
+    NSString *escapedPath = [LMAppleScriptTool escapedAppleScriptLiteral:filePath];
+    if (!escapedPath) {
+        NSLog(@"removeFileToTrash: path contains characters unsafe for AppleScript, fallback to recycleURLs: %@", filePath);
+        NSArray *urls = @[[NSURL fileURLWithPath:filePath]];
+        [[NSWorkspace sharedWorkspace] recycleURLs:urls
+                                 completionHandler:^void(NSDictionary *newURLs, NSError *recycleError) {
+            NSLog(@"exec recycleURLs error : %@", recycleError);
+        }];
+        return;
+    }
     NSString *appleScriptSource = [NSString stringWithFormat:
                                    @"set volume output muted true\n"
                                    @"tell application \"Finder\"\n"
                                    @"set theFile to POSIX file \"%@\"\n"
                                    @"delete theFile\n"
                                    @"end tell\n"
-                                   @"set volume output muted false", filePath];
+                                   @"set volume output muted false", escapedPath];
     
     NSAppleScript *appleScript = [[NSAppleScript alloc] initWithSource:appleScriptSource];
     NSDictionary *errorDict;
@@ -74,6 +88,20 @@
     }];
 #endif
     
+}
+
+#pragma mark - AppleScript Injection Defense
+
++ (NSString *)escapedAppleScriptLiteral:(NSString *)string {
+    if (!string) return nil;
+    // 换行 / 回车无法安全转义（字面换行会破坏脚本语法），返回 nil 由调用方回退
+    if ([string rangeOfCharacterFromSet:[NSCharacterSet newlineCharacterSet]].location != NSNotFound) {
+        return nil;
+    }
+    // 先转义反斜杠再转义双引号（顺序颠倒会导致已转义的引号被二次转义，留下注入面）
+    NSString *escaped = [string stringByReplacingOccurrencesOfString:@"\\" withString:@"\\\\"];
+    escaped = [escaped stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""];
+    return escaped;
 }
 
 @end

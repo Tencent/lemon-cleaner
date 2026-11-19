@@ -339,12 +339,47 @@
 #pragma mark -
 #pragma mark 用户交互
 
+- (NSArray<LMFileItem *> *)otherFileItems {
+    NSMutableArray<LMFileItem *> *others = [NSMutableArray array];
+    for (LMFileItem *item in showItems) {
+        if (item.type == LMFileTypeOther) {
+            [others addObject:item];
+        }
+    }
+    return others;
+}
+
+- (BOOL)confirmOtherItems:(NSArray<LMFileItem *> *)others {
+    if (others.count == 0) {
+        return YES;
+    }
+    NSMutableArray *paths = [NSMutableArray array];
+    for (LMFileItem *item in others) {
+        if (item.path.length > 0) {
+            [paths addObject:item.path];
+        }
+    }
+    NSAlert *alert = [[NSAlert alloc] init];
+    alert.messageText = NSLocalizedString(@"确认同时清理「其他」文件？", nil);
+    alert.informativeText = [paths componentsJoinedByString:@"\n"];
+    [alert addButtonWithTitle:NSLocalizedString(@"确认", nil)];
+    [alert addButtonWithTitle:NSLocalizedString(@"取消", nil)];
+    alert.alertStyle = NSAlertStyleWarning;
+    return [alert runModal] == NSAlertFirstButtonReturn;
+}
+
 - (IBAction)checkAllClick:(id)sender
 {
-//    for (QMStatusItem *showItem in showItems_old)
-//    {
-//        showItem.status = checkAllButton.state;
-//    }
+    BOOL turningOn = (checkAllButton.state == NSOnState);
+    if (turningOn && ![self confirmOtherItems:[self otherFileItems]]) {
+        for (LMFileItem *showItem in showItems) {
+            showItem.isSelected = (showItem.type != LMFileTypeOther);
+        }
+        [checkAllButton setState:NSOffState];
+        [listView reloadData];
+        [self refreshText];
+        return;
+    }
     for (LMFileItem *showItem in showItems) {
         showItem.isSelected = checkAllButton.state;
     }
@@ -363,6 +398,15 @@
 
 - (IBAction)uninstallClick:(id)sender
 {
+    NSMutableArray<LMFileItem *> *selectedOthers = [NSMutableArray array];
+    for (LMFileItem *item in showItems) {
+        if (item.isSelected && item.type == LMFileTypeOther) {
+            [selectedOthers addObject:item];
+        }
+    }
+    if (![self confirmOtherItems:selectedOthers]) {
+        return;
+    }
     if ([delegate respondsToSelector:@selector(selectedDidDone:withSoft:)])
     {
         [delegate selectedDidDone:self withSoft:soft];
@@ -421,8 +465,12 @@
     //文件图标
     [cellView.imageView setImage:fileItem.icon];
     
-    //文件名字
-    [cellView.textField setStringValue:fileItem.name];
+    //文件名字：Other / 系统守护项展示完整路径，避免只看文件名无法分辨
+    if (fileItem.type == LMFileTypeOther || fileItem.type == LMFileTypeDaemon) {
+        [cellView.textField setStringValue:fileItem.path ?: fileItem.name];
+    } else {
+        [cellView.textField setStringValue:fileItem.name];
+    }
     
     //文件大小
     [cellView.sizeField setStringValue:[NSString stringFromDiskSize:fileItem.size]];

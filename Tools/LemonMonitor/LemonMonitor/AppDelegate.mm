@@ -98,8 +98,20 @@
     [[NSUserDefaults standardUserDefaults] setObject:@"WhenScrolling" forKey:@"AppleShowScrollBars"];
     
     // 浮窗监控
-    monitorController = [[LMMonitorController alloc] init];
-    [monitorController load];
+    // 开机自启场景：菜单栏 / 外接屏在登录早期可能尚未初始化完成，此时创建状态栏图标，
+    // 系统可能把其宿主窗口放到屏幕外（进程在跑、菜单栏项存在但图标不可见）。
+    // 故仅对开机自启延迟 1.5s 再创建，等系统布局就绪；手动启用 / 其它启动方式保持立即创建，行为不变。
+    NSInteger startParamsCmd = [[LemonMonitroHelpParams sharedInstance] startParamsCmd];
+    if (startParamsCmd == LemonMonitorRunningOSBoot) {
+        NSLog(@"applicationDidFinishLaunching: OS boot, delay monitor setup 1.5s");
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            self->monitorController = [[LMMonitorController alloc] init];
+            [self->monitorController load];
+        });
+    } else {
+        monitorController = [[LMMonitorController alloc] init];
+        [monitorController load];
+    }
     
     appTashDel = [[AppTrashDel alloc] init];
     
@@ -146,6 +158,12 @@
 }
 
 -(void)updateTheme{
+    if (![NSThread isMainThread]) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self updateTheme];
+        });
+        return;
+    }
     NSLog(@"%s,received notification",__FUNCTION__);
     NSInteger theme = [[NSUserDefaults standardUserDefaults] integerForKey:K_THEME_MODE_SETTED];
     NSLog(@"%s,received notification, theme:%ld",__FUNCTION__,(long)theme);
@@ -193,6 +211,12 @@
 }
 
 -(void)trashSizeOverThreshold: (NSNotification *)notify{
+    if (![NSThread isMainThread]) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self trashSizeOverThreshold:notify];
+        });
+        return;
+    }
     //垃圾桶；如果用户点击暂不提醒，则当天不提醒。5.1.12
     double lastNextRemindTime = [[NSUserDefaults standardUserDefaults] doubleForKey:@"kTrashSizeNextRemindTime"];
     if (lastNextRemindTime != 0) {

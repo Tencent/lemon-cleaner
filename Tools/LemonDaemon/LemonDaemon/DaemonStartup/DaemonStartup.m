@@ -76,9 +76,14 @@ void printDaemonOrAgentsStatus(void){
 //        NSLog(@"normal launchctl status :\n %@",normalLaunchctlStatus);
 //    }
     
-    NSString *rootLaunchctlCmd = @"launchctl list | grep Lemon"; // root
-    NSString *rootLaunchctlStatus = executeCmdAndGetResult(rootLaunchctlCmd);
-    NSLog(@"root launchctl status :\n %@",rootLaunchctlStatus);
+    NSString *rootLaunchctlStatus = executeExecutableWithArguments(@"/bin/launchctl", @[@"list"]);
+    NSMutableString *lemonItems = [NSMutableString string];
+    for (NSString *line in [rootLaunchctlStatus componentsSeparatedByString:@"\n"]) {
+        if ([line localizedCaseInsensitiveContainsString:@"Lemon"]) {
+            [lemonItems appendFormat:@"%@\n", line];
+        }
+    }
+    NSLog(@"root launchctl status :\n %@", lemonItems);
 }
 
 

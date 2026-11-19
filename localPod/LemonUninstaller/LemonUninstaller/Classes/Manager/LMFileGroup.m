@@ -10,6 +10,7 @@
 #import <QMCoreFunction/NSString+Extension.h>
 #import <QMCoreFunction/McCoreFunction.h>
 #import <QMCoreFunction/LoginItemManager.h>
+#import <QMCoreFunction/QMShellExcuteHelper.h>
 
 
 @interface LMFileGroup () {
@@ -278,9 +279,7 @@
 - (void)launchUnloadItem:(LMFileItem *)fileItem {
     NSLog(@"%s, %@", __FUNCTION__, fileItem);
     if ([[[fileItem.path pathExtension] lowercaseString] isEqualToString:@"plist"]) {
-        NSString *commandString = [NSString stringWithFormat:@"launchctl unload %@", fileItem.path];
-        //普通权限
-        system([commandString UTF8String]);
+        [QMShellExcuteHelper executeLaunchPath:@"/bin/launchctl" arguments:@[@"unload", fileItem.path]];
         //ROOT权限
 #ifndef DEBUG
         [[McCoreFunction shareCoreFuction] unInstallPlist:fileItem.path];

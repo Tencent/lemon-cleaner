@@ -236,7 +236,9 @@ static NSString * const kPidKey = @"pid";
         for (DiskZoneModel *zoneModel in diskInfo) {
             NSLog(@"%s, zoneMode Info : %@", __FUNCTION__, zoneModel);
             if(zoneModel.isMainDisk){
-                uint64_t usedBytes = zoneModel.maxSize - zoneModel.leftSize;
+                // 防御：leftSize > maxSize 时避免 uint64_t 无符号下溢
+                uint64_t usedBytes = (zoneModel.maxSize > zoneModel.leftSize) ?
+                                     (uint64_t)(zoneModel.maxSize - zoneModel.leftSize) : 0;
                 if (zoneModel.maxSize > 0)
                 {
                     double useRate = usedBytes*1.0/zoneModel.maxSize;
@@ -961,18 +963,16 @@ static NSString * const kPidKey = @"pid";
     }
 }
 
--(float)getAllUsableBytes{
+-(long long)getAllUsableBytes{
     if (@available(macOS 10.13, *)) {
         NSError *error = nil;
         NSURL *fileURL = [[NSURL alloc] initFileURLWithPath:NSHomeDirectory()];
-         //TODO: 拿到有效的剩余空间
         NSDictionary *results = [fileURL resourceValuesForKeys:@[NSURLVolumeAvailableCapacityForImportantUsageKey] error:&error];
         if (!results) {
             NSLog(@"Error retrieving resource keys");
             return 0;
         }
-        //    NSLog(@"float Available capacity for important usage: %lf",[[results objectForKey:NSURLVolumeAvailableCapacityForImportantUsageKey] floatValue]);
-        return [[results objectForKey:NSURLVolumeAvailableCapacityForImportantUsageKey] floatValue];
+        return [[results objectForKey:NSURLVolumeAvailableCapacityForImportantUsageKey] longLongValue];
     }else{
         return 0;
     }

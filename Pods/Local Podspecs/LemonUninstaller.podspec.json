@@ -24,7 +24,8 @@
   ],
   "public_header_files": [
     "LemonUninstaller/Classes/Controller/McUninstallWindowController.h",
-    "LemonUninstaller/Classes/TrashWatch/AppTrashDel.h"
+    "LemonUninstaller/Classes/TrashWatch/AppTrashDel.h",
+    "LemonUninstaller/Classes/TrashWatch/LMTrashAppIdentity.h"
   ],
   "dependencies": {
     "AFNetworking": [

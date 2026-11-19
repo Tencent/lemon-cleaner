@@ -12,6 +12,7 @@
 #import "McCoreFunction.h"
 #import "QMSafeMutableArray.h"
 #import "QMSoftwareConfigConst.h"
+#import "QMShellExcuteHelper.h"
 
 @interface McUninstallSoft ()
 {
@@ -433,9 +434,7 @@ NSString *McUninstallSoftPathKey = @"McUninstallSoftPathKey";
 {
     if ([[[fileItem.filePath pathExtension] lowercaseString] isEqualToString:@"plist"])
     {
-        NSString *commandString = [NSString stringWithFormat:@"launchctl unload %@",fileItem.filePath];
-        //普通权限
-        system([commandString UTF8String]);
+        [QMShellExcuteHelper executeLaunchPath:@"/bin/launchctl" arguments:@[@"unload", fileItem.filePath]];
         //ROOT权限
         [[McCoreFunction shareCoreFuction] unInstallPlist:fileItem.filePath];
     }

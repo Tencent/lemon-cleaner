@@ -26,6 +26,9 @@
 //初始化 或者 重新初始化
 -(void)initialData;
 
+//已安装软件列表 bundleId→path 字典（只读，用于软件列表上报）
+@property (nonatomic, strong, readonly) NSDictionary *installBundleDic;
+
 //获取某个action对应的垃圾
 -(NSArray *)getCacheWithActionItem:(QMActionItem *)actionItem;
 

@@ -153,7 +153,7 @@ NSArray<NSString *> *extractTailLines(NSData *data, NSUInteger maxLines) {
 
 void trackExceptionLogAndCleanIfNeeded(void) {
     __block unsigned long long lastSize = 0;
-      [[LMLoopTrigger sharedInstance] runModes:LMLoopTriggerRunModeEveryOneHour key:@"trackExceptionLogKey" callback:^{
+      [[LMLoopTrigger sharedInstance] runModes:LMLoopTriggerRunModeEveryOneHour key:@"trackExceptionLogKey" callback:^(LMLoopTriggerRunModes triggerMode) {
           dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
               // 读取日志文件大小
               NSString *logPath = monitorLogPath();

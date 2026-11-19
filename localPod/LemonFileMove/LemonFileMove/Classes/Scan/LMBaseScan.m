@@ -99,8 +99,14 @@
     NSMutableArray *resultArray = [NSMutableArray new];
     path = [path stringByReplacingOccurrencesOfString:@"~" withString:[NSString getUserHomePath]];
     
-    NSString *cmd = [NSString stringWithFormat:shellString, path];
-    NSString *retPath = [QMShellExcuteHelper excuteCmd:cmd];
+    NSRange queryStart = [shellString rangeOfString:@"'"];
+    NSRange queryEnd = [shellString rangeOfString:@"'" options:NSBackwardsSearch];
+    if (queryStart.location == NSNotFound || queryEnd.location <= queryStart.location) {
+        return nil;
+    }
+    NSString *query = [shellString substringWithRange:NSMakeRange(queryStart.location + 1, queryEnd.location - queryStart.location - 1)];
+    NSString *retPath = [QMShellExcuteHelper executeLaunchPath:@"/usr/bin/mdfind"
+                                                    arguments:@[@"-onlyin", path, query]];
     if ([retPath isKindOfClass:[NSNull class]]) {
         return nil;
     }

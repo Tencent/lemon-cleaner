@@ -11,6 +11,10 @@
 #import <QMCoreFunction/STPrivilegedTask.h>
 #import "LMVersionHelper.h"
 #import "LemonStartUpParams.h"
+#import "LMCodeSignVerifier.h"
+
+// 签名校验失败的错误码
+#define QMINST_ERR_SIGNATURE        10
 
 @implementation PreLaunch
 
@@ -105,9 +109,12 @@
     NSString *curVersion = [LMVersionHelper fullVersionFromBundle:[NSBundle mainBundle]];
     NSLog(@"%s, Version:%@", __FUNCTION__, curVersion);
     
-    // 用 LemonDaemon 作为提权入口，先执行 copySelf 再执行 install
-    // 通过一个自定义的组合命令实现，或者直接在 install 流程中包含 copy 逻辑
-    // 这里先执行 copySelfToApplication，再执行 InstallLemon，串行在一个 STPrivilegedTask 中
+    // === Security: Step 1 提权前校验当前 app bundle 代码签名 ===
+    NSString *appBundlePath = [[NSBundle mainBundle] bundlePath];
+    if (![LMCodeSignVerifier verifyAppBundleAtPath:appBundlePath expectedTeamID:@"88L2Q4487U"]) {
+        NSLog(@"%s [Security] App bundle code signature verification FAILED. Abort install. path: %@", __FUNCTION__, appBundlePath);
+        return QMINST_ERR_SIGNATURE;
+    }
     
     NSString *agentPath = [[[NSBundle mainBundle] privateFrameworksPath] stringByAppendingPathComponent:DAEMON_APP_NAME];
     
@@ -120,6 +127,12 @@
     NSLog(@"%s step1 result: %d", __FUNCTION__, copyRet);
     if (copyRet == STPrivilegedAuthorizationError) {
         return STPrivilegedAuthorizationError;
+    }
+    
+    // === Security: Step 2 提权前校验目标路径 app bundle 代码签名 ===
+    if (![LMCodeSignVerifier verifyAppBundleAtPath:DEFAULT_APP_PATH expectedTeamID:@"88L2Q4487U"]) {
+        NSLog(@"%s [Security] Installed app bundle signature verification FAILED. Abort install. path: %@", __FUNCTION__, DEFAULT_APP_PATH);
+        return QMINST_ERR_SIGNATURE;
     }
     
     // Step 2: InstallLemon（复用同一授权上下文，不会再弹密码框）

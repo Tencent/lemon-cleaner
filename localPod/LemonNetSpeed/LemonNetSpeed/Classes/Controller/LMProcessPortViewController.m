@@ -356,15 +356,14 @@ typedef NSInteger LMPortSortType;
 - (void)processPortDataInBackground {
     int processTotal = 0, tcpLocal = 0, tcpRemote = 0;
     
+    // 后台线程仅写本地数组，避免与主线程渲染 tableView 时读取 self.portModelArray 产生数据竞争
+    NSMutableArray<LMProcessPortModel *> *resultArray = [NSMutableArray array];
     @autoreleasepool{
         // 获取进程信息
         NSArray *processInfo = [self fetchProcessInfo];
         
         // 获取网络端口数据
         NSString *outputStr = [self fetchNetworkPortData];
-        
-        // 清空现有数据
-        [self.portModelArray removeAllObjects];
         
         // 解析端口数据
         NSArray *portArr = [outputStr componentsSeparatedByString:@"\n"];
@@ -375,17 +374,18 @@ typedef NSInteger LMPortSortType;
                                                    tcpLocal:&tcpLocal 
                                                   tcpRemote:&tcpRemote];
             if (model) {
-                [self.portModelArray addObject:model];
+                [resultArray addObject:model];
             }
         }
     }
     
-    // 回到主队列更新UI
+    // 回到主队列：一次性整体替换数据源后再更新 UI，保证 portModelArray 只在主线程被读写
     __weak typeof(self) weakSelf = self;
     dispatch_async(dispatch_get_main_queue(), ^{
         __strong typeof(weakSelf) strongSelf = weakSelf;
         if (!strongSelf) return;
         
+        strongSelf.portModelArray = resultArray;
         [strongSelf updateUIWithProcessTotal:processTotal tcpLocal:tcpLocal tcpRemote:tcpRemote];
     });
 }
@@ -611,28 +611,43 @@ typedef NSInteger LMPortSortType;
     
     //processTotal = tcpLocal + tcpRemote;
     NSString *strPort = [NSString stringWithFormat:NSLocalizedStringFromTableInBundle(@"LMProcessPortViewController_statProcessPort_NSString_5", nil, [NSBundle bundleForClass:[self class]], @""), processTotal, tcpLocal, tcpRemote];
-    NSString *strPortTemp = strPort;
-    
-    NSString *strNumber = [NSString stringWithFormat:@"%d", processTotal];
-    int pos = (int)[strPortTemp rangeOfString:strNumber].location;
-    NSRange range1 = NSMakeRange(pos, strNumber.length);
-    
-    strPortTemp = [strPortTemp substringWithRange:NSMakeRange(pos+strNumber.length, [strPortTemp length]-(pos+strNumber.length))];
-    strNumber = [NSString stringWithFormat:@"%d", tcpLocal];
-    pos = (int)[strPortTemp rangeOfString:strNumber].location;
-    NSRange range2 = NSMakeRange(pos+range1.location+range1.length, strNumber.length);
-    
-    strPortTemp = [strPortTemp substringWithRange:NSMakeRange(pos+strNumber.length, [strPortTemp length]-(pos+strNumber.length))];
-    strNumber = [NSString stringWithFormat:@"%d", tcpRemote];
-    pos = (int)[strPortTemp rangeOfString:strNumber].location;
-    NSRange range3 = NSMakeRange(pos+range2.location+range2.length, strNumber.length);
-    
+
+    // 先构造无高亮的基础富文本，作为后续任何一步定位失败时的安全兜底
     NSFont *font = [NSFontHelper getLightSystemFont:12];
     NSMutableAttributedString *attrStr = [[NSMutableAttributedString alloc] initWithString:strPort];
     [attrStr addAttributes:@{NSFontAttributeName:font,
                              NSForegroundColorAttributeName: [NSColor colorWithHex:0x94979B]}
                      range:NSMakeRange(0, strPort.length)];
-    NSRange allRange = [strPort rangeOfString:strPort];
+
+    NSString *strPortTemp = strPort;
+
+    NSString *strNumber = [NSString stringWithFormat:@"%d", processTotal];
+    NSRange found1 = [strPortTemp rangeOfString:strNumber];
+    if (found1.location == NSNotFound) {
+        return attrStr; // 定位不到数字（如本地化格式差异），直接返回兜底，避免 substringWithRange 越界崩溃
+    }
+    int pos = (int)found1.location;
+    NSRange range1 = NSMakeRange(pos, strNumber.length);
+    
+    strPortTemp = [strPortTemp substringWithRange:NSMakeRange(pos+strNumber.length, [strPortTemp length]-(pos+strNumber.length))];
+    strNumber = [NSString stringWithFormat:@"%d", tcpLocal];
+    NSRange found2 = [strPortTemp rangeOfString:strNumber];
+    if (found2.location == NSNotFound) {
+        return attrStr;
+    }
+    pos = (int)found2.location;
+    NSRange range2 = NSMakeRange(pos+range1.location+range1.length, strNumber.length);
+    
+    strPortTemp = [strPortTemp substringWithRange:NSMakeRange(pos+strNumber.length, [strPortTemp length]-(pos+strNumber.length))];
+    strNumber = [NSString stringWithFormat:@"%d", tcpRemote];
+    NSRange found3 = [strPortTemp rangeOfString:strNumber];
+    if (found3.location == NSNotFound) {
+        return attrStr;
+    }
+    pos = (int)found3.location;
+    NSRange range3 = NSMakeRange(pos+range2.location+range2.length, strNumber.length);
+    
+    NSRange allRange = NSMakeRange(0, strPort.length);
     if (NSLocationInRange(range1.location, allRange) && NSLocationInRange(range1.location+range1.length, allRange)) {
         [attrStr addAttributes:@{NSFontAttributeName:font,
                                  NSForegroundColorAttributeName: [NSColor colorWithHex:0x04D999]}
@@ -665,8 +680,8 @@ typedef NSInteger LMPortSortType;
 - (NSView *)tableView:(NSTableView *)tableView viewForTableColumn:(NSTableColumn *)tableColumn row:(NSInteger)row {
     NSString *identifier = tableColumn.identifier;
     LMProcessPortRowView *cellView = [tableView makeViewWithIdentifier:identifier owner:self];
-    if (self.portModelArray.count < row) {
-        NSLog(@"self.portModelArray.count < row");
+    if (self.portModelArray.count <= row) {
+        NSLog(@"self.portModelArray.count <= row");
         return cellView;
     }
     LMProcessPortModel *model = [self.portModelArray objectAtIndex:row];

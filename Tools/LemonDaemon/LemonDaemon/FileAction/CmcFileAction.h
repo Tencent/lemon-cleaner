@@ -7,6 +7,13 @@
 
 #import <Cocoa/Cocoa.h>
 
+/// 路径任一层为非系统别名（/tmp /var /etc）的 symlink 则返回 YES，调用方应拒绝
+BOOL pathHasUnsafeSymlinkComponent(NSString *path);
+
+/// 通用路径安全校验：白名单 + 黑名单 + 非系统 symlink 拒绝 + 路径穿越检测
+/// 返回 YES 表示允许操作，NO 表示拒绝
+BOOL isPathAllowedForFileOp(NSString *path);
+
 // delete files on disk
 int filesRemove(char *data_start, int fileCount);
 

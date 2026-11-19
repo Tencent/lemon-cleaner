@@ -136,7 +136,8 @@ const float kMaxSearchProgress = 1.0f;
 //                                                                options:NSDirectoryEnumerationSkipsPackageDescendants
 //                                                           errorHandler:nil];
         
-            NSString *outputStr = [QMShellExcuteHelper excuteCmd:[NSString stringWithFormat:@"mdfind -onlyin %@ \"kMDItemFSSize > 52428800\"", path]];
+            NSString *outputStr = [QMShellExcuteHelper executeLaunchPath:@"/usr/bin/mdfind"
+                                                              arguments:@[@"-onlyin", path, @"kMDItemFSSize > 52428800"]];
             NSLog(@"big old file outputStr = %@", outputStr);
             NSArray *mdfindArr = [outputStr componentsSeparatedByString:@"\n"];
             [resultPathArray addObject:path];

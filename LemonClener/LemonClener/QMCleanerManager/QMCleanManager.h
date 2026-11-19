@@ -30,6 +30,8 @@
 - (void)cleanSubCategoryEnd:(QMCategorySubItem *)subCategoryItem;
 - (void)cleanFileNums:(NSUInteger) cleanFileNums;
 - (void)cleanResultDidEnd:(NSUInteger)totalSize leftSize:(NSUInteger)leftSize;
+@optional
+- (void)cleanDidCancel;
 
 @end
 

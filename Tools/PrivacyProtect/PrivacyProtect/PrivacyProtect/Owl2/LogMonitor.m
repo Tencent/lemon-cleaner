@@ -25,17 +25,30 @@ extern os_log_t logHandle;
 // pull out items of interest, and save into our defined event
 static OSLogEvent* parseEvent(OSLogEventProxy* event)
 {
-    OSLogEvent *logEvent = [OSLogEvent OSLogEvent];
-    logEvent.process = event.process;
-    logEvent.processImagePath = event.processImagePath;
-    logEvent.processIdentifier = [NSNumber numberWithInt:event.processIdentifier];
-    logEvent.sender = event.sender;
-    logEvent.senderImagePath = event.senderImagePath;
-    logEvent.category = event.category;
-    logEvent.subsystem = event.subsystem;
-    logEvent.date = event.date;
-    logEvent.composedMessage = event.composedMessage;
-    return logEvent;
+    //sanity check
+    if (!event) {
+        NSLog(@"parseEvent: event is nil");
+        return nil;
+    }
+    
+    //wrap in @try-@catch to prevent crashes from accessing deallocated event
+    @try {
+        OSLogEvent *logEvent = [OSLogEvent OSLogEvent];
+        logEvent.process = event.process;
+        logEvent.processImagePath = event.processImagePath;
+        logEvent.processIdentifier = [NSNumber numberWithInt:event.processIdentifier];
+        logEvent.sender = event.sender;
+        logEvent.senderImagePath = event.senderImagePath;
+        logEvent.category = event.category;
+        logEvent.subsystem = event.subsystem;
+        logEvent.date = event.date;
+        logEvent.composedMessage = event.composedMessage;
+        return logEvent;
+    }
+    @catch (NSException *exception) {
+        os_log_error(logHandle, "ERROR: parseEvent threw exception: %{public}@", exception);
+        return nil;
+    }
 }
 
 @implementation LogMonitor
@@ -82,9 +95,18 @@ bail:
 
     //event handler callback
     void (^eventHandler)(OSLogEventProxy* event) = ^void(OSLogEventProxy* event) {
-
-        //Return the raw event
-        callback(parseEvent(event));
+        
+        //parse event safely
+        OSLogEvent *parsedEvent = parseEvent(event);
+        
+        //check if parsing succeeded
+        if (!parsedEvent) {
+            NSLog(@"Failed to parse OSLogEventProxy, skipping callback");
+            return;
+        }
+        
+        //invoke callback with parsed event
+        callback(parsedEvent);
     };
 
     //get 'OSLogEventLiveStream' class
@@ -92,6 +114,12 @@ bail:
     {
         //bail
         goto bail;
+    }
+
+    //若已有旧的 liveStream（重复 start），先 invalidate 并释放，避免旧流泄漏、旧 callback 在途投递
+    if(nil != self.liveStream)
+    {
+        [self stop];
     }
 
     //init live stream
@@ -189,25 +217,27 @@ bail:
 // invalidates live stream
 -(void)stop
 {
-    //sanity check
-    // obj responds to `invalidate`?
-    if(YES != [self.liveStream respondsToSelector:NSSelectorFromString(@"invalidate")])
-    {
-        //bail
-        goto bail;
-    }
-
     //not nil?
-    // invalidate
+    // invalidate & release our reference
     if(nil != self.liveStream)
     {
-        //invalidate
-        [self.liveStream invalidate];
+        //invalidate（停止系统侧事件投递）
+        if(YES == [self.liveStream respondsToSelector:NSSelectorFromString(@"invalidate")])
+        {
+            [self.liveStream invalidate];
+        }
+
+        //断开我方强引用，使 liveStream 及其持有的 eventHandler/callback block 尽快释放，
+        //避免重复 start 覆盖时旧 liveStream 泄漏、以及在途回调窗口被拉长
+        self.liveStream = nil;
     }
+}
 
-bail:
-
-    return;
+//dealloc
+// 兜底：对象销毁时确保 liveStream 被 invalidate 并释放
+-(void)dealloc
+{
+    [self stop];
 }
 
 @end

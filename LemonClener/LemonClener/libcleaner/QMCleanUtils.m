@@ -6,6 +6,7 @@
 
 #import "QMCleanUtils.h"
 #import <sys/stat.h>
+#import <errno.h>
 #import "QMCleanManager.h"
 #import <QMCoreFunction/MdlsToolsHelper.h>
 #import "QMLiteCleanerManager.h"
@@ -210,6 +211,107 @@ static NSMutableDictionary * m_cachePathDict = nil;
     CFRelease(req);
     CFRelease(ref);
     return YES;
+}
+
++ (BOOL)isSystemPathAlias:(NSString *)prefix
+{
+    return [prefix isEqualToString:@"/tmp"] ||
+           [prefix isEqualToString:@"/var"] ||
+           [prefix isEqualToString:@"/etc"];
+}
+
++ (BOOL)pathHasUnsafeSymlinkComponent:(NSString *)path
+{
+    if (path.length == 0) {
+        return YES;
+    }
+    NSString *standardized = [path stringByStandardizingPath];
+    if (standardized.length == 0 || ![standardized hasPrefix:@"/"] || [standardized isEqualToString:@"/"]) {
+        return YES;
+    }
+
+    NSArray<NSString *> *parts = [standardized pathComponents];
+    NSMutableString *prefix = [NSMutableString string];
+    for (NSString *part in parts) {
+        if ([part isEqualToString:@"/"]) {
+            [prefix setString:@"/"];
+            continue;
+        }
+        if ([prefix isEqualToString:@"/"]) {
+            [prefix appendString:part];
+        } else {
+            [prefix appendFormat:@"/%@", part];
+        }
+
+        struct stat st;
+        if (lstat([prefix fileSystemRepresentation], &st) != 0) {
+            // 路径不存在时提前返回「没有不安全 symlink」是安全的：
+            // 后续枚举 / 存在性检查会拦；这里不能当成 symlink 拒绝，否则正常已删目标会被误报。
+            if (errno == ENOENT || errno == ENOTDIR) {
+                return NO;
+            }
+            NSLog(@"[security] lstat failed for %@ errno=%d", prefix, errno);
+            return YES;
+        }
+        if (S_ISLNK(st.st_mode) && ![self isSystemPathAlias:prefix]) {
+            NSLog(@"[security] reject symlink component: %@", prefix);
+            return YES;
+        }
+    }
+    return NO;
+}
+
++ (NSString *)containmentKeyForPath:(NSString *)path
+{
+    if (path.length == 0) {
+        return nil;
+    }
+    NSString *s = [path stringByStandardizingPath];
+    if (s.length == 0 || ![s hasPrefix:@"/"]) {
+        return nil;
+    }
+    // walk 已拒用户 symlink，这里只折叠系统别名，避免 /tmp 与 /private/tmp 对不上
+    if ([s isEqualToString:@"/tmp"] || [s hasPrefix:@"/tmp/"]) {
+        s = [@"/private" stringByAppendingString:s];
+    } else if ([s isEqualToString:@"/var"] || [s hasPrefix:@"/var/"]) {
+        s = [@"/private" stringByAppendingString:s];
+    } else if ([s isEqualToString:@"/etc"] || [s hasPrefix:@"/etc/"]) {
+        s = [@"/private" stringByAppendingString:s];
+    }
+    if (s.length > 1 && [s hasSuffix:@"/"]) {
+        s = [s substringToIndex:s.length - 1];
+    }
+    return s;
+}
+
++ (BOOL)pathKey:(NSString *)pathKey staysUnderVenueKey:(NSString *)venueKey
+{
+    if (pathKey.length == 0 || venueKey.length == 0) {
+        return NO;
+    }
+    if ([pathKey isEqualToString:venueKey]) {
+        return YES;
+    }
+    return [pathKey hasPrefix:[venueKey stringByAppendingString:@"/"]];
+}
+
++ (BOOL)path:(NSString *)path staysUnderVenue:(NSString *)venue
+{
+    return [self pathKey:[self containmentKeyForPath:path] staysUnderVenueKey:[self containmentKeyForPath:venue]];
+}
+
++ (BOOL)path:(NSString *)path staysUnderVenueKey:(NSString *)venueKey
+{
+    return [self pathKey:[self containmentKeyForPath:path] staysUnderVenueKey:venueKey];
+}
+
++ (BOOL)pathExistsWithoutFollowing:(NSString *)path
+{
+    if (path.length == 0) {
+        return NO;
+    }
+    struct stat st;
+    return lstat([path fileSystemRepresentation], &st) == 0;
 }
 
 // 过滤自身产生的日志和缓存

@@ -15,6 +15,7 @@
 #import <ServiceManagement/ServiceManagement.h>
 #import "QMLocalAppHelper.h"
 #import <AppKit/NSWorkspace.h>
+#import <unistd.h>
 
 // FinalShell.app 的bundle id
 static NSString * const kFinalShellAppBundleId = @"st";
@@ -172,15 +173,56 @@ typedef char (*SMLoginItemSetEnabledWithURL_ptr) ( void* ptr, char enabled);
     return nil;
 }
 
+- (int)runLaunchctlWithArguments:(NSArray<NSString *> *)arguments {
+    if (arguments.count == 0) {
+        return -1;
+    }
+    NSTask *task = [[NSTask alloc] init];
+    task.launchPath = @"/bin/launchctl";
+    task.arguments = arguments;
+    @try {
+        [task launch];
+        [task waitUntilExit];
+        return task.terminationStatus;
+    } @catch (NSException *exception) {
+        NSLog(@"%s, exception = %@", __FUNCTION__, exception);
+        return -1;
+    }
+}
+
+- (NSString *)runLaunchctlOutputWithArguments:(NSArray<NSString *> *)arguments {
+    if (arguments.count == 0) {
+        return nil;
+    }
+    NSTask *task = [[NSTask alloc] init];
+    task.launchPath = @"/bin/launchctl";
+    task.arguments = arguments;
+    NSPipe *pipe = [NSPipe pipe];
+    task.standardOutput = pipe;
+    @try {
+        [task launch];
+    } @catch (NSException *exception) {
+        NSLog(@"%s, exception = %@", __FUNCTION__, exception);
+        return nil;
+    }
+    NSData *data = [[pipe fileHandleForReading] readDataToEndOfFile];
+    [task waitUntilExit];
+    return [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+}
+
 - (void)loadPlistFile:(NSString *)filePath {
-    NSString *cmd = [NSString stringWithFormat:@"launchctl load -w %@",filePath];
-    BOOL ret = system([cmd UTF8String]);
+    if (filePath.length == 0) {
+        return;
+    }
+    int ret = [self runLaunchctlWithArguments:@[@"load", @"-w", filePath]];
     NSLog(@"%s, ret = %d", __FUNCTION__ ,ret);
 }
 
 - (void)unloadPlistFile:(NSString *)filePath {
-    NSString *cmd = [NSString stringWithFormat:@"launchctl unload -w %@",filePath];
-    BOOL ret = system([cmd UTF8String]);
+    if (filePath.length == 0) {
+        return;
+    }
+    int ret = [self runLaunchctlWithArguments:@[@"unload", @"-w", filePath]];
     NSLog(@"%s, ret = %d", __FUNCTION__ ,ret);
 }
 
@@ -420,18 +462,20 @@ typedef char (*SMLoginItemSetEnabledWithURL_ptr) ( void* ptr, char enabled);
 
 //判断后台服务是否启用
 -(BOOL)serviceIsEnabledWithItem: (QMAppLaunchItem *)item{
-    NSString *cmd = @"";
-    __block NSString *cmdResult = @"";
-     BOOL isEnable = NO;
+    NSString *cmdResult = @"";
+    BOOL isEnable = NO;
     switch (item.domainType) {
         case LaunchServiceDomainTypeSystem:
 //            cmd = [NSString stringWithFormat:@"sudo launchctl list | grep %@", item.label];
             isEnable = [self.delegate isEnableForLaunchServiceLabel:item.label];
             break;
-        case LaunchServiceDomainTypeUser:
-            cmd = [NSString stringWithFormat:@"launchctl list | grep %@", item.label];
-            cmdResult = [self.delegate exeCommonCmd:cmd];
+        case LaunchServiceDomainTypeUser: {
+            NSString *listOutput = [self runLaunchctlOutputWithArguments:@[@"list"]];
+            if (item.label.length > 0 && [listOutput containsString:item.label]) {
+                cmdResult = item.label;
+            }
             break;
+        }
         default:
             break;
     }
@@ -449,10 +493,13 @@ typedef char (*SMLoginItemSetEnabledWithURL_ptr) ( void* ptr, char enabled);
             [self.delegate disableSystemLaunchItemWithFilePath:item.filePath label:item.label];
             break;
         case LaunchServiceDomainTypeUser: {
-            NSString *cmd = [NSString stringWithFormat: @"launchctl disable gui/$UID/%@;launchctl unload %@", item.label, item.filePath];
-             int result = system([cmd UTF8String]);
-             NSLog(@"%s, disable user launchctl item: %@, result: %d ", __FUNCTION__, item.label, result);
-
+            if (item.label.length == 0 || item.filePath.length == 0) {
+                break;
+            }
+            NSString *target = [NSString stringWithFormat:@"gui/%d/%@", getuid(), item.label];
+            [self runLaunchctlWithArguments:@[@"disable", target]];
+            int result = [self runLaunchctlWithArguments:@[@"unload", item.filePath]];
+            NSLog(@"%s, disable user launchctl item: %@, result: %d ", __FUNCTION__, item.label, result);
         }
             break;
         default:
@@ -463,18 +510,23 @@ typedef char (*SMLoginItemSetEnabledWithURL_ptr) ( void* ptr, char enabled);
 
 -(void)enableLaunchItem:(QMAppLaunchItem *)item{
     NSLog(@"%s, launch file path: %@", __FUNCTION__, item.filePath);
-    NSString *cmd = @"";
-//    cmd = @"sudo launchctl enable system/com.adobe.fpsaud&&sudo launchctl load /Library/LaunchDaemons/com.adobe.fpsaud.plist";
     switch (item.domainType) {
         case LaunchServiceDomainTypeSystem:
 //            cmd = [NSString stringWithFormat: @"sudo launchctl enable system/%@&&sudo launchctl load %@",item.label, item.filePath];
             [self.delegate enabelSystemLaunchItemWithFilePath:item.filePath label:item.label];
             break;
-        case LaunchServiceDomainTypeUser:
-            cmd = [NSString stringWithFormat: @"launchctl enable gui/$UID/%@&&launchctl load %@", item.label, item.filePath];
-            int result = system([cmd UTF8String]);
+        case LaunchServiceDomainTypeUser: {
+            if (item.label.length == 0 || item.filePath.length == 0) {
+                break;
+            }
+            NSString *target = [NSString stringWithFormat:@"gui/%d/%@", getuid(), item.label];
+            int result = [self runLaunchctlWithArguments:@[@"enable", target]];
+            if (result == 0) {
+                result = [self runLaunchctlWithArguments:@[@"load", item.filePath]];
+            }
             NSLog(@"%s, enable user launchctl item: %@, result: %d ", __FUNCTION__, item.label, result);
             break;
+        }
         default:
             break;
     }

@@ -471,6 +471,16 @@
     [m_bigDelegate cleanResultDidEnd:totalSize leftSize:leftSize];
 }
 
+- (void)cleanDidCancel
+{
+    if ([m_delegate respondsToSelector:@selector(cleanDidCancel)]) {
+        [m_delegate cleanDidCancel];
+    }
+    if ([m_bigDelegate respondsToSelector:@selector(cleanDidCancel)]) {
+        [m_bigDelegate cleanDidCancel];
+    }
+}
+
 - (void)cleanSubCategoryStart:(NSString *)subCategoryID {
 //    NSLog(@"clean subCategoryStart %@", subCategoryID);
     [m_delegate cleanSubCategoryStart:[m_subCategoryDict objectForKey:subCategoryID]];

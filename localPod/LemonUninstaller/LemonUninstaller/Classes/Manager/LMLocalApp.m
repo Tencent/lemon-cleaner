@@ -15,6 +15,7 @@
 #import "PkgUninstallManager.h"
 #import "LMUninstallXMLParseManager.h"
 #import "LMASRecentProjectsXMLParse.h"
+#import "LMTrashCodeSign.h"
 
 
 @implementation LMDateWrapper
@@ -55,6 +56,7 @@
     NSMutableArray<LMLocalApp *> *_otherSameBundleApps;
 
     NSArray<LMLoginItem *> *_loginItems;
+    AppScanType _scanType;
 
 }
 
@@ -70,6 +72,8 @@
     if (self) {
         _bundlePath = bundlePath;
         _isScanComplete = NO;
+        // trash 必须经 scanFileItems:AppTrashLeftover 显式指定；未指定按主卸载流程处理，避免依赖枚举默认值 0。
+        _scanType = AppUninstall;
 
 #ifdef  DebugAppUninstallScanBySerial
         NSString *bundleID = self.bundleID;
@@ -582,12 +586,26 @@
 
 // scanFileItems 可能来自两个不同的模块, 软件卸载 或者 卸载残留,
 // 为了做到App卸载全量扫描过程中,当界面退出时,及时停止扫描操作, 所以区分两种不同类型.
+- (BOOL)appliesOfficialScanRules {
+    return _scanType != AppTrashLeftover;
+}
+
+- (NSArray *)officialPredefinedResults:(NSArray *)results {
+    if (![self appliesOfficialScanRules]) {
+        return @[];
+    }
+    return results ?: @[];
+}
+
 - (void)scanFileItems:(AppScanType)scanType {
+    _scanType = scanType;
     LMLocalAppListManager *manager = [LMLocalAppListManager defaultManager];
 
     NSMutableArray<LMFileGroup *> *fileItemGroups = [[NSMutableArray alloc] init];
-    // 用 brew 的搜索逻辑进行搜索
-    [_predefinedScanner setScanApp:[self.appName stringByAppendingPathExtension:@"app"]];
+    // 用 brew 的搜索逻辑进行搜索；废纸篓残留不套用预置规则
+    if ([self appliesOfficialScanRules]) {
+        [_predefinedScanner setScanApp:[self.appName stringByAppendingPathExtension:@"app"]];
+    }
     if (scanType == AppUninstall && manager.stopScaning) {
         return;
     }
@@ -730,7 +748,7 @@
     // 为了防止冲突,只采用一种扫描结果,优先使用 pkg 扫描结果.
 
     NSArray *pkgKexts = [_pkgProvider scanKext];
-    NSArray *predefineKexts = [_predefinedScanner scanKext];
+    NSArray *predefineKexts = [self officialPredefinedResults:[_predefinedScanner scanKext]];
 
     NSMutableArray *filePaths = [NSMutableArray array];
     if (pkgKexts && pkgKexts.count > 0) {
@@ -797,7 +815,7 @@
 - (LMFileGroup *)searchRunningApp {
     LMFileGroup *group = [[LMFileGroup alloc] init];
     group.fileType = LMFileTypeSignal;
-    NSArray *predefineKillSignal = [_predefinedScanner scanSignal];
+    NSArray *predefineKillSignal = [self officialPredefinedResults:[_predefinedScanner scanSignal]];
     // TODO 正在运行的 app,没有适配 signal 或者 quit,也要杀死.
     NSMutableArray *filePaths = [NSMutableArray array];
     [filePaths addObjectsFromArray:[self genFileItemArrayWithPaths:predefineKillSignal withType:LMFileTypeSignal]];
@@ -820,7 +838,7 @@
     NSMutableSet *allSets = [NSMutableSet set];
     NSMutableArray *searchArray = [self searchFiles:searchPaths options:kMcSearchByName | kMcSearchByBundleID | kMcSearchByCompany suffixRegex:nil fileGroup: group];
     [allSets addObjectsFromArray:searchArray];
-    [allSets addObjectsFromArray:[_predefinedScanner scanSupports]];
+    [allSets addObjectsFromArray:[self officialPredefinedResults:[_predefinedScanner scanSupports]]];
     [allSets addObjectsFromArray:[_pkgProvider scanSupports]];
 
     NSMutableArray *filePaths = [NSMutableArray array];
@@ -844,7 +862,7 @@
             [@"~/Library/Caches" stringByExpandingTildeInPath],
             tempPathT, tempPathC];
     NSMutableArray *result = [self searchFiles:searchPaths options:kMcSearchByName | kMcSearchByBundleID | kMcSearchByCompany suffixRegex:nil fileGroup: group];
-    [result addObjectsFromArray:[_predefinedScanner scanCaches]];
+    [result addObjectsFromArray:[self officialPredefinedResults:[_predefinedScanner scanCaches]]];
     NSMutableArray *filePaths = [NSMutableArray array];
     [filePaths addObjectsFromArray:[self genFileItemArrayWithPaths:result withType:LMFileTypeCache]];
     filePaths = [self removeDupInArray:filePaths];
@@ -863,7 +881,7 @@
     ];
     NSMutableArray *result = [self searchFiles:searchPaths options:kMcSearchByBundleID | kMcSearchByName suffixRegex:nil fileGroup: group];
 
-    [result addObjectsFromArray:[_predefinedScanner scanPreferences]];
+    [result addObjectsFromArray:[self officialPredefinedResults:[_predefinedScanner scanPreferences]]];
 
     NSMutableArray *filePaths = [NSMutableArray array];
     [filePaths addObjectsFromArray:[self genFileItemArrayWithPaths:result withType:LMFileTypePreference]];
@@ -882,7 +900,7 @@
             [@"~/Library/Saved Application State" stringByExpandingTildeInPath]
     ];
     NSMutableArray *result = [self searchFiles:searchPaths options:kMcSearchByBundleID suffixRegex:nil fileGroup: group];
-    [result addObjectsFromArray:[_predefinedScanner scanStates]];
+    [result addObjectsFromArray:[self officialPredefinedResults:[_predefinedScanner scanStates]]];
     NSMutableArray *filePaths = [NSMutableArray array];
     [filePaths addObjectsFromArray:[self genFileItemArrayWithPaths:result withType:LMFileTypeState]];
     filePaths = [self removeDupInArray:filePaths];
@@ -907,7 +925,7 @@
      ([0-9]{4}(-[0-9]{1,2}){2})匹配日期
      */
     NSMutableArray *result = [self searchFiles:searchPaths options:kMcSearchByName | kMcSearchByBundleID | kMcSearchByCompany suffixRegex:@"_(([0-9a-fA-F-]{5,})|([0-9]{4}(-[0-9]{1,2}){2})).*" fileGroup: group];
-    [result addObjectsFromArray:[_predefinedScanner scanCrashReporters]];
+    [result addObjectsFromArray:[self officialPredefinedResults:[_predefinedScanner scanCrashReporters]]];
     NSMutableArray *filePaths = [NSMutableArray array];
     [filePaths addObjectsFromArray:[self genFileItemArrayWithPaths:result withType:LMFileTypeReporter]];
     filePaths = [self removeDupInArray:filePaths];
@@ -925,7 +943,7 @@
             [@"~/Library/Logs" stringByExpandingTildeInPath]
     ];
     NSMutableArray *result = [self searchFiles:searchPaths options:kMcSearchByName | kMcSearchByBundleID | kMcSearchByCompany suffixRegex:nil fileGroup: group];
-    [result addObjectsFromArray:[_predefinedScanner scanLogs]];
+    [result addObjectsFromArray:[self officialPredefinedResults:[_predefinedScanner scanLogs]]];
     NSMutableArray *filePaths = [NSMutableArray array];
     [filePaths addObjectsFromArray:[self genFileItemArrayWithPaths:result withType:LMFileTypeLog]];
     filePaths = [self removeDupInArray:filePaths];
@@ -945,13 +963,86 @@
     NSMutableArray *result = [self searchFiles:searchPaths options:kMcSearchByBundleID suffixRegex:nil fileGroup: group];
 
     [result addObjectsFromArray:[self containerFromPlist]];
-    [result addObjectsFromArray:[_predefinedScanner scanSandboxs]];
+    [result addObjectsFromArray:[self officialPredefinedResults:[_predefinedScanner scanSandboxs]]];
 
     NSMutableArray *filePaths = [NSMutableArray array];
     [filePaths addObjectsFromArray:[self genFileItemArrayWithPaths:result withType:LMFileTypeSandbox]];
     filePaths = [self removeDupInArray:filePaths];
     group.filePaths = filePaths;
     return group;
+}
+
+- (BOOL)lm_path:(NSString *)path isInsideDirectory:(NSString *)directory {
+    if (path.length == 0 || directory.length == 0) {
+        return NO;
+    }
+    NSString *resolvedPath = [[path stringByStandardizingPath] stringByResolvingSymlinksInPath];
+    NSString *resolvedDir = [[directory stringByStandardizingPath] stringByResolvingSymlinksInPath];
+    if ([resolvedPath isEqualToString:resolvedDir]) {
+        return YES;
+    }
+    NSString *prefix = [resolvedDir hasSuffix:@"/"] ? resolvedDir : [resolvedDir stringByAppendingString:@"/"];
+    return [resolvedPath hasPrefix:prefix];
+}
+
+- (BOOL)lm_isSystemInterpreterPath:(NSString *)path {
+    NSArray *prefixes = @[@"/usr/bin", @"/bin", @"/usr/sbin", @"/sbin", @"/usr/libexec"];
+    NSString *resolved = [[path stringByStandardizingPath] stringByResolvingSymlinksInPath];
+    for (NSString *prefix in prefixes) {
+        if ([resolved isEqualToString:prefix] || [resolved hasPrefix:[prefix stringByAppendingString:@"/"]]) {
+            return YES;
+        }
+    }
+    return NO;
+}
+
+- (NSArray<NSString *> *)programPathsFromLaunchPlist:(NSDictionary *)plistDict {
+    NSMutableArray *paths = [NSMutableArray array];
+    id programInfo = plistDict[@"Program"];
+    if ([programInfo isKindOfClass:[NSString class]] && [programInfo length] > 0) {
+        [paths addObject:programInfo];
+    }
+    id arguments = plistDict[@"ProgramArguments"];
+    if ([arguments isKindOfClass:[NSArray class]]) {
+        for (id program in arguments) {
+            if ([program isKindOfClass:[NSString class]] && [program length] > 0 && ![paths containsObject:program]) {
+                [paths addObject:program];
+            }
+        }
+    } else if ([arguments isKindOfClass:[NSString class]] && [arguments length] > 0 && ![paths containsObject:arguments]) {
+        [paths addObject:arguments];
+    }
+    return paths;
+}
+
+- (BOOL)trashLeftoverOwnsLaunchPlistAtPath:(NSString *)plistPath {
+    NSDictionary *plistDict = [[NSDictionary alloc] initWithContentsOfFile:plistPath];
+    if (![plistDict isKindOfClass:[NSDictionary class]]) {
+        return NO;
+    }
+    NSString *trashDir = [[@"~/.Trash" stringByExpandingTildeInPath] stringByStandardizingPath];
+    NSString *appTeamID = [LMTrashCodeSign teamIDOfCodeAtPath:self.bundlePath];
+    NSArray<NSString *> *programPaths = [self programPathsFromLaunchPlist:plistDict];
+    for (NSString *programPath in programPaths) {
+        NSString *resolved = [[programPath stringByStandardizingPath] stringByResolvingSymlinksInPath];
+        if ([self lm_path:resolved isInsideDirectory:self.bundlePath]) {
+            return YES;
+        }
+        if ([self lm_isSystemInterpreterPath:resolved]) {
+            continue;
+        }
+        if (![[NSFileManager defaultManager] fileExistsAtPath:resolved]) {
+            continue;
+        }
+        if ([self lm_path:resolved isInsideDirectory:trashDir]) {
+            continue;
+        }
+        NSString *exeTeamID = [LMTrashCodeSign teamIDOfCodeAtPath:resolved];
+        if (appTeamID.length > 0 && exeTeamID.length > 0 && [appTeamID isEqualToString:exeTeamID]) {
+            return YES;
+        }
+    }
+    return NO;
 }
 
 - (LMFileGroup *)searchLaunchDaemons:(NSMutableArray *)groups {
@@ -1022,11 +1113,27 @@
             if (find) break;
         }
     }
-    [allSet addObjectsFromArray:vaguenessArr];
-
-
-    [allSet addObjectsFromArray:[_predefinedScanner scanLaunchDaemons]];
-    [allSet addObjectsFromArray:[_pkgProvider scanLaunchDaemons]];
+    if (_scanType == AppTrashLeftover) {
+        NSMutableSet *owned = [NSMutableSet set];
+        NSMutableSet *candidates = [NSMutableSet set];
+        [candidates addObjectsFromArray:searchResult];
+        [candidates addObjectsFromArray:searchVaguenessResult];
+        for (NSString *plistPath in candidates) {
+            if ([self trashLeftoverOwnsLaunchPlistAtPath:plistPath]) {
+                [owned addObject:plistPath];
+            }
+        }
+        allSet = owned;
+        for (NSString *plistPath in [_pkgProvider scanLaunchDaemons]) {
+            if ([self trashLeftoverOwnsLaunchPlistAtPath:plistPath]) {
+                [allSet addObject:plistPath];
+            }
+        }
+    } else {
+        [allSet addObjectsFromArray:vaguenessArr];
+        [allSet addObjectsFromArray:[_predefinedScanner scanLaunchDaemons]];
+        [allSet addObjectsFromArray:[_pkgProvider scanLaunchDaemons]];
+    }
 
     NSMutableArray *filePaths = [NSMutableArray array];
     [filePaths addObjectsFromArray:[self genFileItemArrayWithPaths:[allSet allObjects] withType:LMFileTypeDaemon]];
@@ -1059,7 +1166,7 @@
 
 
     // 来自predefine,来源于预定策略.
-    NSArray *predefineds = [_predefinedScanner scanOthers];
+    NSArray *predefineds = [self officialPredefinedResults:[_predefinedScanner scanOthers]];
     NSArray *pkgSearchs = [_pkgProvider scanOthers];
     
     NSInteger maxCount = array1.count + predefineds.count;
@@ -1068,8 +1175,10 @@
     [resultSet addObjectsFromArray:predefineds];
     [resultSet addObjectsFromArray:pkgSearchs];
 
-    // 特殊处理(目前是VMware有虚拟机文件需要删除)
-    [resultSet addObjectsFromArray:[self searchCustomPath]];
+    // 特殊处理(目前是VMware有虚拟机文件需要删除)。废纸篓残留不套用官方特例。
+    if ([self appliesOfficialScanRules]) {
+        [resultSet addObjectsFromArray:[self searchCustomPath]];
+    }
 
     // 因为数据来自于 array1, array2, array3. 数据需要合并
     [self removeSubPathIfExist:resultSet];
@@ -1097,6 +1206,9 @@
 
 - (NSArray *)searchCustomPath
 {
+    if (_scanType == AppTrashLeftover) {
+        return nil;
+    }
     if (_bundleID && [_bundleID isEqualToString:@"com.vmware.fusion"]) {
         // ~/Virtual Machines.localized/目录下的.vmwarevm虚拟机文件需要展示是否删除
         // 收集此目录下的虚拟机path
@@ -1463,6 +1575,9 @@ enum {
 
 
 -(NSString *)getMatchedNameFromXMLWithFileGroup: (LMFileGroup *)group{
+    if (_scanType == AppTrashLeftover) {
+        return @"";
+    }
     LMUninstallXMLParseManager *mananger = [LMUninstallXMLParseManager sharedManager];
     for (LMUninstallItem *item in mananger.uninstallItems) {
         if([item.bundleId isEqualToString:self.bundleID]){
@@ -1564,7 +1679,7 @@ enum {
     
     if(group.fileType == LMFileTypeSupport){
         //MacBooster在support下有两个文件夹：MacBoosterMini 和MacBoosterAB，先做特殊处理，直接添加MacBoosterAB文件夹
-        if([self.appName containsString:@"MacBooster"]){
+        if([self appliesOfficialScanRules] && [self.appName containsString:@"MacBooster"]){
             NSString *path = [[@"~/Library/Application Support" stringByExpandingTildeInPath] stringByAppendingPathComponent:@"MacBoosterAB"];
             BOOL isExist = [[NSFileManager defaultManager] fileExistsAtPath:path];
             if(isExist){
@@ -1661,6 +1776,7 @@ NS_INLINE NSString *regexEscape(NSString *string) {
     model->_fileItemGroup = [NSMutableArray array];
     model->_predefinedScanner = _predefinedScanner;
     model->_pkgProvider = _pkgProvider;
+    model->_scanType = _scanType;
     for (int i = 0; i < [_fileItemGroup count]; i++) {
         [model->_fileItemGroup addObject:[_fileItemGroup[i] copy]];
     }
